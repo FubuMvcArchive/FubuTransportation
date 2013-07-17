@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Configuration\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
+    <Compile Include="Configuration\HandlerGraphTester.cs" />
     <Compile Include="FakeHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />

@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuMVC.Core;
 using FubuCore;
-using FubuMVC.Core.Bootstrapping;
-using FubuMVC.Core.Registration.ObjectGraph;
-using FubuMVC.Core.Runtime;
+using System.Linq;
 
 namespace FubuTransportation.Configuration
 {
-
+    public interface IHandlerSource
+    {
+        IEnumerable<HandlerCall> FindCalls();
+    }
 
     /// <summary>
     /// Use to bootstrap a FubuTransportation application that is not co-hosted with a FubuMVC

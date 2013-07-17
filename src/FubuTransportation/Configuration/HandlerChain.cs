@@ -1,8 +1,10 @@
-﻿using FubuMVC.Core.Registration.Nodes;
+﻿using System;
+using System.Collections.Generic;
+using FubuMVC.Core.Registration.Nodes;
 
 namespace FubuTransportation.Configuration
 {
-    public class HandlerChain : BehaviorChain
+    public class HandlerChain : BehaviorChain, IMayHaveInputType
     {
         public static readonly string Category = "Handler";
 
@@ -12,9 +14,9 @@ namespace FubuTransportation.Configuration
             IsPartialOnly = true;
         }
 
-        /*
-         * Maybe another node to handle serializers?  Thinking there might be a special one
-         * 
-         */
+        public HandlerChain(IEnumerable<HandlerCall> calls) : this()
+        {
+            calls.Each(AddToEnd);
+        }
     }
 }
