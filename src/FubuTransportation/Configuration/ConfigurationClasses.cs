@@ -67,16 +67,6 @@ namespace FubuTransportation.Configuration
         }
     }
 
-    public class HandlerChain : BehaviorChain
-    {
-        /*
-         * Set the UrlCategory
-         * PartialOnly
-         * Maybe another node to handle serializers?  Thinking there might be a special one
-         * 
-         */
-    }
-
     public class HandlerCall : ActionCallBase
     {
         public HandlerCall(Type handlerType, MethodInfo method)
