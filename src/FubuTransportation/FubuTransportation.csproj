@@ -59,10 +59,11 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ConfigurationClasses.cs" />
+    <Compile Include="Configuration\HandlerCall.cs" />
     <Compile Include="Configuration\HandlerChain.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\CascadingActionInvoker.cs" />
+    <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />

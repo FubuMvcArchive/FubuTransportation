@@ -9,7 +9,7 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.Runtime
 {
     [TestFixture]
-    public class CascadingActionInvokerTester : InteractionContext<CascadingActionInvoker<ITargetHandler,Input,Output>>
+    public class CascadingHandlerInvokerTester : InteractionContext<CascadingHandlerInvoker<ITargetHandler,Input,Output>>
     {
         private Input theInput;
         private Output expectedOutput;
@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Runtime
     }
 
     [TestFixture]
-    public class CascadingActionInvoker_with_base_class_Tester : InteractionContext<CascadingActionInvoker<ITargetHandler, Input, Output>>
+    public class CascadingHandlerInvoker_with_base_class_Tester : InteractionContext<CascadingHandlerInvoker<ITargetHandler, Input, Output>>
     {
         private SpecialInput theInput;
         private Output expectedOutput;
@@ -98,23 +98,4 @@ namespace FubuTransportation.Testing.Runtime
         }
     }
 
-    public interface ITargetHandler
-    {
-        Output OneInOneOut(Input input);
-        void OneInZeroOut(Input input);
-        object OneInManyOut(Input input);
-    }
-
-    public class Input
-    {
-    }
-
-    public class SpecialInput : Input
-    {
-        
-    }
-
-    public class Output
-    {
-    }
 }

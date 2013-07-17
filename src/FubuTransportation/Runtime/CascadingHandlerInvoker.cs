@@ -6,14 +6,14 @@ using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Runtime
 {
-    public class CascadingActionInvoker<THandler, TInput, TOutput> : BasicBehavior where TInput : class
+    public class CascadingHandlerInvoker<THandler, TInput, TOutput> : BasicBehavior where TInput : class
     {
         private readonly IFubuRequest _request;
         private readonly THandler _handler;
         private readonly IOutgoingMessages _messages;
         private readonly Func<THandler, TInput, TOutput> _action;
 
-        public CascadingActionInvoker(IFubuRequest request, THandler handler, Func<THandler, TInput, TOutput> action, IOutgoingMessages messages) : base(PartialBehavior.Executes)
+        public CascadingHandlerInvoker(IFubuRequest request, THandler handler, Func<THandler, TInput, TOutput> action, IOutgoingMessages messages) : base(PartialBehavior.Executes)
         {
             _request = request;
             _handler = handler;
