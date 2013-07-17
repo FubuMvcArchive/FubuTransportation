@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using FubuMVC.Core;
-using FubuMVC.Core.Behaviors;
-using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Runtime
 {
@@ -67,6 +64,7 @@ namespace FubuTransportation.Runtime
 
         public void Enqueue(params object[] messages)
         {
+            // TODO -- if messages can be cast to IEnumerable<object>, you have to enumerate each
             _messages.AddRange(messages);
         }
 
@@ -83,52 +81,6 @@ namespace FubuTransportation.Runtime
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-    }
-
-    public class RequestReplayActionInvoker<TAction, TInput, TOutput> : BasicBehavior
-        where TInput : class
-        where TOutput : class
-    {
-        private readonly Func<TAction, TInput, TOutput> _action;
-        private readonly TAction _controller;
-        private readonly IFubuRequest _request;
-
-        public RequestReplayActionInvoker(IFubuRequest request, TAction controller,
-                                        Func<TAction, TInput, TOutput> action)
-            : base(PartialBehavior.Executes)
-        {
-            _request = request;
-            _controller = controller;
-            _action = action;
-        }
-
-        protected override DoNext performInvoke()
-        {
-            var input = _request.Get<TInput>();
-            TOutput output = _action(_controller, input);
-            
-
-            throw new NotImplementedException("Need to publish the response right back");
-
-            return DoNext.Continue;
-        }
-    }
-
-    public class CascadingActionInvoker<TAction, TInput> : BasicBehavior
-    {
-        private readonly IFubuRequest _request;
-        private readonly Func<TAction, TInput, IEnumerable<object>> _action;
-
-        public CascadingActionInvoker(IFubuRequest request, Func<TAction, TInput, IEnumerable<object>> action) : base(PartialBehavior.Executes)
-        {
-            _request = request;
-            _action = action;
-        }
-
-        protected override DoNext performInvoke()
-        {
-            throw new NotImplementedException("get input, run action, publish all");
         }
     }
 }
