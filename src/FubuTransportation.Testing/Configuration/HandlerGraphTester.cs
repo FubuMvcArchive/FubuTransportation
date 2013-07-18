@@ -114,6 +114,66 @@ namespace FubuTransportation.Testing.Configuration
             theGraph.ChainFor(typeof(DerivedMessage)).Last().ShouldBeOfType<HandlerCall>()
                 .Equals(baseHandler).ShouldBeTrue();
         }
+
+        [Test]
+        public void merging_adds_a_chain_for_all_new_message_type()
+        {
+            theGraph.Add(concreteCall);
+
+            var other = new HandlerGraph();
+            other.Add(concreteCall4);
+
+            theGraph.Import(other);
+
+            theGraph.Select(x => x.InputType())
+                .ShouldHaveTheSameElementsAs(typeof(Input), typeof(DifferentInput));
+        }
+
+        [Test]
+        public void merging_matching_chains_merges_the_handlers_for_the_same_message()
+        {
+            theGraph.Add(concreteCall);
+
+            var other = new HandlerGraph();
+            other.Add(concreteCall2);
+            other.Add(concreteCall3);
+
+            theGraph.Import(other);
+
+            theGraph.ShouldHaveCount(1);
+
+            var chain = theGraph.ChainFor(typeof (Input));
+            chain.ElementAt(0).Equals(concreteCall).ShouldBeTrue();
+            chain.ElementAt(1).Equals(concreteCall2).ShouldBeTrue();
+            chain.ElementAt(2).Equals(concreteCall3).ShouldBeTrue();
+
+        }
+
+        [Test]
+        public void applies_general_action_from_imported_graph()
+        {
+            var general = HandlerCall.For<ConcreteHandler>(x => x.General(null));
+            var specific1 = HandlerCall.For<ConcreteHandler>(x => x.Specific1(null));
+            var specific2 = HandlerCall.For<ConcreteHandler>(x => x.Specific2(null));
+        
+            theGraph.Add(specific1);
+
+            var other = new HandlerGraph();
+            other.Add(general);
+            other.Add(specific2);
+
+            theGraph.Import(other);
+
+            theGraph.ApplyGeneralizedHandlers();
+
+            theGraph.ChainFor(typeof(Concrete1)).Last()
+                .Equals(general).ShouldBeTrue();
+
+            theGraph.ChainFor(typeof(Concrete2)).Last()
+                .Equals(general).ShouldBeTrue();
+
+
+        }
     }
 
     public class ConcreteHandler

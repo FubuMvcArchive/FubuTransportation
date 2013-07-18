@@ -58,5 +58,23 @@ namespace FubuTransportation.Configuration
         {
             return GetEnumerator();
         }
+
+        public void Import(HandlerGraph other)
+        {
+            _stagedCalls.Fill(other._stagedCalls);
+
+            other._chains.Values.Each(chain => {
+                var inputType = chain.InputType();
+                if (_chains.ContainsKey(inputType))
+                {
+                    var original = _chains[inputType];
+                    chain.OfType<HandlerCall>().Each(x => x.AddClone(original));
+                }
+                else
+                {
+                    _chains.Add(inputType, chain);
+                }
+            });
+        }
     }
 }
