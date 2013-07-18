@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using FubuCore;
 using System.Linq;
+using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Configuration
 {
+    [ApplicationLevel]
     public class HandlerGraph : IEnumerable<HandlerChain>
     {
         private readonly IDictionary<Type, HandlerChain> _chains = new Dictionary<Type, HandlerChain>(); 

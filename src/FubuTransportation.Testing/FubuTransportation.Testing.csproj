@@ -79,9 +79,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
     <Compile Include="Configuration\HandlerGraphTester.cs" />
+    <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
