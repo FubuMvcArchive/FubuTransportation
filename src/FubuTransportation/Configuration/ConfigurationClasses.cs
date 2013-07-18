@@ -107,8 +107,6 @@ namespace FubuTransportation.Configuration
 
     public class HandlerSource : IHandlerSource, DescribesItself
     {
-
-        private readonly AppliesToExpression _applies = new AppliesToExpression();
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private readonly StringWriter _description = new StringWriter();
 
