@@ -1,136 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Bottles;
+using FubuCore;
 using FubuCore.Descriptions;
 using FubuCore.Util;
-using FubuMVC.Core;
-using FubuCore;
-using System.Linq;
 using FubuMVC.Core.Registration;
-using FubuMVC.Core.Registration.DSL;
 
 namespace FubuTransportation.Configuration
 {
-    public interface IHandlerSource
-    {
-        IEnumerable<HandlerCall> FindCalls();
-    }
-
-    /// <summary>
-    /// Use to bootstrap a FubuTransportation application that is not co-hosted with a FubuMVC
-    /// application
-    /// </summary>
-    public static class FubuTransport
-    {
-        public static IContainerFacilityExpression For<T>() where T : FubuTransportRegistry, new()
-        {
-            var extension = new T();
-
-            return For(extension);
-        }
-
-        public static IContainerFacilityExpression For(FubuTransportRegistry extension)
-        {
-            var registry = new FubuRegistry();
-            extension.As<IFubuRegistryExtension>().Configure(registry);
-            return FubuApplication.For(registry);
-        }
-
-        public static IContainerFacilityExpression For(Action<FubuTransportRegistry> configuration)
-        {
-            var extension = new FubuTransportRegistry();
-            configuration(extension);
-
-            return For(extension);
- 
-        }
-
-        public static FubuApplication ServiceBus<T>(this FubuApplication application) where T : FubuTransportRegistry, new()
-        {
-            // TODO -- toss in a fake bottle to get here
-            //return application.
-        
-            throw new NotImplementedException();
-        }
-    }
-
-
-    public class FubuTransportRegistry : IFubuRegistryExtension
-    {
-        private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
-
-        /*
-         * Build a HandlerGraph for just this registry, then reach
-         * into the parent and import yours into it
-         * 
-         * 
-         * 
-         */
-
-        // TODO -- need to do something to keep this from getting picked up automatically.
-
-        private IEnumerable<IHandlerSource> allSources()
-        {
-            if (_sources.Any())
-            {
-                foreach (var handlerSource in _sources)
-                {
-                    yield return handlerSource;
-                }
-            }
-            else
-            {
-                var source = new HandlerSource();
-                source.UseThisAssembly();
-                source.IncludeClassesSuffixedWithConsumer();
-
-                yield return source;
-            }
-        } 
-
-        void IFubuRegistryExtension.Configure(FubuRegistry registry)
-        {
-            var graph = new HandlerGraph();
-            var allCalls = allSources().SelectMany(x => x.FindCalls());
-            graph.Add(allCalls);
-
-            // TODO -- apply policies of some sort
-
-            registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
-        }
-
-        /// <summary>
-        ///   Finds the currently executing assembly.
-        /// </summary>
-        /// <returns></returns>
-        public static Assembly FindTheCallingAssembly()
-        {
-            var trace = new StackTrace(false);
-
-            Assembly thisAssembly = Assembly.GetExecutingAssembly();
-            Assembly fubuCore = typeof(ITypeResolver).Assembly;
-            Assembly bottles = typeof(IPackageLoader).Assembly;
-            Assembly fubumvc = typeof (PackageRegistry).Assembly;
-
-            Assembly callingAssembly = null;
-            for (int i = 0; i < trace.FrameCount; i++)
-            {
-                StackFrame frame = trace.GetFrame(i);
-                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly && assembly != fubuCore && assembly != bottles && assembly != fubumvc)
-                {
-                    callingAssembly = assembly;
-                    break;
-                }
-            }
-            return callingAssembly;
-        }
-    }
-
     public class HandlerSource : IHandlerSource, DescribesItself
     {
         private readonly List<Assembly> _assemblies = new List<Assembly>();
@@ -175,10 +55,10 @@ namespace FubuTransportation.Configuration
         private IEnumerable<HandlerCall> actionsFromType(Type type)
         {
             return type.PublicInstanceMethods()
-                .Where(_methodFilters.Matches)
-                .Where(HandlerCall.IsCandidate)
-                .Select(m => buildHandler(type, m))
-                .Where(_callFilters.Matches);
+                       .Where(_methodFilters.Matches)
+                       .Where(HandlerCall.IsCandidate)
+                       .Select(m => buildHandler(type, m))
+                       .Where(_callFilters.Matches);
         }
 
         protected virtual HandlerCall buildHandler(Type type, MethodInfo method)

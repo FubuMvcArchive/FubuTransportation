@@ -43,6 +43,9 @@
     <Reference Include="FubuMVC.Core">
       <HintPath>..\packages\FubuMVC.Core\lib\net40\FubuMVC.Core.dll</HintPath>
     </Reference>
+    <Reference Include="FubuMVC.StructureMap">
+      <HintPath>..\packages\FubuMVC.StructureMap\lib\net40\FubuMVC.StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="FubuTestingSupport">
       <HintPath>..\packages\FubuTestingSupport\lib\FubuTestingSupport.dll</HintPath>
     </Reference>
@@ -85,7 +88,7 @@
     <Compile Include="Configuration\HandlerGraphTester.cs" />
     <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
-    <Compile Include="FubuTransportationExtensions.cs" />
+    <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />

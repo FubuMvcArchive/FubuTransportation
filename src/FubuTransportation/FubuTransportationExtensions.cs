@@ -2,7 +2,7 @@
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 
-namespace FubuTransportation.Testing
+namespace FubuTransportation
 {
     public class FubuTransportationExtensions : IFubuRegistryExtension
     {
