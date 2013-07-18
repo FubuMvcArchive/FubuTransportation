@@ -15,6 +15,8 @@ namespace FubuTransportation.Testing.Configuration
         public void apply_to_single_assembly_looking_for_Handler()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
+
             source.UseThisAssembly();
             source.IncludeClassesSuffixedWithConsumer();
 
@@ -33,6 +35,8 @@ namespace FubuTransportation.Testing.Configuration
         public void uses_the_containing_assembly_by_default()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
+
             source.IncludeClassesSuffixedWithConsumer();
 
             var descriptions = source.As<IHandlerSource>().FindCalls().Select(x => x.Description);
@@ -50,6 +54,8 @@ namespace FubuTransportation.Testing.Configuration
         public void custom_type_filter_on_excludes()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
+
             source.IncludeClassesSuffixedWithConsumer();
             source.ExcludeTypes(x => x.Name == "MyOtherConsumer");
 
@@ -65,6 +71,7 @@ namespace FubuTransportation.Testing.Configuration
         public void custom_type_filter_on_includeds()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
             source.IncludeTypes(x => x.Name == "MyConsumer");
 
             var descriptions = source.As<IHandlerSource>().FindCalls().Select(x => x.Description);
@@ -79,6 +86,7 @@ namespace FubuTransportation.Testing.Configuration
         public void custom_method_inclusion()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
             source.IncludeClassesSuffixedWithConsumer();
             source.IncludeMethods(x => x.Name == "M2");
 
@@ -93,6 +101,7 @@ namespace FubuTransportation.Testing.Configuration
         public void custom_method_exclusion()
         {
             var source = new HandlerSource();
+            source.ExcludeTypes(x => x.Namespace != "FubuTransportation.Testing.Configuration");
             source.IncludeClassesSuffixedWithConsumer();
             source.ExcludeMethods(x => x.Name == "M2");
 
