@@ -61,8 +61,7 @@ namespace FubuTransportation.Configuration
 
     public class FubuTransportRegistry : IFubuRegistryExtension
     {
-        private readonly Assembly _currentAssembly = TypePool.FindTheCallingAssembly();
-
+        private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
 
         /*
          * Build a HandlerGraph for just this registry, then reach
@@ -72,9 +71,36 @@ namespace FubuTransportation.Configuration
          * 
          */
 
+        // TODO -- need to do something to keep this from getting picked up automatically.
+
+        private IEnumerable<IHandlerSource> allSources()
+        {
+            if (_sources.Any())
+            {
+                foreach (var handlerSource in _sources)
+                {
+                    yield return handlerSource;
+                }
+            }
+            else
+            {
+                var source = new HandlerSource();
+                source.UseThisAssembly();
+                source.IncludeClassesSuffixedWithConsumer();
+
+                yield return source;
+            }
+        } 
+
         void IFubuRegistryExtension.Configure(FubuRegistry registry)
         {
-            throw new System.NotImplementedException();
+            var graph = new HandlerGraph();
+            var allCalls = allSources().SelectMany(x => x.FindCalls());
+            graph.Add(allCalls);
+
+            // TODO -- apply policies of some sort
+
+            registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
         }
 
         /// <summary>
