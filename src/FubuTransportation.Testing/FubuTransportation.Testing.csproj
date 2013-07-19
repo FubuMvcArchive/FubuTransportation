@@ -88,10 +88,14 @@
     <Compile Include="Configuration\HandlerGraphTester.cs" />
     <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
+    <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
+    <Compile Include="Runtime\simplest_possible_invocation.cs" />
+    <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
+    <Compile Include="Runtime\test_support_classes.cs" />
     <Compile Include="StandinTester.cs" />
   </ItemGroup>
   <ItemGroup>

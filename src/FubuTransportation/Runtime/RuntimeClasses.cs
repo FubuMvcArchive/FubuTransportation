@@ -26,11 +26,6 @@ namespace FubuTransportation.Runtime
         void StartReceiving(IReceiver receiver);
     }
 
-    public interface IMessageInvoker
-    {
-        void Invoke(Envelope envelope);
-    }
-
     // Will use message invoker, but IReceiver will also be responsible for 
     // other coordination with the EventAggregator, sending replies, and logging
     public interface IReceiver
@@ -52,8 +47,7 @@ namespace FubuTransportation.Runtime
     /// </summary>
     public interface IOutgoingMessages : IEnumerable<object>
     {
-        void Enqueue(params object[] messages);
-        void Enqueue(IEnumerable messages);
+        void Enqueue(object message);
     }
 
     public class OutgoingMessages : IOutgoingMessages
@@ -62,15 +56,17 @@ namespace FubuTransportation.Runtime
 
         // TODO -- needs to track the originating message in order to do the request/replay semantics
 
-        public void Enqueue(params object[] messages)
+        public void Enqueue(object message)
         {
-            // TODO -- if messages can be cast to IEnumerable<object>, you have to enumerate each
-            _messages.AddRange(messages);
-        }
-
-        public void Enqueue(IEnumerable messages)
-        {
-            _messages.Each(x => _messages.Add(x));
+            var enumerable = message as IEnumerable<object>;
+            if (enumerable == null)
+            {
+                _messages.Add(message);
+            }
+            else
+            {
+                _messages.AddRange(enumerable);
+            }
         }
 
         public IEnumerator<object> GetEnumerator()

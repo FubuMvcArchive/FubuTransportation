@@ -27,9 +27,7 @@ namespace FubuTransportation.Configuration
 
         public static IContainerFacilityExpression For(Action<FubuTransportRegistry> configuration)
         {
-            var extension = new FubuTransportRegistry();
-            configuration(extension);
-
+            var extension = FubuTransportRegistry.For(configuration);
             return For(extension);
  
         }

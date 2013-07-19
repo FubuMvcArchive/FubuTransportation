@@ -1,6 +1,7 @@
 ﻿using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation
 {
@@ -20,6 +21,7 @@ namespace FubuTransportation
     {
         public FubuTransportServiceRegistry()
         {
+            SetServiceIfNone<IMessageInvoker, MessageInvoker>();
         }
     }
 

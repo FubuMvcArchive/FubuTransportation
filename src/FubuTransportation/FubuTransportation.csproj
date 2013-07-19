@@ -58,6 +58,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
     <Compile Include="Configuration\FubuTransportRegistry.cs" />
     <Compile Include="Configuration\HandlerCall.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
     <Compile Include="Runtime\Envelope.cs" />
+    <Compile Include="Runtime\IMessageInvoker.cs" />
+    <Compile Include="Runtime\MessageInvoker.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />
   </ItemGroup>

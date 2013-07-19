@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,23 @@ namespace FubuTransportation.Configuration
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
 
-        // TODO -- need to do something to keep this from getting picked up automatically.
+        public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
+        {
+            var registry = new FubuTransportRegistry();
+            configure(registry);
+
+            return registry;
+        }
+
+        public static FubuTransportRegistry Empty()
+        {
+            return new FubuTransportRegistry();
+        }
+
+        protected FubuTransportRegistry()
+        {
+            
+        }
 
         private IEnumerable<IHandlerSource> allSources()
         {
@@ -71,5 +88,45 @@ namespace FubuTransportation.Configuration
             }
             return callingAssembly;
         }
+
+        public HandlersExpression Handlers
+        {
+            get
+            {
+                return new HandlersExpression(this);
+            }
+        }
+
+        public class HandlersExpression
+        {
+            private readonly FubuTransportRegistry _parent;
+
+            public HandlersExpression(FubuTransportRegistry parent)
+            {
+                _parent = parent;
+            }
+
+            public void Include(params Type[] types)
+            {
+                _parent._sources.Add(new ExplicitTypeHandlerSource(types));
+            }
+
+            public void Include<T>()
+            {
+                Include(typeof(T));
+            }
+
+            public void FindBy<T>() where T : IHandlerSource, new()
+            {
+                _parent._sources.Add(new T());
+            }
+
+            public void FindBy(IHandlerSource source)
+            {
+                _parent._sources.Add(source);
+            }
+        }
     }
+
+    
 }
