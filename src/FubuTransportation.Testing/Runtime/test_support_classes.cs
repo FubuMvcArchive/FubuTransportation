@@ -7,6 +7,8 @@ using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.Runtime
 {
+    public class GenericHandler : SimpleHandler<Message>{}
+
     public class OneMessage : Message{}
 
     public class OneHandler : SimpleHandler<OneMessage>{}
@@ -52,11 +54,11 @@ namespace FubuTransportation.Testing.Runtime
             return _processed.Where(x => x.Message is T);
         } 
 
-        public static IEnumerable<MessageProcessed> AllProcessed
+        public static MessageProcessed[] AllProcessed
         {
             get
             {
-                return _processed;
+                return _processed.ToArray();
             }
         } 
     }
