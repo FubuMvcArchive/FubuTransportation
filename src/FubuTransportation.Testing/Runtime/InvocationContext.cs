@@ -53,15 +53,16 @@ namespace FubuTransportation.Testing.Runtime
             theTransportRegistry.Handlers.Include(handlers);
         }
 
-        protected StubEnvelope sendMessage(Message message)
+        protected StubEnvelope sendMessage(params Message[] message)
         {
             var envelope = new StubEnvelope();
-            envelope.Messages = new object[]{message};
+            envelope.Messages = message;
 
             sendEnvelope(envelope);
 
             return envelope;
         }
+
 
         protected void sendEnvelope(StubEnvelope envelope)
         {

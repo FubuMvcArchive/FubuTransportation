@@ -31,6 +31,8 @@ namespace FubuTransportation
         public void Configure(BehaviorGraph graph)
         {
             var handlers = graph.Settings.Get<HandlerGraph>();
+            handlers.Add(HandlerCall.For<BatchHandler>(x => x.Handle(null)));
+
             handlers.ApplyGeneralizedHandlers();
 
             foreach (var chain in handlers)

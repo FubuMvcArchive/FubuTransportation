@@ -3,6 +3,7 @@ using FubuMVC.Core;
 using FubuMVC.Core.Diagnostics;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 using NUnit.Framework;
 using StructureMap;
 using FubuMVC.StructureMap;
@@ -28,6 +29,18 @@ namespace FubuTransportation.Testing
             graph.Behaviors.Count(x => typeof (Foo2) == x.InputType()).ShouldEqual(1);
             graph.Behaviors.Count(x => typeof (Foo3) == x.InputType()).ShouldEqual(1);
             graph.Behaviors.Count(x => typeof (Foo4) == x.InputType()).ShouldEqual(1);
+
+        }
+
+        [Test]
+        public void has_the_batch_handling_chain()
+        {
+            var container = new Container();
+            FubuTransport.For<MyFirstTransport>().StructureMap(container).Bootstrap();
+
+            var graph = container.GetInstance<BehaviorGraph>();
+
+            graph.Behaviors.Count(x => typeof(object[]) == x.InputType()).ShouldEqual(1);
         }
 
         [Test]

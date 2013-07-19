@@ -30,19 +30,20 @@ namespace FubuTransportation.Runtime
                 }
                 else
                 {
-                    executeChain(envelope, inputType, chain);
+                    executeChain(envelope, inputType, chain, envelope.Messages.Single());
                 }
             }
             else
             {
-                throw new NotImplementedException();
+                var chain = _graph.ChainFor(typeof (object[]));
+                executeChain(envelope, typeof(object[]), chain, envelope.Messages);
             }
         }
 
-        private void executeChain(Envelope envelope, Type inputType, HandlerChain chain)
+        private void executeChain(Envelope envelope, Type inputType, HandlerChain chain, object message)
         {
             var request = new InMemoryFubuRequest();
-            request.Set(inputType, envelope.Messages.Single());
+            request.Set(inputType, message);
 
             var outgoing = new OutgoingMessages();
 

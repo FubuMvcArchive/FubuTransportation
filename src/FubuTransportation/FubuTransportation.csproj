@@ -69,6 +69,7 @@
     <Compile Include="FubuTransportationExtensions.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\BatchHandler.cs" />
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\IMessageInvoker.cs" />
