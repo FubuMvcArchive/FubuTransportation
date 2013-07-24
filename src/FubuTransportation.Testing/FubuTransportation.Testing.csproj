@@ -99,7 +99,9 @@
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
     <Compile Include="Runtime\test_support_classes.cs" />
+    <Compile Include="Runtime\XmlMessageSerializerTester.cs" />
     <Compile Include="StandinTester.cs" />
+    <Compile Include="TransportActivatorTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">

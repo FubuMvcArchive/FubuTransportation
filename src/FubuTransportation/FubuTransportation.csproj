@@ -74,8 +74,11 @@
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\IMessageInvoker.cs" />
     <Compile Include="Runtime\MessageInvoker.cs" />
+    <Compile Include="Runtime\Receiver.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />
+    <Compile Include="Runtime\XmlMessageSerializer.cs" />
+    <Compile Include="TransportActivator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

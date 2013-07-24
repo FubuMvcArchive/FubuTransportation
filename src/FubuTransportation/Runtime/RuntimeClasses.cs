@@ -21,7 +21,7 @@ namespace FubuTransportation.Runtime
         Uri Id { get; } // Really for identification
 
         // Envelope might have a reference to its parent
-        void Send(Envelope envelope);
+        void Send(Uri destination, Envelope envelope);
 
         void StartReceiving(IReceiver receiver);
     }
