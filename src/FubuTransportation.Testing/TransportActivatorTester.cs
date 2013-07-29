@@ -11,8 +11,9 @@ namespace FubuTransportation.Testing
         [Test]
         public void transports_are_started()
         {
+            // TODO -- will be obsolete
             var transport = MockFor<ITransport>();
-            transport.Expect(x => x.StartReceiving(Arg<IReceiver>.Is.Anything));
+            transport.Expect(x => x.StartReceiving(Arg<ChannelOptions>.Is.Anything, Arg<IReceiver>.Is.Anything));
             ClassUnderTest.Activate(null, null);
             transport.VerifyAllExpectations();
         }

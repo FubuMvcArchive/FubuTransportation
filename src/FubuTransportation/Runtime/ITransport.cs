@@ -6,8 +6,12 @@ namespace FubuTransportation.Runtime
     public interface IChannel : IDisposable
     {
         Uri Id { get; }
+        void StartReceiving(ChannelOptions options, IReceiver receiver);
+    }
 
-        void StartReceiving(IReceiver receiver);
+    public class ChannelOptions
+    {
+        public int ThreadCount = 1;
     }
 
     public interface ITransport : IDisposable, IChannel

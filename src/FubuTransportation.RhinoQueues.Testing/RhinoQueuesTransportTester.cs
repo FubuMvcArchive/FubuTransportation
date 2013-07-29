@@ -37,7 +37,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             var receiver = MockFor<IReceiver>();
             _settings.Queues[0].ThreadCount = 3;
             
-            ClassUnderTest.StartReceiving(receiver);
+            ClassUnderTest.StartReceiving(new ChannelOptions(), receiver);
             ClassUnderTest.ThreadCount.ShouldEqual(3);
         }
 
@@ -50,7 +50,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             var queue = new QueueSetting {QueueName = "test2", ThreadCount = 4};
             _settings.Queues.Add(queue);
 
-            ClassUnderTest.StartReceiving(receiver);
+            ClassUnderTest.StartReceiving(new ChannelOptions(), receiver);
             ClassUnderTest.ThreadCount.ShouldEqual(5);
         }
 
@@ -59,7 +59,7 @@ namespace FubuTransportation.RhinoQueues.Testing
         {
             _queue.Expect(x => x.Receive(Arg<string>.Is.Anything))
                 .Return(new Message() { Data = new byte[] { } });
-            ClassUnderTest.StartReceiving(MockFor<IReceiver>());
+            ClassUnderTest.StartReceiving(new ChannelOptions(), MockFor<IReceiver>());
             _queue.AssertWasCalled(x => x.Start());
         }
 

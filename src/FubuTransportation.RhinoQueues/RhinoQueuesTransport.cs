@@ -48,7 +48,7 @@ namespace FubuTransportation.RhinoQueues
             return uri.Scheme.EqualsIgnoreCase("rhino.queues");
         }
 
-        public void StartReceiving(IReceiver receiver)
+        public void StartReceiving(ChannelOptions options, IReceiver receiver)
         {
             _queue.Start();
             _settings.Queues.Each(x => startListeningThreads(x.QueueName, x.ThreadCount, receiver));
