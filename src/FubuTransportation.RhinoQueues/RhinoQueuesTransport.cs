@@ -31,17 +31,17 @@ namespace FubuTransportation.RhinoQueues
 
         public int ThreadCount { get { return _threads.Count; }}
 
-        public void Send(Uri destination, Envelope envelope)
-        {
-            //TODO delayed messages
-            // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
-            var messagePayload = new MessagePayload
-            {
-                Data = envelope.Data, 
-                Headers = envelope.Headers
-            };
-            _queue.Send(destination, messagePayload);
-        }
+//        public void Send(Uri destination, Envelope envelope)
+//        {
+//            //TODO delayed messages
+//            // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
+//            var messagePayload = new MessagePayload
+//            {
+//                Data = envelope.Data, 
+//                Headers = envelope.Headers
+//            };
+//            _queue.Send(destination, messagePayload);
+//        }
 
         public bool Matches(Uri uri)
         {

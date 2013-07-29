@@ -19,7 +19,7 @@ namespace FubuTransportation.Runtime
         // Really for identification
 
         // Envelope might have a reference to its parent
-        void Send(Uri destination, Envelope envelope);
+        //void Send(Uri destination, Envelope envelope);
 
         bool Matches(Uri uri);
     }
