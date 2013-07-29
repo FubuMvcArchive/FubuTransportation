@@ -76,6 +76,18 @@ namespace FubuTransportation.RhinoQueues.Testing
                 x.Send(Arg.Is(uri), Arg<MessagePayload>.Matches(m => Encoding.UTF8.GetString(m.Data) == hello)));
         }
 
+        [Test]
+        public void matches_rhino_queues_positive()
+        {
+            ClassUnderTest.Matches(new Uri("rhino.queues://machine/something")).ShouldBeTrue();
+        }
+
+        [Test]
+        public void does_not_match_when_protocol_is_not_rhino_queues()
+        {
+            ClassUnderTest.Matches(new Uri("http://rhino.queues//something")).ShouldBeFalse();
+        }
+
         [TearDown]
         public void Teardown()
         {

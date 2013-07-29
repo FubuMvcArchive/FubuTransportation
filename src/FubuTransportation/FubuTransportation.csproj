@@ -73,6 +73,7 @@
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\IMessageInvoker.cs" />
+    <Compile Include="Runtime\ITransport.cs" />
     <Compile Include="Runtime\MessageInvoker.cs" />
     <Compile Include="Runtime\Receiver.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />

@@ -42,6 +42,11 @@ namespace FubuTransportation.RhinoQueues
             _queue.Send(destination, messagePayload);
         }
 
+        public bool Matches(Uri uri)
+        {
+            return uri.Scheme.EqualsIgnoreCase("rhino.queues");
+        }
+
         public void StartReceiving(IReceiver receiver)
         {
             _queue.Start();

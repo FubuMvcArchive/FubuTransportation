@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
@@ -23,16 +21,6 @@ namespace FubuTransportation.Runtime
 
     
     // Wanna make ITransport as stupid as possible
-    public interface ITransport : IDisposable
-    {
-        Uri Id { get; } // Really for identification
-
-        // Envelope might have a reference to its parent
-        void Send(Uri destination, Envelope envelope);
-
-        [MarkedForTermination]
-        void StartReceiving(IReceiver receiver);
-    }
 
     // Will use message invoker, but IReceiver will also be responsible for 
     // other coordination with the EventAggregator, sending replies, and logging
