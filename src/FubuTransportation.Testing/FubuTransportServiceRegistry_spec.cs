@@ -19,6 +19,12 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void EnvelopeSerializer_is_registered()
+        {
+            registeredTypeIs<IEnvelopeSerializer, EnvelopeSerializer>();
+        }
+
+        [Test]
         public void MessageInvoker_is_registered()
         {
             registeredTypeIs<IMessageInvoker, MessageInvoker>();
