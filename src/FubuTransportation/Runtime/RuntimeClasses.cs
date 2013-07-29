@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
@@ -14,6 +15,12 @@ namespace FubuTransportation.Runtime
         object[] Deserialize(Stream message);
     }
 
+    public interface IMessageCallback
+    {
+        void MarkSuccessful();
+        void MarkFailed();
+    }
+
     
     // Wanna make ITransport as stupid as possible
     public interface ITransport : IDisposable
@@ -23,6 +30,7 @@ namespace FubuTransportation.Runtime
         // Envelope might have a reference to its parent
         void Send(Uri destination, Envelope envelope);
 
+        [MarkedForTermination]
         void StartReceiving(IReceiver receiver);
     }
 

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -39,7 +40,9 @@ namespace FubuTransportation.Testing.Runtime
             handler<OneHandler, TwoHandler, ThreeHandler, FourHandler>();
 
             var theMessage = new TwoMessage();
-            sendMessage(theMessage).WasSuccessful.ShouldBeTrue();
+
+
+            sendMessage(theMessage).Callback.AssertWasCalled(x => x.MarkSuccessful());
 
         }
 

@@ -4,13 +4,19 @@ using FubuCore.Util;
 
 namespace FubuTransportation.Runtime
 {
-    public abstract class Envelope
+    public class Envelope
     {
         public static readonly string Id = "Id";
         public static readonly string OriginalId = "OriginalId";
         public static readonly string ParentId = "ParentId";
 
-        public abstract NameValueCollection Headers { get; } 
+        public Envelope(IMessageCallback callback, NameValueCollection headers = null)
+        {
+            Callback = callback;
+            Headers = headers ?? new NameValueCollection();
+        }
+
+        public NameValueCollection Headers { get; private set; } 
 
         public object[] Messages;
 
@@ -18,9 +24,7 @@ namespace FubuTransportation.Runtime
         
         public Uri Source;
 
-        public abstract void MarkSuccessful();
-        public abstract void MarkFailed();
-        
+        public IMessageCallback Callback;
     }
 
 

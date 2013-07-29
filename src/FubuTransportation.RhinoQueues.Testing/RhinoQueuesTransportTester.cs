@@ -68,8 +68,10 @@ namespace FubuTransportation.RhinoQueues.Testing
         {
             var uri = new Uri("nullo://nowhere.com");
             var hello = "hello";
-            ClassUnderTest.Send(uri, new RhinoQueuesEnvelope(
-                new NameValueCollection(), new object[]{hello}, () => { }, () => { }));
+            ClassUnderTest.Send(uri, new Envelope(MockFor<IMessageCallback>())
+            {
+                Messages = new object[]{hello}
+            });
             _queue.AssertWasCalled(x => 
                 x.Send(Arg.Is(uri), Arg<MessagePayload>.Matches(m => Encoding.UTF8.GetString(m.Data) == hello)));
         }

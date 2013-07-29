@@ -179,25 +179,5 @@ namespace FubuTransportation.Testing.Runtime
         }
     }
 
-    public class StubEnvelope : Envelope
-    {
-        private readonly NameValueCollection _headers = new NameValueCollection();
-        public bool WasSuccessful;
-        public bool WasFailure;
 
-        public override NameValueCollection Headers
-        {
-            get { return _headers; }
-        }
-
-        public override void MarkSuccessful()
-        {
-            WasSuccessful = true;
-        }
-
-        public override void MarkFailed()
-        {
-            WasFailure = true;
-        }
-    }
 }

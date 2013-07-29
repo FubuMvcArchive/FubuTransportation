@@ -56,7 +56,7 @@ namespace FubuTransportation.Runtime
             try
             {
                 behavior.Invoke();
-                envelope.MarkSuccessful();
+                envelope.Callback.MarkSuccessful();
             }
             catch (Exception ex)
             {

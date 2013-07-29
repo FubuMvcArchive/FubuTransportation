@@ -72,7 +72,10 @@ namespace FubuTransportation.RhinoQueues
                     var message = _queue.Receive(queueName);
                     var messages = deserialize(message);
 
-                    var envelope = new RhinoQueuesEnvelope(message.Headers, messages, () => tx.Complete(), () => { });
+                    var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
+                    {
+                        Messages = messages
+                    };
                     receiver.Receive(this, envelope);
                 }
             }

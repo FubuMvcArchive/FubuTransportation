@@ -3,6 +3,7 @@ using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap;
 
 namespace FubuTransportation.Testing.Runtime
@@ -53,9 +54,9 @@ namespace FubuTransportation.Testing.Runtime
             theTransportRegistry.Handlers.Include(handlers);
         }
 
-        protected StubEnvelope sendMessage(params Message[] message)
+        protected Envelope sendMessage(params Message[] message)
         {
-            var envelope = new StubEnvelope();
+            var envelope = new Envelope(MockRepository.GenerateMock<IMessageCallback>());
             envelope.Messages = message;
 
             sendEnvelope(envelope);
@@ -64,7 +65,7 @@ namespace FubuTransportation.Testing.Runtime
         }
 
 
-        protected void sendEnvelope(StubEnvelope envelope)
+        protected void sendEnvelope(Envelope envelope)
         {
             // ????????
         
