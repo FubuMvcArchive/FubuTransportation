@@ -1,23 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 
 namespace FubuTransportation.Runtime
 {
-    
-    public interface IMessageSerializer
-    {
-        void Serialize(object message, Stream stream);
-        object Deserialize(Stream message);
-    }
-
-    public interface IMessageCallback
-    {
-        void MarkSuccessful();
-        void MarkFailed();
-    }
-
-    
     // Wanna make ITransport as stupid as possible
 
     // Will use message invoker, but IReceiver will also be responsible for 
