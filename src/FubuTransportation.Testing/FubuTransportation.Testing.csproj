@@ -92,6 +92,7 @@
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BasicJsonMessageSerializerTester.cs" />
+    <Compile Include="Runtime\BinarySerializerTester.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
     <Compile Include="Runtime\EnvelopeSerializerIntegratedTester.cs" />
     <Compile Include="Runtime\EnvelopeSerializerTester.cs" />

@@ -17,6 +17,11 @@ namespace FubuTransportation.Runtime
 
     public class EnvelopeSerializer : IEnvelopeSerializer
     {
+        // TODO -- register this thing
+        // TODO -- default content-type for the application
+        // TODO -- throw if unrecognized content-type
+        // TODO -- use from MessageInvoker
+
         private readonly IEnumerable<IMessageSerializer> _serializers;
 
         public EnvelopeSerializer(IEnumerable<IMessageSerializer> serializers)
@@ -26,19 +31,36 @@ namespace FubuTransportation.Runtime
 
         public void Deserialize(Envelope envelope)
         {
-            var serializer = _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(envelope.ContentType));
-            // TODO -- what to do w/ unknown content-type?
+            if (envelope.Data == null) throw new InvalidOperationException("No data on this envelope to deserialize");
 
+
+            var serializer = selectSerializer(envelope);
+            
             using (var stream = new MemoryStream(envelope.Data))
             {
                 envelope.Message = serializer.Deserialize(stream);
             }
+        }
 
+        private IMessageSerializer selectSerializer(Envelope envelope)
+        {
+
+            // TODO -- what to do w/ unknown content-type?
+            return _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(envelope.ContentType));
         }
 
         public void Serialize(Envelope envelope)
         {
-            throw new NotImplementedException();
+            if (envelope.Message == null) throw new InvalidOperationException("No message on this envelope to serialize");
+
+            var serializer = selectSerializer(envelope);
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(envelope.Message, stream);
+                stream.Position = 0;
+
+                envelope.Data = stream.ReadAllBytes();
+            }
         }
     }
 }

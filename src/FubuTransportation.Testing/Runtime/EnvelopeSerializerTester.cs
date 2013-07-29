@@ -1,4 +1,5 @@
-﻿using FubuTestingSupport;
+﻿using System;
+using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -36,6 +37,23 @@ namespace FubuTransportation.Testing.Runtime
             ClassUnderTest.Deserialize(theEnvelope);
 
             theEnvelope.Message.ShouldBeTheSameAs(o);
+        }
+
+        [Test]
+        public void throws_on_serialize_with_no_message()
+        {
+            Exception<InvalidOperationException>.ShouldBeThrownBy(() => {
+                ClassUnderTest.Serialize(new Envelope(null));
+            }).Message.ShouldEqual("No message on this envelope to serialize");
+        }
+
+        [Test]
+        public void throws_on_deserialize_with_no_data()
+        {
+            Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
+            {
+                ClassUnderTest.Deserialize(new Envelope(null));
+            }).Message.ShouldEqual("No data on this envelope to deserialize");
         }
 
     }
