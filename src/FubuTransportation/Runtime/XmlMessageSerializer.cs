@@ -300,6 +300,12 @@ namespace FubuTransportation.Runtime
                 var msg = ReadObject(type, element);
                 msgs.Add(msg);
             }
+
+            if (msgs.Count == 1)
+            {
+                return msgs.Single();
+            }
+
             return msgs.ToArray();
         }
 

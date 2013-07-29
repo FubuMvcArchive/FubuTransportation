@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using FubuCore.Util;
 using FubuMVC.Core.Http;
 
 namespace FubuTransportation.Runtime
@@ -10,7 +9,15 @@ namespace FubuTransportation.Runtime
         public static readonly string Id = "Id";
         public static readonly string OriginalId = "OriginalId";
         public static readonly string ParentId = "ParentId";
-        public static readonly string ContentType = HttpResponseHeaders.ContentType;
+        public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
+        public IMessageCallback Callback;
+
+        public byte[] Data;
+        public object Message;
+
+        // TODO -- do routing slip tracking later
+
+        public Uri Source;
 
         public Envelope(IMessageCallback callback, NameValueCollection headers = null)
         {
@@ -18,17 +25,15 @@ namespace FubuTransportation.Runtime
             Headers = headers ?? new NameValueCollection();
         }
 
-        public NameValueCollection Headers { get; private set; } 
+        public string ContentType
+        {
+            get { return Headers.Get(ContentTypeKey); }
+            set
+            {
+                Headers.Set(ContentTypeKey, value);
+            }
+        }
 
-        public object Message;
-        public byte[] Data;
-
-        // TODO -- do routing slip tracking later
-        
-        public Uri Source;
-
-        public IMessageCallback Callback;
+        public NameValueCollection Headers { get; private set; }
     }
-
-
 }
