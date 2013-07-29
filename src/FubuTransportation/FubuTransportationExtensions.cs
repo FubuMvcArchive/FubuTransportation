@@ -23,7 +23,7 @@ namespace FubuTransportation
         public FubuTransportServiceRegistry()
         {
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
-            SetServiceIfNone<IMessageSerializer, XmlMessageSerializer>();
+            AddService<IMessageSerializer, XmlMessageSerializer>();
             SetServiceIfNone<IReceiver, Receiver>();
             AddService<IActivator, TransportActivator>();
         }

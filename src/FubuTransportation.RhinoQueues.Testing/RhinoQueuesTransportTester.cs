@@ -110,5 +110,10 @@ namespace FubuTransportation.RhinoQueues.Testing
                 return new object[]{reader.ReadToEnd()};
             }
         }
+
+        public string ContentType
+        {
+            get { return "text/plain"; }
+        }
     }
 }

@@ -303,6 +303,10 @@ namespace FubuTransportation.Runtime
             return msgs.ToArray();
         }
 
+        public string ContentType { 
+            get { return "application/xml"; }
+        }
+
         private object ReadObject(Type type, XElement element)
         {
             if (type == null)
