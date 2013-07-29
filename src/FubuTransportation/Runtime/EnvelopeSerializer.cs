@@ -17,7 +17,6 @@ namespace FubuTransportation.Runtime
 
     public class EnvelopeSerializer : IEnvelopeSerializer
     {
-        // TODO -- register this thing
         // TODO -- default content-type for the application
         // TODO -- throw if unrecognized content-type
         // TODO -- use from MessageInvoker

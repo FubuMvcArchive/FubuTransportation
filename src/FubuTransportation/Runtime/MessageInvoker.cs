@@ -10,15 +10,27 @@ namespace FubuTransportation.Runtime
     {
         private readonly IServiceFactory _factory;
         private readonly HandlerGraph _graph;
+        private readonly IEnvelopeSerializer _serializer;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph)
+        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer)
         {
             _factory = factory;
             _graph = graph;
+            _serializer = serializer;
+        }
+
+        public IEnvelopeSerializer Serializer
+        {
+            get { return _serializer; }
         }
 
         public void Invoke(Envelope envelope)
         {
+            if (envelope.Message == null)
+            {
+                _serializer.Deserialize(envelope);
+            }
+
             var inputType = envelope.Message.GetType();
 
             if (envelope.Message.GetType() == typeof (object[]))

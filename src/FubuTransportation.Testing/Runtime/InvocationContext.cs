@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap;
 using System.Linq;
+using FubuCore;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -68,7 +69,9 @@ namespace FubuTransportation.Testing.Runtime
 
         protected void sendEnvelope(Envelope envelope)
         {
-            // ????????
+            envelope.ContentType = new XmlMessageSerializer().ContentType;
+            _invoker.Value.As<MessageInvoker>().Serializer.Serialize(envelope);
+            envelope.Message = null;
         
             _invoker.Value.Invoke(envelope);
         }
