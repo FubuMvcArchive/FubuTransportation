@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,9 +24,11 @@ namespace FubuTransportation.Runtime
             reflection = new Reflection();
         }
 
-        public void Serialize(object[] messages, Stream messageStream)
+        public void Serialize(object message, Stream messageStream)
         {
-            var namespaces = GetNamespaces(messages);
+            var messages = message as object[] ?? new object[] {message};
+
+            var namespaces = GetNamespaces(message);
             var messagesElement = new XElement(namespaces["esb"] + "messages");
             var xml = new XDocument(messagesElement);
 
@@ -258,13 +261,15 @@ namespace FubuTransportation.Runtime
             return value.ToString();
         }
 
-        private IDictionary<string, XNamespace> GetNamespaces(object[] mesages)
+        private IDictionary<string, XNamespace> GetNamespaces(object message)
         {
+            var messages = message as object[] ?? new []{message};
+
             var namespaces = new Dictionary<string, XNamespace>
             {
                 {"esb", "http://servicebus.fubutransportation.com/2013/07/19/esb"},
             };
-            foreach (var msg in mesages)
+            foreach (var msg in messages)
             {
                 if (msg == null)
                     continue;
@@ -274,7 +279,7 @@ namespace FubuTransportation.Runtime
             return namespaces;
         }
 
-        public object[] Deserialize(Stream message)
+        public object Deserialize(Stream message)
         {
             var namespaces = GetNamespaces(new object[0]);
             var document = XDocument.Load(XmlReader.Create(message));

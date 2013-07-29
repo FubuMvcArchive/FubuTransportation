@@ -1,8 +1,8 @@
 ﻿using System;
 using FubuCore.Binding;
+using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
-using System.Linq;
 
 namespace FubuTransportation.Runtime
 {
@@ -19,24 +19,23 @@ namespace FubuTransportation.Runtime
 
         public void Invoke(Envelope envelope)
         {
-            if (envelope.Messages.Length == 1)
+            var inputType = envelope.Message.GetType();
+
+            if (envelope.Message.GetType() == typeof (object[]))
             {
-                var inputType = envelope.Messages.Single().GetType();
+                var chain = _graph.ChainFor(typeof (object[]));
+                executeChain(envelope, typeof (object[]), chain, envelope.Message);
+            }
+            else
+            {
                 var chain = _graph.ChainFor(inputType);
                 if (chain == null)
                 {
                     // TODO -- got to do something here for error handling or broadcasting
                     throw new NotImplementedException();
                 }
-                else
-                {
-                    executeChain(envelope, inputType, chain, envelope.Messages.Single());
-                }
-            }
-            else
-            {
-                var chain = _graph.ChainFor(typeof (object[]));
-                executeChain(envelope, typeof(object[]), chain, envelope.Messages);
+
+                executeChain(envelope, inputType, chain, envelope.Message);
             }
         }
 
@@ -47,11 +46,11 @@ namespace FubuTransportation.Runtime
 
             var outgoing = new OutgoingMessages();
 
-            var args = new ServiceArguments()
+            ServiceArguments args = new ServiceArguments()
                 .With<IFubuRequest>(request)
                 .With<IOutgoingMessages>(outgoing);
 
-            var behavior = _factory.BuildBehavior(args, chain.UniqueId);
+            IActionBehavior behavior = _factory.BuildBehavior(args, chain.UniqueId);
 
             try
             {

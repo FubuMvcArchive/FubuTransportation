@@ -5,6 +5,7 @@ using FubuTransportation.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap;
+using System.Linq;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -57,7 +58,7 @@ namespace FubuTransportation.Testing.Runtime
         protected Envelope sendMessage(params Message[] message)
         {
             var envelope = new Envelope(MockRepository.GenerateMock<IMessageCallback>());
-            envelope.Messages = message;
+            envelope.Message = message.Length == 1 ? (object) message.Single() : message.Select(x => x as object).ToArray();
 
             sendEnvelope(envelope);
 

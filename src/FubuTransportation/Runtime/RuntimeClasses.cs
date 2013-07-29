@@ -5,12 +5,10 @@ using System.IO;
 namespace FubuTransportation.Runtime
 {
     
-    // Copied straight from RSB for now
     public interface IMessageSerializer
     {
-        void Serialize(object[] messages, Stream message);
-
-        object[] Deserialize(Stream message);
+        void Serialize(object message, Stream stream);
+        object Deserialize(Stream message);
     }
 
     public interface IMessageCallback

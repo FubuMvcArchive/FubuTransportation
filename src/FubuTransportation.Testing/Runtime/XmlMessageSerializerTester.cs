@@ -42,7 +42,7 @@ namespace FubuTransportation.Testing.Runtime
             var stream = new MemoryStream();
             serializer.Serialize(new object[] { ticks }, stream);
             stream.Position = 0;
-            var actual = (long)serializer.Deserialize(stream)[0];
+            var actual = (long)serializer.Deserialize(stream).As<object[]>()[0];
             ticks.ShouldEqual(actual);
         }
 
@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Runtime
             var stream = new MemoryStream();
             serializer.Serialize(new object[] { aDouble }, stream);
             stream.Position = 0;
-            var actual = (double)serializer.Deserialize(stream)[0];
+            var actual = (double)serializer.Deserialize(stream).As<object[]>()[0];
             aDouble.ShouldEqual(actual);
         }
 
@@ -66,7 +66,7 @@ namespace FubuTransportation.Testing.Runtime
             var stream = new MemoryStream();
             serializer.Serialize(new object[] { aFloat }, stream);
             stream.Position = 0;
-            var actual = (float)serializer.Deserialize(stream)[0];
+            var actual = (float)serializer.Deserialize(stream).As<object[]>()[0];
             aFloat.ShouldEqual(actual);
         }
 
@@ -77,7 +77,7 @@ namespace FubuTransportation.Testing.Runtime
             var stream = new MemoryStream();
             serializer.Serialize(new object[] { new byte[] { 1, 2, 3, 4 } }, stream);
             stream.Position = 0;
-            var actual = (byte[])serializer.Deserialize(stream)[0];
+            var actual = (byte[])serializer.Deserialize(stream).As<object[]>()[0];
             new byte[] { 1, 2, 3, 4 }.ShouldEqual(actual);
         }
 
@@ -89,7 +89,7 @@ namespace FubuTransportation.Testing.Runtime
             var stream = new MemoryStream();
             serializer.Serialize(new object[] { value }, stream);
             stream.Position = 0;
-            var actual = (DateTimeOffset)serializer.Deserialize(stream)[0];
+            var actual = (DateTimeOffset)serializer.Deserialize(stream).As<object[]>()[0];
             value.ShouldEqual(actual);
         }
 
@@ -106,7 +106,7 @@ namespace FubuTransportation.Testing.Runtime
                 }
             }, stream);
             stream.Position = 0;
-            var actual = (ClassWithObjectArray)serializer.Deserialize(stream)[0];
+            var actual = (ClassWithObjectArray)serializer.Deserialize(stream).As<object[]>()[0];
             "ayende".ShouldEqual(actual.Items[0].As<OrderLine>().Product);
         }
 
@@ -118,7 +118,7 @@ namespace FubuTransportation.Testing.Runtime
             serializer.Serialize(new[] { sample }, stream);
             stream.Position = 0;
 
-            var order = (Order)serializer.Deserialize(stream)[0];
+            var order = (Order)serializer.Deserialize(stream).As<object[]>()[0];
 
             sample.Url.ShouldEqual(order.Url);
             sample.At.ShouldEqual(order.At);

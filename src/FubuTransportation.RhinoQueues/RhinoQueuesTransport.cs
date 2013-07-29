@@ -79,25 +79,27 @@ namespace FubuTransportation.RhinoQueues
 
                     var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
                     {
-                        Messages = messages
+                        Message = messages
                     };
                     receiver.Receive(this, envelope);
                 }
             }
         }
 
+        [MarkedForTermination]
         private byte[] serialize(Envelope envelope)
         {
             using (var ms = new MemoryStream())
             {
-                _serializer.Serialize(envelope.Messages, ms);
+                _serializer.Serialize(envelope.Message, ms);
                 return ms.ToArray();
             }
         }
 
-        private object[] deserialize(Message message)
+        [MarkedForTermination]
+        private object deserialize(Message message)
         {
-            object[] messages;
+            object messages;
             using (var ms = new MemoryStream(message.Data))
             {
                 messages = _serializer.Deserialize(ms);

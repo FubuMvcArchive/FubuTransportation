@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using FubuCore.Util;
+using FubuMVC.Core.Http;
 
 namespace FubuTransportation.Runtime
 {
@@ -9,6 +10,7 @@ namespace FubuTransportation.Runtime
         public static readonly string Id = "Id";
         public static readonly string OriginalId = "OriginalId";
         public static readonly string ParentId = "ParentId";
+        public static readonly string ContentType = HttpResponseHeaders.ContentType;
 
         public Envelope(IMessageCallback callback, NameValueCollection headers = null)
         {
@@ -18,7 +20,8 @@ namespace FubuTransportation.Runtime
 
         public NameValueCollection Headers { get; private set; } 
 
-        public object[] Messages;
+        public object Message;
+        public byte[] Data;
 
         // TODO -- do routing slip tracking later
         

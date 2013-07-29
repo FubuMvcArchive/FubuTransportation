@@ -70,7 +70,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             var hello = "hello";
             ClassUnderTest.Send(uri, new Envelope(MockFor<IMessageCallback>())
             {
-                Messages = new object[]{hello}
+                Message = hello
             });
             _queue.AssertWasCalled(x => 
                 x.Send(Arg.Is(uri), Arg<MessagePayload>.Matches(m => Encoding.UTF8.GetString(m.Data) == hello)));
@@ -97,14 +97,13 @@ namespace FubuTransportation.RhinoQueues.Testing
 
     public class SimpleSerializer : IMessageSerializer
     {
-        public void Serialize(object[] messages, Stream stream)
+        public void Serialize(object message2, Stream stream)
         {
-            var message = messages.First().As<string>();
-            var bytes = Encoding.UTF8.GetBytes(message);
+            var bytes = Encoding.UTF8.GetBytes(message2.As<string>());
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        public object[] Deserialize(Stream message)
+        public object Deserialize(Stream message)
         {
             using (var reader = new StreamReader(message, Encoding.UTF8))
             {
