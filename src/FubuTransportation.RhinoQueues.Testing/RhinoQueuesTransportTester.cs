@@ -64,19 +64,6 @@ namespace FubuTransportation.RhinoQueues.Testing
         }
 
         [Test]
-        public void sends_with_serialized_message()
-        {
-            var uri = new Uri("nullo://nowhere.com");
-            var hello = "hello";
-            ClassUnderTest.Send(uri, new Envelope(MockFor<IMessageCallback>())
-            {
-                Message = hello
-            });
-            _queue.AssertWasCalled(x => 
-                x.Send(Arg.Is(uri), Arg<MessagePayload>.Matches(m => Encoding.UTF8.GetString(m.Data) == hello)));
-        }
-
-        [Test]
         public void matches_rhino_queues_positive()
         {
             ClassUnderTest.Matches(new Uri("rhino.queues://machine/something")).ShouldBeTrue();

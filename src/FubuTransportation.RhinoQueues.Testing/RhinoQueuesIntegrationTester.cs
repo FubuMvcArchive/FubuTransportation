@@ -43,11 +43,14 @@ namespace FubuTransportation.RhinoQueues.Testing
                 .Bootstrap();
 
             var handle = TestConsumer.WaitHandle = new ManualResetEvent(false);
-            var serializer = container.GetInstance<IMessageSerializer>();
+            var serializer = new XmlMessageSerializer();
             var message = new MessagePayload()
             {
                 Headers = new NameValueCollection()
             };
+
+            message.Headers[Envelope.ContentTypeKey] = serializer.ContentType;
+
             using (var ms = new MemoryStream())
             {
                 serializer.Serialize(new object[]{new TestMessage()}, ms);

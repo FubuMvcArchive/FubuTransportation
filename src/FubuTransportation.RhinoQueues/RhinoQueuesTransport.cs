@@ -34,9 +34,10 @@ namespace FubuTransportation.RhinoQueues
         public void Send(Uri destination, Envelope envelope)
         {
             //TODO delayed messages
+            // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
             var messagePayload = new MessagePayload
             {
-                Data = serialize(envelope), 
+                Data = envelope.Data, 
                 Headers = envelope.Headers
             };
             _queue.Send(destination, messagePayload);
@@ -75,36 +76,15 @@ namespace FubuTransportation.RhinoQueues
                     new TransactionOptions{ IsolationLevel = IsolationLevel.ReadCommitted}))
                 {
                     var message = _queue.Receive(queueName);
-                    var messages = deserialize(message);
 
+                    // TODO -- pull out a factory method for RhinoQueues.Message to our Envelope & UT
                     var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
                     {
-                        Message = messages
+                        Data = message.Data
                     };
                     receiver.Receive(this, envelope);
                 }
             }
-        }
-
-        [MarkedForTermination]
-        private byte[] serialize(Envelope envelope)
-        {
-            using (var ms = new MemoryStream())
-            {
-                _serializer.Serialize(envelope.Message, ms);
-                return ms.ToArray();
-            }
-        }
-
-        [MarkedForTermination]
-        private object deserialize(Message message)
-        {
-            object messages;
-            using (var ms = new MemoryStream(message.Data))
-            {
-                messages = _serializer.Deserialize(ms);
-            }
-            return messages;
         }
 
         public void Dispose()
