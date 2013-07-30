@@ -10,14 +10,26 @@ namespace FubuTransportation.Configuration
 {
     public class ChannelNode
     {
-        // TODO -- blow up if Accessor is not a Uri!!!!
-        public Accessor SettingAddress { get; set; }
+        public Accessor SettingAddress
+        {
+            get { return _settingAddress; }
+            set
+            {
+                if (value.PropertyType != typeof (Uri))
+                {
+                    throw new ArgumentOutOfRangeException("SettingAddress", "Can only be a Uri property");
+                }
+                _settingAddress = value;
+            }
+        }
+
         public string Key { get; set; }
 
         public int ThreadCount = 1;
         public bool Incoming = false;
 
         public IList<IRoutingRule> Rules = new List<IRoutingRule>();
+        private Accessor _settingAddress;
 
         public Uri Uri { get; set; }
         public IChannel Channel { get; set; }

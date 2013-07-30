@@ -101,6 +101,7 @@
     <Compile Include="Runtime\generic_handlers_are_called_for_messages_that_match.cs" />
     <Compile Include="Runtime\handling_a_batch_of_messages.cs" />
     <Compile Include="Runtime\multiple_handlers_for_one_message.cs" />
+    <Compile Include="Runtime\ReceiverTester.cs" />
     <Compile Include="Runtime\Routing\AssemblyRuleTester.cs" />
     <Compile Include="Runtime\Routing\NamespaceRuleTester.cs" />
     <Compile Include="Runtime\simplest_possible_invocation.cs" />

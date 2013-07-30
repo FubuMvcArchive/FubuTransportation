@@ -1,4 +1,6 @@
-﻿using FubuTransportation.Configuration;
+﻿using System;
+using FubuCore.Reflection;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Routing;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -43,5 +45,19 @@ namespace FubuTransportation.Testing.Configuration
 
             node.Publishes(typeof(NewUser)).ShouldBeFalse();
         }
+
+        [Test]
+        public void setting_address_has_to_be_a_Uri()
+        {
+            var node = new ChannelNode();
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
+                node.SettingAddress = ReflectionHelper.GetAccessor<FakeThing>(x => x.Name);
+            });
+        }
+    }
+
+    public class FakeThing
+    {
+        public string Name { get; set; }
     }
 }

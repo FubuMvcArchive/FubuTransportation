@@ -1,38 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Threading;
-using System.Transactions;
+using System.Linq;
 using FubuCore;
-using FubuMVC.Core;
-using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
-using Rhino.Queues;
-using StructureMap;
-using System.Linq;
 
 namespace FubuTransportation.RhinoQueues.Testing
 {
     [TestFixture]
     public class RhinoQueuesIntegrationTester
     {
-        private PersistentQueues queues;
-        private RhinoQueuesTransport transport;
-        private ChannelGraph graph;
-        private ChannelNode node;
-
         [SetUp]
         public void Setup()
         {
-            if(Directory.Exists(PersistentQueues.EsentPath))
+            if (Directory.Exists(PersistentQueues.EsentPath))
                 Directory.Delete(PersistentQueues.EsentPath, true);
-            if(Directory.Exists("test.esent"))
+            if (Directory.Exists("test.esent"))
                 Directory.Delete("test.esent", true);
 
             graph = new ChannelGraph();
@@ -46,13 +32,17 @@ namespace FubuTransportation.RhinoQueues.Testing
             transport.OpenChannels(graph);
         }
 
+        private PersistentQueues queues;
+        private RhinoQueuesTransport transport;
+        private ChannelGraph graph;
+        private ChannelNode node;
+
 
         [Test]
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void send_a_message_and_get_it_back()
         {
-            var envelope = new Envelope(null);
-            envelope.Data = new byte[]{1,2,3,4,5};
+            var envelope = new Envelope(null) {Data = new byte[] {1, 2, 3, 4, 5}};
             envelope.Headers["foo"] = "bar";
 
             var receiver = new StubReceiver();
@@ -67,13 +57,10 @@ namespace FubuTransportation.RhinoQueues.Testing
 
             receiver.Received.Any().ShouldBeTrue();
 
-            var actual = receiver.Received.Single();
+            Envelope actual = receiver.Received.Single();
             actual.Data.ShouldEqual(envelope.Data);
             actual.Headers["foo"].ShouldEqual("bar");
-
         }
-
-
     }
 
     public class ChannelSettings
@@ -82,5 +69,4 @@ namespace FubuTransportation.RhinoQueues.Testing
         public Uri Downstream { get; set; }
         public Uri Upstream { get; set; }
     }
-
 }

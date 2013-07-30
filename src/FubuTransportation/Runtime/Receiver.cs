@@ -11,7 +11,7 @@
 
         public void Receive(IChannel channel, Envelope envelope)
         {
-            // TODO -- copy the Uri of the channel to the envelope
+            envelope.Source = channel.Address;
             _messageInvoker.Invoke(envelope);
         }
     }
