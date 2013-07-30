@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Net;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -18,12 +19,17 @@ namespace FubuTransportation.RhinoQueues.Testing
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void creates_queues_when_started()
         {
-            var setting = new RhinoQueuesSettings();
-            setting.Queues.Add(new QueueSetting{QueueName = "test", ThreadCount = 1});
-            using (var queue = new PersistentQueue(setting))
+            using (var queues = new PersistentQueues())
             {
-                queue.Start();
-                queue.QueueManager.Queues[0].ShouldEqual("test");
+                queues.Start(new RhinoUri[]
+                {
+                    new RhinoUri("rhino.queues://localhost:2424/some_queue"), 
+                    new RhinoUri("rhino.queues://localhost:2424/other_queue"), 
+                    new RhinoUri("rhino.queues://localhost:2424/third_queue"), 
+                });
+
+                queues.ManagerFor(new IPEndPoint(IPAddress.Loopback, 2424))
+                    .Queues.ShouldHaveTheSameElementsAs("some_queue", "other_queue", "third_queue");
             }
         }
     }

@@ -35,9 +35,11 @@ namespace FubuTransportation.RhinoQueues.Testing
             sender.Start();
 
             var container = new Container();
-            var settings = new RhinoQueuesSettings()
-                .AddQueue("testqueue");
-            container.Configure(x => x.For<RhinoQueuesSettings>().Use(settings));
+//            var settings = new RhinoQueuesSettings()
+//                .AddQueue("testqueue");
+//            container.Configure(x => x.For<RhinoQueuesSettings>().Use(settings));
+            Assert.Fail("NWO");
+
             FubuTransport.For<RQTransportRegistry>()
                 .StructureMap(container)
                 .Bootstrap();

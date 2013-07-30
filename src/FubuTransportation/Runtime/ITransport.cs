@@ -11,7 +11,7 @@ namespace FubuTransportation.Runtime
         void StartReceiving(ChannelNode node, IReceiver receiver);
     }
 
-    public interface ITransport : IDisposable, IChannel
+    public interface ITransport : IDisposable
     {
         // Really for identification
 

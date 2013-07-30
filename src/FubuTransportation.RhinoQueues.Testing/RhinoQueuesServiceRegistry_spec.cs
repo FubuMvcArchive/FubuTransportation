@@ -27,7 +27,7 @@ namespace FubuTransportation.RhinoQueues.Testing
         [Test]
         public void PersistentQueue_is_registered()
         {
-            registeredTypeIs<IPersistentQueue, PersistentQueue>();
+            registeredTypeIs<IPersistentQueues, PersistentQueues>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuTransportation.Configuration;
@@ -19,7 +20,15 @@ namespace FubuTransportation
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            _transports.Each(x => x.StartReceiving(new ChannelNode(), _receiver));
+            /*
+             * 1.) take in the ChannelGraph
+             * 2.) take in the IServiceLocator
+             * 3.) ChannelGraph.FindSettings(services)
+             * 4.) for each ITransport, Start(graph)
+             * 5.) for each listening ChannelNode, StartReceiving(IReceiver)
+             * 
+             */
+            throw new NotImplementedException();
         }
     }
 }

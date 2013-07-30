@@ -10,13 +10,9 @@ namespace FubuTransportation.Testing
     public class TransportActivatorTester : InteractionContext<TransportActivator>
     {
         [Test]
-        public void transports_are_started()
+        public void redo()
         {
-            // TODO -- will be obsolete
-            var transport = MockFor<ITransport>();
-            transport.Expect(x => x.StartReceiving(Arg<ChannelNode>.Is.Anything, Arg<IReceiver>.Is.Anything));
-            ClassUnderTest.Activate(null, null);
-            transport.VerifyAllExpectations();
+            Assert.Fail("NWO");
         }
     }
 }

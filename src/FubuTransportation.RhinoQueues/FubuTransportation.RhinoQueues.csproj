@@ -64,10 +64,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="PersistantQueue.cs" />
+    <Compile Include="IPersistentQueues.cs" />
+    <Compile Include="PersistentQueues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RhinoQueuesChannel.cs" />
     <Compile Include="RhinoQueuesExtension.cs" />
-    <Compile Include="RhinoQueuesSettings.cs" />
     <Compile Include="RhinoQueuesTransport.cs" />
     <Compile Include="RhinoUri.cs" />
     <Compile Include="TransactionCallback.cs" />

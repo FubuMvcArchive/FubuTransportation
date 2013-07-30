@@ -9,7 +9,7 @@
             _messageInvoker = messageInvoker;
         }
 
-        public void Receive(ITransport transport, Envelope envelope)
+        public void Receive(IChannel channel, Envelope envelope)
         {
             _messageInvoker.Invoke(envelope);
         }
