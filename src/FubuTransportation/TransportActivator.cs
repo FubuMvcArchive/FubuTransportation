@@ -19,7 +19,7 @@ namespace FubuTransportation
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            _transports.Each(x => x.StartReceiving(new ChannelOptions(), _receiver));
+            _transports.Each(x => x.StartReceiving(new ChannelNode(), _receiver));
         }
     }
 }

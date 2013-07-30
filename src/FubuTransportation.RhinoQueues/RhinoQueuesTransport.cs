@@ -55,7 +55,7 @@ namespace FubuTransportation.RhinoQueues
         }
 
         public Uri Address { get { return _address; } }
-        public void StartReceiving(ChannelOptions options, IReceiver receiver)
+        public void StartReceiving(ChannelNode node, IReceiver receiver)
         {
             throw new NotImplementedException();
         }
@@ -99,7 +99,7 @@ namespace FubuTransportation.RhinoQueues
             return uri.Scheme.EqualsIgnoreCase("rhino.queues");
         }
 
-        public void StartReceiving(ChannelOptions options, IReceiver receiver)
+        public void StartReceiving(ChannelNode node, IReceiver receiver)
         {
             _queue.Start();
             _settings.Queues.Each(x => startListeningThreads(x.QueueName, x.ThreadCount, receiver));

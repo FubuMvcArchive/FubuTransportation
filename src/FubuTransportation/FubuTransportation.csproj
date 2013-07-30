@@ -73,7 +73,7 @@
     <Compile Include="Runtime\BatchHandler.cs" />
     <Compile Include="Runtime\BinarySerializer.cs" />
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
-    <Compile Include="Configuration\ChannelOptions.cs" />
+    <Compile Include="Configuration\ChannelNode.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\IMessageCallback.cs" />

@@ -8,7 +8,7 @@ namespace FubuTransportation.Runtime
     public interface IChannel : IDisposable
     {
         Uri Address { get; }
-        void StartReceiving(ChannelOptions options, IReceiver receiver);
+        void StartReceiving(ChannelNode node, IReceiver receiver);
     }
 
     public interface ITransport : IDisposable, IChannel
