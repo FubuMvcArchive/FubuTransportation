@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
 using System.Transactions;
+using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
@@ -12,82 +15,72 @@ using FubuTransportation.Runtime;
 using NUnit.Framework;
 using Rhino.Queues;
 using StructureMap;
+using System.Linq;
 
 namespace FubuTransportation.RhinoQueues.Testing
 {
     [TestFixture]
     public class RhinoQueuesIntegrationTester
     {
+        private PersistentQueues queues;
+        private RhinoQueuesTransport transport;
+        private ChannelGraph graph;
+        private ChannelNode node;
+
         [SetUp]
         public void Setup()
         {
-            if(Directory.Exists("fubutransportation.esent"))
-                Directory.Delete("fubutransportation.esent", true);
+            if(Directory.Exists(PersistentQueues.EsentPath))
+                Directory.Delete(PersistentQueues.EsentPath, true);
             if(Directory.Exists("test.esent"))
                 Directory.Delete("test.esent", true);
+
+            graph = new ChannelGraph();
+            node = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
+            node.Uri = new Uri("rhino.queues://localhost:2020/upstream");
+            node.Incoming = true;
+
+            queues = new PersistentQueues();
+            transport = new RhinoQueuesTransport(queues);
+
+            transport.OpenChannels(graph);
         }
 
 
-        /*
         [Test]
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
-        public void can_receive_messages()
+        public void send_a_message_and_get_it_back()
         {
-            var sender = new QueueManager(new IPEndPoint(IPAddress.Loopback, 2201), "test.esent");
-            sender.Start();
+            var envelope = new Envelope(null);
+            envelope.Data = new byte[]{1,2,3,4,5};
+            envelope.Headers["foo"] = "bar";
 
-            var container = new Container();
-//            var settings = new RhinoQueuesSettings()
-//                .AddQueue("testqueue");
-//            container.Configure(x => x.For<RhinoQueuesSettings>().Use(settings));
-            Assert.Fail("NWO");
+            var receiver = new StubReceiver();
+            node.Channel.StartReceiving(node, receiver);
 
-            FubuTransport.For<RQTransportRegistry>()
-                .StructureMap(container)
-                .Bootstrap();
+            node.Channel.As<RhinoQueuesChannel>().Send(envelope);
+            Wait.Until(() => receiver.Received.Any());
 
-            var handle = TestConsumer.WaitHandle = new ManualResetEvent(false);
-            var serializer = new XmlMessageSerializer();
-            var message = new MessagePayload()
-            {
-                Headers = new NameValueCollection()
-            };
 
-            message.Headers[Envelope.ContentTypeKey] = serializer.ContentType;
+            graph.Each(x => x.Channel.Dispose());
+            queues.Dispose();
 
-            using (var ms = new MemoryStream())
-            {
-                serializer.Serialize(new object[]{new TestMessage()}, ms);
-                message.Data = ms.ToArray();
-            }
-            using (var tx = new TransactionScope())
-            {
-                sender.Send(new Uri("rhino.queues://localhost:2200/testqueue"), message);
-                tx.Complete();
-            }
+            receiver.Received.Any().ShouldBeTrue();
 
-            handle.WaitOne(TimeSpan.FromSeconds(3)).ShouldBeTrue();
-            sender.Dispose();
+            var actual = receiver.Received.Single();
+            actual.Data.ShouldEqual(envelope.Data);
+            actual.Headers["foo"].ShouldEqual("bar");
+
         }
-         */
+
+
     }
 
-    public class RQTransportRegistry : FubuTransportRegistry
+    public class ChannelSettings
     {
+        public Uri Outbound { get; set; }
+        public Uri Downstream { get; set; }
+        public Uri Upstream { get; set; }
     }
 
-    public class TestConsumer
-    {
-        //TODO fragile, maybe pull out to a wrapped invoker or something rather than static state
-        public static ManualResetEvent WaitHandle;
-
-        public void Consume(TestMessage message)
-        {
-            WaitHandle.Set();
-        }
-    }
-
-    public class TestMessage
-    {
-    }
 }

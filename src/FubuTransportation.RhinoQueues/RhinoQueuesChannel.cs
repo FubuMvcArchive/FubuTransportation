@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Transactions;
 using FubuTransportation.Configuration;
@@ -65,6 +66,8 @@ namespace FubuTransportation.RhinoQueues
                     receiver.Receive(this, envelope);
                 }
             }
+
+            Debug.WriteLine("I'm done on this thread");
         }
 
         public static Envelope ToEnvelope(TransactionScope tx, Message message)
@@ -86,20 +89,32 @@ namespace FubuTransportation.RhinoQueues
 
             foreach (var thread in _threads)
             {
-                thread.Join();
+                
+                if (!thread.Join(2000))
+                {
+                    thread.Abort();
+                }
             }
         }
 
-        //        public void Send(Uri destination, Envelope envelope)
-        //        {
-        //            //TODO delayed messages
-        //            // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
-        //            var messagePayload = new MessagePayload
-        //            {
-        //                Data = envelope.Data, 
-        //                Headers = envelope.Headers
-        //            };
-        //            _queues.Send(destination, messagePayload);
-        //        }
+        public void Send(Envelope envelope)
+        {
+            //TODO delayed messages
+            // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
+            var messagePayload = new MessagePayload
+            {
+                Data = envelope.Data, 
+                Headers = envelope.Headers
+            };
+
+            using (var tx = new TransactionScope())
+            {
+                var id = _queueManager.Send(_address, messagePayload);
+                envelope.CorrelationId = id.MessageIdentifier;
+                
+                tx.Complete();
+            }
+            
+        }
     }
 }

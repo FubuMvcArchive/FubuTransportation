@@ -35,5 +35,8 @@ namespace FubuTransportation.Runtime
         }
 
         public NameValueCollection Headers { get; private set; }
+
+        // TODO -- get this on the receive too!
+        public Guid CorrelationId { get; set; }
     }
 }
