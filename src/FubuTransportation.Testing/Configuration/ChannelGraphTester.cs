@@ -1,8 +1,11 @@
 ﻿using System;
 using FubuCore;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
+using System.Collections.Generic;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Configuration
 {
@@ -70,7 +73,27 @@ namespace FubuTransportation.Testing.Configuration
         [Test]
         public void start_receiving()
         {
-            Assert.Fail("Do.");
+            var graph = new ChannelGraph();
+            var node1 = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
+            var node2 = graph.ChannelFor<ChannelSettings>(x => x.Downstream);
+            var node3 = graph.ChannelFor<BusSettings>(x => x.Upstream);
+            var node4 = graph.ChannelFor<BusSettings>(x => x.Downstream);
+
+            node1.Incoming = true;
+            node2.Incoming = false;
+            node3.Incoming = true;
+            node4.Incoming = false;
+
+            graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
+
+            var receiver = MockRepository.GenerateMock<IReceiver>();
+
+            graph.StartReceiving(receiver);
+
+            node1.Channel.AssertWasCalled(x => x.StartReceiving(node1, receiver));
+            node2.Channel.AssertWasNotCalled(x => x.StartReceiving(node2, receiver), x => x.IgnoreArguments());
+            node3.Channel.AssertWasCalled(x => x.StartReceiving(node3, receiver));
+            node4.Channel.AssertWasNotCalled(x => x.StartReceiving(node4, receiver), x => x.IgnoreArguments());
         }
     }
 

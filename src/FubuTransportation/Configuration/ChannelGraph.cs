@@ -6,6 +6,7 @@ using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuTransportation.Runtime;
+using System.Linq;
 
 namespace FubuTransportation.Configuration
 {
@@ -35,7 +36,7 @@ namespace FubuTransportation.Configuration
 
         public virtual void StartReceiving(IReceiver receiver)
         {
-            throw new NotImplementedException();
+            _channels.Where(x => x.Incoming).Each(node => node.Channel.StartReceiving(node, receiver));
         }
 
         public static string ToKey(Accessor accessor)

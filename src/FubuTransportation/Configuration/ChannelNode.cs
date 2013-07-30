@@ -35,7 +35,7 @@ namespace FubuTransportation.Configuration
 
         public string Protocol()
         {
-            throw new NotImplementedException();
+            return Uri.Scheme;
         }
     }
 
