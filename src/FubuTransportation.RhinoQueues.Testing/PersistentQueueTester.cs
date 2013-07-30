@@ -2,6 +2,7 @@
 using System.Net;
 using FubuTestingSupport;
 using NUnit.Framework;
+using System.Linq;
 
 namespace FubuTransportation.RhinoQueues.Testing
 {
@@ -29,7 +30,7 @@ namespace FubuTransportation.RhinoQueues.Testing
                 });
 
                 queues.ManagerFor(new IPEndPoint(IPAddress.Loopback, 2424))
-                    .Queues.ShouldHaveTheSameElementsAs("some_queue", "other_queue", "third_queue");
+                    .Queues.OrderBy(x => x).ShouldHaveTheSameElementsAs("other_queue", "some_queue", "third_queue");
             }
         }
     }

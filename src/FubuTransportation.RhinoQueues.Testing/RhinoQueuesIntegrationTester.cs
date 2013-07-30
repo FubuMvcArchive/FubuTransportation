@@ -27,6 +27,8 @@ namespace FubuTransportation.RhinoQueues.Testing
                 Directory.Delete("test.esent", true);
         }
 
+
+        /*
         [Test]
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void can_receive_messages()
@@ -67,6 +69,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             handle.WaitOne(TimeSpan.FromSeconds(3)).ShouldBeTrue();
             sender.Dispose();
         }
+         */
     }
 
     public class RQTransportRegistry : FubuTransportRegistry
