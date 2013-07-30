@@ -82,6 +82,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ChannelGraphTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
