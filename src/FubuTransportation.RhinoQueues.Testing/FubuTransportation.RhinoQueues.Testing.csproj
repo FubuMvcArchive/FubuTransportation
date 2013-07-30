@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="PersistentQueueTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RhinoQueuesChannelTester.cs" />
     <Compile Include="RhinoQueuesIntegrationTester.cs" />
     <Compile Include="RhinoQueuesServiceRegistry_spec.cs" />
     <Compile Include="RhinoUriTester.cs" />

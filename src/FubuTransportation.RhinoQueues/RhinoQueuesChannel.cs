@@ -5,6 +5,7 @@ using System.Transactions;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using Rhino.Queues;
+using Rhino.Queues.Model;
 
 namespace FubuTransportation.RhinoQueues
 {
@@ -59,15 +60,23 @@ namespace FubuTransportation.RhinoQueues
                 {
                     var message = _queueManager.Receive(queueName);
 
-                    // TODO -- pull out a factory method for RhinoQueues.Message to our Envelope & UT
-                    var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
-                    {
-                        Data = message.Data
-                    };
+                    var envelope = ToEnvelope(tx, message);
 
                     receiver.Receive(this, envelope);
                 }
             }
+        }
+
+        public static Envelope ToEnvelope(TransactionScope tx, Message message)
+        {
+            var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
+            {
+                Data = message.Data
+            };
+
+            envelope.Headers[Envelope.Id] = message.Id.MessageIdentifier.ToString();
+
+            return envelope;
         }
 
         public void Dispose()
