@@ -97,6 +97,7 @@
     <Compile Include="RhinoQueuesIntegrationTester.cs" />
     <Compile Include="RhinoQueuesServiceRegistry_spec.cs" />
     <Compile Include="RhinoQueuesTransportTester.cs" />
+    <Compile Include="RhinoUriTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation.RhinoQueues\FubuTransportation.RhinoQueues.csproj">

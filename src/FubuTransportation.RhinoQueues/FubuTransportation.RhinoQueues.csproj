@@ -69,6 +69,7 @@
     <Compile Include="RhinoQueuesExtension.cs" />
     <Compile Include="RhinoQueuesSettings.cs" />
     <Compile Include="RhinoQueuesTransport.cs" />
+    <Compile Include="RhinoUri.cs" />
     <Compile Include="TransactionCallback.cs" />
   </ItemGroup>
   <ItemGroup>

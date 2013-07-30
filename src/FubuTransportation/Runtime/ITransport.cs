@@ -20,5 +20,6 @@ namespace FubuTransportation.Runtime
 
         // Nope, change this to matching on protocol
 
+        void OpenChannels(ChannelGraph graph);
     }
 }

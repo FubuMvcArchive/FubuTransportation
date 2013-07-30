@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -13,7 +14,6 @@ using System.Linq;
 
 namespace FubuTransportation.RhinoQueues
 {
-
     public class RhinoQueuesChannel : IChannel
     {
         private readonly Uri _address;
@@ -103,6 +103,11 @@ namespace FubuTransportation.RhinoQueues
         {
             _queue.Start();
             _settings.Queues.Each(x => startListeningThreads(x.QueueName, x.ThreadCount, receiver));
+        }
+
+        public void OpenChannels(ChannelGraph graph)
+        {
+            throw new NotImplementedException();
         }
 
         private void startListeningThreads(string queueName, int threadCount, IReceiver receiver)

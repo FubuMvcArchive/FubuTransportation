@@ -32,6 +32,11 @@ namespace FubuTransportation.Configuration
             var settings = services.GetInstance(SettingAddress.OwnerType);
             Uri = (Uri) SettingAddress.GetValue(settings);
         }
+
+        public string Protocol()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     
