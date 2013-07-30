@@ -7,6 +7,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using Rhino.Queues.Model;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace FubuTransportation.RhinoQueues
 {
@@ -23,19 +24,20 @@ namespace FubuTransportation.RhinoQueues
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            // IPersistentQueues is disposable
         }
 
+        // TODO -- needs hard integration tests
         public void OpenChannels(ChannelGraph graph)
         {
-            throw new NotImplementedException();
-        }
+            var rhinoChannels = graph.Where(x => x.Protocol() == RhinoUri.Protocol).ToArray();
+            
+            _queues.Start(rhinoChannels.Select(x => new RhinoUri(x.Uri)));
 
-        public bool Matches(Uri uri)
-        {
-            return uri.Scheme.EqualsIgnoreCase("rhino.queues");
+            rhinoChannels.Each(node => {
+                node.Channel = RhinoQueuesChannel.Build(new RhinoUri(node.Uri), _queues);
+            });
         }
-
 
     }
 }

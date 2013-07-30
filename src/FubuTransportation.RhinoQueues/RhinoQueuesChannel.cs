@@ -18,7 +18,8 @@ namespace FubuTransportation.RhinoQueues
 
         public static RhinoQueuesChannel Build(RhinoUri uri, IPersistentQueues queues)
         {
-            throw new NotImplementedException();
+            var queueManager = queues.ManagerFor(uri.Endpoint);
+            return new RhinoQueuesChannel(uri.Address, uri.QueueName, queueManager);
         }
 
         public RhinoQueuesChannel(Uri address, string queueName, IQueueManager queueManager)
