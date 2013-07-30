@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Configuration
 {
@@ -26,9 +27,15 @@ namespace FubuTransportation.Configuration
             return channel;
         }
 
-        public void ReadSettings(IServiceLocator services)
+        // leave it virtual for testing
+        public virtual void ReadSettings(IServiceLocator services)
         {
             _channels.Each(x => x.ReadSettings(services));
+        }
+
+        public virtual void StartReceiving(IReceiver receiver)
+        {
+            throw new NotImplementedException();
         }
 
         public static string ToKey(Accessor accessor)

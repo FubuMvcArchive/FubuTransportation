@@ -66,6 +66,12 @@ namespace FubuTransportation.Testing.Configuration
             graph.ChannelFor<BusSettings>(x => x.Downstream)
                 .Uri.ShouldEqual(bus.Downstream);
         }
+
+        [Test]
+        public void start_receiving()
+        {
+            Assert.Fail("Do.");
+        }
     }
 
     public class ChannelSettings
