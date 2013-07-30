@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.Reflection;
 using FubuCore.Util;
-using FubuTransportation.Runtime.Routing;
-using System.Linq;
 
 namespace FubuTransportation.Configuration
 {
@@ -47,23 +45,4 @@ namespace FubuTransportation.Configuration
             return GetEnumerator();
         }
     }
-
-    public class ChannelNode
-    {
-        public Accessor SettingAddress;
-        public string Key;
-
-        public int ThreadCount = 1;
-        public bool Incoming = false;
-
-        public IList<IRoutingRule> Rules = new List<IRoutingRule>();
- 
-        public bool Publishes(Type type)
-        {
-            return Rules.Any(x => x.Matches(type));
-        }
-        
-    }
-
-    
 }
