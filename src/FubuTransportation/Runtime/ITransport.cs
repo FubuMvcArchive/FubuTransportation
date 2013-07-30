@@ -19,8 +19,6 @@ namespace FubuTransportation.Runtime
         //void Send(Uri destination, Envelope envelope);
 
         // Nope, change this to matching on protocol
-        bool Matches(Uri uri);
 
-        
     }
 }

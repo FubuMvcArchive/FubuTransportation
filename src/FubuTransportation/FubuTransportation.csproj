@@ -58,6 +58,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="Configuration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
     <Compile Include="Configuration\FubuTransportRegistry.cs" />

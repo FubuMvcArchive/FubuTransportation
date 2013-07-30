@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
 
@@ -25,6 +26,11 @@ namespace FubuTransportation.Configuration
             return channel;
         }
 
+        public void ReadSettings(IServiceLocator services)
+        {
+            _channels.Each(x => x.ReadSettings(services));
+        }
+
         public static string ToKey(Accessor accessor)
         {
             return accessor.OwnerType.Name.Replace("Settings", "") + ":" + accessor.Name;
@@ -45,4 +51,5 @@ namespace FubuTransportation.Configuration
             return GetEnumerator();
         }
     }
+
 }
