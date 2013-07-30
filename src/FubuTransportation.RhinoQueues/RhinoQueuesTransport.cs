@@ -1,33 +1,84 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Transactions;
 using System.Collections.Generic;
 using FubuCore;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using Rhino.Queues;
 using Rhino.Queues.Model;
+using System.Linq;
 
 namespace FubuTransportation.RhinoQueues
 {
+
+    public class RhinoQueuesChannel : IChannel
+    {
+        private readonly Uri _address;
+        private readonly int _port;
+        private IPEndPoint _endpoint;
+        private string _queueName;
+
+        // TODO -- needs to validate the Uri
+        public RhinoQueuesChannel(Uri address)
+        {
+            _address = address;
+
+            // "rhino.queues://localhost:2424/client_management_bus_local"
+
+            var first = _address.Segments.First();
+            var parts = first.Split(':');
+            if (parts.Length == 2)
+            {
+                _port = int.Parse(parts.Last());
+                if (parts.First().EqualsIgnoreCase("localhost"))
+                {
+                    _endpoint = new IPEndPoint(IPAddress.Loopback, _port);
+                }
+            }
+            else
+            {
+                // TODO -- throw something?
+                // 
+            }
+            
+            _queueName = _address.Segments.Last();
+            
+
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Uri Address { get { return _address; } }
+        public void StartReceiving(ChannelOptions options, IReceiver receiver)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
     public class RhinoQueuesTransport : ITransport
     {
         private readonly List<Thread> _threads;
         private readonly RhinoQueuesSettings _settings;
-        private readonly IMessageSerializer _serializer;
         private readonly IPersistentQueue _queue;
         private bool _disposed;
 
-        public RhinoQueuesTransport(RhinoQueuesSettings settings, IMessageSerializer serializer, IPersistentQueue queue)
+        public RhinoQueuesTransport(RhinoQueuesSettings settings, IPersistentQueue queue)
         {
             _settings = settings;
-            _serializer = serializer;
             _queue = queue;
             _threads = new List<Thread>();
-            Id = new Uri("rhino.queues://{0}:{1}/".ToFormat(Environment.MachineName, settings.Port));
+            Address = new Uri("rhino.queues://{0}:{1}/".ToFormat(Environment.MachineName, settings.Port));
         }
 
-        public Uri Id { get; private set; }
+        public Uri Address { get; private set; }
 
         public int ThreadCount { get { return _threads.Count; }}
 

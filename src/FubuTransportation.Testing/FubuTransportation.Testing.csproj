@@ -99,6 +99,8 @@
     <Compile Include="Runtime\generic_handlers_are_called_for_messages_that_match.cs" />
     <Compile Include="Runtime\handling_a_batch_of_messages.cs" />
     <Compile Include="Runtime\multiple_handlers_for_one_message.cs" />
+    <Compile Include="Runtime\Routing\AssemblyRuleTester.cs" />
+    <Compile Include="Runtime\Routing\NamespaceRuleTester.cs" />
     <Compile Include="Runtime\simplest_possible_invocation.cs" />
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
@@ -111,6 +113,10 @@
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">
       <Project>{23FDB1CE-1EC5-4D1B-B3E5-008A439CAA13}</Project>
       <Name>FubuTransportation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestMessages\TestMessages.csproj">
+      <Project>{3735a25a-28b6-4da3-a4cf-7606538e0155}</Project>
+      <Name>TestMessages</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

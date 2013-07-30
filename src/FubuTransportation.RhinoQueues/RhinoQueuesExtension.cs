@@ -19,7 +19,7 @@ namespace FubuTransportation.RhinoQueues
     {
         public RhinoQueuesServiceRegistry()
         {
-            AddService<ITransport, RhinoQueuesTransport>().IsSingleton = true;
+            AddService<ITransport, RhinoQueuesTransport>();
             SetServiceIfNone<IPersistentQueue, PersistentQueue>(x => x.IsSingleton = true);
         }
     }

@@ -73,6 +73,7 @@
     <Compile Include="Runtime\BatchHandler.cs" />
     <Compile Include="Runtime\BinarySerializer.cs" />
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
+    <Compile Include="Configuration\ChannelOptions.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\IMessageCallback.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="Runtime\ITransport.cs" />
     <Compile Include="Runtime\MessageInvoker.cs" />
     <Compile Include="Runtime\Receiver.cs" />
+    <Compile Include="Runtime\Routing\AssemblyRule.cs" />
+    <Compile Include="Runtime\Routing\IRoutingRule.cs" />
+    <Compile Include="Runtime\Routing\NamespaceRule.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\XmlMessageSerializer.cs" />

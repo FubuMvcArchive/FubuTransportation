@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bottles;
 using Bottles.Diagnostics;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation
