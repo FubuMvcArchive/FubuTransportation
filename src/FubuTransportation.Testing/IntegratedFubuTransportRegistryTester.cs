@@ -173,6 +173,15 @@ namespace FubuTransportation.Testing
             rule.Matches(GetType()).ShouldBeFalse();
         }
 
+        [Test]
+        public void add_custom_rule()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessagesMatchingRule<CustomRule>();
+
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldBeOfType<CustomRule>();
+        }
+
         // TODO -- set thread count for listening
     }
 
@@ -181,6 +190,14 @@ namespace FubuTransportation.Testing
         public Uri Outbound { get; set; }
         public Uri Downstream { get; set; }
         public Uri Upstream { get; set; }
+    }
+
+    public class CustomRule : IRoutingRule
+    {
+        public bool Matches(Type type)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class BusRegistry : FubuTransportRegistry<BusSettings>

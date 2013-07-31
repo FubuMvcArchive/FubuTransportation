@@ -250,6 +250,12 @@ namespace FubuTransportation.Configuration
                 alter = node => node.Rules.Add(new LambdaRoutingRule(filter));
                 return this;
             }
+
+            public ChannelExpression PublishesMessagesMatchingRule<TRule>() where TRule : IRoutingRule, new()
+            {
+                alter = node => node.Rules.Add(new TRule());
+                return this;
+            }
         }
     }
 
