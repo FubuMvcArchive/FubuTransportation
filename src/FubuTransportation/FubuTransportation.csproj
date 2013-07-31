@@ -68,6 +68,7 @@
     <Compile Include="Configuration\HandlerSource.cs" />
     <Compile Include="Configuration\IHandlerSource.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
+    <Compile Include="InMemory\Classes.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BasicJsonMessageSerializer.cs" />

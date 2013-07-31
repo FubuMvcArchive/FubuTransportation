@@ -90,10 +90,12 @@
     <Compile Include="Configuration\HandlerGraphTester.cs" />
     <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
+    <Compile Include="InMemory\InMemoryQueueIntegrationTester.cs" />
     <Compile Include="IntegratedFubuTransportRegistryTester.cs" />
     <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordingReceiver.cs" />
     <Compile Include="Runtime\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\BinarySerializerTester.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
@@ -125,6 +127,7 @@
       <Name>TestMessages</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,49 @@
+﻿using System;
+using FubuTransportation.InMemory;
+using FubuTransportation.Runtime;
+using NUnit.Framework;
+using System.Linq;
+using FubuTestingSupport;
+
+namespace FubuTransportation.Testing.InMemory
+{
+    [TestFixture]
+    public class InMemoryQueueIntegrationTester
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            InMemoryQueueManager.ClearAll();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            InMemoryQueueManager.ClearAll();
+        }
+
+        [Test]
+        public void can_round_trip_an_envelope_through_the_queue()
+        {
+            var envelope = new Envelope(null);
+            envelope.CorrelationId = Guid.NewGuid();
+            envelope.Headers["Foo"] = "Bar";
+            envelope.Data = new byte[]{1,2,3,4,5};
+
+            var queue = InMemoryQueueManager.QueueFor(new Uri("memory://foo"));
+
+            var receiver = new RecordingReceiver();
+            queue.AddListener(receiver);
+
+            queue.Enqueue(envelope);
+
+            Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds:2000);
+
+            var received = receiver.Received.Single();
+
+            received.CorrelationId.ShouldEqual(envelope.CorrelationId);
+            received.ContentType.ShouldEqual(envelope.ContentType);
+            received.Data.ShouldEqual(envelope.Data);
+        }
+    }
+}

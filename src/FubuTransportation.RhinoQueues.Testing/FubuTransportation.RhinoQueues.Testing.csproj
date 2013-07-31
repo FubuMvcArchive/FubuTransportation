@@ -101,12 +101,15 @@
     <Compile Include="RhinoQueuesIntegrationTester.cs" />
     <Compile Include="RhinoQueuesServiceRegistry_spec.cs" />
     <Compile Include="RhinoUriTester.cs" />
-    <Compile Include="StubReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation.RhinoQueues\FubuTransportation.RhinoQueues.csproj">
       <Project>{f151167c-4736-4c67-9697-7876574c05d0}</Project>
       <Name>FubuTransportation.RhinoQueues</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FubuTransportation.Testing\FubuTransportation.Testing.csproj">
+      <Project>{0196722C-FDEF-4C0E-AFDC-4867F75F770D}</Project>
+      <Name>FubuTransportation.Testing</Name>
     </ProjectReference>
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">
       <Project>{23fdb1ce-1ec5-4d1b-b3e5-008a439caa13}</Project>

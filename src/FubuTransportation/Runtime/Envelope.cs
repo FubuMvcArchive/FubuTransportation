@@ -4,15 +4,20 @@ using FubuMVC.Core.Http;
 
 namespace FubuTransportation.Runtime
 {
+    [Serializable]
     public class Envelope
     {
         public static readonly string Id = "Id";
         public static readonly string OriginalId = "OriginalId";
         public static readonly string ParentId = "ParentId";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
+        
+        [NonSerialized]
         public IMessageCallback Callback;
 
         public byte[] Data;
+
+        [NonSerialized]
         public object Message;
 
         // TODO -- do routing slip tracking later

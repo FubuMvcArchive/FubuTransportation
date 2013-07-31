@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
-using FubuCore.Util;
 using FubuTransportation.Runtime;
 
-namespace FubuTransportation.RhinoQueues.Testing
+namespace FubuTransportation.Testing
 {
-    public class StubReceiver : IReceiver
+    public class RecordingReceiver : IReceiver
     {
         public IList<Envelope> Received = new List<Envelope>(); 
 
@@ -31,15 +29,11 @@ namespace FubuTransportation.RhinoQueues.Testing
 
             while (clock.ElapsedMilliseconds < timeoutInMilliseconds)
             {
-                Debug.WriteLine(clock.ElapsedMilliseconds);
-
                 Thread.Yield();
                 Thread.Sleep(500);
 
                 if (condition()) return;
             }
-
-            Debug.WriteLine("Done waiting, I'm out of here");
         }
     }
 }

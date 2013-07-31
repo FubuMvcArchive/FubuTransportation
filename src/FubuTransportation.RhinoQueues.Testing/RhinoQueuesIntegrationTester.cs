@@ -6,6 +6,7 @@ using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Testing;
 using NUnit.Framework;
 
 namespace FubuTransportation.RhinoQueues.Testing
@@ -45,7 +46,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             var envelope = new Envelope(null) {Data = new byte[] {1, 2, 3, 4, 5}};
             envelope.Headers["foo"] = "bar";
 
-            var receiver = new StubReceiver();
+            var receiver = new RecordingReceiver();
             node.Channel.StartReceiving(receiver, new ChannelNode());
 
             node.Channel.As<RhinoQueuesChannel>().Send(envelope);
