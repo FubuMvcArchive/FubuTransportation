@@ -21,5 +21,28 @@ namespace FubuTransportation.Runtime.Routing
         {
             return new AssemblyRule(typeof(T).Assembly);
         }
+
+        protected bool Equals(AssemblyRule other)
+        {
+            return Equals(_assembly, other._assembly);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((AssemblyRule) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_assembly != null ? _assembly.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Contained in assembly {0}", _assembly.GetName().Name);
+        }
     }
 }

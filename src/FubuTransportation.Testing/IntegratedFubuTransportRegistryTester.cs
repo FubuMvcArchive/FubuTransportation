@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Linq.Expressions;
+using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
-using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Routing;
 using NUnit.Framework;
-using StructureMap;
-using FubuCore;
+using System.Linq;
 
 namespace FubuTransportation.Testing
 {
     [TestFixture]
-    public class FubuTransportRegistryTester
+    public class IntegratedFubuTransportRegistryTester
     {
         [SetUp]
         public void SetUp()
@@ -24,7 +24,6 @@ namespace FubuTransportation.Testing
                     new FubuTransportationExtensions().As<IFubuRegistryExtension>().Configure(registry);
                     theRegistry.As<IFubuRegistryExtension>().Configure(registry);
                 });
-
             });
 
             _handlers = new Lazy<HandlerGraph>(() => _behaviors.Value.Settings.Get<HandlerGraph>());
@@ -35,8 +34,8 @@ namespace FubuTransportation.Testing
         private Lazy<HandlerGraph> _handlers;
         private Lazy<ChannelGraph> _channels;
         private Lazy<BehaviorGraph> _behaviors;
-    
-    
+
+
         public HandlerGraph theHandlers
         {
             get { return _handlers.Value; }
@@ -50,6 +49,15 @@ namespace FubuTransportation.Testing
         public ChannelNode channelFor(Expression<Func<BusSettings, Uri>> expression)
         {
             return theChannels.ChannelFor(expression);
+        }
+
+        [Test]
+        public void set_channel_to_listening()
+        {
+            theRegistry.Channel(x => x.Upstream).Incoming();
+
+            channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
+            channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
         }
 
 
@@ -88,13 +96,50 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void set_channel_to_listening()
+        public void add_namespace_publishing_rule()
         {
-            theRegistry.Channel(x => x.Upstream).Incoming();
+            theRegistry.Channel(x => x.Outbound).PublishesMessagesInNamespaceContainingType<BusSettings>();
 
-            channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
-            channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldEqual(NamespaceRule.For<BusSettings>());
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
         }
+
+        [Test]
+        public void add_namespace_publishing_rule_2()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessagesInNamespace(typeof(BusSettings).Namespace);
+
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldEqual(NamespaceRule.For<BusSettings>());
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void add_assembly_publishing_rule()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessagesInAssemblyContainingType<BusSettings>();
+
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldEqual(AssemblyRule.For<BusSettings>());
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void add_assembly_publishing_rule_2()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessagesInAssembly(typeof(BusSettings).Assembly.GetName().Name);
+
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldEqual(AssemblyRule.For<BusSettings>());
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
+        }
+
+        // TODO -- set thread count for listening
     }
 
     public class BusSettings
@@ -106,9 +151,5 @@ namespace FubuTransportation.Testing
 
     public class BusRegistry : FubuTransportRegistry<BusSettings>
     {
-        public BusRegistry()
-        {
-
-        }
     }
 }

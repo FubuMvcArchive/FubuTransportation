@@ -9,6 +9,7 @@ using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Routing;
 
 namespace FubuTransportation.Configuration
 {
@@ -202,6 +203,33 @@ namespace FubuTransportation.Configuration
             public ChannelExpression Incoming()
             {
                 alter = node => node.Incoming = true;
+                return this;
+            }
+
+            public ChannelExpression PublishesMessagesInNamespaceContainingType<TMessageType>()
+            {
+                alter = node => node.Rules.Add(NamespaceRule.For<TMessageType>());
+                return this;
+            }
+
+            // TODO -- PublishesMessages(Func<Type, bool>)
+            public ChannelExpression PublishesMessagesInNamespace(string @namespace)
+            {
+                alter = node => node.Rules.Add(new NamespaceRule(@namespace));
+                return this;
+            }
+
+            public ChannelExpression PublishesMessagesInAssemblyContainingType<TMessageType>()
+            {
+                alter = node => node.Rules.Add(AssemblyRule.For<TMessageType>());
+                return this;
+            }
+
+            public ChannelExpression PublishesMessagesInAssembly(string assemblyName)
+            {
+                var assembly = Assembly.Load(assemblyName);
+
+                alter = node => node.Rules.Add(new AssemblyRule(assembly));
                 return this;
             }
         }

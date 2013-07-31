@@ -21,5 +21,28 @@ namespace FubuTransportation.Runtime.Routing
         {
             return new NamespaceRule(typeof(T).Namespace);
         }
+
+        protected bool Equals(NamespaceRule other)
+        {
+            return string.Equals(_ns, other._ns);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((NamespaceRule) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_ns != null ? _ns.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Contained in namespace {0}", _ns);
+        }
     }
 }

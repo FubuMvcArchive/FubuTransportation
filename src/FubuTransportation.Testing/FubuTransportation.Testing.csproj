@@ -90,7 +90,7 @@
     <Compile Include="Configuration\HandlerGraphTester.cs" />
     <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
-    <Compile Include="FubuTransportRegistryTester.cs" />
+    <Compile Include="IntegratedFubuTransportRegistryTester.cs" />
     <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
