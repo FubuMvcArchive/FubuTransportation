@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Bottles;
 using FubuCore;
+using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Runtime;
 
@@ -33,7 +35,7 @@ namespace FubuTransportation.Configuration
             
         }
 
-        private Action<ChannelGraph> channel
+        internal Action<ChannelGraph> channel
         {
             set
             {
@@ -149,6 +151,53 @@ namespace FubuTransportation.Configuration
         public void DefaultContentType(string contentType)
         {
             channel = graph => graph.DefaultContentType = contentType;
+        }
+    }
+
+    public class FubuTransportRegistry<T> : FubuTransportRegistry
+    {
+        protected FubuTransportRegistry()
+        {
+        }
+
+        public ChannelExpression Channel(Expression<Func<T, Uri>> expression)
+        {
+            return new ChannelExpression(this, expression);
+        }
+
+        public class ChannelExpression
+        {
+            private readonly FubuTransportRegistry<T> _parent;
+            private Accessor _accessor;
+
+            public ChannelExpression(FubuTransportRegistry<T> parent, Expression<Func<T, Uri>> expression)
+            {
+                _parent = parent;
+                _accessor = ReflectionHelper.GetAccessor(expression);
+            }
+
+            private Action<ChannelNode> alter
+            {
+                set
+                {
+                    _parent.channel = graph => {
+                        var node = graph.ChannelFor(_accessor);
+                        value(node);
+                    };
+                }
+            }
+
+            public ChannelExpression DefaultSerializer<TSerializer>() where TSerializer : IMessageSerializer, new()
+            {
+                alter = node => node.DefaultContentType = new TSerializer().ContentType;
+                return this;
+            }
+
+            public ChannelExpression DefaultContentType(string contentType)
+            {
+                alter = node => node.DefaultContentType = contentType;
+                return this;
+            }
         }
     }
 

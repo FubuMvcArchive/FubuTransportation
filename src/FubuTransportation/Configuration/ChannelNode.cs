@@ -33,7 +33,9 @@ namespace FubuTransportation.Configuration
 
         public Uri Uri { get; set; }
         public IChannel Channel { get; set; }
- 
+
+        public string DefaultContentType { get; set; }
+
         public bool Publishes(Type type)
         {
             return Rules.Any(x => x.Matches(type));

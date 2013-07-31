@@ -27,9 +27,9 @@ namespace FubuTransportation.Configuration
         /// </summary>
         public string DefaultContentType { get; set; }
 
-        public ChannelNode ChannelFor<T>(Expression<Func<T, object>> property)
+        public ChannelNode ChannelFor<T>(Expression<Func<T, Uri>> property)
         {
-            return ChannelFor(property.ToAccessor());
+            return ChannelFor(ReflectionHelper.GetAccessor(property));
         }
 
         public ChannelNode ChannelFor(Accessor accessor)
