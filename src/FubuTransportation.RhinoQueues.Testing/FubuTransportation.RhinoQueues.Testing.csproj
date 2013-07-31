@@ -71,8 +71,10 @@
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Queues">
+      <HintPath>..\packages\Rhino.Queues\lib\4.0\Rhino.Queues.dll</HintPath>
+    </Reference>
     <Reference Include="Rhino.Queues, Version=2.1.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rhino.Queues\lib\4.0\Rhino.Queues.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
