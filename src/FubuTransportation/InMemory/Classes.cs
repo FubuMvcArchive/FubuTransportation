@@ -12,13 +12,6 @@ using System.Collections.Generic;
 
 namespace FubuTransportation.InMemory
 {
-    /*
-     * Need to register the InMemoryTransport
-     * 
-     * 
-     * 
-     */
-
 
     public static class InMemoryQueueManager
     {
