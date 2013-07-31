@@ -10,7 +10,6 @@ namespace FubuTransportation.Runtime
         private readonly ChannelNode _node;
         private readonly Uri _address;
 
-        // TODO -- take in ChannelNode.  
         public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node)
         {
             _messageInvoker = messageInvoker;
@@ -19,13 +18,36 @@ namespace FubuTransportation.Runtime
             _address = node.Uri;
         }
 
-        // TODO -- remove IChannel from this signature
         public void Receive(Envelope envelope)
         {
             envelope.Source = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
             _messageInvoker.Invoke(envelope);
+        }
+
+        protected bool Equals(Receiver other)
+        {
+            return Equals(_messageInvoker, other._messageInvoker) && Equals(_graph, other._graph) && Equals(_node, other._node);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Receiver) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_messageInvoker != null ? _messageInvoker.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_graph != null ? _graph.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_node != null ? _node.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

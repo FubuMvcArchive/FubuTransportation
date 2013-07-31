@@ -24,7 +24,6 @@ namespace FubuTransportation
         {
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             AddService<IMessageSerializer, XmlMessageSerializer>();
-            SetServiceIfNone<IReceiver, Receiver>();
             AddService<IActivator, TransportActivator>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();

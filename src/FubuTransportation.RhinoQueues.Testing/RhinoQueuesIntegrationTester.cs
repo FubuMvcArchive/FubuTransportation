@@ -46,7 +46,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             envelope.Headers["foo"] = "bar";
 
             var receiver = new StubReceiver();
-            node.Channel.StartReceiving(node, receiver);
+            node.Channel.StartReceiving(receiver, new ChannelNode());
 
             node.Channel.As<RhinoQueuesChannel>().Send(envelope);
             Wait.Until(() => receiver.Received.Any());

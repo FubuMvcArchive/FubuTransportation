@@ -94,14 +94,12 @@ namespace FubuTransportation.Testing.Configuration
 
             graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
 
-            var receiver = MockRepository.GenerateMock<IReceiver>();
+            graph.StartReceiving(MockRepository.GenerateMock<IMessageInvoker>());
 
-            graph.StartReceiving(receiver);
-
-            node1.Channel.AssertWasCalled(x => x.StartReceiving(node1, receiver));
-            node2.Channel.AssertWasNotCalled(x => x.StartReceiving(node2, receiver), x => x.IgnoreArguments());
-            node3.Channel.AssertWasCalled(x => x.StartReceiving(node3, receiver));
-            node4.Channel.AssertWasNotCalled(x => x.StartReceiving(node4, receiver), x => x.IgnoreArguments());
+            node1.Channel.AssertWasCalled(x => x.StartReceiving(null, node1), x => x.IgnoreArguments());
+            node2.Channel.AssertWasNotCalled(x => x.StartReceiving(null, node2), x => x.IgnoreArguments());
+            node3.Channel.AssertWasCalled(x => x.StartReceiving(null, node3), x => x.IgnoreArguments());
+            node4.Channel.AssertWasNotCalled(x => x.StartReceiving(null, node4), x => x.IgnoreArguments());
         }
 
         [Test]

@@ -42,10 +42,5 @@ namespace FubuTransportation.Testing
             registeredTypeIs<IActivator, TransportActivator>();
         }
 
-        [Test]
-        public void Receiver_is_registered()
-        {
-            registeredTypeIs<IReceiver, Receiver>();
-        }
     }
 }

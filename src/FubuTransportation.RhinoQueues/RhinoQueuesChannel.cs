@@ -33,7 +33,7 @@ namespace FubuTransportation.RhinoQueues
 
         public Uri Address { get { return _address; } }
 
-        public void StartReceiving(ChannelNode node, IReceiver receiver)
+        public void StartReceiving(IReceiver receiver, ChannelNode node)
         {
             startListeningThreads(_queueName, node.ThreadCount, receiver);
         }

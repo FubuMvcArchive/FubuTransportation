@@ -51,6 +51,14 @@ namespace FubuTransportation.Configuration
         {
             return Uri.Scheme;
         }
+
+        public void StartReceiving(ChannelGraph graph, IMessageInvoker invoker)
+        {
+            if (Incoming)
+            {
+                Channel.StartReceiving(new Receiver(invoker, graph, this), this);
+            }
+        }
     }
 
     

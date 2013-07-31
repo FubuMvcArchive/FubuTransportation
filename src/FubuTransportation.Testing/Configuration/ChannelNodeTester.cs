@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuCore.Reflection;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -53,6 +54,23 @@ namespace FubuTransportation.Testing.Configuration
             Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
                 node.SettingAddress = ReflectionHelper.GetAccessor<FakeThing>(x => x.Name);
             });
+        }
+
+        [Test]
+        public void start_receiving()
+        {
+            var invoker = MockRepository.GenerateMock<IMessageInvoker>();
+            var node = new ChannelNode
+            {
+                Incoming = true,
+                Channel = MockRepository.GenerateMock<IChannel>(),
+            };
+
+            var graph = new ChannelGraph();
+
+            node.StartReceiving(graph, invoker);
+            
+            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node), node));
         }
     }
 
