@@ -85,6 +85,7 @@
     <Compile Include="Runtime\Receiver.cs" />
     <Compile Include="Runtime\Routing\AssemblyRule.cs" />
     <Compile Include="Runtime\Routing\IRoutingRule.cs" />
+    <Compile Include="Runtime\Routing\LambdaRoutingRule.cs" />
     <Compile Include="Runtime\Routing\NamespaceRule.cs" />
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />

@@ -104,7 +104,9 @@
     <Compile Include="Runtime\multiple_handlers_for_one_message.cs" />
     <Compile Include="Runtime\ReceiverTester.cs" />
     <Compile Include="Runtime\Routing\AssemblyRuleTester.cs" />
+    <Compile Include="Runtime\Routing\LambdaRoutingRuleTester.cs" />
     <Compile Include="Runtime\Routing\NamespaceRuleTester.cs" />
+    <Compile Include="Runtime\Routing\SingleTypeRoutingRuleTester.cs" />
     <Compile Include="Runtime\simplest_possible_invocation.cs" />
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
