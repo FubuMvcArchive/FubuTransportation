@@ -139,6 +139,40 @@ namespace FubuTransportation.Testing
             channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
         }
 
+        [Test]
+        public void add_single_type_rule()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessage<BusSettings>();
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldBeOfType<SingleTypeRoutingRule<BusSettings>>();
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void add_single_type_rule_2()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessage(typeof(BusSettings));
+            channelFor(x => x.Outbound).Rules.Single()
+                                       .ShouldBeOfType<SingleTypeRoutingRule<BusSettings>>();
+
+            channelFor(x => x.Upstream).Rules.Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void add_adhoc_rule()
+        {
+            theRegistry.Channel(x => x.Outbound).PublishesMessages(type => {
+                return type == typeof (BusSettings);
+            });
+
+            var rule = channelFor(x => x.Outbound).Rules.Single();
+
+            rule.ShouldBeOfType<LambdaRoutingRule>();
+            rule.Matches(typeof(BusSettings)).ShouldBeTrue();
+            rule.Matches(GetType()).ShouldBeFalse();
+        }
+
         // TODO -- set thread count for listening
     }
 

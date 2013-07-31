@@ -212,7 +212,6 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
-            // TODO -- PublishesMessages(Func<Type, bool>)
             public ChannelExpression PublishesMessagesInNamespace(string @namespace)
             {
                 alter = node => node.Rules.Add(new NamespaceRule(@namespace));
@@ -230,6 +229,25 @@ namespace FubuTransportation.Configuration
                 var assembly = Assembly.Load(assemblyName);
 
                 alter = node => node.Rules.Add(new AssemblyRule(assembly));
+                return this;
+            }
+
+            public ChannelExpression PublishesMessage<TMessage>()
+            {
+                alter = node => node.Rules.Add(new SingleTypeRoutingRule<TMessage>());
+                return this;
+            }
+
+            public ChannelExpression PublishesMessage(Type messageType)
+            {
+                alter =
+                    node => node.Rules.Add(typeof (SingleTypeRoutingRule<>).CloseAndBuildAs<IRoutingRule>(messageType));
+                return this;
+            }
+
+            public ChannelExpression PublishesMessages(Func<Type, bool> filter)
+            {
+                alter = node => node.Rules.Add(new LambdaRoutingRule(filter));
                 return this;
             }
         }
