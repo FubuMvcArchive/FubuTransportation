@@ -12,7 +12,7 @@ namespace FubuTransportation.RhinoQueues.Testing
     {
         public IList<Envelope> Received = new List<Envelope>(); 
 
-        public void Receive(IChannel channel, Envelope envelope)
+        public void Receive(Envelope envelope)
         {
             Received.Add(envelope);
 

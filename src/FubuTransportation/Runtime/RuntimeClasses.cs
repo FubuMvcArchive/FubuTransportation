@@ -9,7 +9,7 @@ namespace FubuTransportation.Runtime
     // other coordination with the EventAggregator, sending replies, and logging
     public interface IReceiver
     {
-        void Receive(IChannel channel, Envelope envelope);
+        void Receive(Envelope envelope);
     }
 
     // THinking that this thing internally will have a bunch of little IRouterRules

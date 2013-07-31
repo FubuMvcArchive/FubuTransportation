@@ -61,7 +61,7 @@ namespace FubuTransportation.RhinoQueues
 
                 var envelope = ToEnvelope(transactionalScope, message);
 
-                receiver.Receive(this, envelope);
+                receiver.Receive(envelope);
             }
 
             Debug.WriteLine("I'm done on this thread");
