@@ -1,17 +1,25 @@
 ﻿using System;
 using FubuCore;
+using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Collections.Generic;
 using Rhino.Mocks;
+using FubuCore.Reflection;
 
 namespace FubuTransportation.Testing.Configuration
 {
     [TestFixture]
     public class ChannelGraphTester
     {
+        [Test]
+        public void the_default_content_type_should_be_xml_serialization()
+        {
+            new ChannelGraph().DefaultContentType.ShouldEqual(new XmlMessageSerializer().ContentType);
+        }
+
         [Test]
         public void to_key_by_expression()
         {
@@ -94,6 +102,12 @@ namespace FubuTransportation.Testing.Configuration
             node2.Channel.AssertWasNotCalled(x => x.StartReceiving(node2, receiver), x => x.IgnoreArguments());
             node3.Channel.AssertWasCalled(x => x.StartReceiving(node3, receiver));
             node4.Channel.AssertWasNotCalled(x => x.StartReceiving(node4, receiver), x => x.IgnoreArguments());
+        }
+
+        [Test]
+        public void channel_graph_has_to_be_application_level()
+        {
+            typeof(ChannelGraph).HasAttribute<ApplicationLevelAttribute>().ShouldBeTrue();
         }
     }
 

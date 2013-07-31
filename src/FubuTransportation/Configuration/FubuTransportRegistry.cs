@@ -6,12 +6,14 @@ using System.Reflection;
 using Bottles;
 using FubuCore;
 using FubuMVC.Core;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Configuration
 {
     public class FubuTransportRegistry : IFubuRegistryExtension
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
+        private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
         {
@@ -29,6 +31,14 @@ namespace FubuTransportation.Configuration
         protected FubuTransportRegistry()
         {
             
+        }
+
+        private Action<ChannelGraph> channel
+        {
+            set
+            {
+                _channelAlterations.Add(value);
+            }
         }
 
         private IEnumerable<IHandlerSource> allSources()
@@ -59,6 +69,10 @@ namespace FubuTransportation.Configuration
             // TODO -- apply policies of some sort
 
             registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
+
+            registry.AlterSettings<ChannelGraph>(channels => {
+                _channelAlterations.Each(x => x(channels));
+            });
         }
 
         /// <summary>
@@ -125,6 +139,16 @@ namespace FubuTransportation.Configuration
             {
                 _parent._sources.Add(source);
             }
+        }
+
+        public void DefaultSerializer<T>() where T : IMessageSerializer, new()
+        {
+            channel = graph => graph.DefaultContentType = new T().ContentType;
+        }
+
+        public void DefaultContentType(string contentType)
+        {
+            channel = graph => graph.DefaultContentType = contentType;
         }
     }
 
