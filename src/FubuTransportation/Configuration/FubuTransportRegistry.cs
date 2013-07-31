@@ -200,9 +200,20 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
-            public ChannelExpression Incoming()
+            public ChannelExpression ReadIncoming(int threadCount = -1)
             {
-                alter = node => node.Incoming = true;
+                if (threadCount > 0)
+                {
+                    alter = node => {
+                        node.Incoming = true;
+                        node.ThreadCount = threadCount;
+                    };
+                }
+                else
+                {
+                    alter = node => node.Incoming = true;
+                }
+
                 return this;
             }
 

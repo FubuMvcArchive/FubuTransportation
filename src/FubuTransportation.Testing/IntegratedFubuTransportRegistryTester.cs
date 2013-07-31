@@ -54,12 +54,22 @@ namespace FubuTransportation.Testing
         [Test]
         public void set_channel_to_listening()
         {
-            theRegistry.Channel(x => x.Upstream).Incoming();
+            theRegistry.Channel(x => x.Upstream).ReadIncoming();
 
             channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
             channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
         }
 
+        [Test]
+        public void set_channel_to_listening_override_thread_count()
+        {
+            theRegistry.Channel(x => x.Upstream).ReadIncoming(5);
+
+            channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
+            channelFor(x => x.Upstream).ThreadCount.ShouldEqual(5);
+
+            channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
+        }
 
         [Test]
         public void set_the_default_content_type_by_serializer_type()
@@ -182,7 +192,6 @@ namespace FubuTransportation.Testing
                                        .ShouldBeOfType<CustomRule>();
         }
 
-        // TODO -- set thread count for listening
     }
 
     public class BusSettings
