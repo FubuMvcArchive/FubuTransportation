@@ -2,8 +2,10 @@
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
+using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
+using System.Linq;
 
 namespace FubuTransportation.Testing
 {
@@ -16,6 +18,16 @@ namespace FubuTransportation.Testing
             registry.Services<FubuTransportServiceRegistry>();
             BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<TService>().Type.ShouldEqual(
                 typeof(TImplementation));
+        }
+
+        [Test]
+        public void in_memory_transport_is_registered()
+        {
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            BehaviorGraph.BuildFrom(registry).Services
+                         .ServicesFor<ITransport>().Single(x => x.Type == typeof (InMemoryTransport))
+                         .ShouldNotBeNull();
         }
 
         [Test]

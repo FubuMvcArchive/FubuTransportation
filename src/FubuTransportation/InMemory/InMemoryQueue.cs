@@ -1,37 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using FubuCore;
-using FubuCore.Util;
-using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace FubuTransportation.InMemory
 {
-
-    public static class InMemoryQueueManager
-    {
-        private static readonly Cache<Uri, InMemoryQueue> _queues = new Cache<Uri,InMemoryQueue>(x => new InMemoryQueue(x));
-
-    
-        public static void ClearAll()
-        {
-            _queues.Each(x => x.SafeDispose());
-            _queues.ClearAll();
-        }
-
-        public static InMemoryQueue QueueFor(Uri uri)
-        {
-            return _queues[uri];
-        }
-    }
-
-
-
     public class InMemoryQueue : IDisposable
     {
         private readonly Uri _uri;
@@ -118,50 +95,6 @@ namespace FubuTransportation.InMemory
                 _disposed = true;
                 _task.SafeDispose();
             }
-        }
-    }
-
-    public class InMemoryTransport : ITransport
-    {
-        public void Dispose()
-        {
-            // nothing
-        }
-
-        public void OpenChannels(ChannelGraph graph)
-        {
-            graph.Where(x => x.Protocol() == InMemoryChannel.Protocol).Each(x => x.Channel = new InMemoryChannel(x));
-        }
-    }
-
-    public class InMemoryChannel : IChannel
-    {
-        public static readonly string Protocol = "memory";
-        private readonly InMemoryQueue _queue;
-
-        public InMemoryChannel(ChannelNode node)
-        {
-            Address = node.Uri;
-            _queue = InMemoryQueueManager.QueueFor(Address);
-        }
-
-        public void Dispose()
-        {
-            
-        }
-
-        public Uri Address { get; private set; }
-        public void StartReceiving(IReceiver receiver, ChannelNode node)
-        {
-            for (int i = 0; i < node.ThreadCount; i++)
-            {
-                _queue.AddListener(receiver);              
-            }
-        }
-
-        public void Send(Envelope envelope)
-        {
-            _queue.Enqueue(envelope);
         }
     }
 }

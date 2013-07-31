@@ -2,6 +2,7 @@
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation
@@ -25,6 +26,7 @@ namespace FubuTransportation
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             AddService<IMessageSerializer, XmlMessageSerializer>();
             AddService<IActivator, TransportActivator>();
+            AddService<ITransport, InMemoryTransport>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
         }
