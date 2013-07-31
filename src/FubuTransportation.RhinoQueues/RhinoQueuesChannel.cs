@@ -64,7 +64,6 @@ namespace FubuTransportation.RhinoQueues
                 receiver.Receive(envelope);
             }
 
-            Debug.WriteLine("I'm done on this thread");
         }
 
         public static Envelope ToEnvelope(ITransactionalScope tx, Message message)
