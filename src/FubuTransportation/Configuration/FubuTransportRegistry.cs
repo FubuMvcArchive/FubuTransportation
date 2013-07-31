@@ -168,7 +168,7 @@ namespace FubuTransportation.Configuration
         public class ChannelExpression
         {
             private readonly FubuTransportRegistry<T> _parent;
-            private Accessor _accessor;
+            private readonly Accessor _accessor;
 
             public ChannelExpression(FubuTransportRegistry<T> parent, Expression<Func<T, Uri>> expression)
             {
@@ -196,6 +196,12 @@ namespace FubuTransportation.Configuration
             public ChannelExpression DefaultContentType(string contentType)
             {
                 alter = node => node.DefaultContentType = contentType;
+                return this;
+            }
+
+            public ChannelExpression Incoming()
+            {
+                alter = node => node.Incoming = true;
                 return this;
             }
         }

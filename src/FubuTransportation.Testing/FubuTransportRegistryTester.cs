@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq.Expressions;
 using FubuMVC.Core;
+using FubuMVC.Core.Registration;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using StructureMap;
+using FubuCore;
 
 namespace FubuTransportation.Testing
 {
@@ -17,18 +19,22 @@ namespace FubuTransportation.Testing
         public void SetUp()
         {
             theRegistry = new BusRegistry();
-            _runtime = new Lazy<FubuRuntime>(() => {
-                return FubuTransport.For(theRegistry).StructureMap(new Container()).Bootstrap();
+            _behaviors = new Lazy<BehaviorGraph>(() => {
+                return BehaviorGraph.BuildFrom(registry => {
+                    new FubuTransportationExtensions().As<IFubuRegistryExtension>().Configure(registry);
+                    theRegistry.As<IFubuRegistryExtension>().Configure(registry);
+                });
+
             });
 
-            _handlers = new Lazy<HandlerGraph>(() => _runtime.Value.Factory.Get<HandlerGraph>());
-            _channels = new Lazy<ChannelGraph>(() => _runtime.Value.Factory.Get<ChannelGraph>());
+            _handlers = new Lazy<HandlerGraph>(() => _behaviors.Value.Settings.Get<HandlerGraph>());
+            _channels = new Lazy<ChannelGraph>(() => _behaviors.Value.Settings.Get<ChannelGraph>());
         }
 
         private BusRegistry theRegistry;
         private Lazy<HandlerGraph> _handlers;
         private Lazy<ChannelGraph> _channels;
-        private Lazy<FubuRuntime> _runtime;
+        private Lazy<BehaviorGraph> _behaviors;
     
     
         public HandlerGraph theHandlers
@@ -79,6 +85,15 @@ namespace FubuTransportation.Testing
         {
             theRegistry.Channel(x => x.Outbound).DefaultContentType("application/json");
             channelFor(x => x.Outbound).DefaultContentType.ShouldEqual("application/json");
+        }
+
+        [Test]
+        public void set_channel_to_listening()
+        {
+            theRegistry.Channel(x => x.Upstream).Incoming();
+
+            channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
+            channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
         }
     }
 
