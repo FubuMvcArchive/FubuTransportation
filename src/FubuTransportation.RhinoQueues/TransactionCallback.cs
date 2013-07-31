@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Transactions;
 using FubuTransportation.Runtime;
+using Rhino.Queues;
 
 namespace FubuTransportation.RhinoQueues
 {
     public class TransactionCallback : IMessageCallback
     {
-        private readonly TransactionScope _transaction;
+        private readonly ITransactionalScope _transaction;
 
-        public TransactionCallback(TransactionScope transaction)
+        public TransactionCallback(ITransactionalScope transaction)
         {
             _transaction = transaction;
         }
 
         public void MarkSuccessful()
         {
-            _transaction.Complete();
+            _transaction.Commit();
         }
 
         public void MarkFailed()
         {
-            throw new NotImplementedException();
+            _transaction.Rollback();
         }
     }
 }

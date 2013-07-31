@@ -56,21 +56,18 @@ namespace FubuTransportation.RhinoQueues
         {
             while (!_disposed)
             {
-                using (var tx = new TransactionScope(TransactionScopeOption.Required,
-                                                     new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
-                {
-                    var message = _queueManager.Receive(queueName);
+                var transactionalScope = _queueManager.BeginTransactionalScope();
+                var message = transactionalScope.Receive(queueName);
 
-                    var envelope = ToEnvelope(tx, message);
+                var envelope = ToEnvelope(transactionalScope, message);
 
-                    receiver.Receive(this, envelope);
-                }
+                receiver.Receive(this, envelope);
             }
 
             Debug.WriteLine("I'm done on this thread");
         }
 
-        public static Envelope ToEnvelope(TransactionScope tx, Message message)
+        public static Envelope ToEnvelope(ITransactionalScope tx, Message message)
         {
             var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
             {
@@ -103,18 +100,16 @@ namespace FubuTransportation.RhinoQueues
             // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
             var messagePayload = new MessagePayload
             {
-                Data = envelope.Data, 
+                Data = envelope.Data,
                 Headers = envelope.Headers
             };
 
-            using (var tx = new TransactionScope())
-            {
-                var id = _queueManager.Send(_address, messagePayload);
-                envelope.CorrelationId = id.MessageIdentifier;
-                
-                tx.Complete();
-            }
-            
+            //TODO Should this scope be shared with the dequeue scope?
+            var sendingScope = _queueManager.BeginTransactionalScope();
+            var id = sendingScope.Send(_address, messagePayload);
+            envelope.CorrelationId = id.MessageIdentifier;
+            sendingScope.Commit();
+
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Specialized;
 using System.Transactions;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
+using Rhino.Mocks;
+using Rhino.Queues;
 using Rhino.Queues.Model;
 using FubuTestingSupport;
 
@@ -12,7 +14,6 @@ namespace FubuTransportation.RhinoQueues.Testing
     public class when_creating_an_envelope_from_a_rhino_queue_message
     {
         private Message message;
-        private TransactionScope transaction;
         private Envelope theEnvelope;
 
         [SetUp]
@@ -25,15 +26,9 @@ namespace FubuTransportation.RhinoQueues.Testing
                 Id = new MessageId {MessageIdentifier = Guid.NewGuid()}
             };
 
-            transaction = new TransactionScope();
+            var transaction = MockRepository.GenerateMock<ITransactionalScope>();
 
             theEnvelope = RhinoQueuesChannel.ToEnvelope(transaction, message);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            transaction.Dispose();
         }
 
         [Test]
