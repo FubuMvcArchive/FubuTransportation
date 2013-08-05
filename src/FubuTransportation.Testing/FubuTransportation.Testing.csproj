@@ -91,6 +91,7 @@
     <Compile Include="Configuration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
     <Compile Include="InMemory\InMemoryQueueIntegrationTester.cs" />
+    <Compile Include="InMemory\InMemoryTransportTester.cs" />
     <Compile Include="IntegratedFubuTransportRegistryTester.cs" />
     <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />

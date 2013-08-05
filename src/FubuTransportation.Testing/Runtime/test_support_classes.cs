@@ -1,33 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using FubuTransportation.Runtime;
 using System.Linq;
 using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.Runtime
 {
-    public class GenericHandler : SimpleHandler<Message>{}
+    public class GenericHandler : SimpleHandler<Message>
+    {
+    }
 
-    public class OneMessage : Message{}
+    public class OneMessage : Message
+    {
+    }
 
-    public class OneHandler : SimpleHandler<OneMessage>{}
-    public class AnotherOneHandler : SimpleHandler<OneMessage>{}
-    public class DifferentOneHandler : SimpleHandler<OneMessage>{}
+    public class OneHandler : SimpleHandler<OneMessage>
+    {
+    }
 
-    public class TwoMessage : Message{}
-    public class TwoHandler : SimpleHandler<TwoMessage> { }
+    public class AnotherOneHandler : SimpleHandler<OneMessage>
+    {
+    }
 
-    public class ThreeMessage : Message { }
-    public class ThreeHandler : SimpleHandler<ThreeMessage> { }
+    public class DifferentOneHandler : SimpleHandler<OneMessage>
+    {
+    }
 
-    public class FourMessage : Message { }
-    public class FourHandler : SimpleHandler<FourMessage> { }
+    public class TwoMessage : Message
+    {
+    }
+
+    public class TwoHandler : SimpleHandler<TwoMessage>
+    {
+    }
+
+    public class ThreeMessage : Message
+    {
+    }
+
+    public class ThreeHandler : SimpleHandler<ThreeMessage>
+    {
+    }
+
+    public class FourMessage : Message
+    {
+    }
+
+    public class FourHandler : SimpleHandler<FourMessage>
+    {
+    }
 
 
     public static class TestMessageRecorder
     {
-        private readonly static IList<MessageProcessed> _processed = new List<MessageProcessed>();
+        private static readonly IList<MessageProcessed> _processed = new List<MessageProcessed>();
+
+        public static MessageProcessed[] AllProcessed
+        {
+            get { return _processed.ToArray(); }
+        }
 
         public static void Clear()
         {
@@ -52,18 +82,10 @@ namespace FubuTransportation.Testing.Runtime
         public static IEnumerable<MessageProcessed> ProcessedFor<T>() where T : Message
         {
             return _processed.Where(x => x.Message is T);
-        } 
-
-        public static MessageProcessed[] AllProcessed
-        {
-            get
-            {
-                return _processed.ToArray();
-            }
-        } 
+        }
     }
 
-    public class SimpleHandler<T>  where T : Message
+    public class SimpleHandler<T> where T : Message
     {
         public void Handle(T message)
         {
@@ -76,11 +98,14 @@ namespace FubuTransportation.Testing.Runtime
         public MirrorMessage<T> Handle(T message)
         {
             TestMessageRecorder.Processed(GetType().Name, message);
-            return new MirrorMessage<T>{Id = message.Id};
+            return new MirrorMessage<T> {Id = message.Id};
         }
     }
 
-    public class ManyResponseHandler<T, TR1, TR2, TR3> where T : Message, new() where TR1 : Message, new() where TR2 : Message, new() where TR3 : Message, new()
+    public class ManyResponseHandler<T, TR1, TR2, TR3> where T : Message, new()
+                                                       where TR1 : Message, new()
+                                                       where TR2 : Message, new()
+                                                       where TR3 : Message, new()
     {
         public IEnumerable<object> Handle(T message)
         {
@@ -101,7 +126,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             return new MessageProcessed
             {
-                Description = typeof(T).Name, 
+                Description = typeof (T).Name,
                 Message = message
             };
         }
@@ -115,15 +140,16 @@ namespace FubuTransportation.Testing.Runtime
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((MessageProcessed)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((MessageProcessed) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((Description != null ? Description.GetHashCode() : 0) * 397) ^ (Message != null ? Message.GetHashCode() : 0);
+                return ((Description != null ? Description.GetHashCode() : 0)*397) ^
+                       (Message != null ? Message.GetHashCode() : 0);
             }
         }
     }
@@ -146,8 +172,8 @@ namespace FubuTransportation.Testing.Runtime
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Message)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Message) obj);
         }
 
         public override int GetHashCode()
@@ -169,8 +195,8 @@ namespace FubuTransportation.Testing.Runtime
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((MirrorMessage<T>)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((MirrorMessage<T>) obj);
         }
 
         public override int GetHashCode()
@@ -178,6 +204,4 @@ namespace FubuTransportation.Testing.Runtime
             return Id.GetHashCode();
         }
     }
-
-
 }
