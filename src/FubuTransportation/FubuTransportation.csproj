@@ -96,6 +96,7 @@
     <Compile Include="Runtime\RuntimeClasses.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\XmlMessageSerializer.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="TransportActivator.cs" />
   </ItemGroup>
   <ItemGroup />

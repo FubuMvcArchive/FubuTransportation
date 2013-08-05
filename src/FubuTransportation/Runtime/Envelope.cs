@@ -11,6 +11,7 @@ namespace FubuTransportation.Runtime
         public static readonly string OriginalId = "OriginalId";
         public static readonly string ParentId = "ParentId";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
+        public static readonly string SourceKey = "Source";
         
         [NonSerialized]
         public IMessageCallback Callback;
@@ -22,7 +23,21 @@ namespace FubuTransportation.Runtime
 
         // TODO -- do routing slip tracking later
 
-        public Uri Source;
+        public Uri Source
+        {
+            get { return Headers[SourceKey].ToUri(); }
+            set
+            {
+                if (value == null)
+                {
+                    Headers.Remove(SourceKey);
+                }
+                else
+                {
+                    Headers[SourceKey] = value.ToString();
+                }
+            }
+        }
 
         public Envelope(IMessageCallback callback, NameValueCollection headers = null)
         {

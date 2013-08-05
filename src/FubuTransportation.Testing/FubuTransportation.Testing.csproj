@@ -113,9 +113,27 @@
     <Compile Include="Runtime\simplest_possible_invocation.cs" />
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
-    <Compile Include="Runtime\test_support_classes.cs" />
+    <Compile Include="TestSupport\AnotherOneHandler.cs" />
+    <Compile Include="TestSupport\DifferentOneHandler.cs" />
+    <Compile Include="TestSupport\FourHandler.cs" />
+    <Compile Include="TestSupport\FourMessage.cs" />
+    <Compile Include="TestSupport\HarnessSettings.cs" />
+    <Compile Include="TestSupport\ManyResponseHandler.cs" />
+    <Compile Include="TestSupport\Message.cs" />
+    <Compile Include="TestSupport\MessageProcessed.cs" />
+    <Compile Include="TestSupport\MirrorMessage.cs" />
+    <Compile Include="TestSupport\OneHandler.cs" />
+    <Compile Include="TestSupport\OneMessage.cs" />
+    <Compile Include="TestSupport\RequestResponseHandler.cs" />
+    <Compile Include="TestSupport\SimpleHandler.cs" />
+    <Compile Include="TestSupport\TestMessageRecorder.cs" />
+    <Compile Include="TestSupport\GenericHandler.cs" />
     <Compile Include="Runtime\XmlMessageSerializerTester.cs" />
     <Compile Include="StandinTester.cs" />
+    <Compile Include="TestSupport\ThreeHandler.cs" />
+    <Compile Include="TestSupport\ThreeMessage.cs" />
+    <Compile Include="TestSupport\TwoHandler.cs" />
+    <Compile Include="TestSupport\TwoMessage.cs" />
     <Compile Include="TransportActivatorTester.cs" />
   </ItemGroup>
   <ItemGroup>
