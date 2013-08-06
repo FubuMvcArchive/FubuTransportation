@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Bottles.Services.Messaging.Tracking;
+using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using FubuMVC.StructureMap;
@@ -11,48 +11,6 @@ using StructureMap;
 
 namespace FubuTransportation.Testing.TestSupport
 {
-    public class Scenario
-    {
-        public readonly NodeConfiguration Website1 = new NodeConfiguration(x => x.Website1);
-        public readonly NodeConfiguration Website2 = new NodeConfiguration(x => x.Website2);
-        public readonly NodeConfiguration Website3 = new NodeConfiguration(x => x.Website3);
-        public readonly NodeConfiguration Website4 = new NodeConfiguration(x => x.Website4);
-        
-        public readonly NodeConfiguration Service1 = new NodeConfiguration(x => x.Service1);
-        public readonly NodeConfiguration Service2 = new NodeConfiguration(x => x.Service2);
-        public readonly NodeConfiguration Service3 = new NodeConfiguration(x => x.Service3);
-        public readonly NodeConfiguration Service4 = new NodeConfiguration(x => x.Service4);
-
-        private readonly IEnumerable<NodeConfiguration> _configurations;
-        private readonly IList<IScenarioStep> _steps = new List<IScenarioStep>(); 
-
-        public Scenario()
-        {
-            _configurations = new NodeConfiguration[]
-            {
-                Website1,
-                Website2,
-                Website3,
-                Website4,
-                Service1,
-                Service2,
-                Service3,
-                Service4
-            };
-
-            _configurations.Each(x => x.Parent = this);
-        }
-
-        internal void Execute()
-        {
-            InMemoryQueueManager.ClearAll();
-            TestMessageRecorder.Clear();
-            MessageHistory.ClearAll();
-
-            _configurations.Each(x => x.SpinUp());
-        }
-    }
-
     public interface IScenarioStep
     {
         void PreviewAct(IScenarioWriter writer);
@@ -193,9 +151,19 @@ namespace FubuTransportation.Testing.TestSupport
             } 
         }
 
+        internal void Describe(IScenarioWriter writer)
+        {
+            if (!_registry.IsValueCreated) return;
+
+            writer.WriteLine(ReflectionHelper.GetAccessor(_expression).Name);
+            using (writer.Indent())
+            {
+                _runtime.Factory.Get<ChannelGraph>().Each(x => x.Describe(writer));
+            }
+        }
 
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             if (_runtime != null)
             {

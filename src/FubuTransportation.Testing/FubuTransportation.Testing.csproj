@@ -118,7 +118,6 @@
     <Compile Include="TestSupport\FourHandler.cs" />
     <Compile Include="TestSupport\FourMessage.cs" />
     <Compile Include="TestSupport\HarnessSettings.cs" />
-    <Compile Include="TestSupport\IScenarioWriter.cs" />
     <Compile Include="TestSupport\ManyResponseHandler.cs" />
     <Compile Include="TestSupport\Message.cs" />
     <Compile Include="TestSupport\MessageProcessed.cs" />
@@ -127,6 +126,7 @@
     <Compile Include="TestSupport\OneHandler.cs" />
     <Compile Include="TestSupport\OneMessage.cs" />
     <Compile Include="TestSupport\RequestResponseHandler.cs" />
+    <Compile Include="TestSupport\Scenario.cs" />
     <Compile Include="TestSupport\SimpleHandler.cs" />
     <Compile Include="TestSupport\SourceRecordingHandler.cs" />
     <Compile Include="TestSupport\TestMessageRecorder.cs" />
