@@ -26,7 +26,7 @@ namespace FubuTransportation.Testing.TestSupport
 
         public static void Processed(string description, Message message)
         {
-            _processed.Add(new MessageProcessed
+            _processed.Fill(new MessageProcessed
             {
                 Description = description,
                 Message = message

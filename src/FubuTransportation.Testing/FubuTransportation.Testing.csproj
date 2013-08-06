@@ -122,10 +122,12 @@
     <Compile Include="TestSupport\Message.cs" />
     <Compile Include="TestSupport\MessageProcessed.cs" />
     <Compile Include="TestSupport\MirrorMessage.cs" />
+    <Compile Include="TestSupport\NodeConfiguration.cs" />
     <Compile Include="TestSupport\OneHandler.cs" />
     <Compile Include="TestSupport\OneMessage.cs" />
     <Compile Include="TestSupport\RequestResponseHandler.cs" />
     <Compile Include="TestSupport\SimpleHandler.cs" />
+    <Compile Include="TestSupport\SourceRecordingHandler.cs" />
     <Compile Include="TestSupport\TestMessageRecorder.cs" />
     <Compile Include="TestSupport\GenericHandler.cs" />
     <Compile Include="Runtime\XmlMessageSerializerTester.cs" />

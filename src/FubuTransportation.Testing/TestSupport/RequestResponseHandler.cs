@@ -8,4 +8,15 @@
             return new MirrorMessage<T> {Id = message.Id};
         }
     }
+
+    public class RequestResponseHandler<TRequest, TResponse> where TRequest : Message where TResponse : Message, new()
+    {
+        public TResponse Handle(TRequest request)
+        {
+            return new TResponse
+            {
+                Id = request.Id
+            };
+        }
+    }
 }

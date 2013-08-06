@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Testing.TestSupport
 {
@@ -10,6 +11,10 @@ namespace FubuTransportation.Testing.TestSupport
         }
 
         public Guid Id { get; set; }
+        public Uri Source { get; set; }
+        public string Key { get; set; }
+
+        public Envelope Envelope { get; set; }
 
         protected bool Equals(Message other)
         {

@@ -60,6 +60,7 @@ namespace FubuTransportation.Runtime
 
             ServiceArguments args = new ServiceArguments()
                 .With<IFubuRequest>(request)
+                .With(envelope)
                 .With<IOutgoingMessages>(outgoing);
 
             IActionBehavior behavior = _factory.BuildBehavior(args, chain.UniqueId);
