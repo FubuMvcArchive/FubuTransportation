@@ -113,12 +113,18 @@
     <Compile Include="Runtime\simplest_possible_invocation.cs" />
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
+    <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs" />
+    <Compile Include="Scenarios\Send_a_message_that_raises_events.cs" />
+    <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs" />
+    <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs" />
     <Compile Include="ScenarioWriterSmokeTester.cs" />
     <Compile Include="TestSupport\AnotherOneHandler.cs" />
     <Compile Include="TestSupport\DifferentOneHandler.cs" />
     <Compile Include="TestSupport\FourHandler.cs" />
     <Compile Include="TestSupport\FourMessage.cs" />
+    <Compile Include="TestSupport\HandledByStep.cs" />
     <Compile Include="TestSupport\HarnessSettings.cs" />
+    <Compile Include="TestSupport\IScenarioStep.cs" />
     <Compile Include="TestSupport\ManyResponseHandler.cs" />
     <Compile Include="TestSupport\Message.cs" />
     <Compile Include="TestSupport\MessageProcessed.cs" />
@@ -126,6 +132,7 @@
     <Compile Include="TestSupport\NodeConfiguration.cs" />
     <Compile Include="TestSupport\OneHandler.cs" />
     <Compile Include="TestSupport\OneMessage.cs" />
+    <Compile Include="TestSupport\RequestReplyStep.cs" />
     <Compile Include="TestSupport\RequestResponseHandler.cs" />
     <Compile Include="TestSupport\Scenario.cs" />
     <Compile Include="TestSupport\SimpleHandler.cs" />

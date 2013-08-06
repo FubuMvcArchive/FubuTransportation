@@ -1,0 +1,19 @@
+﻿using FubuTransportation.Testing.TestSupport;
+
+namespace FubuTransportation.Testing.Scenarios
+{
+    public class Send_a_single_message_to_the_correct_node : Scenario
+    {
+        public Send_a_single_message_to_the_correct_node()
+        {
+            Website1.Registry.Channel(x => x.Service1)
+                    .PublishesMessage<OneMessage>();
+
+            Service1.Handles<OneMessage>();
+            Service2.Handles<OneMessage>();
+            Service3.Handles<OneMessage>();
+
+            Send<OneMessage>("first message").ShouldBeReceivedBy(Service1);
+        }
+    }
+}

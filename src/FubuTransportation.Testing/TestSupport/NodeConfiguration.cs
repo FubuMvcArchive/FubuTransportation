@@ -11,82 +11,6 @@ using StructureMap;
 
 namespace FubuTransportation.Testing.TestSupport
 {
-    public interface IScenarioStep
-    {
-        void PreviewAct(IScenarioWriter writer);
-        void PreviewAssert(IScenarioWriter writer);
-
-        void Act(IScenarioWriter writer);
-        void Assert(IScenarioWriter writer);
-
-        bool MatchesMessage(MessageProcessed processed);
-    }
-
-    public class HandledByStep : IScenarioStep
-    {
-        public HandledByStep(Message message, NodeConfiguration node)
-        {
-        }
-
-        public void PreviewAct(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreviewAssert(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Act(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Assert(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MatchesMessage(MessageProcessed processed)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class RequestReplyStep<TRequest, TReply> : IScenarioStep
-    {
-        public RequestReplyStep()
-        {
-        }
-
-        public void PreviewAct(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PreviewAssert(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Act(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Assert(IScenarioWriter writer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MatchesMessage(MessageProcessed processed)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
     public class NodeConfiguration : IDisposable
     {
         private readonly Expression<Func<HarnessSettings, Uri>> _expression;
@@ -125,14 +49,35 @@ namespace FubuTransportation.Testing.TestSupport
             _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
         }
 
-        public void ListensFor<T>() where T : Message
+        public HandlesExpresion<T> Handles<T>() where T : Message
         {
             _registry.Value.Handlers.Include<SimpleHandler<T>>();
+        
+            return new HandlesExpresion<T>(this);
         }
 
-        public ReplyExpression<T> Requestings<T>() where T : Message
+        public class HandlesExpresion<T> where T : Message
+        {
+            public HandlesExpresion(NodeConfiguration parent)
+            {
+                throw new NotImplementedException();
+            }
+
+            public HandlesExpresion<T> Raises<TResponse>() where TResponse : Message
+            {
+                throw new NotImplementedException();
+                return this;
+            } 
+        }
+
+        public ReplyExpression<T> Requesting<T>() where T : Message
         {
             return new ReplyExpression<T>(this);
+        }
+
+        public FubuTransportRegistry<HarnessSettings> Registry
+        {
+            get { return _registry.Value; }
         }
 
         public class ReplyExpression<T> where T : Message
