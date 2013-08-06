@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace FubuTransportation.Runtime.Routing
@@ -15,6 +16,11 @@ namespace FubuTransportation.Runtime.Routing
         public bool Matches(Type type)
         {
             return _assembly.Equals(type.Assembly);
+        }
+
+        public void Describe(IScenarioWriter writer)
+        {
+            writer.WriteLine("Publishes messages in Assembly " + _assembly.GetName().Name);
         }
 
         public static AssemblyRule For<T>()

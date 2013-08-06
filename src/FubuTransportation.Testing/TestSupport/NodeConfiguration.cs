@@ -69,6 +69,31 @@ namespace FubuTransportation.Testing.TestSupport
         public HandledByStep(Message message, NodeConfiguration node)
         {
         }
+
+        public void PreviewAct(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PreviewAssert(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Act(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Assert(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MatchesMessage(MessageProcessed processed)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class RequestReplyStep<TRequest, TReply> : IScenarioStep
@@ -76,32 +101,33 @@ namespace FubuTransportation.Testing.TestSupport
         public RequestReplyStep()
         {
         }
-    }
 
-    public interface IScenarioWriter
-    {
-        IDisposable Indent();
-
-        void Write(string format, params object[] parameters);
-    }
-
-    public class RecordingBus : IServiceBus
-    {
-        public TaskCompletionSource<TResponse> Request<TRequest, TResponse>(TRequest request)
+        public void PreviewAct(IScenarioWriter writer)
         {
             throw new NotImplementedException();
         }
 
-        public void Send(params object[] messages)
+        public void PreviewAssert(IScenarioWriter writer)
         {
             throw new NotImplementedException();
         }
 
-        public void ConsumeMessages(params object[] messages)
+        public void Act(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Assert(IScenarioWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MatchesMessage(MessageProcessed processed)
         {
             throw new NotImplementedException();
         }
     }
+
 
     public class NodeConfiguration : IDisposable
     {

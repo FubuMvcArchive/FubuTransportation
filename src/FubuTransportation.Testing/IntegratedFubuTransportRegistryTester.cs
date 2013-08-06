@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq.Expressions;
 using FubuCore;
 using FubuMVC.Core;
@@ -172,9 +173,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_adhoc_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessages(type => {
-                return type == typeof (BusSettings);
-            });
+            theRegistry.Channel(x => x.Outbound).PublishesMessages(type => type == typeof(BusSettings));
 
             var rule = channelFor(x => x.Outbound).Rules.Single();
 
@@ -206,6 +205,11 @@ namespace FubuTransportation.Testing
         public bool Matches(Type type)
         {
             throw new NotImplementedException();
+        }
+
+        public void Describe(IScenarioWriter writer)
+        {
+            writer.WriteLine("Custom!");
         }
     }
 

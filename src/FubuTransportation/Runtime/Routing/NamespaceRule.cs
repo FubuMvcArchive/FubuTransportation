@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using FubuCore;
 
 namespace FubuTransportation.Runtime.Routing
@@ -15,6 +16,11 @@ namespace FubuTransportation.Runtime.Routing
         public bool Matches(Type type)
         {
             return type.IsInNamespace(_ns);
+        }
+
+        public void Describe(IScenarioWriter writer)
+        {
+            writer.WriteLine("Publishes messages from namespace " + _ns);
         }
 
         public static NamespaceRule For<T>()

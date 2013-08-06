@@ -256,7 +256,7 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
-            public ChannelExpression PublishesMessages(Func<Type, bool> filter)
+            public ChannelExpression PublishesMessages(Expression<Func<Type, bool>> filter)
             {
                 alter = node => node.Rules.Add(new LambdaRoutingRule(filter));
                 return this;

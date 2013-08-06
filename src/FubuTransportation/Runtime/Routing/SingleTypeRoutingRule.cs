@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace FubuTransportation.Runtime.Routing
 {
@@ -7,6 +8,11 @@ namespace FubuTransportation.Runtime.Routing
         public bool Matches(Type type)
         {
             return type == typeof (T);
+        }
+
+        public void Describe(IScenarioWriter writer)
+        {
+            writer.WriteLine("Publishes " + typeof(T).Name);
         }
     }
 }
