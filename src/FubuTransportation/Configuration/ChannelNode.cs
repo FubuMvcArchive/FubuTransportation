@@ -59,6 +59,20 @@ namespace FubuTransportation.Configuration
                 Channel.StartReceiving(new Receiver(invoker, graph, this), this);
             }
         }
+        
+        public void Describe(IScenarioWriter writer)
+        {
+            writer.WriteLine(Key);
+            using (writer.Indent())
+            {
+                if (Incoming)
+                {
+                    writer.WriteLine("Listens to {0} with {1} threads", Uri, ThreadCount);
+                }
+
+                Rules.Each(x => x.Describe(writer));
+            }
+        }
     }
 
     
