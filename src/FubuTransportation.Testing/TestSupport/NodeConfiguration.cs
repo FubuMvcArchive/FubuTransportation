@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.TestSupport
     public class NodeConfiguration : IDisposable
     {
         private readonly Expression<Func<HarnessSettings, Uri>> _expression;
-        private readonly Lazy<FubuTransportRegistry<HarnessSettings>> _registry = new Lazy<FubuTransportRegistry<HarnessSettings>>(); 
+        private readonly Lazy<FubuTransportRegistry<HarnessSettings>> _registry = new Lazy<FubuTransportRegistry<HarnessSettings>>(() => FubuTransportRegistry<HarnessSettings>.Empty()); 
         private FubuRuntime _runtime;
         private IServiceBus _serviceBus; 
 
@@ -49,6 +49,42 @@ namespace FubuTransportation.Testing.TestSupport
             _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
         }
 
+        public SendExpression<T> Sends<T>(string description) where T : Message, new()
+        {
+            return new SendExpression<T>(Parent, this, description);
+        }
+
+        public class SendExpression<T> where T : Message, new()
+        {
+            private readonly Scenario _parent;
+            private readonly NodeConfiguration _sender;
+            private readonly string _description;
+            private readonly SendMessageStep<T> _step;
+
+            public SendExpression(Scenario parent, NodeConfiguration sender, string description)
+            {
+                _parent = parent;
+                _sender = sender;
+                _description = description;
+                _step = new SendMessageStep<T>(sender, description);
+                parent.AddStep(_step);
+
+
+            }
+
+            public SendExpression<T> ShouldBeReceivedBy(NodeConfiguration node)
+            {
+                _step.ReceivingNodes.Add(node);
+                return this;
+            }
+
+            public SendExpression<T> MatchingMessageIsReceivedBy<TMatching>(NodeConfiguration receiver) where TMatching : Message
+            {
+                _parent.AddStep(new MatchingMessageStep<TMatching>(_step, receiver));
+                return this;
+            }
+        }
+
         public HandlesExpresion<T> Handles<T>() where T : Message
         {
             _registry.Value.Handlers.Include<SimpleHandler<T>>();
@@ -58,14 +94,17 @@ namespace FubuTransportation.Testing.TestSupport
 
         public class HandlesExpresion<T> where T : Message
         {
+            private readonly NodeConfiguration _parent;
+
             public HandlesExpresion(NodeConfiguration parent)
             {
-                throw new NotImplementedException();
+                parent._registry.Value.Handlers.Include<SimpleHandler<T>>();
+                _parent = parent;
             }
 
-            public HandlesExpresion<T> Raises<TResponse>() where TResponse : Message
+            public HandlesExpresion<T> Raises<TResponse>() where TResponse : Message, new()
             {
-                throw new NotImplementedException();
+                _parent._registry.Value.Handlers.Include<RequestResponseHandler<T, TResponse>>();
                 return this;
             } 
         }
@@ -96,11 +135,19 @@ namespace FubuTransportation.Testing.TestSupport
             } 
         }
 
+        public string Name
+        {
+            get
+            {
+                return ReflectionHelper.GetAccessor(_expression).Name;
+            }
+        }
+
         internal void Describe(IScenarioWriter writer)
         {
             if (!_registry.IsValueCreated) return;
 
-            writer.WriteLine(ReflectionHelper.GetAccessor(_expression).Name);
+            writer.WriteLine(Name);
             using (writer.Indent())
             {
                 _runtime.Factory.Get<ChannelGraph>().Each(x => x.Describe(writer));
@@ -114,6 +161,11 @@ namespace FubuTransportation.Testing.TestSupport
             {
                 _runtime.Dispose();
             }
+        }
+
+        public IReplyExpectation Requests<T>(string description) where T : Message, new()
+        {
+            return new RequestReplyExpression<T>(this, this.Parent, description);
         }
     }
 }

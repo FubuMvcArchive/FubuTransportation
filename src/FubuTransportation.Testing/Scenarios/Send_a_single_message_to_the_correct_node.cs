@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.Scenarios
             Service2.Handles<OneMessage>();
             Service3.Handles<OneMessage>();
 
-            Send<OneMessage>("first message").ShouldBeReceivedBy(Service1);
+            Website1.Sends<OneMessage>("first message").ShouldBeReceivedBy(Service1);
         }
     }
 }

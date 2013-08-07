@@ -12,9 +12,8 @@ namespace FubuTransportation.Testing.Scenarios
             Service1.Handles<OneMessage>()
                 .Raises<TwoMessage>();
 
-            GivenRequest<OneMessage>("original request").From(Website1)
-                .ExpectReply<TwoMessage>()
-                .From(Service1);
+            Website1.Requests<OneMessage>("original request")
+                .ExpectReply<TwoMessage>().From(Service1);
         }
 
 

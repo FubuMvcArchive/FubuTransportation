@@ -22,7 +22,7 @@ namespace FubuTransportation.Testing.TestSupport
 
         public Scenario()
         {
-            // TODO -- derive title from the class name? Strip out the "_"'s?
+            Title = GetType().Name.Replace("_", " ");
 
             _configurations = new NodeConfiguration[]
             {
@@ -66,6 +66,8 @@ namespace FubuTransportation.Testing.TestSupport
 
         internal void Preview(IScenarioWriter writer)
         {
+            _configurations.Each(x => x.SpinUp());
+
             writer.WriteTitle(Title);
 
             using (writer.Indent())
@@ -89,66 +91,9 @@ namespace FubuTransportation.Testing.TestSupport
             writer.BlankLine();
         }
 
-        public SendExpression<T> Send<T>(string description) where T : Message, new()
+        internal void AddStep(IScenarioStep step)
         {
-            return new SendExpression<T>(this, description);
-        } 
-
-        public class SendExpression<T> where T : Message, new()
-        {
-            public SendExpression(Scenario parent, string description)
-            {
-            }
-
-            public SendExpression<T> ShouldBeReceivedBy(NodeConfiguration node)
-            {
-
-                return this;
-            }
-
-            public SendExpression<T> MatchingMessageIsReceivedBy<T1>(NodeConfiguration nodeConfiguration)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
-
-        public GivenRequestExpression<TRequest> GivenRequest<TRequest>(string description) where TRequest : Message, new()
-        {
-            return new GivenRequestExpression<TRequest>(this, description);
-        }
-
-        // TODO -- clean up the FI mechanics to make it lead the user.
-        public class GivenRequestExpression<TRequest> where TRequest : Message, new()
-        {
-            public GivenRequestExpression(Scenario parent, string description)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public GivenRequestExpression<TRequest> From(NodeConfiguration nodeConfiguration)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public GivenRequestExpression<TRequest> SentBy(NodeConfiguration nodeConfiguration)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            public GivenRequestExpression<TRequest> ExpectReply<TReply>() where TReply : Message
-            {
-                throw new System.NotImplementedException();
-            }
-
-
-        }
-
-        public class RequestExpression<TRequest> where TRequest : Message, new()
-        {
-            public RequestExpression(Scenario parent, string description)
-            {
-                throw new System.NotImplementedException();
-            }
+            _steps.Add(step);
         }
     }
 }

@@ -4,18 +4,25 @@ namespace FubuTransportation.Testing.TestSupport
 {
     public class RequestReplyStep<TRequest, TReply> : IScenarioStep
     {
-        public RequestReplyStep()
+        private readonly string _description;
+        private readonly NodeConfiguration _sender;
+        private readonly NodeConfiguration _receiver;
+
+        public RequestReplyStep(string description, NodeConfiguration sender, NodeConfiguration receiver)
         {
+            _description = description;
+            _sender = sender;
+            _receiver = receiver;
         }
 
         public void PreviewAct(IScenarioWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteLine("Node {0} sends request '{1}' ({2}), expecting a matching response {3}", _sender.Name, _description, typeof(TRequest).Name, typeof(TReply).Name);
         }
 
         public void PreviewAssert(IScenarioWriter writer)
         {
-            throw new NotImplementedException();
+            writer.WriteLine("Expecting a reply of type {0} from node {1}", typeof(TReply).Name, _receiver.Name);
         }
 
         public void Act(IScenarioWriter writer)

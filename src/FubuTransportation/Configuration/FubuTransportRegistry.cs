@@ -161,6 +161,13 @@ namespace FubuTransportation.Configuration
         {
         }
 
+
+        public new static FubuTransportRegistry<T> Empty()
+        {
+            return new FubuTransportRegistry<T>();
+        }
+
+
         public ChannelExpression Channel(Expression<Func<T, Uri>> expression)
         {
             return new ChannelExpression(this, expression);

@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.Scenarios
 
             // Assuming that if the events raised can be handled locally, they are
             // handled here. Corey/Ryan to review
-            Send<OneMessage>("original message")
+            Website1.Sends<OneMessage>("original message")
                 .ShouldBeReceivedBy(Service1)
                 .MatchingMessageIsReceivedBy<TwoMessage>(Service1)
                 .MatchingMessageIsReceivedBy<ThreeMessage>(Service1);
