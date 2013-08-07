@@ -15,6 +15,24 @@ namespace FubuTransportation
         void ConsumeMessages(params object[] messages);
     }
 
+    public class ServiceBus : IServiceBus
+    {
+        public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Send(params object[] messages)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ConsumeMessages(params object[] messages)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public interface IEventAggregator
     {
         

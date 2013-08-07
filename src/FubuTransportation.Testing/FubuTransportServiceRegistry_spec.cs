@@ -21,6 +21,12 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void service_bus_is_registered()
+        {
+            registeredTypeIs<IServiceBus, ServiceBus>();
+        }
+
+        [Test]
         public void in_memory_transport_is_registered()
         {
             var registry = new FubuRegistry();

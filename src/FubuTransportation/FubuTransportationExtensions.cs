@@ -28,6 +28,8 @@ namespace FubuTransportation
             AddService<IActivator, TransportActivator>();
             AddService<ITransport, InMemoryTransport>();
 
+            SetServiceIfNone<IServiceBus, ServiceBus>();
+
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
         }
     }
