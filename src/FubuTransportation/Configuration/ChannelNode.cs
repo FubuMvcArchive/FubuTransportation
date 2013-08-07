@@ -70,7 +70,7 @@ namespace FubuTransportation.Configuration
                     writer.WriteLine("Listens to {0} with {1} threads", Uri, ThreadCount);
                 }
 
-                Rules.Each(x => x.Describe(writer));
+                Rules.Each(x => x.Describe());
             }
         }
     }

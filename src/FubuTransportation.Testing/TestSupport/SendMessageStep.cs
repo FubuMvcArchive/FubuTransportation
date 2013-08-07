@@ -40,7 +40,19 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void PreviewAssert(IScenarioWriter writer)
         {
-            
+            ReceivingNodes.Each(receiver => {
+                if (_description.IsEmpty())
+                {
+                    writer.WriteLine("Message of type {0} should be received by {1}", typeof(T).Name, receiver.Name);
+                }
+                else
+                {
+                    writer.WriteLine("Message of type {0} ({1}) should be received by {2}", typeof(T).Name, _description, receiver.Name);
+                }
+            });
+
+
+
         }
 
         public void Act(IScenarioWriter writer)

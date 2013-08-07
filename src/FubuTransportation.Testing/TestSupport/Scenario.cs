@@ -74,10 +74,21 @@ namespace FubuTransportation.Testing.TestSupport
             {
                 writeArrangement(writer);
 
-                _steps.Each(x => x.PreviewAct(writer));
+                writer.WriteLine("Actions");
+
+                using (writer.Indent())
+                {
+                    _steps.Each(x => x.PreviewAct(writer));
+                }
+
                 writer.BlankLine();
 
-                _steps.Each(x => x.PreviewAssert(writer));
+                writer.WriteLine("Assertions");
+
+                using (writer.Indent())
+                {
+                    _steps.Each(x => x.PreviewAssert(writer));
+                }
             }
         }
 
@@ -85,7 +96,6 @@ namespace FubuTransportation.Testing.TestSupport
         {
             _configurations.Each(x => {
                 x.Describe(writer);
-                writer.BlankLine();
             });
 
             writer.BlankLine();

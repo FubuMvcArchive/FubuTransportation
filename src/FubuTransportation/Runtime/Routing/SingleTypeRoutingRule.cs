@@ -10,9 +10,9 @@ namespace FubuTransportation.Runtime.Routing
             return type == typeof (T);
         }
 
-        public void Describe(IScenarioWriter writer)
+        public string Describe()
         {
-            writer.WriteLine("Publishes " + typeof(T).Name);
+            return typeof(T).Name;
         }
     }
 }

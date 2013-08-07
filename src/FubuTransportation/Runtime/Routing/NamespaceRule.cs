@@ -18,9 +18,9 @@ namespace FubuTransportation.Runtime.Routing
             return type.IsInNamespace(_ns);
         }
 
-        public void Describe(IScenarioWriter writer)
+        public string Describe()
         {
-            writer.WriteLine("Publishes messages from namespace " + _ns);
+            return "Messages from namespace " + _ns;
         }
 
         public static NamespaceRule For<T>()

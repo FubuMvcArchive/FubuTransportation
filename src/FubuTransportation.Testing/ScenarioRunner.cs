@@ -20,7 +20,11 @@ namespace FubuTransportation.Testing
             var scenarios = FindScenarios();
             var writer = new ScenarioWriter();
 
-            scenarios.Each(x => x.Preview(writer));
+            scenarios.Each(x => {
+                x.Preview(writer);
+                writer.BlankLine();
+                writer.BlankLine();
+            });
         }
 
 

@@ -18,9 +18,9 @@ namespace FubuTransportation.Runtime.Routing
             return _assembly.Equals(type.Assembly);
         }
 
-        public void Describe(IScenarioWriter writer)
+        public string Describe()
         {
-            writer.WriteLine("Publishes messages in Assembly " + _assembly.GetName().Name);
+            return "Messages in Assembly " + _assembly.GetName().Name;
         }
 
         public static AssemblyRule For<T>()

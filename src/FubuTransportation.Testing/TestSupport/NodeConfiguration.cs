@@ -8,6 +8,7 @@ using FubuTransportation.Configuration;
 using FubuMVC.StructureMap;
 using FubuTransportation.InMemory;
 using StructureMap;
+using System.Linq;
 
 namespace FubuTransportation.Testing.TestSupport
 {
@@ -148,9 +149,31 @@ namespace FubuTransportation.Testing.TestSupport
             if (!_registry.IsValueCreated) return;
 
             writer.WriteLine(Name);
+            var channels = _runtime.Factory.Get<ChannelGraph>();
             using (writer.Indent())
             {
-                _runtime.Factory.Get<ChannelGraph>().Each(x => x.Describe(writer));
+                channels.Where(x => x.Incoming)
+                        .Each(x => writer.WriteLine("Listens to {0} with {1} threads", x.Uri, x.ThreadCount));
+            
+                //writer.BlankLine();
+
+                channels.Where(x => x.Rules.Any()).Each(x => {
+                    writer.WriteLine("Publishes to {0}", x.Key);
+
+                    using (writer.Indent())
+                    {
+                        x.Rules.Each(rule => writer.Bullet(rule.Describe()));
+                    }
+                });
+
+                var handlers = _runtime.Factory.Get<HandlerGraph>();
+                var inputs = handlers.Select(x => x.InputType()).Where(x => x != typeof(object[]));
+                if (inputs.Any())
+                {
+                    writer.WriteLine("Handles " + inputs.Select(x => x.Name).Join(", "));
+                }
+
+                writer.BlankLine();
             }
         }
 

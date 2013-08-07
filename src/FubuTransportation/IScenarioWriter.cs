@@ -15,6 +15,7 @@ namespace FubuTransportation
 
         void Exception(Exception ex);
         void Failure(string format, params object[] parameters);
+        void Bullet(string format, params object[] parameters);
     }
 
     public class ScenarioWriter : IScenarioWriter
@@ -60,7 +61,8 @@ namespace FubuTransportation
 
         public void BlankLine()
         {
-            WriteLine(string.Empty);
+            Console.WriteLine();
+            _writer.WriteLine();
         }
 
         public void Exception(Exception ex)
@@ -85,6 +87,11 @@ namespace FubuTransportation
 
             FailureCount++;
             Console.ForegroundColor = color;
+        }
+
+        public void Bullet(string format, params object[] parameters)
+        {
+            WriteLine("* " + format, parameters);
         }
 
         public int FailureCount { get; private set; }

@@ -207,9 +207,9 @@ namespace FubuTransportation.Testing
             throw new NotImplementedException();
         }
 
-        public void Describe(IScenarioWriter writer)
+        public string Describe()
         {
-            writer.WriteLine("Custom!");
+            return "Custom!";
         }
     }
 

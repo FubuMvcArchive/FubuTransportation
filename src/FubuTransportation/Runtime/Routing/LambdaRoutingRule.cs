@@ -20,9 +20,9 @@ namespace FubuTransportation.Runtime.Routing
             return _filter(type);
         }
 
-        public void Describe(IScenarioWriter writer)
+        public string Describe()
         {
-            writer.WriteLine(_expression.ToString());
+            return "Messages of matching " + _expression.ToString();
         }
     }
 }
