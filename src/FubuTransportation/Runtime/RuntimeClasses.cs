@@ -22,7 +22,8 @@ namespace FubuTransportation.Runtime
         public IEnumerable<IChannel> FindChannels(object message)
         {
             // TODO -- gets a LOT more sophisticated later
-            return _graph.Where(c => c.Rules.Any(x => x.Matches(message.GetType()))).Select(c => c.Channel);
+            var inputType = message.GetType();
+            return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType))).Select(c => c.Channel);
         }
     }
 

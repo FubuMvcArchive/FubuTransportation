@@ -46,7 +46,13 @@ namespace FubuTransportation
 
                 _serializer.Serialize(envelope);
 
-                _router.FindChannels(envelope.Message.GetType()).Each(x => x.Send(envelope));
+                var channels = _router.FindChannels(envelope.Message).ToArray();
+                if (!channels.Any())
+                {
+                    throw new Exception("No channels match this message");
+                }
+
+                channels.Each(x => x.Send(envelope));
             }
             else
             {

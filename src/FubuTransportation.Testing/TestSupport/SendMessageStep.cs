@@ -58,6 +58,7 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Act(IScenarioWriter writer)
         {
+            MessageHistory.Record(MessageTrack.ForSent(Message));
             _sender.ServiceBus.Send(Message);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Bottles.Services.Messaging.Tracking;
 
 namespace FubuTransportation.Testing.TestSupport
 {
@@ -32,6 +33,7 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Act(IScenarioWriter writer)
         {
+            MessageHistory.Record(MessageTrack.ForSent(_request));
             _completion = _sender.ServiceBus.Request<TRequest, TReply>(_request);
         }
 

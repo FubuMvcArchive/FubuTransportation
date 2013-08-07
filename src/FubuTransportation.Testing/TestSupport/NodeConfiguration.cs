@@ -204,7 +204,7 @@ namespace FubuTransportation.Testing.TestSupport
         {
             return TestMessageRecorder.AllProcessed.Any(processed => {
                 return processed.Message.GetType() == message.GetType() && processed.Message.Id == message.Id &&
-                       message.Source == _uri;
+                       processed.Message.Source == _uri;
             });
         }
     }

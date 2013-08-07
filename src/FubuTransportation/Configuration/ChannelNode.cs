@@ -73,6 +73,11 @@ namespace FubuTransportation.Configuration
                 Rules.Each(x => x.Describe());
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("Channel: {0}", Key);
+        }
     }
 
     

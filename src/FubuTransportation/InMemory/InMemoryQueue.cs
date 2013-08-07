@@ -82,6 +82,7 @@ namespace FubuTransportation.InMemory
                         using (var stream = new MemoryStream(data))
                         {
                             var envelope = _parent._formatter.Deserialize(stream).As<Envelope>();
+                            envelope.Callback = new InMemoryCallback(_parent, envelope);
                             _receiver.Receive(envelope);
                         }
                     }
@@ -95,6 +96,28 @@ namespace FubuTransportation.InMemory
                 _disposed = true;
                 _task.SafeDispose();
             }
+        }
+    }
+
+    public class InMemoryCallback : IMessageCallback
+    {
+        private readonly InMemoryQueue _parent;
+        private readonly Envelope _envelope;
+
+        public InMemoryCallback(InMemoryQueue parent, Envelope envelope)
+        {
+            _parent = parent;
+            _envelope = envelope;
+        }
+
+        public void MarkSuccessful()
+        {
+            // nothing
+        }
+
+        public void MarkFailed()
+        {
+            throw new NotImplementedException();
         }
     }
 }
