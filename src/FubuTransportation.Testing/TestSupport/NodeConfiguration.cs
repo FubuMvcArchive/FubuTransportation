@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing.TestSupport
                 return this;
             }
 
-            public SendExpression<T> MatchingMessageIsReceivedBy<TMatching>(NodeConfiguration receiver) where TMatching : Message
+            public SendExpression<T> MatchingMessageIsReceivedBy<TMatching>(NodeConfiguration receiver) where TMatching : Message, new()
             {
                 _parent.AddStep(new MatchingMessageStep<TMatching>(_step, receiver));
                 return this;
@@ -189,6 +189,11 @@ namespace FubuTransportation.Testing.TestSupport
         public IReplyExpectation Requests<T>(string description) where T : Message, new()
         {
             return new RequestReplyExpression<T>(this, this.Parent, description);
+        }
+
+        internal bool Received(Message message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

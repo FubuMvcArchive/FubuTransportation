@@ -13,7 +13,7 @@
             _description = description;
         }
 
-        public class ReplyExpectation<TResponse> : IFromNode
+        public class ReplyExpectation<TResponse> : IFromNode where TResponse : Message, new()
         {
             private readonly RequestReplyExpression<T> _parent;
 
@@ -39,7 +39,7 @@
 
     public interface IReplyExpectation
     {
-        IFromNode ExpectReply<T>() where T : Message;
+        IFromNode ExpectReply<T>() where T : Message, new();
     }
 
     public interface IFromNode

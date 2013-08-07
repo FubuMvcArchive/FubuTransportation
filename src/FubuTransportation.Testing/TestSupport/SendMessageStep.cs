@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bottles.Services.Messaging.Tracking;
 using FubuCore;
 
 namespace FubuTransportation.Testing.TestSupport
@@ -57,18 +58,22 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Act(IScenarioWriter writer)
         {
-            PreviewAct(writer);
-            throw new System.NotImplementedException();
+            _sender.ServiceBus.Send(Message);
         }
 
         public void Assert(IScenarioWriter writer)
         {
-            throw new System.NotImplementedException();
+            ReceivingNodes.Each(receiver => {
+                if (!receiver.Received(Message))
+                {
+                    writer.Failure("Message {0} was not received by {1}", Message.GetType().Name, receiver.Name);
+                }
+            });
         }
 
         public bool MatchesMessage(MessageProcessed processed)
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         public Message Message { get; private set; }

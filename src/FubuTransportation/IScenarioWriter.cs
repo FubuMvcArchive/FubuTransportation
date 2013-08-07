@@ -83,7 +83,7 @@ namespace FubuTransportation
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
 
-            WriteLine(format, parameters);
+            WriteLine("FAILURE:  " + format, parameters);
 
             FailureCount++;
             Console.ForegroundColor = color;

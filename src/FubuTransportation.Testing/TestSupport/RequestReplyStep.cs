@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace FubuTransportation.Testing.TestSupport
 {
-    public class RequestReplyStep<TRequest, TReply> : IScenarioStep
+    public class RequestReplyStep<TRequest, TReply> : IScenarioStep where TRequest : Message, new() where TReply : Message
     {
         private readonly string _description;
         private readonly NodeConfiguration _sender;
         private readonly NodeConfiguration _receiver;
+        private Task<TReply> _completion;
+        private TRequest _request;
 
         public RequestReplyStep(string description, NodeConfiguration sender, NodeConfiguration receiver)
         {
             _description = description;
             _sender = sender;
             _receiver = receiver;
+
+            _request = new TRequest();
         }
 
         public void PreviewAct(IScenarioWriter writer)
@@ -27,12 +32,22 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Act(IScenarioWriter writer)
         {
-            throw new NotImplementedException();
+            _completion = _sender.ServiceBus.Request<TRequest, TReply>(_request);
         }
 
         public void Assert(IScenarioWriter writer)
         {
-            throw new NotImplementedException();
+            var response = _completion.Result;
+
+            if (response == null)
+            {
+                writer.Failure("Did not get any response!");
+            }
+
+            if (response.Id != _request.Id)
+            {
+                writer.Failure("Response does not match the request");
+            }
         }
 
         public bool MatchesMessage(MessageProcessed processed)

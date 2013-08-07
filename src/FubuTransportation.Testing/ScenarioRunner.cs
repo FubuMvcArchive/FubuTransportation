@@ -27,6 +27,15 @@ namespace FubuTransportation.Testing
             });
         }
 
+        [Test, Explicit]
+        public void try_one()
+        {
+            var writer = new ScenarioWriter();
+
+            new Send_a_single_message_to_the_correct_node().Execute(writer);
+            writer.FailureCount.ShouldEqual(0);
+        }
+
 
 
         public static IEnumerable<Scenario> FindScenarios()

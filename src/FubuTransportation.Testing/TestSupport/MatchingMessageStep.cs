@@ -2,7 +2,7 @@
 
 namespace FubuTransportation.Testing.TestSupport
 {
-    public class MatchingMessageStep<T> : IScenarioStep where T : Message
+    public class MatchingMessageStep<T> : IScenarioStep where T : Message, new()
     {
         private readonly IOriginatingMessage _message;
         private readonly NodeConfiguration _receiver;
@@ -33,12 +33,15 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Act(IScenarioWriter writer)
         {
-            throw new System.NotImplementedException();
+            // no-op
         }
 
         public void Assert(IScenarioWriter writer)
         {
-            throw new System.NotImplementedException();
+            if (!_receiver.Received(new T {Id = _message.Message.Id}))
+            {
+                writer.Failure("Message {0} was not received by {1}", typeof(T).Name, _receiver.Name);
+            }
         }
 
         public bool MatchesMessage(MessageProcessed processed)

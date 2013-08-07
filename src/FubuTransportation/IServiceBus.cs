@@ -4,7 +4,7 @@ namespace FubuTransportation
 {
     public interface IServiceBus
     {
-        TaskCompletionSource<TResponse> Request<TRequest, TResponse>(TRequest request);
+        Task<TResponse> Request<TRequest, TResponse>(TRequest request);
 
         // MUST be a receiver or it fails
         void Send(params object[] messages);

@@ -55,10 +55,27 @@ namespace FubuTransportation.Testing.TestSupport
             {
                 writeArrangement(writer);
 
-                _steps.Each(x => x.Act(writer));
+                writer.WriteLine("Actions");
+
+                using (writer.Indent())
+                {
+                    _steps.Each(x => x.PreviewAct(writer));
+                    _steps.Each(x => x.Act(writer));
+                }
+
+                Wait.Until(() => {
+                    return !MessageHistory.Outstanding().Any();
+                }, timeoutInMilliseconds:5000);
+
                 writer.BlankLine();
 
-                _steps.Each(x => x.Assert(writer));
+                writer.WriteLine("Assertions");
+
+                using (writer.Indent())
+                {
+                    _steps.Each(x => x.PreviewAssert(writer));
+                    _steps.Each(x => x.Assert(writer));
+                }
 
                 // TODO -- blow up if there are unexpected messages
             }
