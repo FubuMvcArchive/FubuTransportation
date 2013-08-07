@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
 {
@@ -17,14 +18,14 @@ namespace FubuTransportation.Runtime
 
     public class EnvelopeSerializer : IEnvelopeSerializer
     {
-        // TODO -- default content-type for the application
         // TODO -- throw if unrecognized content-type
-        // TODO -- use from MessageInvoker
 
+        private readonly ChannelGraph _graph;
         private readonly IEnumerable<IMessageSerializer> _serializers;
 
-        public EnvelopeSerializer(IEnumerable<IMessageSerializer> serializers)
+        public EnvelopeSerializer(ChannelGraph graph, IEnumerable<IMessageSerializer> serializers)
         {
+            _graph = graph;
             _serializers = serializers;
         }
 
@@ -51,6 +52,11 @@ namespace FubuTransportation.Runtime
         public void Serialize(Envelope envelope)
         {
             if (envelope.Message == null) throw new InvalidOperationException("No message on this envelope to serialize");
+
+            if (envelope.ContentType.IsEmpty())
+            {
+                envelope.ContentType = _graph.DefaultContentType;
+            }
 
             var serializer = selectSerializer(envelope);
             using (var stream = new MemoryStream())

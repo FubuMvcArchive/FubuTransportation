@@ -40,7 +40,33 @@ namespace FubuTransportation.Testing
             writer.FailureCount.ShouldEqual(0);
         }
 
+        [Test, Explicit]
+        public void run_all_scenarios()
+        {
+            var scenarios = FindScenarios();
+            var failures = new List<string>();
+            
+            scenarios.Each(x => {
+                var writer = new ScenarioWriter();
 
+                x.Execute(writer);
+
+                if (writer.FailureCount > 0)
+                {
+                    failures.Add(x.Title);
+
+                    Console.WriteLine(writer.ToString());
+                }
+            });
+
+            if (failures.Any())
+            {
+                Debug.WriteLine("Scenarios failed!");
+                failures.Each(x => Debug.WriteLine(x));
+
+                Assert.Fail();
+            }
+        }
 
         public static IEnumerable<Scenario> FindScenarios()
         {
