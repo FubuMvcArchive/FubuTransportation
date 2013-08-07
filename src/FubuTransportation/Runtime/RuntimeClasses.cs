@@ -1,21 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using FubuTransportation.Configuration;
+using System.Linq;
 
 namespace FubuTransportation.Runtime
 {
-    // Wanna make ITransport as stupid as possible
-
-    // Will use message invoker, but IReceiver will also be responsible for 
-    // other coordination with the EventAggregator, sending replies, and logging
-    public interface IReceiver
+    public interface IChannelRouter
     {
-        void Receive(Envelope envelope);
+        IEnumerable<IChannel> FindChannels(object message);
     }
 
-    // THinking that this thing internally will have a bunch of little IRouterRules
-    public interface IRouter
+    public class ChannelRouter : IChannelRouter
     {
-        ITransport SelectTransport(Envelope envelope);
+        private readonly ChannelGraph _graph;
+
+        public ChannelRouter(ChannelGraph graph)
+        {
+            _graph = graph;
+        }
+
+        public IEnumerable<IChannel> FindChannels(object message)
+        {
+            // TODO -- gets a LOT more sophisticated later
+            return _graph.Where(c => c.Rules.Any(x => x.Matches(message.GetType()))).Select(c => c.Channel);
+        }
     }
 
 

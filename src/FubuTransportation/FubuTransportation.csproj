@@ -86,6 +86,7 @@
     <Compile Include="Runtime\IMessageCallback.cs" />
     <Compile Include="Runtime\IMessageInvoker.cs" />
     <Compile Include="Runtime\IMessageSerializer.cs" />
+    <Compile Include="Runtime\IReceiver.cs" />
     <Compile Include="Runtime\ITransport.cs" />
     <Compile Include="Runtime\MessageInvoker.cs" />
     <Compile Include="Runtime\Receiver.cs" />

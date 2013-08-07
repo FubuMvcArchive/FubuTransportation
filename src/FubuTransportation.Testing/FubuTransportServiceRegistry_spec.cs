@@ -27,6 +27,12 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void channel_router_is_registered()
+        {
+            registeredTypeIs<IChannelRouter, ChannelRouter>();
+        }
+
+        [Test]
         public void in_memory_transport_is_registered()
         {
             var registry = new FubuRegistry();

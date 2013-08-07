@@ -29,6 +29,7 @@ namespace FubuTransportation
             AddService<ITransport, InMemoryTransport>();
 
             SetServiceIfNone<IServiceBus, ServiceBus>();
+            SetServiceIfNone<IChannelRouter, ChannelRouter>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
         }

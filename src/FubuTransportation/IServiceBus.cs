@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using FubuTransportation.Runtime;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FubuTransportation
 {
@@ -17,6 +21,15 @@ namespace FubuTransportation
 
     public class ServiceBus : IServiceBus
     {
+        private readonly IChannelRouter _router;
+        private readonly IEnvelopeSerializer _serializer;
+
+        public ServiceBus(IChannelRouter router, IEnvelopeSerializer serializer)
+        {
+            _router = router;
+            _serializer = serializer;
+        }
+
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
         {
             return new TaskCompletionSource<TResponse>().Task;
@@ -24,6 +37,21 @@ namespace FubuTransportation
 
         public void Send(params object[] messages)
         {
+            if (messages.Count() == 1)
+            {
+                var envelope = new Envelope(null)
+                {
+                    Message = messages.Single()
+                };
+
+                _serializer.Serialize(envelope);
+
+                _router.FindChannels(envelope.Message.GetType()).Each(x => x.Send(envelope));
+            }
+            else
+            {
+                throw new NotImplementedException("Not yet batching");
+            }
         }
 
         public void ConsumeMessages(params object[] messages)
