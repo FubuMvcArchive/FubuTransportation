@@ -19,17 +19,15 @@ namespace FubuTransportation
     {
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
         {
-            throw new System.NotImplementedException();
+            return new TaskCompletionSource<TResponse>().Task;
         }
 
         public void Send(params object[] messages)
         {
-            throw new System.NotImplementedException();
         }
 
         public void ConsumeMessages(params object[] messages)
         {
-            throw new System.NotImplementedException();
         }
     }
 

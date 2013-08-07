@@ -9,7 +9,7 @@ namespace FubuTransportation.Testing.TestSupport
         private readonly NodeConfiguration _sender;
         private readonly NodeConfiguration _receiver;
         private Task<TReply> _completion;
-        private TRequest _request;
+        private readonly TRequest _request;
 
         public RequestReplyStep(string description, NodeConfiguration sender, NodeConfiguration receiver)
         {
@@ -37,17 +37,20 @@ namespace FubuTransportation.Testing.TestSupport
 
         public void Assert(IScenarioWriter writer)
         {
-            var response = _completion.Result;
+            if (_completion.Wait(2000))
+            {
+                var response = _completion.Result;
 
-            if (response == null)
+                if (response.Id != _request.Id)
+                {
+                    writer.Failure("Response does not match the request");
+                }
+            }
+            else
             {
                 writer.Failure("Did not get any response!");
             }
 
-            if (response.Id != _request.Id)
-            {
-                writer.Failure("Response does not match the request");
-            }
         }
 
         public bool MatchesMessage(MessageProcessed processed)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bottles.Services.Messaging.Tracking;
 using FubuTransportation.InMemory;
 using System.Linq;
@@ -59,8 +60,18 @@ namespace FubuTransportation.Testing.TestSupport
 
                 using (writer.Indent())
                 {
-                    _steps.Each(x => x.PreviewAct(writer));
-                    _steps.Each(x => x.Act(writer));
+                    _steps.Each(x => {
+                        x.PreviewAct(writer);
+                        try
+                        {
+                            x.Act(writer);
+                        }
+                        catch (Exception e)
+                        {
+                            writer.Exception(e);
+                        }
+                    });
+
                 }
 
                 Wait.Until(() => {
@@ -73,8 +84,26 @@ namespace FubuTransportation.Testing.TestSupport
 
                 using (writer.Indent())
                 {
-                    _steps.Each(x => x.PreviewAssert(writer));
-                    _steps.Each(x => x.Assert(writer));
+                    _steps.Each(x => {
+                        x.PreviewAssert(writer);
+                        x.Assert(writer);
+                    });
+                }
+
+
+                writer.BlankLine();
+
+
+                if (TestMessageRecorder.AllProcessed.Any())
+                {
+                    writer.WriteLine("Messages Received");
+                    TestMessageRecorder.AllProcessed.Each(x => {
+                        writer.Bullet("{0} received by {1}", x.Message.GetType().Name, x.Message.Source);
+                    });
+                }
+                else
+                {
+                    writer.WriteLine("No messages were received!");
                 }
 
                 // TODO -- blow up if there are unexpected messages

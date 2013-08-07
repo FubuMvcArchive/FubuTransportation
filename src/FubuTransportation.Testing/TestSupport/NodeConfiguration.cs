@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
@@ -9,6 +8,7 @@ using FubuMVC.StructureMap;
 using FubuTransportation.InMemory;
 using StructureMap;
 using System.Linq;
+using FubuCore;
 
 namespace FubuTransportation.Testing.TestSupport
 {
@@ -17,7 +17,9 @@ namespace FubuTransportation.Testing.TestSupport
         private readonly Expression<Func<HarnessSettings, Uri>> _expression;
         private readonly Lazy<FubuTransportRegistry<HarnessSettings>> _registry = new Lazy<FubuTransportRegistry<HarnessSettings>>(() => FubuTransportRegistry<HarnessSettings>.Empty()); 
         private FubuRuntime _runtime;
-        private IServiceBus _serviceBus; 
+        private IServiceBus _serviceBus;
+        private Uri _uri;
+        private readonly IList<string> _info = new List<string>(); 
 
         public NodeConfiguration(Expression<Func<HarnessSettings, Uri>> expression)
         {
@@ -45,9 +47,13 @@ namespace FubuTransportation.Testing.TestSupport
             var container = new Container();
 
             // Make it all be 
-            container.Inject(InMemoryTransport.ToInMemory<HarnessSettings>());
+            var harnessSettings = InMemoryTransport.ToInMemory<HarnessSettings>();
+            container.Inject(harnessSettings);
+
+            _uri = (Uri) ReflectionHelper.GetAccessor(_expression).GetValue(harnessSettings);
 
             _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
+            _serviceBus = container.GetInstance<IServiceBus>();
         }
 
         public SendExpression<T> Sends<T>(string description) where T : Message, new()
@@ -105,6 +111,7 @@ namespace FubuTransportation.Testing.TestSupport
 
             public HandlesExpresion<T> Raises<TResponse>() where TResponse : Message, new()
             {
+                _parent._info.Add("Handling {0} raises {1}".ToFormat(typeof(T).Name, typeof(TResponse).Name));
                 _parent._registry.Value.Handlers.Include<RequestResponseHandler<T, TResponse>>();
                 return this;
             } 
@@ -173,6 +180,8 @@ namespace FubuTransportation.Testing.TestSupport
                     writer.WriteLine("Handles " + inputs.Select(x => x.Name).Join(", "));
                 }
 
+                _info.Each(x => writer.WriteLine(x));
+
                 writer.BlankLine();
             }
         }
@@ -193,7 +202,10 @@ namespace FubuTransportation.Testing.TestSupport
 
         internal bool Received(Message message)
         {
-            throw new NotImplementedException();
+            return TestMessageRecorder.AllProcessed.Any(processed => {
+                return processed.Message.GetType() == message.GetType() && processed.Message.Id == message.Id &&
+                       message.Source == _uri;
+            });
         }
     }
 }
