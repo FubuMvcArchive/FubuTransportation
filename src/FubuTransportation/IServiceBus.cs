@@ -11,12 +11,19 @@ namespace FubuTransportation
         Task<TResponse> Request<TRequest, TResponse>(TRequest request);
 
         // MUST be a receiver or it fails
-        void Send(params object[] messages);
+        void Send<T>(T message);
 
         // Doesn't have to be a receiver
         //void Publish(params object[] messages);
-        
-        void ConsumeMessages(params object[] messages);
+
+
+        /// <summary>
+        /// Invoke consumers for the relevant messages managed by the current
+        /// service bus instance. This happens immediately and on the current thread.
+        /// Error actions will not be executed and the message consumers will not be retried
+        /// if an error happens.
+        /// </summary>
+        //void ConsumeMessages(params object[] messages);
     }
 
     public class ServiceBus : IServiceBus
@@ -35,33 +42,22 @@ namespace FubuTransportation
             return new TaskCompletionSource<TResponse>().Task;
         }
 
-        public void Send(params object[] messages)
+        public void Send<T>(T message)
         {
-            if (messages.Count() == 1)
+            var envelope = new Envelope(null)
             {
-                var envelope = new Envelope(null)
-                {
-                    Message = messages.Single()
-                };
+                Message = message
+            };
 
-                _serializer.Serialize(envelope);
+            _serializer.Serialize(envelope);
 
-                var channels = _router.FindChannels(envelope.Message).ToArray();
-                if (!channels.Any())
-                {
-                    throw new Exception("No channels match this message");
-                }
-
-                channels.Each(x => x.Send(envelope));
-            }
-            else
+            var channels = _router.FindChannels(envelope.Message).ToArray();
+            if (!channels.Any())
             {
-                throw new NotImplementedException("Not yet batching");
+                throw new Exception("No channels match this message");
             }
-        }
 
-        public void ConsumeMessages(params object[] messages)
-        {
+            channels.Each(x => x.Send(envelope));
         }
     }
 
