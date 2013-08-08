@@ -18,12 +18,12 @@ namespace FubuTransportation.Runtime
             _address = node.Uri;
         }
 
-        public void Receive(Envelope envelope)
+        public void Receive(Envelope envelope, IMessageCallback callback)
         {
             envelope.Source = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
-            _messageInvoker.Invoke(envelope);
+            _messageInvoker.Invoke(envelope, callback);
         }
 
         protected bool Equals(Receiver other)

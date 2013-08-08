@@ -15,6 +15,7 @@ namespace FubuTransportation.Testing.Runtime
         private ChannelNode theNode;
         private RecordingMessageInvoker theInvoker;
         private Receiver theReceiver;
+        private IMessageCallback theCallback;
 
         [SetUp]
         public void SetUp()
@@ -24,6 +25,8 @@ namespace FubuTransportation.Testing.Runtime
 
             theInvoker = new RecordingMessageInvoker();
 
+            theCallback = MockRepository.GenerateMock<IMessageCallback>();
+
             theReceiver = new Receiver(theInvoker, theGraph, theNode);
         }
 
@@ -32,10 +35,10 @@ namespace FubuTransportation.Testing.Runtime
         {
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = null;
-            var envelope = new Envelope(null);
+            var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
 
-            theReceiver.Receive(envelope);
+            theReceiver.Receive(envelope, theCallback);
 
             envelope.ContentType.ShouldEqual("text/json");
         }
@@ -46,10 +49,10 @@ namespace FubuTransportation.Testing.Runtime
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = "text/xml";
 
-            var envelope = new Envelope(null);
+            var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
 
-            theReceiver.Receive(envelope);
+            theReceiver.Receive(envelope, theCallback);
 
             envelope.ContentType.ShouldEqual("text/xml");
         }
@@ -60,10 +63,10 @@ namespace FubuTransportation.Testing.Runtime
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = "text/xml";
 
-            var envelope = new Envelope(null);
+            var envelope = new Envelope();
             envelope.ContentType = "text/plain";
 
-            theReceiver.Receive(envelope);
+            theReceiver.Receive(envelope, theCallback);
 
             envelope.ContentType.ShouldEqual("text/plain");
         }
@@ -73,7 +76,7 @@ namespace FubuTransportation.Testing.Runtime
     {
         public IList<Envelope> Invoked = new List<Envelope>();
 
-        public void Invoke(Envelope envelope)
+        public void Invoke(Envelope envelope, IMessageCallback callback)
         {
             Invoked.Add(envelope);
         }
@@ -83,10 +86,11 @@ namespace FubuTransportation.Testing.Runtime
     [TestFixture]
     public class when_receiving_a_message : InteractionContext<Receiver>
     {
-        Envelope envelope = new Envelope(null);
+        Envelope envelope = new Envelope();
         Uri address = new Uri("foo://bar");
         private IChannel theChannel;
         private ChannelNode theNode;
+        private IMessageCallback theCallback;
 
         protected override void beforeEach()
         {
@@ -101,8 +105,10 @@ namespace FubuTransportation.Testing.Runtime
             };
 
             Services.Inject(theNode);
-            
-            ClassUnderTest.Receive(envelope);
+
+            theCallback = MockRepository.GenerateMock<IMessageCallback>();
+
+            ClassUnderTest.Receive(envelope, theCallback);
         }
 
         [Test]
@@ -114,7 +120,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_call_through_to_the_invoker()
         {
-            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(envelope));
+            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(envelope, theCallback));
         }
     }
 }

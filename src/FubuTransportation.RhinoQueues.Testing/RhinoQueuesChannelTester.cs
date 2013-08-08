@@ -26,9 +26,7 @@ namespace FubuTransportation.RhinoQueues.Testing
                 Id = new MessageId {MessageIdentifier = Guid.NewGuid()}
             };
 
-            var transaction = MockRepository.GenerateMock<ITransactionalScope>();
-
-            theEnvelope = RhinoQueuesChannel.ToEnvelope(transaction, message);
+            theEnvelope = RhinoQueuesChannel.ToEnvelope(message);
         }
 
         [Test]

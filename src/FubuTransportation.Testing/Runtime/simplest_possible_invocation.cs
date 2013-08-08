@@ -41,9 +41,9 @@ namespace FubuTransportation.Testing.Runtime
             handler<OneHandler, TwoHandler, ThreeHandler, FourHandler>();
 
             var theMessage = new TwoMessage();
+            sendMessage(theMessage);
 
-
-            sendMessage(theMessage).Callback.AssertWasCalled(x => x.MarkSuccessful());
+            theCallback.AssertWasCalled(x => x.MarkSuccessful());
 
         }
 

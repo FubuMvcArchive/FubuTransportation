@@ -15,6 +15,8 @@ namespace FubuTransportation.Testing.Runtime
     {
         private FubuTransportRegistry theTransportRegistry;
         private Lazy<IMessageInvoker> _invoker;
+
+        protected IMessageCallback theCallback;
             
             
             
@@ -30,6 +32,8 @@ namespace FubuTransportation.Testing.Runtime
 
                 return container.GetInstance<IMessageInvoker>();
             });
+
+            theCallback = MockRepository.GenerateMock<IMessageCallback>();
 
             theContextIs();
 
@@ -59,7 +63,7 @@ namespace FubuTransportation.Testing.Runtime
 
         protected Envelope sendMessage(params Message[] message)
         {
-            var envelope = new Envelope(MockRepository.GenerateMock<IMessageCallback>());
+            var envelope = new Envelope();
             envelope.Message = message.Length == 1 ? (object) message.Single() : message.Select(x => x as object).ToArray();
 
             sendEnvelope(envelope);
@@ -74,7 +78,7 @@ namespace FubuTransportation.Testing.Runtime
             _invoker.Value.As<MessageInvoker>().Serializer.Serialize(envelope);
             envelope.Message = null;
         
-            _invoker.Value.Invoke(envelope);
+            _invoker.Value.Invoke(envelope, theCallback);
         }
 
         

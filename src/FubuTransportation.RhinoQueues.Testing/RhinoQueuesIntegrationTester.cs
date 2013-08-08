@@ -43,7 +43,7 @@ namespace FubuTransportation.RhinoQueues.Testing
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void send_a_message_and_get_it_back()
         {
-            var envelope = new Envelope(null) {Data = new byte[] {1, 2, 3, 4, 5}};
+            var envelope = new Envelope() {Data = new byte[] {1, 2, 3, 4, 5}};
             envelope.Headers["foo"] = "bar";
 
             var receiver = new RecordingReceiver();

@@ -82,8 +82,7 @@ namespace FubuTransportation.InMemory
                         using (var stream = new MemoryStream(data))
                         {
                             var envelope = _parent._formatter.Deserialize(stream).As<Envelope>();
-                            envelope.Callback = new InMemoryCallback(_parent, envelope);
-                            _receiver.Receive(envelope);
+                            _receiver.Receive(envelope, new InMemoryCallback(_parent, envelope));
                         }
                     }
                 });

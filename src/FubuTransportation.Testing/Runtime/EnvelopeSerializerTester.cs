@@ -21,7 +21,7 @@ namespace FubuTransportation.Testing.Runtime
                 serializers[i].Stub(x => x.ContentType).Return("text/" + i);
             }
 
-            theEnvelope = new Envelope(null)
+            theEnvelope = new Envelope()
             {
                 Data = new byte[0]
             };
@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Runtime
         public void throws_on_serialize_with_no_message()
         {
             Exception<InvalidOperationException>.ShouldBeThrownBy(() => {
-                ClassUnderTest.Serialize(new Envelope(null));
+                ClassUnderTest.Serialize(new Envelope());
             }).Message.ShouldEqual("No message on this envelope to serialize");
         }
 
@@ -63,7 +63,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
             {
-                ClassUnderTest.Deserialize(new Envelope(null));
+                ClassUnderTest.Deserialize(new Envelope());
             }).Message.ShouldEqual("No data on this envelope to deserialize");
         }
 

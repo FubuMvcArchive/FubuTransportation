@@ -59,16 +59,16 @@ namespace FubuTransportation.RhinoQueues
                 var transactionalScope = _queueManager.BeginTransactionalScope();
                 var message = transactionalScope.Receive(queueName);
 
-                var envelope = ToEnvelope(transactionalScope, message);
+                var envelope = ToEnvelope(message);
 
-                receiver.Receive(envelope);
+                receiver.Receive(envelope, new TransactionCallback(transactionalScope));
             }
 
         }
 
-        public static Envelope ToEnvelope(ITransactionalScope tx, Message message)
+        public static Envelope ToEnvelope(Message message)
         {
-            var envelope = new Envelope(new TransactionCallback(tx), message.Headers)
+            var envelope = new Envelope(message.Headers)
             {
                 Data = message.Data
             };

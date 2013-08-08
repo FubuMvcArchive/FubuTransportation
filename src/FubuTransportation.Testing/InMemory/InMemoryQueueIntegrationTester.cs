@@ -26,7 +26,7 @@ namespace FubuTransportation.Testing.InMemory
         [Test]
         public void can_round_trip_an_envelope_through_the_queue()
         {
-            var envelope = new Envelope(null);
+            var envelope = new Envelope();
             envelope.CorrelationId = Guid.NewGuid();
             envelope.Headers["Foo"] = "Bar";
             envelope.Data = new byte[]{1,2,3,4,5};
@@ -59,7 +59,7 @@ namespace FubuTransportation.Testing.InMemory
             transport.OpenChannels(graph);
             node.Channel.ShouldNotBeNull();
 
-            var envelope = new Envelope(null);
+            var envelope = new Envelope();
             envelope.CorrelationId = Guid.NewGuid();
             envelope.Headers["Foo"] = "Bar";
             envelope.Data = new byte[] { 1, 2, 3, 4, 5 };

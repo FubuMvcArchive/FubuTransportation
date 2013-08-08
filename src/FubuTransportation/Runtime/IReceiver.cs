@@ -2,6 +2,6 @@
 {
     public interface IReceiver
     {
-        void Receive(Envelope envelope);
+        void Receive(Envelope envelope, IMessageCallback callback);
     }
 }

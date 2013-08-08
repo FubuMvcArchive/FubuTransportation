@@ -27,7 +27,7 @@ namespace FubuTransportation.Testing.Runtime
         private void assertRoundTrips(int index)
         {
             var contentType = messageSerializers[index].ContentType;
-            var envelope = new Envelope(null)
+            var envelope = new Envelope()
             {
                 Message = theAddress,
                 ContentType = contentType
@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void happily_chooses_the_default_content_type_for_the_graph_if_none_is_on_the_envelope()
         {
-            var envelope = new Envelope(null)
+            var envelope = new Envelope()
             {
                 Message = theAddress,
                 ContentType = null

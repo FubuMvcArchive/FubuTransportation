@@ -11,15 +11,10 @@ namespace FubuTransportation.Runtime
     {
         void Deserialize(Envelope envelope);
         void Serialize(Envelope envelope);
-
-        // TODO -- maybe?
-        // string ContentTypeFor<T>() ??
     }
 
     public class EnvelopeSerializer : IEnvelopeSerializer
     {
-        // TODO -- throw if unrecognized content-type
-
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<IMessageSerializer> _serializers;
 

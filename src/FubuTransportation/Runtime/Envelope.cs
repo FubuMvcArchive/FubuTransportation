@@ -12,9 +12,6 @@ namespace FubuTransportation.Runtime
         public static readonly string ParentId = "ParentId";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
         public static readonly string SourceKey = "Source";
-        
-        [NonSerialized]
-        public IMessageCallback Callback;
 
         public byte[] Data;
 
@@ -39,10 +36,14 @@ namespace FubuTransportation.Runtime
             }
         }
 
-        public Envelope(IMessageCallback callback, NameValueCollection headers = null)
+        public Envelope(NameValueCollection headers)
         {
-            Callback = callback;
             Headers = headers ?? new NameValueCollection();
+        }
+
+        public Envelope()
+        {
+            Headers = new NameValueCollection();
         }
 
         public string ContentType

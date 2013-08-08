@@ -24,7 +24,8 @@ namespace FubuTransportation.Runtime
             get { return _serializer; }
         }
 
-        public void Invoke(Envelope envelope)
+        // TODO -- clean this up. Think it can get simpler
+        public void Invoke(Envelope envelope, IMessageCallback callback)
         {
             if (envelope.Message == null)
             {
@@ -33,10 +34,10 @@ namespace FubuTransportation.Runtime
 
             var inputType = envelope.Message.GetType();
 
-            if (envelope.Message.GetType() == typeof (object[]))
+            if (inputType == typeof (object[]))
             {
                 var chain = _graph.ChainFor(typeof (object[]));
-                executeChain(envelope, typeof (object[]), chain, envelope.Message);
+                executeChain(envelope, typeof (object[]), chain, envelope.Message, callback);
             }
             else
             {
@@ -47,11 +48,12 @@ namespace FubuTransportation.Runtime
                     throw new NotImplementedException();
                 }
 
-                executeChain(envelope, inputType, chain, envelope.Message);
+                executeChain(envelope, inputType, chain, envelope.Message, callback);
             }
         }
 
-        private void executeChain(Envelope envelope, Type inputType, HandlerChain chain, object message)
+        // TODO -- just smelly
+        private void executeChain(Envelope envelope, Type inputType, HandlerChain chain, object message, IMessageCallback callback)
         {
             var request = new InMemoryFubuRequest();
             request.Set(inputType, message);
@@ -68,7 +70,7 @@ namespace FubuTransportation.Runtime
             try
             {
                 behavior.Invoke();
-                envelope.Callback.MarkSuccessful();
+                callback.MarkSuccessful();
             }
             catch (Exception ex)
             {

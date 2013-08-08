@@ -44,7 +44,7 @@ namespace FubuTransportation
 
         public void Send<T>(T message)
         {
-            var envelope = new Envelope(null)
+            var envelope = new Envelope()
             {
                 Message = message
             };
