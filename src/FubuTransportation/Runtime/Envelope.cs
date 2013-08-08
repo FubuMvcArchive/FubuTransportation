@@ -12,6 +12,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ParentId = "ParentId";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
         public static readonly string SourceKey = "Source";
+        public static readonly string ChannelKey = "Channel";
 
         public byte[] Data;
 
