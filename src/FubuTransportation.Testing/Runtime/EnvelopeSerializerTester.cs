@@ -40,6 +40,17 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void throws_on_unknown_content_type()
+        {
+            theEnvelope.ContentType = "random/nonexistent";
+            theEnvelope.Message = new object();
+
+            Exception<UnknownContentTypeException>.ShouldBeThrownBy(() => {
+                ClassUnderTest.Serialize(theEnvelope);
+            }).Message.ShouldContain("random/nonexistent");
+        }
+
+        [Test]
         public void throws_on_serialize_with_no_message()
         {
             Exception<InvalidOperationException>.ShouldBeThrownBy(() => {

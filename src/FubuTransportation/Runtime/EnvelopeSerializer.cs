@@ -44,9 +44,14 @@ namespace FubuTransportation.Runtime
 
         private IMessageSerializer selectSerializer(Envelope envelope)
         {
+            var serializer = _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(envelope.ContentType));
+        
+            if (serializer == null)
+            {
+                throw new UnknownContentTypeException(envelope.ContentType);
+            }
 
-            // TODO -- what to do w/ unknown content-type?
-            return _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(envelope.ContentType));
+            return serializer;
         }
 
         public void Serialize(Envelope envelope)
