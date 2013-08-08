@@ -106,7 +106,15 @@ namespace FubuTransportation.Testing.TestSupport
                     writer.WriteLine("No messages were received!");
                 }
 
-                // TODO -- blow up if there are unexpected messages
+                var unexpectedMessages = TestMessageRecorder.AllProcessed.Where(x => !_steps.Any(step => step.MatchesSentMessage(x.Message)))
+                                   .ToArray();
+
+                if (unexpectedMessages.Any())
+                {
+                    writer.BlankLine();
+                    writer.WriteLine("Found unexpected messages");
+                    unexpectedMessages.Each(x => writer.Failure(x.ToString()));
+                }
             }
         }
 

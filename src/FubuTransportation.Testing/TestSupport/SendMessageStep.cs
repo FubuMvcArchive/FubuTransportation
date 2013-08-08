@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bottles.Services.Messaging.Tracking;
 using FubuCore;
+using System.Linq;
 
 namespace FubuTransportation.Testing.TestSupport
 {
@@ -72,9 +73,9 @@ namespace FubuTransportation.Testing.TestSupport
             });
         }
 
-        public bool MatchesMessage(MessageProcessed processed)
+        public bool MatchesSentMessage(Message processed)
         {
-            return false;
+            return processed is T && processed.Id == Message.Id && ReceivingNodes.Any(x => x.Uri == processed.Source);
         }
 
         public Message Message { get; private set; }

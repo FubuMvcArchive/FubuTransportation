@@ -10,6 +10,7 @@ namespace FubuTransportation.Testing.Scenarios
                     .PublishesMessage<OneMessage>();
 
             Service1.Handles<OneMessage>();
+
             Service2.Handles<OneMessage>();
             Service3.Handles<OneMessage>();
 

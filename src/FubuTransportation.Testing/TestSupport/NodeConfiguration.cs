@@ -151,6 +151,11 @@ namespace FubuTransportation.Testing.TestSupport
             }
         }
 
+        public Uri Uri
+        {
+            get { return _uri; }
+        }
+
         internal void Describe(IScenarioWriter writer)
         {
             if (!_registry.IsValueCreated) return;

@@ -33,5 +33,10 @@ namespace FubuTransportation.Testing.TestSupport
         {
             return Id.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} from {1}/{2}", GetType().Name,Source, Key);
+        }
     }
 }

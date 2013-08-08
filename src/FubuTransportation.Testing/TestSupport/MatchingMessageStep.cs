@@ -44,9 +44,9 @@ namespace FubuTransportation.Testing.TestSupport
             }
         }
 
-        public bool MatchesMessage(MessageProcessed processed)
+        public bool MatchesSentMessage(Message processed)
         {
-            throw new System.NotImplementedException();
+            return processed is T && processed.Id == _message.Message.Id;
         }
     }
 }

@@ -8,6 +8,6 @@
         void Act(IScenarioWriter writer);
         void Assert(IScenarioWriter writer);
 
-        bool MatchesMessage(MessageProcessed processed);
+        bool MatchesSentMessage(Message processed);
     }
 }
