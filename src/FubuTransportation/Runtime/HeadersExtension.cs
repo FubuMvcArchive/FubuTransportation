@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
@@ -15,5 +16,7 @@ namespace FubuTransportation.Runtime
 
             return clone;
         }
+
+        
     }
 }

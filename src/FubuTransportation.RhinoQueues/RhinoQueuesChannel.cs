@@ -68,7 +68,7 @@ namespace FubuTransportation.RhinoQueues
 
         public static Envelope ToEnvelope(Message message)
         {
-            var envelope = new Envelope(message.Headers)
+            var envelope = new Envelope(new NameValueHeaders(message.Headers))
             {
                 Data = message.Data
             };
@@ -100,7 +100,7 @@ namespace FubuTransportation.RhinoQueues
             var messagePayload = new MessagePayload
             {
                 Data = envelope.Data,
-                Headers = envelope.Headers
+                Headers = envelope.Headers.ToNameValues()
             };
 
             //TODO Should this scope be shared with the dequeue scope?

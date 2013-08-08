@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace FubuTransportation.Runtime
 {
+    [Serializable]
     public class NameValueHeaders : IHeaders
     {
         private readonly NameValueCollection _inner;
@@ -25,6 +27,11 @@ namespace FubuTransportation.Runtime
         public IEnumerable<string> Keys()
         {
             return _inner.AllKeys;
+        }
+
+        public NameValueCollection ToNameValues()
+        {
+            return _inner;
         }
     }
 }

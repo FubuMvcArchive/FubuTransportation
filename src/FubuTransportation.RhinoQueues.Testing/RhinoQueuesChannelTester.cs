@@ -26,6 +26,10 @@ namespace FubuTransportation.RhinoQueues.Testing
                 Id = new MessageId {MessageIdentifier = Guid.NewGuid()}
             };
 
+            message.Headers["a"] = "1";
+            message.Headers["b"] = "2";
+            message.Headers["c"] = "3";
+
             theEnvelope = RhinoQueuesChannel.ToEnvelope(message);
         }
 
@@ -38,7 +42,9 @@ namespace FubuTransportation.RhinoQueues.Testing
         [Test]
         public void should_copy_the_headers()
         {
-            theEnvelope.Headers.ShouldBeTheSameAs(message.Headers);
+            theEnvelope.Headers["a"].ShouldEqual("1");
+            theEnvelope.Headers["b"].ShouldEqual("2");
+            theEnvelope.Headers["c"].ShouldEqual("3");
         }
 
         [Test]

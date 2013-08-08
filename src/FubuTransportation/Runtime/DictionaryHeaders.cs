@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace FubuTransportation.Runtime
 {
+    [Serializable]
     public class DictionaryHeaders : IHeaders
     {
         private readonly IDictionary<string, string> _inner;
@@ -34,6 +37,14 @@ namespace FubuTransportation.Runtime
         public IEnumerable<string> Keys()
         {
             return _inner.Keys;
+        }
+
+        public NameValueCollection ToNameValues()
+        {
+            var values = new NameValueCollection();
+            _inner.Each(x => values[x.Key] = x.Value);
+
+            return values;
         }
     }
 }

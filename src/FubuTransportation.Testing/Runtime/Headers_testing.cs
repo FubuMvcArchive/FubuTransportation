@@ -54,6 +54,18 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void to_name_values_for_dictionary()
+        {
+            var values = new Dictionary<string, string> { { "a", "1" }, { "b", "2" } };
+
+            var headers = new DictionaryHeaders(values);
+
+            var collection = headers.ToNameValues();
+            collection["a"].ShouldEqual("1");
+            collection["b"].ShouldEqual("2");
+        }
+
+        [Test]
         public void get_keys_from_dictionary()
         {
             var values = new Dictionary<string, string> { { "a", "1" }, { "b", "2" }, {"c", "3"} };

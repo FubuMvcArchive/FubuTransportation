@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 
 namespace FubuTransportation.Runtime
@@ -9,5 +10,7 @@ namespace FubuTransportation.Runtime
         string this[string key] { get; set; }
 
         IEnumerable<string> Keys();
+
+        NameValueCollection ToNameValues();
     }
 }
