@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.Runtime
         [SetUp]
         public void SetUp()
         {
-            events = new EventAggregator();
+            events = new EventAggregator(new IListener[0]);
 
             handler = new StubMessage1Handler();
             events.AddListener(handler);

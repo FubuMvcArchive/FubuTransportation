@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using FubuMVC.StructureMap;
 using FubuTransportation.InMemory;
+using FubuTransportation.TestSupport;
 using StructureMap;
 using System.Linq;
 using FubuCore;
@@ -49,6 +51,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
             // Make it all be 
             var harnessSettings = InMemoryTransport.ToInMemory<HarnessSettings>();
             container.Inject(harnessSettings);
+            container.Configure(x => x.For<IListener>().Add<MessageWatcher>());
 
             _uri = (Uri) ReflectionHelper.GetAccessor(_expression).GetValue(harnessSettings);
 

@@ -123,6 +123,7 @@
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
     <Compile Include="ScenarioRunner.cs" />
+    <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
     <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs" />
     <Compile Include="Scenarios\Send_a_message_that_raises_events.cs" />
     <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs" />
@@ -149,7 +150,6 @@
     <Compile Include="ScenarioSupport\Scenario.cs" />
     <Compile Include="ScenarioSupport\SendMessageStep.cs" />
     <Compile Include="ScenarioSupport\SimpleHandler.cs" />
-    <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
     <Compile Include="ScenarioSupport\TestMessageRecorder.cs" />
     <Compile Include="ScenarioSupport\GenericHandler.cs" />
     <Compile Include="Runtime\XmlMessageSerializerTester.cs" />

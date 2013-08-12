@@ -13,6 +13,11 @@ namespace FubuTransportation
         private readonly List<object> _listeners = new List<object>();
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
+        public EventAggregator(IEnumerable<IListener> listeners)
+        {
+            _listeners.AddRange(listeners);
+        }
+
         public void SendMessage<T>(T message)
         {
             // TODO -- Harden this and add logging

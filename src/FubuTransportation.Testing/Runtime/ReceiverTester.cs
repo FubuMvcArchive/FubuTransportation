@@ -75,24 +75,6 @@ namespace FubuTransportation.Testing.Runtime
             envelope.ContentType.ShouldEqual("text/plain");
         }
 
-        [Test]
-        public void receive_a_message_that_generates_responses()
-        {
-            var envelope = new Envelope
-            {
-                CorrelationId = Guid.NewGuid().ToString()
-            };
-
-            var response1 = new Message3();
-            theInvoker.Responses.Add(response1);
-            var response2 = new Message4();
-            theInvoker.Responses.Add(response2);
-
-            theReceiver.Receive(envelope, theCallback);
-
-            theSender.Sent.Select(x => x.Message)
-                .ShouldHaveTheSameElementsAs(response1, response2);
-        }
     }
 
     public class RecordingMessageInvoker : IMessageInvoker, IOutgoingMessages
@@ -101,10 +83,9 @@ namespace FubuTransportation.Testing.Runtime
 
         public IList<object> Responses = new List<object>(); 
 
-        public IOutgoingMessages Invoke(Envelope envelope, IMessageCallback callback)
+        public void Invoke(Envelope envelope, IMessageCallback callback)
         {
             Invoked.Add(envelope);
-            return this;
         }
 
         public IEnumerator<object> GetEnumerator()
@@ -147,8 +128,7 @@ namespace FubuTransportation.Testing.Runtime
 
             Services.Inject(theNode);
 
-            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null, null)).IgnoreArguments()
-                                      .Return(new RecordingMessageInvoker()); // stubbing out the outgoing messages
+            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null, null)).IgnoreArguments();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
 

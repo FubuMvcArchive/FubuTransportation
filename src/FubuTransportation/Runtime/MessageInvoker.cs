@@ -5,6 +5,7 @@ using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
+using System.Collections.Generic;
 
 namespace FubuTransportation.Runtime
 {
@@ -16,13 +17,15 @@ namespace FubuTransportation.Runtime
         private readonly HandlerGraph _graph;
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
+        private readonly IEnvelopeSender _sender;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger)
+        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
         {
             _factory = factory;
             _graph = graph;
             _serializer = serializer;
             _logger = logger;
+            _sender = sender;
         }
 
         public IEnvelopeSerializer Serializer
@@ -31,7 +34,7 @@ namespace FubuTransportation.Runtime
         }
 
         // TODO -- clean this up. Think it can get simpler
-        public IOutgoingMessages Invoke(Envelope envelope, IMessageCallback callback)
+        public void Invoke(Envelope envelope, IMessageCallback callback)
         {
             if (envelope.Message == null)
             {
@@ -44,7 +47,7 @@ namespace FubuTransportation.Runtime
             if (inputType == typeof (object[]))
             {
                 var chain = _graph.ChainFor(typeof (object[]));
-                return executeChain(envelope, chain, callback);
+                executeChain(envelope, chain, callback);
             }
             else
             {
@@ -55,11 +58,11 @@ namespace FubuTransportation.Runtime
                     throw new NotImplementedException();
                 }
 
-                return executeChain(envelope, chain, callback);
+                executeChain(envelope, chain, callback);
             }
         }
 
-        private IOutgoingMessages executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
+        private void executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
         {
             _logger.InfoMessage(() => new ChainExecutionStarted
             {
@@ -76,15 +79,20 @@ namespace FubuTransportation.Runtime
             try
             {
                 behavior.Invoke();
-                callback.MarkSuccessful();
+                args.Each(o =>
+                {
+                    var child = envelope.ForResponse(o);
+                    _sender.Send(child);
+                });
 
-                return args;
+                callback.MarkSuccessful();
             }
             catch (Exception ex)
             {
                 // TODO -- um, do something here
+                callback.MarkFailed();
                 throw;
-                //callback.MarkFailed();
+                
             }
             finally
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
 using FubuTransportation.InMemory;
 using System.Linq;
@@ -75,6 +76,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
                 }
 
                 Wait.Until(() => {
+                    Debug.WriteLine("I'm testing to see if everything is cleared yet");
                     return !MessageHistory.Outstanding().Any();
                 }, timeoutInMilliseconds:5000);
 

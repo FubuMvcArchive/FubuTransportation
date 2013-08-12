@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using System.Collections.Generic;
 
@@ -26,11 +27,7 @@ namespace FubuTransportation.Runtime
             envelope.Source = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
-            var outgoing = _messageInvoker.Invoke(envelope, callback);
-            outgoing.Each(o => {
-                var child = envelope.ForResponse(o);
-                _sender.Send(child);
-            });
+            _messageInvoker.Invoke(envelope, callback);
         }
 
         protected bool Equals(Receiver other)

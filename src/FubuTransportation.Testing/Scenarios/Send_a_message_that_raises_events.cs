@@ -16,6 +16,10 @@ namespace FubuTransportation.Testing.Scenarios
             Service1.Handles<TwoMessage>();
             Service1.Handles<ThreeMessage>();
 
+            // TODO -- super hokey
+            Service1.Registry.Channel(x => x.Service1)
+                    .PublishesMessage<TwoMessage>().PublishesMessage<ThreeMessage>();
+
             // Assuming that if the events raised can be handled locally, they are
             // handled here. Corey/Ryan to review
             Website1.Sends<OneMessage>("original message")

@@ -2,6 +2,6 @@
 {
     public interface IMessageInvoker
     {
-        IOutgoingMessages Invoke(Envelope envelope, IMessageCallback callback);
+        void Invoke(Envelope envelope, IMessageCallback callback);
     }
 }
