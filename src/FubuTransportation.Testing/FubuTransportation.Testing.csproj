@@ -96,6 +96,7 @@
     <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
     <Compile Include="Runtime\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\BinarySerializerTester.cs" />

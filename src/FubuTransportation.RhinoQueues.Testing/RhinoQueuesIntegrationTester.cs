@@ -49,7 +49,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             var receiver = new RecordingReceiver();
             node.Channel.StartReceiving(receiver, new ChannelNode());
 
-            node.Channel.As<RhinoQueuesChannel>().Send(envelope);
+            node.Channel.As<RhinoQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());
 
 

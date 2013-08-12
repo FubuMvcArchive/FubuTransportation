@@ -83,7 +83,6 @@
     <Compile Include="Runtime\DictionaryHeaders.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
-    <Compile Include="Runtime\HeadersExtension.cs" />
     <Compile Include="Runtime\IChannel.cs" />
     <Compile Include="Runtime\IHeaders.cs" />
     <Compile Include="Runtime\IMessageCallback.cs" />

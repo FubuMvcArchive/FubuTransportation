@@ -78,6 +78,18 @@ namespace FubuTransportation.Configuration
         {
             return string.Format("Channel: {0}", Key);
         }
+
+        // virtual for testing of course
+        public virtual void Send(Envelope envelope)
+        {
+            var clone = new NameValueHeaders();
+            envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
+
+            clone[Envelope.SourceKey] = Uri.ToString();
+            clone[Envelope.ChannelKey] = Key;
+
+            Channel.Send(envelope.Data, clone);
+        }
     }
 
     

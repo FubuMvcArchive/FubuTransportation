@@ -42,11 +42,13 @@ namespace FubuTransportation
             return new TaskCompletionSource<TResponse>().Task;
         }
 
+        // TODO -- UT the correlation id
         public void Send<T>(T message)
         {
             var envelope = new Envelope()
             {
-                Message = message
+                Message = message,
+                CorrelationId = Guid.NewGuid().ToString()
             };
 
             _serializer.Serialize(envelope);

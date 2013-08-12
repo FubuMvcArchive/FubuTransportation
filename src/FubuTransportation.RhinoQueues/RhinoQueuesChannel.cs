@@ -73,8 +73,6 @@ namespace FubuTransportation.RhinoQueues
                 Data = message.Data
             };
 
-            envelope.Headers[Envelope.Id] = message.Id.MessageIdentifier.ToString();
-
             return envelope;
         }
 
@@ -93,20 +91,23 @@ namespace FubuTransportation.RhinoQueues
             }
         }
 
-        public void Send(Envelope envelope)
+        public void Send(byte[] data, IHeaders headers)
         {
             //TODO delayed messages
             // TODO -- pull out a factory method for our Envelope to RhinoQueues Message & UT
             var messagePayload = new MessagePayload
             {
-                Data = envelope.Data,
-                Headers = envelope.Headers.ToNameValues()
+                Data = data,
+                Headers = headers.ToNameValues()
             };
 
             //TODO Should this scope be shared with the dequeue scope?
             var sendingScope = _queueManager.BeginTransactionalScope();
             var id = sendingScope.Send(_address, messagePayload);
-            envelope.CorrelationId = id.MessageIdentifier;
+            
+            // TODO -- do we grab this?
+            
+            //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
 
         }

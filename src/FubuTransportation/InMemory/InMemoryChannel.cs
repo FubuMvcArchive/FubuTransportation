@@ -29,8 +29,9 @@ namespace FubuTransportation.InMemory
             }
         }
 
-        public void Send(Envelope envelope)
+        public void Send(byte[] data, IHeaders headers)
         {
+            var envelope = new Envelope(headers) {Data = data};
             _queue.Enqueue(envelope);
         }
     }

@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using TestMessages;
 using FubuTestingSupport;
+using System.Linq;
 
 namespace FubuTransportation.Testing.Configuration
 {
@@ -71,6 +72,72 @@ namespace FubuTransportation.Testing.Configuration
             node.StartReceiving(graph, invoker);
             
             node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node), node));
+        }
+
+        
+    }
+
+    [TestFixture]
+    public class when_sending_an_envelope
+    {
+        private Envelope theEnvelope;
+        private RecordingChannel theChannel;
+        private ChannelNode theNode;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theEnvelope = new Envelope()
+            {
+                Data = new byte[]{1,2,3,4},
+                
+            };
+
+            theEnvelope.Headers["A"] = "1";
+            theEnvelope.Headers["B"] = "2";
+            theEnvelope.Headers["C"] = "3";
+
+            theChannel = new RecordingChannel();
+
+            theNode = new ChannelNode
+            {
+                Channel = theChannel,
+                Key = "Foo",
+                Uri = "foo://bar".ToUri()
+            };
+
+            theNode.Send(theEnvelope);
+        }
+
+        [Test]
+        public void should_have_sent_the_data()
+        {
+            theChannel.Sent.Single().Data.ShouldEqual(theEnvelope.Data);
+        }
+
+        [Test]
+        public void should_have_sent_a_copy_of_the_headers()
+        {
+            var sentHeaders = theChannel.Sent.Single().Headers;
+            sentHeaders.ShouldNotBeTheSameAs(theEnvelope.Headers);
+
+            sentHeaders["A"].ShouldEqual("1");
+            sentHeaders["B"].ShouldEqual("2");
+            sentHeaders["C"].ShouldEqual("3");
+        }
+
+        [Test]
+        public void sends_the_channel_key()
+        {
+            var sentHeaders = theChannel.Sent.Single().Headers;
+            sentHeaders[Envelope.ChannelKey].ShouldEqual(theNode.Key);
+        }
+
+        [Test]
+        public void sends_the_source_as_a_header()
+        {
+            var sentHeaders = theChannel.Sent.Single().Headers;
+            sentHeaders[Envelope.SourceKey].ToUri().ShouldEqual(theNode.Uri);
         }
     }
 

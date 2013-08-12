@@ -8,7 +8,7 @@ namespace FubuTransportation.Runtime
 {
     public interface IChannelRouter
     {
-        IEnumerable<IChannel> FindChannels(object message);
+        IEnumerable<ChannelNode> FindChannels(object message);
     }
 
     public class ChannelRouter : IChannelRouter
@@ -20,11 +20,11 @@ namespace FubuTransportation.Runtime
             _graph = graph;
         }
 
-        public IEnumerable<IChannel> FindChannels(object message)
+        public IEnumerable<ChannelNode> FindChannels(object message)
         {
             // TODO -- gets a LOT more sophisticated later
             var inputType = message.GetType();
-            return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType))).Select(c => c.Channel);
+            return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType)));
         }
     }
 

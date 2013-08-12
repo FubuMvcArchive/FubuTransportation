@@ -1,13 +1,14 @@
 ﻿using System;
 using FubuMVC.Core.Http;
+using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
     [Serializable]
     public class Envelope
     {
-        public static readonly string Id = "Id";
         public static readonly string OriginalId = "OriginalId";
+        public static readonly string IdKey = "Id";
         public static readonly string ParentId = "ParentId";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
         public static readonly string SourceKey = "Source";
@@ -43,7 +44,13 @@ namespace FubuTransportation.Runtime
 
         public IHeaders Headers { get; private set; }
 
-        // TODO -- get this on the receive too!
-        public Guid CorrelationId { get; set; }
+        public string CorrelationId
+        {
+            get
+            {
+                return Headers[IdKey];
+            }
+            set { Headers[IdKey] = value; }
+        }
     }
 }

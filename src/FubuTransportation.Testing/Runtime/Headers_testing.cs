@@ -75,26 +75,5 @@ namespace FubuTransportation.Testing.Runtime
             headers.Keys().ShouldHaveTheSameElementsAs("a", "b", "c");
         }
 
-        [Test]
-        public void copy_headers_for_a_channel_node()
-        {
-            var headers = new NameValueHeaders();
-            headers["a"] = "1";
-            headers["b"] = "2";
-            headers["c"] = "3";
-
-            var node = new ChannelNode
-            {
-                Key = "SomeKey",
-                Uri = "foo://bar".ToUri()
-            };
-
-            var clone = headers.CloneForSource(node);
-            clone["a"].ShouldEqual("1");
-            clone["b"].ShouldEqual("2");
-            clone["c"].ShouldEqual("3");
-            clone[Envelope.SourceKey].ShouldEqual(node.Uri.ToString());
-            clone[Envelope.ChannelKey].ShouldEqual(node.Key);
-        }
     }
 }

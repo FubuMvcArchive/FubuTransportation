@@ -47,10 +47,5 @@ namespace FubuTransportation.RhinoQueues.Testing
             theEnvelope.Headers["c"].ShouldEqual("3");
         }
 
-        [Test]
-        public void should_copy_the_id()
-        {
-            theEnvelope.Headers["Id"].ShouldEqual(message.Id.MessageIdentifier.ToString());
-        }
     }
 }
