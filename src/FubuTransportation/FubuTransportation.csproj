@@ -67,7 +67,9 @@
     <Compile Include="Configuration\HandlerGraph.cs" />
     <Compile Include="Configuration\HandlerSource.cs" />
     <Compile Include="Configuration\IHandlerSource.cs" />
+    <Compile Include="EventAggregator.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
+    <Compile Include="IEventAggregator.cs" />
     <Compile Include="InMemory\InMemoryQueueManager.cs" />
     <Compile Include="InMemory\InMemoryChannel.cs" />
     <Compile Include="InMemory\InMemoryQueue.cs" />

@@ -63,8 +63,10 @@ namespace FubuTransportation
         }
     }
 
-    public interface IEventAggregator
+
+    public interface IListener<T>
     {
-        
+        void Handle(T message);
     }
+
 }
