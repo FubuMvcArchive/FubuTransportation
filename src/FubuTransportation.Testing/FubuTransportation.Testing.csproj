@@ -122,6 +122,7 @@
     <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs" />
     <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs" />
     <Compile Include="ScenarioWriterSmokeTester.cs" />
+    <Compile Include="ServiceBusTester.cs" />
     <Compile Include="TestSupport\AnotherOneHandler.cs" />
     <Compile Include="TestSupport\DifferentOneHandler.cs" />
     <Compile Include="TestSupport\FourHandler.cs" />

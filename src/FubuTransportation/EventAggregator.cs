@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace FubuTransportation
 {
+
     public class EventAggregator : IEventAggregator
     {
         private readonly List<object> _listeners = new List<object>();
