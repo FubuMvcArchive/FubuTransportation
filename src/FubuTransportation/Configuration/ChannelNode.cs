@@ -52,11 +52,11 @@ namespace FubuTransportation.Configuration
             return Uri.Scheme;
         }
 
-        public void StartReceiving(ChannelGraph graph, IMessageInvoker invoker)
+        public void StartReceiving(ChannelGraph graph, IMessageInvoker invoker, IEnvelopeSender sender)
         {
             if (Incoming)
             {
-                Channel.StartReceiving(new Receiver(invoker, graph, this), this);
+                Channel.StartReceiving(new Receiver(invoker, graph, this, sender), this);
             }
         }
         

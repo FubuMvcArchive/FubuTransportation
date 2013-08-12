@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
+using System.Linq;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -16,6 +18,7 @@ namespace FubuTransportation.Testing.Runtime
         private RecordingMessageInvoker theInvoker;
         private Receiver theReceiver;
         private IMessageCallback theCallback;
+        private RecordingEnvelopeSender theSender;
 
         [SetUp]
         public void SetUp()
@@ -26,8 +29,9 @@ namespace FubuTransportation.Testing.Runtime
             theInvoker = new RecordingMessageInvoker();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
+            theSender = new RecordingEnvelopeSender();
 
-            theReceiver = new Receiver(theInvoker, theGraph, theNode);
+            theReceiver = new Receiver(theInvoker, theGraph, theNode, theSender);
         }
 
         [Test]
@@ -70,15 +74,52 @@ namespace FubuTransportation.Testing.Runtime
 
             envelope.ContentType.ShouldEqual("text/plain");
         }
+
+        [Test]
+        public void receive_a_message_that_generates_responses()
+        {
+            var envelope = new Envelope
+            {
+                CorrelationId = Guid.NewGuid().ToString()
+            };
+
+            var response1 = new Message3();
+            theInvoker.Responses.Add(response1);
+            var response2 = new Message4();
+            theInvoker.Responses.Add(response2);
+
+            theReceiver.Receive(envelope, theCallback);
+
+            theSender.Sent.Select(x => x.Message)
+                .ShouldHaveTheSameElementsAs(response1, response2);
+        }
     }
 
-    public class RecordingMessageInvoker : IMessageInvoker
+    public class RecordingMessageInvoker : IMessageInvoker, IOutgoingMessages
     {
         public IList<Envelope> Invoked = new List<Envelope>();
 
-        public void Invoke(Envelope envelope, IMessageCallback callback)
+        public IList<object> Responses = new List<object>(); 
+
+        public IOutgoingMessages Invoke(Envelope envelope, IMessageCallback callback)
         {
             Invoked.Add(envelope);
+            return this;
+        }
+
+        public IEnumerator<object> GetEnumerator()
+        {
+            return Responses.GetEnumerator();
+        }
+
+        public void Enqueue(object message)
+        {
+            Responses.Add(message);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 
@@ -105,6 +146,9 @@ namespace FubuTransportation.Testing.Runtime
             };
 
             Services.Inject(theNode);
+
+            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null, null)).IgnoreArguments()
+                                      .Return(new RecordingMessageInvoker()); // stubbing out the outgoing messages
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
 

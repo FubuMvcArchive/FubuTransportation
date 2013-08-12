@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuTransportation.Configuration;
+using System.Collections.Generic;
 
 namespace FubuTransportation.Runtime
 {
@@ -8,13 +9,15 @@ namespace FubuTransportation.Runtime
         private readonly IMessageInvoker _messageInvoker;
         private readonly ChannelGraph _graph;
         private readonly ChannelNode _node;
+        private readonly IEnvelopeSender _sender;
         private readonly Uri _address;
 
-        public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node)
+        public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node, IEnvelopeSender sender)
         {
             _messageInvoker = messageInvoker;
             _graph = graph;
             _node = node;
+            _sender = sender;
             _address = node.Uri;
         }
 
@@ -23,7 +26,11 @@ namespace FubuTransportation.Runtime
             envelope.Source = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
-            _messageInvoker.Invoke(envelope, callback);
+            var outgoing = _messageInvoker.Invoke(envelope, callback);
+            outgoing.Each(o => {
+                var child = envelope.ForResponse(o);
+                _sender.Send(child);
+            });
         }
 
         protected bool Equals(Receiver other)

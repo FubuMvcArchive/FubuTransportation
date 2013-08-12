@@ -31,6 +31,7 @@ namespace FubuTransportation.Runtime
         public Envelope()
         {
             Headers = new NameValueHeaders();
+            CorrelationId = Guid.NewGuid().ToString();
         }
 
         public Uri Source

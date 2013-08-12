@@ -5,6 +5,8 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
 {
+    // TODO -- need to apply unit tests to this thing as the error handling req's
+    // solidify
     public class MessageInvoker : IMessageInvoker
     {
         private readonly IServiceFactory _factory;
@@ -24,7 +26,7 @@ namespace FubuTransportation.Runtime
         }
 
         // TODO -- clean this up. Think it can get simpler
-        public void Invoke(Envelope envelope, IMessageCallback callback)
+        public IOutgoingMessages Invoke(Envelope envelope, IMessageCallback callback)
         {
             if (envelope.Message == null)
             {
@@ -37,7 +39,7 @@ namespace FubuTransportation.Runtime
             if (inputType == typeof (object[]))
             {
                 var chain = _graph.ChainFor(typeof (object[]));
-                executeChain(envelope, chain, callback);
+                return executeChain(envelope, chain, callback);
             }
             else
             {
@@ -48,11 +50,11 @@ namespace FubuTransportation.Runtime
                     throw new NotImplementedException();
                 }
 
-                executeChain(envelope, chain, callback);
+                return executeChain(envelope, chain, callback);
             }
         }
 
-        private void executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
+        private IOutgoingMessages executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
         {
             var args = new HandlerArguments(envelope);
             var behavior = _factory.BuildBehavior(args, chain.UniqueId);
@@ -61,6 +63,8 @@ namespace FubuTransportation.Runtime
             {
                 behavior.Invoke();
                 callback.MarkSuccessful();
+
+                return args;
             }
             catch (Exception ex)
             {

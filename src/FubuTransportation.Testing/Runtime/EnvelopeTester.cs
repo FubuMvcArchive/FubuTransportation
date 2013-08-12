@@ -9,6 +9,18 @@ namespace FubuTransportation.Testing.Runtime
     public class EnvelopeTester
     {
         [Test]
+        public void has_a_correlation_id_by_default()
+        {
+            new Envelope().CorrelationId.ShouldNotBeNull();
+
+            new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+            new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+            new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+            new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+            new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+        }
+
+        [Test]
         public void default_values_for_original_and_parent_id_are_null()
         {
             var parent = new Envelope

@@ -61,6 +61,8 @@ namespace FubuTransportation.Testing.Configuration
         public void start_receiving()
         {
             var invoker = MockRepository.GenerateMock<IMessageInvoker>();
+            var sender = MockRepository.GenerateMock<IEnvelopeSender>();
+
             var node = new ChannelNode
             {
                 Incoming = true,
@@ -69,9 +71,9 @@ namespace FubuTransportation.Testing.Configuration
 
             var graph = new ChannelGraph();
 
-            node.StartReceiving(graph, invoker);
+            node.StartReceiving(graph, invoker,sender);
             
-            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node), node));
+            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node, sender), node));
         }
 
         
