@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime
 {
@@ -12,12 +15,14 @@ namespace FubuTransportation.Runtime
         private readonly IServiceFactory _factory;
         private readonly HandlerGraph _graph;
         private readonly IEnvelopeSerializer _serializer;
+        private readonly ILogger _logger;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer)
+        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger)
         {
             _factory = factory;
             _graph = graph;
             _serializer = serializer;
+            _logger = logger;
         }
 
         public IEnvelopeSerializer Serializer
@@ -56,6 +61,15 @@ namespace FubuTransportation.Runtime
 
         private IOutgoingMessages executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
         {
+            _logger.InfoMessage(() => new ChainExecutionStarted
+            {
+                ChainId = chain.UniqueId,
+                Envelope = envelope
+            });
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var args = new HandlerArguments(envelope);
             var behavior = _factory.BuildBehavior(args, chain.UniqueId);
 
@@ -71,6 +85,17 @@ namespace FubuTransportation.Runtime
                 // TODO -- um, do something here
                 throw;
                 //callback.MarkFailed();
+            }
+            finally
+            {
+                stopwatch.Stop();
+
+                _logger.InfoMessage(() => new ChainExecutionFinished
+                {
+                    ChainId = chain.UniqueId,
+                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
+                    Envelope = envelope
+                });
             }
         }
     }

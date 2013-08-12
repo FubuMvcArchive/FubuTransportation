@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using FubuCore.Logging;
-using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
@@ -54,18 +53,5 @@ namespace FubuTransportation.Logging
         // TODO -- do we wanna turn this on or off?
         public bool IsDebugEnabled { get { return true; } }
         public bool IsInfoEnabled { get { return true; } }
-    }
-
-    public class ChainExecutionStarted : LogRecord
-    {
-        public Guid ChainId { get; set; }
-        public Envelope Envelope { get; set; }
-    }
-
-    public class ChainExecutionFinished : LogRecord
-    {
-        public Guid ChainId { get; set; }
-        public Envelope Envelope { get; set; }
-        public long ElapsedMilliseconds { get; set; }
     }
 }
