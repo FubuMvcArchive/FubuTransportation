@@ -87,6 +87,7 @@
     <Compile Include="Runtime\DictionaryHeaders.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
+    <Compile Include="Runtime\HandlerArguments.cs" />
     <Compile Include="Runtime\IChannel.cs" />
     <Compile Include="Runtime\IChannelRouter.cs" />
     <Compile Include="Runtime\IEnvelopeSender.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="Runtime\Routing\LambdaRoutingRule.cs" />
     <Compile Include="Runtime\Routing\NamespaceRule.cs" />
     <Compile Include="Runtime\Routing\SingleTypeRoutingRule.cs" />
-    <Compile Include="Runtime\OutgoingMessages.cs" />
     <Compile Include="Runtime\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\UnknownChannelException.cs" />
     <Compile Include="Runtime\UnknownContentTypeException.cs" />

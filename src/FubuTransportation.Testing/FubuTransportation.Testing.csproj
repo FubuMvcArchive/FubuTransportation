@@ -111,7 +111,7 @@
     <Compile Include="Runtime\handling_a_batch_of_messages.cs" />
     <Compile Include="Runtime\Headers_testing.cs" />
     <Compile Include="Runtime\multiple_handlers_for_one_message.cs" />
-    <Compile Include="Runtime\OutgoingMessagesTester.cs" />
+    <Compile Include="Runtime\HandlerArgumentsTester.cs" />
     <Compile Include="Runtime\ReceiverTester.cs" />
     <Compile Include="Runtime\Routing\AssemblyRuleTester.cs" />
     <Compile Include="Runtime\Routing\LambdaRoutingRuleTester.cs" />

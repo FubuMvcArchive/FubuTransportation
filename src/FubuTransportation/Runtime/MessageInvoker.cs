@@ -1,5 +1,4 @@
 ﻿using System;
-using FubuCore.Binding;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
@@ -34,10 +33,11 @@ namespace FubuTransportation.Runtime
 
             var inputType = envelope.Message.GetType();
 
+            // TODO -- going to get rid of this in favor of a formal "Batch" concept
             if (inputType == typeof (object[]))
             {
                 var chain = _graph.ChainFor(typeof (object[]));
-                executeChain(envelope, typeof (object[]), chain, envelope.Message, callback);
+                executeChain(envelope, chain, callback);
             }
             else
             {
@@ -48,24 +48,14 @@ namespace FubuTransportation.Runtime
                     throw new NotImplementedException();
                 }
 
-                executeChain(envelope, inputType, chain, envelope.Message, callback);
+                executeChain(envelope, chain, callback);
             }
         }
 
-        // TODO -- just smelly
-        private void executeChain(Envelope envelope, Type inputType, HandlerChain chain, object message, IMessageCallback callback)
+        private void executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
         {
-            var request = new InMemoryFubuRequest();
-            request.Set(inputType, message);
-
-            var outgoing = new OutgoingMessages();
-
-            ServiceArguments args = new ServiceArguments()
-                .With<IFubuRequest>(request)
-                .With(envelope)
-                .With<IOutgoingMessages>(outgoing);
-
-            IActionBehavior behavior = _factory.BuildBehavior(args, chain.UniqueId);
+            var args = new HandlerArguments(envelope);
+            var behavior = _factory.BuildBehavior(args, chain.UniqueId);
 
             try
             {
@@ -76,7 +66,7 @@ namespace FubuTransportation.Runtime
             {
                 // TODO -- um, do something here
                 throw;
-                //envelope.MarkFailed();
+                //callback.MarkFailed();
             }
         }
     }
