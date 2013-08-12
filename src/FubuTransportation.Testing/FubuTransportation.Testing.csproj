@@ -101,8 +101,10 @@
     <Compile Include="Runtime\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\BinarySerializerTester.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
+    <Compile Include="Runtime\EnvelopeSenderTester.cs" />
     <Compile Include="Runtime\EnvelopeSerializerIntegratedTester.cs" />
     <Compile Include="Runtime\EnvelopeSerializerTester.cs" />
+    <Compile Include="Runtime\EnvelopeTester.cs" />
     <Compile Include="Runtime\EventAggregatorTester.cs" />
     <Compile Include="Runtime\generic_handlers_are_called_for_messages_that_match.cs" />
     <Compile Include="Runtime\handling_a_batch_of_messages.cs" />

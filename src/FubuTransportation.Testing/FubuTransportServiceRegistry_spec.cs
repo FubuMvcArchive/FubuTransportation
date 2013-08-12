@@ -33,6 +33,12 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void envelope_sender_is_registered()
+        {
+            registeredTypeIs<IEnvelopeSender, EnvelopeSender>();
+        }
+
+        [Test]
         public void in_memory_transport_is_registered()
         {
             var registry = new FubuRegistry();

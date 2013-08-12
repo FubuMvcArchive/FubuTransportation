@@ -70,6 +70,7 @@
     <Compile Include="EventAggregator.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
     <Compile Include="IEventAggregator.cs" />
+    <Compile Include="IListener.cs" />
     <Compile Include="InMemory\InMemoryQueueManager.cs" />
     <Compile Include="InMemory\InMemoryChannel.cs" />
     <Compile Include="InMemory\InMemoryQueue.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\IChannel.cs" />
+    <Compile Include="Runtime\IEnvelopeSender.cs" />
     <Compile Include="Runtime\IHeaders.cs" />
     <Compile Include="Runtime\IMessageCallback.cs" />
     <Compile Include="Runtime\IMessageInvoker.cs" />

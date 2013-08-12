@@ -12,5 +12,8 @@ namespace FubuTransportation.Runtime
         IEnumerable<string> Keys();
 
         NameValueCollection ToNameValues();
+
+        bool Has(string key);
     }
+
 }

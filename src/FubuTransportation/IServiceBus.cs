@@ -28,13 +28,11 @@ namespace FubuTransportation
 
     public class ServiceBus : IServiceBus
     {
-        private readonly IChannelRouter _router;
-        private readonly IEnvelopeSerializer _serializer;
+        private readonly IEnvelopeSender _sender;
 
-        public ServiceBus(IChannelRouter router, IEnvelopeSerializer serializer)
+        public ServiceBus(IEnvelopeSender sender)
         {
-            _router = router;
-            _serializer = serializer;
+            _sender = sender;
         }
 
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
@@ -44,28 +42,7 @@ namespace FubuTransportation
 
         public void Send<T>(T message)
         {
-            var envelope = new Envelope()
-            {
-                Message = message,
-                CorrelationId = Guid.NewGuid().ToString()
-            };
-
-            _serializer.Serialize(envelope);
-
-            var channels = _router.FindChannels(envelope.Message).ToArray();
-            if (!channels.Any())
-            {
-                throw new Exception("No channels match this message");
-            }
-
-            channels.Each(x => x.Send(envelope));
+            _sender.Send(new Envelope {Message = message});
         }
     }
-
-
-    public interface IListener<T>
-    {
-        void Handle(T message);
-    }
-
 }

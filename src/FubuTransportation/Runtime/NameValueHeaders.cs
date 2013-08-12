@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace FubuTransportation.Runtime
 {
@@ -32,6 +33,11 @@ namespace FubuTransportation.Runtime
         public NameValueCollection ToNameValues()
         {
             return _inner;
+        }
+
+        public bool Has(string key)
+        {
+            return _inner.AllKeys.Contains(key);
         }
     }
 }

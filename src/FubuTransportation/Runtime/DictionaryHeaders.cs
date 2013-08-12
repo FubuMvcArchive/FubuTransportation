@@ -46,5 +46,10 @@ namespace FubuTransportation.Runtime
 
             return values;
         }
+
+        public bool Has(string key)
+        {
+            return _inner.ContainsKey(key);
+        }
     }
 }

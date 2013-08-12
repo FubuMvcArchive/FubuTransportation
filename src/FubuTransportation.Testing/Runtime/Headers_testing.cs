@@ -27,6 +27,19 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void name_value_has()
+        {
+            var values = new NameValueCollection();
+            values["a"] = "1";
+            values["b"] = "2";
+
+            var headers = new NameValueHeaders(values);
+
+            headers.Has("a").ShouldBeTrue();
+            headers.Has("c").ShouldBeFalse();
+        }
+
+        [Test]
         public void get_keys_from_name_value_collection()
         {
             var values = new NameValueCollection();
@@ -51,6 +64,17 @@ namespace FubuTransportation.Testing.Runtime
             headers["c"] = "3";
 
             values["c"].ShouldEqual("3");
+        }
+
+        [Test]
+        public void dictionary_has()
+        {
+            var values = new Dictionary<string, string> { { "a", "1" }, { "b", "2" } };
+
+            var headers = new DictionaryHeaders(values);
+
+            headers.Has("a").ShouldBeTrue();
+            headers.Has("c").ShouldBeFalse();
         }
 
         [Test]
