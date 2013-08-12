@@ -10,7 +10,7 @@ using StructureMap;
 using System.Linq;
 using FubuCore;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class NodeConfiguration : IDisposable
     {

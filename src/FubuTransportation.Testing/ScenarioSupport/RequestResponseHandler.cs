@@ -1,4 +1,6 @@
-﻿namespace FubuTransportation.Testing.TestSupport
+﻿using System.Diagnostics;
+
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class RequestResponseHandler<T> where T : Message
     {
@@ -13,6 +15,8 @@
     {
         public TResponse Handle(TRequest request)
         {
+            Debug.WriteLine("I responded w/ " + typeof(TResponse).Name);
+
             return new TResponse
             {
                 Id = request.Id

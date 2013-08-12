@@ -1,4 +1,4 @@
-﻿using FubuTransportation.Testing.TestSupport;
+﻿using FubuTransportation.Testing.ScenarioSupport;
 
 namespace FubuTransportation.Testing.Scenarios
 {
@@ -12,6 +12,9 @@ namespace FubuTransportation.Testing.Scenarios
             Service1.Handles<OneMessage>()
                 .Raises<TwoMessage>()
                 .Raises<ThreeMessage>();
+
+            Service1.Handles<TwoMessage>();
+            Service1.Handles<ThreeMessage>();
 
             // Assuming that if the events raised can be handled locally, they are
             // handled here. Corey/Ryan to review

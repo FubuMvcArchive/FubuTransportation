@@ -1,6 +1,6 @@
 ﻿using FubuCore;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class MatchingMessageStep<T> : IScenarioStep where T : Message, new()
     {

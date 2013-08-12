@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Bottles.Services.Messaging.Tracking;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class RequestReplyStep<TRequest, TReply> : IScenarioStep where TRequest : Message, new() where TReply : Message
     {

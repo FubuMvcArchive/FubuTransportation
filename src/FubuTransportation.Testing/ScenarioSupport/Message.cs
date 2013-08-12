@@ -1,7 +1,7 @@
 ﻿using System;
 using FubuTransportation.Runtime;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class Message
     {

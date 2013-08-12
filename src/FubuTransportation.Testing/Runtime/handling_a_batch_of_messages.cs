@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using FubuTestingSupport;
-using FubuTransportation.Testing.TestSupport;
+using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Runtime

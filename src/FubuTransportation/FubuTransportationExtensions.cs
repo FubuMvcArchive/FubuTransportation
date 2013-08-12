@@ -1,9 +1,11 @@
 ﻿using Bottles;
+using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation
@@ -38,6 +40,8 @@ namespace FubuTransportation
             SetServiceIfNone<IChannelRouter, ChannelRouter>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
+
+            AddService<ILogListener, EventAggregationListener>();
         }
     }
 

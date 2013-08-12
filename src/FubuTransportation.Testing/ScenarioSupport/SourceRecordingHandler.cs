@@ -1,7 +1,7 @@
 ﻿using Bottles.Services.Messaging.Tracking;
 using FubuTransportation.Runtime;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class SourceRecordingHandler
     {

@@ -1,8 +1,10 @@
 ﻿using Bottles;
+using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
 using FubuTransportation.InMemory;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using System.Linq;
@@ -46,6 +48,17 @@ namespace FubuTransportation.Testing
             BehaviorGraph.BuildFrom(registry).Services
                          .ServicesFor<ITransport>().Single(x => x.Type == typeof (InMemoryTransport))
                          .ShouldNotBeNull();
+        }
+
+        [Test]
+        public void event_aggregation_listener_is_registered()
+        {
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            BehaviorGraph.BuildFrom(registry).Services
+                         .ServicesFor<ILogListener>()
+                         .Any(x => x.Type == typeof(EventAggregationListener))
+                         .ShouldBeTrue();
         }
 
         [Test]

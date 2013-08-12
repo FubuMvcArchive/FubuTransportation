@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class ManyResponseHandler<T, TR1, TR2, TR3> where T : Message, new()
                                                        where TR1 : Message, new()

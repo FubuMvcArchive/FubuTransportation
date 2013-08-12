@@ -4,7 +4,7 @@ using Bottles.Services.Messaging.Tracking;
 using FubuTransportation.InMemory;
 using System.Linq;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class Scenario
     {

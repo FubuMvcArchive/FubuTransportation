@@ -2,7 +2,7 @@
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
-using FubuTransportation.Testing.TestSupport;
+using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using StructureMap;
 using FubuMVC.StructureMap;

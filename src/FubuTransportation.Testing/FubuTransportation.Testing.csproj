@@ -95,6 +95,7 @@
     <Compile Include="IntegratedFubuTransportRegistryTester.cs" />
     <Compile Include="FubuTransportServiceRegistry_spec.cs" />
     <Compile Include="FullStackConfigurationIntegrationTester.cs" />
+    <Compile Include="Logging\EventAggregationListenerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
@@ -128,35 +129,35 @@
     <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs" />
     <Compile Include="ScenarioWriterSmokeTester.cs" />
     <Compile Include="ServiceBusTester.cs" />
-    <Compile Include="TestSupport\AnotherOneHandler.cs" />
-    <Compile Include="TestSupport\DifferentOneHandler.cs" />
-    <Compile Include="TestSupport\FourHandler.cs" />
-    <Compile Include="TestSupport\FourMessage.cs" />
-    <Compile Include="TestSupport\HarnessSettings.cs" />
-    <Compile Include="TestSupport\IScenarioStep.cs" />
-    <Compile Include="TestSupport\ManyResponseHandler.cs" />
-    <Compile Include="TestSupport\MatchingMessageStep.cs" />
-    <Compile Include="TestSupport\Message.cs" />
-    <Compile Include="TestSupport\MessageProcessed.cs" />
-    <Compile Include="TestSupport\MirrorMessage.cs" />
-    <Compile Include="TestSupport\NodeConfiguration.cs" />
-    <Compile Include="TestSupport\OneHandler.cs" />
-    <Compile Include="TestSupport\OneMessage.cs" />
-    <Compile Include="TestSupport\RequestReplyExpression.cs" />
-    <Compile Include="TestSupport\RequestReplyStep.cs" />
-    <Compile Include="TestSupport\RequestResponseHandler.cs" />
-    <Compile Include="TestSupport\Scenario.cs" />
-    <Compile Include="TestSupport\SendMessageStep.cs" />
-    <Compile Include="TestSupport\SimpleHandler.cs" />
-    <Compile Include="TestSupport\SourceRecordingHandler.cs" />
-    <Compile Include="TestSupport\TestMessageRecorder.cs" />
-    <Compile Include="TestSupport\GenericHandler.cs" />
+    <Compile Include="ScenarioSupport\AnotherOneHandler.cs" />
+    <Compile Include="ScenarioSupport\DifferentOneHandler.cs" />
+    <Compile Include="ScenarioSupport\FourHandler.cs" />
+    <Compile Include="ScenarioSupport\FourMessage.cs" />
+    <Compile Include="ScenarioSupport\HarnessSettings.cs" />
+    <Compile Include="ScenarioSupport\IScenarioStep.cs" />
+    <Compile Include="ScenarioSupport\ManyResponseHandler.cs" />
+    <Compile Include="ScenarioSupport\MatchingMessageStep.cs" />
+    <Compile Include="ScenarioSupport\Message.cs" />
+    <Compile Include="ScenarioSupport\MessageProcessed.cs" />
+    <Compile Include="ScenarioSupport\MirrorMessage.cs" />
+    <Compile Include="ScenarioSupport\NodeConfiguration.cs" />
+    <Compile Include="ScenarioSupport\OneHandler.cs" />
+    <Compile Include="ScenarioSupport\OneMessage.cs" />
+    <Compile Include="ScenarioSupport\RequestReplyExpression.cs" />
+    <Compile Include="ScenarioSupport\RequestReplyStep.cs" />
+    <Compile Include="ScenarioSupport\RequestResponseHandler.cs" />
+    <Compile Include="ScenarioSupport\Scenario.cs" />
+    <Compile Include="ScenarioSupport\SendMessageStep.cs" />
+    <Compile Include="ScenarioSupport\SimpleHandler.cs" />
+    <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
+    <Compile Include="ScenarioSupport\TestMessageRecorder.cs" />
+    <Compile Include="ScenarioSupport\GenericHandler.cs" />
     <Compile Include="Runtime\XmlMessageSerializerTester.cs" />
     <Compile Include="StandinTester.cs" />
-    <Compile Include="TestSupport\ThreeHandler.cs" />
-    <Compile Include="TestSupport\ThreeMessage.cs" />
-    <Compile Include="TestSupport\TwoHandler.cs" />
-    <Compile Include="TestSupport\TwoMessage.cs" />
+    <Compile Include="ScenarioSupport\ThreeHandler.cs" />
+    <Compile Include="ScenarioSupport\ThreeMessage.cs" />
+    <Compile Include="ScenarioSupport\TwoHandler.cs" />
+    <Compile Include="ScenarioSupport\TwoMessage.cs" />
     <Compile Include="TransportActivatorTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +170,9 @@
       <Name>TestMessages</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="TestSupport\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

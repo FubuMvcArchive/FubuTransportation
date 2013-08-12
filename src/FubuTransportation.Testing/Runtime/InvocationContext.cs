@@ -2,7 +2,7 @@
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
-using FubuTransportation.Testing.TestSupport;
+using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap;

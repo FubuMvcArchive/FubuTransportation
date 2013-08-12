@@ -1,4 +1,4 @@
-﻿using FubuTransportation.Testing.TestSupport;
+﻿using FubuTransportation.Testing.ScenarioSupport;
 
 namespace FubuTransportation.Testing.Scenarios
 {

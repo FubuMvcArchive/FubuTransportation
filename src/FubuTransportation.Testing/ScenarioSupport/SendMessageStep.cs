@@ -3,7 +3,7 @@ using Bottles.Services.Messaging.Tracking;
 using FubuCore;
 using System.Linq;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public interface IOriginatingMessage
     {

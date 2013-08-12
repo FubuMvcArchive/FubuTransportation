@@ -2,7 +2,7 @@
 using System.Linq;
 using FubuTestingSupport;
 
-namespace FubuTransportation.Testing.TestSupport
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public static class TestMessageRecorder
     {
