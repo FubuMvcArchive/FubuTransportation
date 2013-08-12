@@ -26,7 +26,7 @@ namespace FubuTransportation.Runtime
 
             _serializer.Serialize(envelope);
 
-            var channels = _router.FindChannels(envelope.Message).ToArray();
+            var channels = _router.FindChannels(envelope).ToArray();
 
             // TODO -- needs more work and thought here about what to do.
             if (!channels.Any())

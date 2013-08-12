@@ -1,34 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using FubuTransportation.Configuration;
-using System.Linq;
 
 namespace FubuTransportation.Runtime
 {
-    public interface IChannelRouter
-    {
-        IEnumerable<ChannelNode> FindChannels(object message);
-    }
-
-    public class ChannelRouter : IChannelRouter
-    {
-        private readonly ChannelGraph _graph;
-
-        public ChannelRouter(ChannelGraph graph)
-        {
-            _graph = graph;
-        }
-
-        public IEnumerable<ChannelNode> FindChannels(object message)
-        {
-            // TODO -- gets a LOT more sophisticated later
-            var inputType = message.GetType();
-            return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType)));
-        }
-    }
-
-
     /// <summary>
     /// Models a queue of outgoing messages as a result of the current message so you don't even try to 
     /// send replies until the original message succeeds

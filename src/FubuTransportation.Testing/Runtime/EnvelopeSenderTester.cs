@@ -29,7 +29,7 @@ namespace FubuTransportation.Testing.Runtime
             theEnvelope = new Envelope {Message = theMessage};
             
 
-            MockFor<IChannelRouter>().Stub(x => x.FindChannels(theMessage))
+            MockFor<IChannelRouter>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);
