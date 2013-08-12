@@ -43,6 +43,18 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void event_aggregator_is_registered_as_a_singleton()
+        {
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var @default = BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<IEventAggregator>();
+
+            @default.Type.ShouldEqual(typeof (EventAggregator));
+            @default.IsSingleton.ShouldBeTrue();
+
+        }
+
+        [Test]
         public void EnvelopeSerializer_is_registered()
         {
             registeredTypeIs<IEnvelopeSerializer, EnvelopeSerializer>();

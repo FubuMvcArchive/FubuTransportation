@@ -1,6 +1,7 @@
 ﻿using Bottles;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
@@ -23,6 +24,10 @@ namespace FubuTransportation
     {
         public FubuTransportServiceRegistry()
         {
+            var eventAggregatorDef = ObjectDef.ForType<EventAggregator>();
+            eventAggregatorDef.IsSingleton = true;
+            SetServiceIfNone(typeof(IEventAggregator), eventAggregatorDef);
+
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             AddService<IMessageSerializer, XmlMessageSerializer>();
             AddService<IActivator, TransportActivator>();
