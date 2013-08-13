@@ -56,9 +56,8 @@ namespace FubuTransportation.Runtime
                 var chain = _graph.ChainFor(inputType);
                 if (chain == null)
                 {
-                    // TODO -- got to do something here for error handling or broadcasting
-                    // TODO -- send an audit message
-                    throw new NotImplementedException();
+                    _logger.InfoMessage(() => new NoHandlerForMessage{Envelope = envelope});
+                    return;
                 }
 
                 executeChain(envelope, chain, callback);
@@ -89,13 +88,14 @@ namespace FubuTransportation.Runtime
                 });
 
                 callback.MarkSuccessful();
+                _logger.InfoMessage(() => new MessageSuccessful{Envelope = envelope});
             }
             catch (Exception ex)
             {
                 // TODO -- um, do something here
                 callback.MarkFailed();
-                throw;
-                
+                _logger.InfoMessage(() => new MessageFailed{Envelope = envelope, Exception = ex});
+                _logger.Error(envelope.CorrelationId, ex);                
             }
             finally
             {
