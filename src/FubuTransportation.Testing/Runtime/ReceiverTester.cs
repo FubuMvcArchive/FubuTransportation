@@ -142,7 +142,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_copy_the_channel_address_to_the_envelope()
         {
-            envelope.Source.ShouldEqual(address);
+            envelope.Destination.ShouldEqual(address);
         }
 
         [Test]

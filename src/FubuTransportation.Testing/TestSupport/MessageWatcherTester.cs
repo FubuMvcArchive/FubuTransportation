@@ -3,6 +3,7 @@ using Bottles.Services.Messaging.Tracking;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.TestSupport;
+using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
@@ -57,5 +58,141 @@ namespace FubuTransportation.Testing.TestSupport
 
             MessageHistory.Outstanding().Any().ShouldBeFalse();
         }
+
+        [Test]
+        public void handle_envelope_sent_then_message_successful_tracking_for_the_same_message_to_multiple_nodes()
+        {
+            MessageHistory.ClearAll();
+
+            var envelope1 = new Envelope();
+            var node1 = new StubChannelNode();
+            var node2 = new StubChannelNode();
+
+            var messageWatcher = new MessageWatcher();
+        
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node1));
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node2));
+
+            MessageHistory.Outstanding().Count().ShouldEqual(2);
+
+            envelope1.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageSuccessful
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Count().ShouldEqual(1);
+
+            envelope1.Destination = node2.Uri;
+            messageWatcher.Handle(new MessageSuccessful
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void handle_envelope_sent_then_message_successful_for_multiple_messages_to_the_same_node()
+        {
+            MessageHistory.ClearAll();
+
+            var envelope1 = new Envelope();
+            var envelope2 = new Envelope();
+            var node1 = new StubChannelNode();
+
+            var messageWatcher = new MessageWatcher();
+
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node1));
+            messageWatcher.Handle(new EnvelopeSent(envelope2, node1));
+
+            MessageHistory.Outstanding().Count().ShouldEqual(2);
+
+            envelope1.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageSuccessful
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Count().ShouldEqual(1);
+
+            envelope2.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageSuccessful
+            {
+                Envelope = envelope2
+            });
+
+            MessageHistory.Outstanding().Any().ShouldBeFalse();
+        }
+
+
+
+        [Test]
+        public void handle_envelope_sent_then_message_failed_tracking_for_the_same_message_to_multiple_nodes()
+        {
+            MessageHistory.ClearAll();
+
+            var envelope1 = new Envelope();
+            var node1 = new StubChannelNode();
+            var node2 = new StubChannelNode();
+
+            var messageWatcher = new MessageWatcher();
+
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node1));
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node2));
+
+            MessageHistory.Outstanding().Count().ShouldEqual(2);
+
+            envelope1.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageFailed
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Count().ShouldEqual(1);
+
+            envelope1.Destination = node2.Uri;
+            messageWatcher.Handle(new MessageFailed
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void handle_envelope_sent_then_message_failed_for_multiple_messages_to_the_same_node()
+        {
+            MessageHistory.ClearAll();
+
+            var envelope1 = new Envelope();
+            var envelope2 = new Envelope();
+            var node1 = new StubChannelNode();
+
+            var messageWatcher = new MessageWatcher();
+
+            messageWatcher.Handle(new EnvelopeSent(envelope1, node1));
+            messageWatcher.Handle(new EnvelopeSent(envelope2, node1));
+
+            MessageHistory.Outstanding().Count().ShouldEqual(2);
+
+            envelope1.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageFailed
+            {
+                Envelope = envelope1
+            });
+
+            MessageHistory.Outstanding().Count().ShouldEqual(1);
+
+            envelope2.Destination = node1.Uri;
+            messageWatcher.Handle(new MessageFailed
+            {
+                Envelope = envelope2
+            });
+
+            MessageHistory.Outstanding().Any().ShouldBeFalse();
+        }
+
+
     }
 }
