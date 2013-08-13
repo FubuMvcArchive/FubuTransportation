@@ -59,15 +59,15 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ChannelGraph.cs" />
-    <Compile Include="Configuration\ExplicitTypeHandlerSource.cs" />
+    <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
     <Compile Include="Configuration\FubuTransportRegistry.cs" />
-    <Compile Include="Configuration\HandlerCall.cs" />
+    <Compile Include="Registration\Nodes\HandlerCall.cs" />
     <Compile Include="Configuration\HandlerChain.cs" />
     <Compile Include="Configuration\HandlerGraph.cs" />
-    <Compile Include="Configuration\HandlerSource.cs" />
-    <Compile Include="Configuration\IHandlerSource.cs" />
     <Compile Include="EventAggregator.cs" />
+    <Compile Include="Registration\HandlerSource.cs" />
+    <Compile Include="Registration\IHandlerSource.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
     <Compile Include="IEventAggregator.cs" />
     <Compile Include="IListener.cs" />

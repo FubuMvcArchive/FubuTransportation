@@ -8,6 +8,7 @@ using Bottles;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core;
+using FubuTransportation.Registration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 

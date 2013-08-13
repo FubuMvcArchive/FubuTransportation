@@ -1,4 +1,5 @@
 ﻿using FubuTransportation.Configuration;
+using FubuTransportation.Registration.Nodes;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;

@@ -6,6 +6,7 @@ using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
+using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation

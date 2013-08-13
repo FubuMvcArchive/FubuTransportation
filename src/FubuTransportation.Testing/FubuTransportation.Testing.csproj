@@ -85,10 +85,10 @@
     <Compile Include="Configuration\ChannelGraphTester.cs" />
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
-    <Compile Include="Configuration\HandlerCallTester.cs" />
+    <Compile Include="Registration\Nodes\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
     <Compile Include="Configuration\HandlerGraphTester.cs" />
-    <Compile Include="Configuration\HandlerSourceTester.cs" />
+    <Compile Include="Registration\HandlerSourceTester.cs" />
     <Compile Include="FakeHandlers.cs" />
     <Compile Include="InMemory\InMemoryQueueIntegrationTester.cs" />
     <Compile Include="InMemory\InMemoryTransportTester.cs" />

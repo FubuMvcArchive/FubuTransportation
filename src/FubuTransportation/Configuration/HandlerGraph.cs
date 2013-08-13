@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using FubuCore;
 using System.Linq;
 using FubuMVC.Core.Registration;
+using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.Configuration
 {

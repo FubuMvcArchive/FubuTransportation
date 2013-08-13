@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuMVC.Core.Registration.Nodes;
+using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.Configuration
 {
