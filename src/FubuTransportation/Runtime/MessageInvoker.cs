@@ -66,7 +66,7 @@ namespace FubuTransportation.Runtime
 
         private void executeChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
         {
-            _logger.InfoMessage(() => new ChainExecutionStarted
+            _logger.DebugMessage(() => new ChainExecutionStarted
             {
                 ChainId = chain.UniqueId,
                 Envelope = envelope
@@ -101,7 +101,7 @@ namespace FubuTransportation.Runtime
             {
                 stopwatch.Stop();
 
-                _logger.InfoMessage(() => new ChainExecutionFinished
+                _logger.DebugMessage(() => new ChainExecutionFinished
                 {
                     ChainId = chain.UniqueId,
                     ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,

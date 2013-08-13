@@ -122,6 +122,7 @@
     <Compile Include="Runtime\XmlMessageSerializer.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TransportActivator.cs" />
+    <Compile Include="TransportSettings.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

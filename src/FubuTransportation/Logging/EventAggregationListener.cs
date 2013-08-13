@@ -7,10 +7,12 @@ namespace FubuTransportation.Logging
     public class EventAggregationListener : ILogListener
     {
         private readonly IEventAggregator _events;
+        private readonly TransportSettings _settings;
 
-        public EventAggregationListener(IEventAggregator events)
+        public EventAggregationListener(IEventAggregator events, TransportSettings settings)
         {
             _events = events;
+            _settings = settings;
         }
 
         public bool ListensFor(Type type)
@@ -51,7 +53,7 @@ namespace FubuTransportation.Logging
         }
 
         // TODO -- do we wanna turn this on or off?
-        public bool IsDebugEnabled { get { return true; } }
-        public bool IsInfoEnabled { get { return true; } }
+        public bool IsDebugEnabled { get { return _settings.DebugEnabled; } }
+        public bool IsInfoEnabled { get { return _settings.InfoEnabled; } }
     }
 }

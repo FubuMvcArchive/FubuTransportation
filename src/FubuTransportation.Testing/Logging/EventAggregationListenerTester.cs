@@ -41,6 +41,52 @@ namespace FubuTransportation.Testing.Logging
 
             MockFor<IEventAggregator>().AssertWasCalled(x => x.SendMessage(message));
         }
+
+        [Test]
+        public void debug_disabled()
+        {
+            Services.Inject(new TransportSettings
+            {
+                DebugEnabled = false
+            });
+
+            ClassUnderTest.IsDebugEnabled.ShouldBeFalse();
+        }
+
+        [Test]
+        public void debug_enabled()
+        {
+            Services.Inject(new TransportSettings
+            {
+                DebugEnabled = true
+            });
+
+            ClassUnderTest.IsDebugEnabled.ShouldBeTrue();
+        }
+
+        [Test]
+        public void info_disabled()
+        {
+            Services.Inject(new TransportSettings
+            {
+                InfoEnabled = false
+            });
+
+            ClassUnderTest.IsInfoEnabled.ShouldBeFalse();
+        }
+
+        [Test]
+        public void Info_enabled()
+        {
+            Services.Inject(new TransportSettings
+            {
+                InfoEnabled = true
+            });
+
+            ClassUnderTest.IsInfoEnabled.ShouldBeTrue();
+        }
+
+
     }
 
 }

@@ -161,6 +161,7 @@
     <Compile Include="ScenarioSupport\TwoMessage.cs" />
     <Compile Include="TestSupport\MessageWatcherTester.cs" />
     <Compile Include="TransportActivatorTester.cs" />
+    <Compile Include="TransportSettingsTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">

@@ -18,6 +18,7 @@ namespace FubuTransportation.Configuration
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
+        private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>(); 
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
         {
@@ -35,6 +36,11 @@ namespace FubuTransportation.Configuration
         protected FubuTransportRegistry()
         {
             
+        }
+
+        public void AlterSettings<T>(Action<T> alteration) where T : new()
+        {
+            _alterations.Add(r => r.AlterSettings(alteration));
         }
 
         internal Action<ChannelGraph> channel
@@ -77,6 +83,8 @@ namespace FubuTransportation.Configuration
             registry.AlterSettings<ChannelGraph>(channels => {
                 _channelAlterations.Each(x => x(channels));
             });
+
+            _alterations.Each(x => x(registry));
         }
 
         /// <summary>

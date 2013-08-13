@@ -44,7 +44,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
             registry.Channel(_expression).ReadIncoming(2);
 
             registry.Handlers.Include<SourceRecordingHandler>();
-
+            registry.AlterSettings<TransportSettings>(x => x.DebugEnabled = true);
 
             var container = new Container();
 
