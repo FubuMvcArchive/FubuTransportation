@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
+using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
@@ -56,7 +57,7 @@ namespace FubuTransportation.Configuration
         {
             if (Incoming)
             {
-                Channel.StartReceiving(new Receiver(invoker, graph, this, sender), this);
+                Channel.StartReceiving(new Receiver(invoker, graph, this), this);
             }
         }
         

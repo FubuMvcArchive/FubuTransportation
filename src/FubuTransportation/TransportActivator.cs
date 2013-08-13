@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 

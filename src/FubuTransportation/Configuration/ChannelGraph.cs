@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore;
+using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;

@@ -1,6 +1,7 @@
 ﻿using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;

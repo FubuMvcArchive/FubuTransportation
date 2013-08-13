@@ -4,6 +4,7 @@ using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
+    // TODO -- give this a decent ToString()
     [Serializable]
     public class Envelope
     {

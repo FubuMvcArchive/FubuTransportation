@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuCore;
+using FubuCore.Logging;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;

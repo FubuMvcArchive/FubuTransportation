@@ -2,6 +2,7 @@
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using System.Collections.Generic;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime
 {
@@ -10,15 +11,13 @@ namespace FubuTransportation.Runtime
         private readonly IMessageInvoker _messageInvoker;
         private readonly ChannelGraph _graph;
         private readonly ChannelNode _node;
-        private readonly IEnvelopeSender _sender;
         private readonly Uri _address;
 
-        public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node, IEnvelopeSender sender)
+        public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node)
         {
             _messageInvoker = messageInvoker;
             _graph = graph;
             _node = node;
-            _sender = sender;
             _address = node.Uri;
         }
 

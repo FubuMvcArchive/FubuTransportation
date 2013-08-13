@@ -79,6 +79,7 @@
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Logging\ChainExecutionFinished.cs" />
     <Compile Include="Logging\ChainExecutionStarted.cs" />
+    <Compile Include="Logging\EnvelopeReceived.cs" />
     <Compile Include="Logging\EventAggregationListener.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

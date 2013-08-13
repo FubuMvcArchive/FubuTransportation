@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuCore.Reflection;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
@@ -71,9 +72,10 @@ namespace FubuTransportation.Testing.Configuration
 
             var graph = new ChannelGraph();
 
+            var logger = new RecordingLogger();
             node.StartReceiving(graph, invoker,sender);
             
-            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node, sender), node));
+            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node), node));
         }
 
         

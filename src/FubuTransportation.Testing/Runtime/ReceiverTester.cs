@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FubuCore.Logging;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -18,7 +22,7 @@ namespace FubuTransportation.Testing.Runtime
         private RecordingMessageInvoker theInvoker;
         private Receiver theReceiver;
         private IMessageCallback theCallback;
-        private RecordingEnvelopeSender theSender;
+        private RecordingLogger theLogger;
 
         [SetUp]
         public void SetUp()
@@ -29,9 +33,9 @@ namespace FubuTransportation.Testing.Runtime
             theInvoker = new RecordingMessageInvoker();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
-            theSender = new RecordingEnvelopeSender();
+            theLogger = new RecordingLogger();
 
-            theReceiver = new Receiver(theInvoker, theGraph, theNode, theSender);
+            theReceiver = new Receiver(theInvoker, theGraph, theNode);
         }
 
         [Test]

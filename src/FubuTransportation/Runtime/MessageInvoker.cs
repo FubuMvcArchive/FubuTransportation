@@ -41,6 +41,8 @@ namespace FubuTransportation.Runtime
                 _serializer.Deserialize(envelope);
             }
 
+            _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope});
+
             var inputType = envelope.Message.GetType();
 
             // TODO -- going to get rid of this in favor of a formal "Batch" concept
