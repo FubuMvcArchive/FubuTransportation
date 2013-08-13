@@ -44,7 +44,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
                 if (response.Id != _request.Id)
                 {
-                    writer.Failure("Response does not match the request");
+                    writer.Failure("ResponseIdKey does not match the request");
                 }
             }
             else

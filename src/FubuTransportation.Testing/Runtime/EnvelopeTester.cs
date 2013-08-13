@@ -85,7 +85,7 @@ namespace FubuTransportation.Testing.Runtime
 
             var child = parent.ForResponse(childMessage);
 
-            child.Headers[Envelope.Response].ShouldEqual(parent.CorrelationId);
+            child.Headers[Envelope.ResponseIdKey].ShouldEqual(parent.CorrelationId);
             child.Destination.ShouldEqual(parent.Source);
         }
 
@@ -105,8 +105,87 @@ namespace FubuTransportation.Testing.Runtime
 
             var child = parent.ForResponse(childMessage);
 
-            child.Headers.Has(Envelope.Response).ShouldBeFalse();
+            child.Headers.Has(Envelope.ResponseIdKey).ShouldBeFalse();
             child.Destination.ShouldBeNull();
+        }
+
+        [Test]
+        public void source_property()
+        {
+            var envelope = new Envelope();
+
+            envelope.Source.ShouldBeNull();
+
+            var uri = "fake://thing".ToUri();
+            envelope.Source = uri;
+
+            envelope.Headers[Envelope.SourceKey].ShouldEqual(uri.ToString());
+            envelope.Source.ShouldEqual(uri);
+        }
+
+        [Test]
+        public void content_type()
+        {
+            var envelope = new Envelope();
+            envelope.ContentType.ShouldEqual(null);
+
+            envelope.ContentType = "text/xml";
+
+            envelope.Headers[Envelope.ContentTypeKey].ShouldEqual("text/xml");
+            envelope.ContentType.ShouldEqual("text/xml");
+        }
+
+        [Test]
+        public void original_id()
+        {
+            var envelope = new Envelope();
+            envelope.OriginalId.ShouldBeNull();
+
+            var originalId = Guid.NewGuid().ToString();
+            envelope.OriginalId = originalId;
+
+            envelope.Headers[Envelope.OriginalIdKey].ShouldEqual(originalId);
+            envelope.OriginalId.ShouldEqual(originalId);
+        }
+
+        [Test]
+        public void ParentId()
+        {
+            var envelope = new Envelope();
+            envelope.ParentId.ShouldBeNull();
+
+            var parentId = Guid.NewGuid().ToString();
+            envelope.ParentId = parentId;
+
+            envelope.Headers[Envelope.ParentIdKey].ShouldEqual(parentId);
+            envelope.ParentId.ShouldEqual(parentId);
+        }
+
+        [Test]
+        public void ResponseId()
+        {
+            var envelope = new Envelope();
+            envelope.ResponseId.ShouldBeNull();
+
+            var responseId = Guid.NewGuid().ToString();
+            envelope.ResponseId = responseId;
+
+            envelope.Headers[Envelope.ResponseIdKey].ShouldEqual(responseId);
+            envelope.ResponseId.ShouldEqual(responseId);
+        }
+
+        [Test]
+        public void destination_property()
+        {
+            var envelope = new Envelope();
+
+            envelope.Destination.ShouldBeNull();
+
+            var uri = "fake://thing".ToUri();
+            envelope.Destination = uri;
+
+            envelope.Headers[Envelope.DestinationKey].ShouldEqual(uri.ToString());
+            envelope.Destination.ShouldEqual(uri);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace FubuTransportation.Testing.Runtime
                 Message = theMessage
             };
 
-            envelope.Headers[Envelope.Response] = correlationId;
+            envelope.Headers[Envelope.ResponseIdKey] = correlationId;
 
             theListener.Handle(new EnvelopeReceived
             {
