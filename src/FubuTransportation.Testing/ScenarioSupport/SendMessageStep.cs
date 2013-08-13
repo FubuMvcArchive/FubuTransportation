@@ -60,7 +60,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         public void Act(IScenarioWriter writer)
         {
-            Debug.WriteLine("I'm sending {0}/{1}", Message.GetType().Name, Message.Id);
             MessageHistory.Record(MessageTrack.ForSent(Message));
             _sender.ServiceBus.Send(Message);
         }

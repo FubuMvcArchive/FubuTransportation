@@ -18,7 +18,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
             message.Source = _envelope.Source;
             message.Envelope = _envelope;
 
-            Debug.WriteLine("I'm done consuming {0}/{1}", message.GetType().Name, message.Id);
             MessageHistory.Record(MessageTrack.ForReceived(message, message.Id.ToString()));
         }
     }

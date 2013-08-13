@@ -25,7 +25,7 @@ namespace FubuTransportation.Runtime
 
                 var chain = _graph.ChainFor(inputType);
 
-                // TODO -- do something when the chain is not found
+                // TODO -- do something when the chain is not found - THROW
 
                 _factory.BuildPartial(chain).InvokePartial();
 

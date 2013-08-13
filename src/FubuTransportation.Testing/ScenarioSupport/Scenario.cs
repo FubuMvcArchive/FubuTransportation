@@ -76,7 +76,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
                 }
 
                 Wait.Until(() => {
-                    Debug.WriteLine("I'm testing to see if everything is cleared yet");
                     return !MessageHistory.Outstanding().Any();
                 }, timeoutInMilliseconds:5000);
 

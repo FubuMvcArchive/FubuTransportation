@@ -10,8 +10,6 @@ namespace FubuTransportation.TestSupport
 
         public void Handle(ChainExecutionStarted message)
         {
-            Debug.WriteLine("I got a ChainExecutionStarted message");
-
             var track = MessageTrack.ForSent(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 
@@ -20,8 +18,6 @@ namespace FubuTransportation.TestSupport
 
         public void Handle(ChainExecutionFinished message)
         {
-            Debug.WriteLine("I got a ChainExecutionFinished message");
-
             var track = MessageTrack.ForReceived(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 

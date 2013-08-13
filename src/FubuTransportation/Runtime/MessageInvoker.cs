@@ -55,6 +55,7 @@ namespace FubuTransportation.Runtime
                 if (chain == null)
                 {
                     // TODO -- got to do something here for error handling or broadcasting
+                    // TODO -- send an audit message
                     throw new NotImplementedException();
                 }
 

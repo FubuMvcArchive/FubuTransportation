@@ -15,8 +15,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
     {
         public TResponse Handle(TRequest request)
         {
-            Debug.WriteLine("I responded w/ " + typeof(TResponse).Name);
-
             return new TResponse
             {
                 Id = request.Id

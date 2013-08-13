@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
@@ -116,7 +117,7 @@ namespace FubuTransportation.InMemory
 
         public void MarkFailed()
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("Message was marked as failed!");
         }
     }
 }
