@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Bottles;
 using FubuCore.Logging;
 
 namespace FubuTransportation.Logging

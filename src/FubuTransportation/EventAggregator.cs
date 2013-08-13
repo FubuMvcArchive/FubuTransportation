@@ -4,28 +4,39 @@ using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
 using System.Linq;
+using FubuCore.Logging;
 
 namespace FubuTransportation
 {
 
     public class EventAggregator : IEventAggregator
     {
+        private readonly Lazy<ILogger> _logger;
         private readonly List<object> _listeners = new List<object>();
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        public EventAggregator(IEnumerable<IListener> listeners)
+        public EventAggregator(Func<ILogger> logger, IEnumerable<IListener> listeners)
         {
+            _logger = new Lazy<ILogger>(logger);
             _listeners.AddRange(listeners);
         }
 
         public void SendMessage<T>(T message)
         {
-            // TODO -- Harden this and add logging
             Task.Factory.StartNew(() => {
                 var listeners = _lock.Read(() => _listeners.OfType<IListener<T>>().ToArray());
                 
-                // TODO -- error handling in each so they can fail independently
-                listeners.Each(x => x.Handle(message));
+                listeners.Each(x => {
+                    try
+                    {
+                        x.Handle(message);
+                        _logger.Value.Debug(() => "Successfully processed event {0} with listener {1} in event aggregation".ToFormat(message, x));
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Value.Error("Failed while trying to process event {0} with listener {1}".ToFormat(message, x), e);
+                    }
+                });
             });
         }
 

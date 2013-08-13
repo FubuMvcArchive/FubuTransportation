@@ -1,4 +1,5 @@
-﻿using FubuTestingSupport;
+﻿using FubuMVC.Core.Runtime.Logging;
+using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -9,11 +10,14 @@ namespace FubuTransportation.Testing.Runtime
     {
         private EventAggregator events;
         private StubMessage1Handler handler;
+        private RecordingLogger recordingLogger;
 
         [SetUp]
         public void SetUp()
         {
-            events = new EventAggregator(new IListener[0]);
+            recordingLogger = new RecordingLogger();
+
+            events = new EventAggregator(() => recordingLogger, new IListener[0]);
 
             handler = new StubMessage1Handler();
             events.AddListener(handler);
@@ -53,6 +57,34 @@ namespace FubuTransportation.Testing.Runtime
             listener3.LastMessage.ShouldBeTheSameAs(message1);
 
             listener4.LastMessage.ShouldBeTheSameAs(message2);
+        }
+
+        [Test]
+        public void listeners_can_fail_one_at_a_time()
+        {
+            var listener1 = new StubListener<Message1>();
+            var listener2 = new StubListener<Message1>();
+            var listener3 = new StubListener<Message1>();
+            var listener4 = new StubListener<Message2>();
+
+            events.AddListeners(listener1, listener2, listener3, this, listener4);
+            events.AddListener(new ErrorCausingHandler());
+
+            var message1 = new Message1();
+            var message2 = new Message2();
+
+            events.SendMessage(message1);
+            events.SendMessage(message2);
+
+            Wait.Until(() => listener1.LastMessage != null && listener2.LastMessage != null && listener3.LastMessage != null && listener4.LastMessage != null);
+
+            listener1.LastMessage.ShouldBeTheSameAs(message1);
+            listener2.LastMessage.ShouldBeTheSameAs(message1);
+            listener3.LastMessage.ShouldBeTheSameAs(message1);
+
+            listener4.LastMessage.ShouldBeTheSameAs(message2);
+
+
         }
 
         [Test]
@@ -116,6 +148,14 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         #endregion
+    }
+
+    public class ErrorCausingHandler : IListener<Message1>
+    {
+        public void Handle(Message1 message)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
     public class Message1
