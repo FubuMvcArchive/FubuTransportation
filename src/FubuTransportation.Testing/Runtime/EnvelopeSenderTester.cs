@@ -1,6 +1,9 @@
 ﻿using System;
+using FubuCore.Logging;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
@@ -18,6 +21,7 @@ namespace FubuTransportation.Testing.Runtime
         private byte[] theData;
         private Envelope theEnvelope;
         private string correlationId;
+        private RecordingLogger theLogger;
 
         protected override void beforeEach()
         {
@@ -27,13 +31,23 @@ namespace FubuTransportation.Testing.Runtime
 
             theMessage = new Message();
             theEnvelope = new Envelope {Message = theMessage};
-            
+
+            theLogger = new RecordingLogger();
+            Services.Inject<ILogger>(theLogger);
 
             MockFor<IChannelRouter>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);
 
+        }
+
+        [Test]
+        public void should_audit_each_node_sender_for_the_envelope()
+        {
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node1));
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node2));
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node3));
         }
 
         [Test]
@@ -63,6 +77,12 @@ namespace FubuTransportation.Testing.Runtime
     public class StubChannelNode : ChannelNode
     {
         public Envelope LastEnvelope;
+
+        public StubChannelNode()
+        {
+            Key = Guid.NewGuid().ToString();
+            Uri = ("fake://" + Key).ToUri();
+        }
 
         public override void Send(Envelope envelope)
         {

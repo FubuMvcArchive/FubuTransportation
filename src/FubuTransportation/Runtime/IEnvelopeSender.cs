@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Logging;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime
 {
@@ -13,11 +15,13 @@ namespace FubuTransportation.Runtime
     {
         private readonly IChannelRouter _router;
         private readonly IEnvelopeSerializer _serializer;
+        private readonly ILogger _logger;
 
-        public EnvelopeSender(IChannelRouter router, IEnvelopeSerializer serializer)
+        public EnvelopeSender(IChannelRouter router, IEnvelopeSerializer serializer, ILogger logger)
         {
             _router = router;
             _serializer = serializer;
+            _logger = logger;
         }
 
         public string Send(Envelope envelope)
@@ -34,7 +38,11 @@ namespace FubuTransportation.Runtime
                 throw new Exception("No channels match this message");
             }
 
-            channels.Each(x => x.Send(envelope));
+            // TODO -- harden this and log any exceptions
+            channels.Each(x => {
+                _logger.InfoMessage(() => new EnvelopeSent(envelope, x));
+                x.Send(envelope);
+            });
 
             return envelope.CorrelationId;
         }
