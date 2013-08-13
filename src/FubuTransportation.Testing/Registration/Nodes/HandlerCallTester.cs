@@ -15,6 +15,15 @@ namespace FubuTransportation.Testing.Registration.Nodes
         // TODO -- need to do some end to end testing with these against the container
 
         [Test]
+        public void handler_call_should_not_match_property_setters()
+        {
+            var handlerType = typeof(ITargetHandler);
+            var property = handlerType.GetProperty("Message");
+            var method = property.GetSetMethod();
+            HandlerCall.IsCandidate(method).ShouldBeFalse();
+        }
+
+        [Test]
         public void choose_handler_type_for_one_in_one_out()
         {
             var handler = HandlerCall.For<ITargetHandler>(x => x.OneInOneOut(null));

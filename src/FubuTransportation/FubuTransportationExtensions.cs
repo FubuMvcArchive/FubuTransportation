@@ -6,6 +6,7 @@ using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
+using FubuTransportation.Registration.Conventions;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 
@@ -19,6 +20,7 @@ namespace FubuTransportation
             // needs to be after authentication
 
             registry.Policies.Add<ImportHandlers>();
+            registry.Policies.Add<DefaultSagaConvention>();
             registry.Services<FubuTransportServiceRegistry>();
         }
     }
@@ -37,6 +39,7 @@ namespace FubuTransportation
             AddService<IActivator, TransportActivator>();
             AddService<ITransport, InMemoryTransport>();
 
+            SetServiceIfNone(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
             SetServiceIfNone<IServiceBus, ServiceBus>();
             SetServiceIfNone<IChannelRouter, ChannelRouter>();
 

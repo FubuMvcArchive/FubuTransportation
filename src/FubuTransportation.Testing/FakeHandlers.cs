@@ -3,6 +3,7 @@
 
     public interface ITargetHandler
     {
+        string Message { get; set; }
         Output OneInOneOut(Input input);
         void OneInZeroOut(Input input);
         object OneInManyOut(Input input);

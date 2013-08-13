@@ -77,6 +77,15 @@ namespace FubuTransportation.Registration
             IncludeTypesNamed(x => x.EndsWith("Consumer"));
         }
 
+        /// <summary>
+        /// Find Handlers suffixed with 'Saga' that have public properties of 'State' and 'IsCompleted'
+        /// </summary>
+        public void IncludeClassesMatchingSagaConvention()
+        {
+            _description.WriteLine("Public classes suffixed with Saga that have public properties of 'State' and 'IsCompleted'");
+            IncludeTypes(x => x.MatchesSagaConvention());
+        }
+
         public void IncludeTypesNamed(Expression<Func<string, bool>> filter)
         {
             _description.WriteLine("Classes that match " + filter.ToString());

@@ -1,4 +1,5 @@
-﻿using Bottles;
+﻿using System;
+using Bottles;
 using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
@@ -16,10 +17,16 @@ namespace FubuTransportation.Testing
     {
         private void registeredTypeIs<TService, TImplementation>()
         {
+            registeredTypeIs(typeof(TService), typeof(TImplementation));
+        }
+
+        private void registeredTypeIs(Type service, Type implementation)
+        {
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();
-            BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<TService>().Type.ShouldEqual(
-                typeof(TImplementation));
+            BehaviorGraph.BuildFrom(registry)
+                .Services.DefaultServiceFor(service)
+                .Type.ShouldEqual(implementation);
         }
 
         [Test]
@@ -97,5 +104,10 @@ namespace FubuTransportation.Testing
             registeredTypeIs<IActivator, TransportActivator>();
         }
 
+        [Test]
+        public void InMemorySagaRepository_is_registered()
+        {
+            registeredTypeIs(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
+        }
     }
 }

@@ -85,6 +85,10 @@
     <Compile Include="Configuration\ChannelGraphTester.cs" />
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
+    <Compile Include="HandlerExtensionsTester.cs" />
+    <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
+    <Compile Include="Registration\Conventions\DefaultSagaConventionTester.cs" />
+    <Compile Include="Registration\FuncBuilderTester.cs" />
     <Compile Include="Registration\Nodes\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
     <Compile Include="Configuration\HandlerGraphTester.cs" />
@@ -162,6 +166,7 @@
     <Compile Include="TestSupport\MessageWatcherTester.cs" />
     <Compile Include="TransportActivatorTester.cs" />
     <Compile Include="TransportSettingsTester.cs" />
+    <Compile Include="TypeExtensionsTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">
