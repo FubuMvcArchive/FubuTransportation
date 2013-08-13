@@ -59,6 +59,12 @@ namespace FubuTransportation.Runtime
             set { Headers[ParentIdKey] = value; }
         }
 
+        public string ResponseId
+        {
+            get { return Headers[Response]; }
+            set { Headers[Response] = value; }
+        }
+
         public Uri Destination
         {
             get { return Headers[DestinationKey].ToUri(); }
@@ -88,7 +94,7 @@ namespace FubuTransportation.Runtime
 
             if (Headers.Has(ReplyRequested) && Headers[ReplyRequested].EqualsIgnoreCase("true"))
             {
-                child.Headers[Response] = true.ToString();
+                child.Headers[Response] = CorrelationId;
                 child.Destination = Source;
             }
 

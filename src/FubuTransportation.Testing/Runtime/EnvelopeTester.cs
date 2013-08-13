@@ -85,7 +85,7 @@ namespace FubuTransportation.Testing.Runtime
 
             var child = parent.ForResponse(childMessage);
 
-            child.Headers[Envelope.Response].ShouldEqual(true.ToString());
+            child.Headers[Envelope.Response].ShouldEqual(parent.CorrelationId);
             child.Destination.ShouldEqual(parent.Source);
         }
 

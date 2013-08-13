@@ -1,4 +1,6 @@
-﻿namespace FubuTransportation
+﻿using System;
+
+namespace FubuTransportation
 {
     public interface IListener<T>
     {
@@ -12,5 +14,11 @@
     public interface IListener
     {
         
+    }
+
+    public interface IExpiringListener
+    {
+        bool IsExpired { get; }
+        DateTime ExpiresAt { get; }
     }
 }
