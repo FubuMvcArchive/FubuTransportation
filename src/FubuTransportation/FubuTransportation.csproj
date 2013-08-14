@@ -62,6 +62,7 @@
     <Compile Include="Behaviors\SagaHandlerBehavior.cs" />
     <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="HandlerExtensions.cs" />
+    <Compile Include="NewSagaSpike.cs" />
     <Compile Include="Registration\Conventions\DefaultSagaConvention.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
