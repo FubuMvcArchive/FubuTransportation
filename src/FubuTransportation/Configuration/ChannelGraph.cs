@@ -22,6 +22,12 @@ namespace FubuTransportation.Configuration
             DefaultContentType = new XmlMessageSerializer().ContentType;
         }
 
+
+        /// <summary>
+        /// Used to identify the instance of the running FT node
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// The default content type to use for serialization if none is specified at
         /// either the message or channel level
@@ -71,6 +77,11 @@ namespace FubuTransportation.Configuration
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Add(ChannelNode replyNode)
+        {
+            _channels[replyNode.Key] = replyNode;
         }
     }
 

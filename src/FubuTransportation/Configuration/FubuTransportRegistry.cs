@@ -35,7 +35,7 @@ namespace FubuTransportation.Configuration
 
         protected FubuTransportRegistry()
         {
-            AlterSettings<TransportSettings>(x => {
+            AlterSettings<ChannelGraph>(x => {
                 if (x.Name.IsEmpty())
                 {
                     x.Name = GetType().Name.Replace("TransportRegistry", "").Replace("Registry", "").ToLower();

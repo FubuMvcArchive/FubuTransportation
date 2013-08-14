@@ -37,6 +37,9 @@ namespace FubuTransportation.Configuration
 
         public string DefaultContentType { get; set; }
 
+        // TODO -- don't like this.  Goofy.  
+        public bool ForReplies { get; set; }
+
         public bool Publishes(Type type)
         {
             return Rules.Any(x => x.Matches(type));

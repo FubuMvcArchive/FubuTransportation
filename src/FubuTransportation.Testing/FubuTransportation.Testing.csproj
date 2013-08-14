@@ -85,6 +85,7 @@
     <Compile Include="Configuration\ChannelGraphTester.cs" />
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
+    <Compile Include="Configuration\UriExtensionsTester.cs" />
     <Compile Include="HandlerExtensionsTester.cs" />
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="Registration\Conventions\DefaultSagaConventionTester.cs" />

@@ -22,10 +22,10 @@ namespace FubuTransportation.Testing.Configuration
         public void able_to_derive_the_node_name_from_fubu_transport_registry_name()
         {
             var runtime = FubuTransport.For<CustomTransportRegistry>().StructureMap(new Container()).Bootstrap();
-            runtime.Factory.Get<TransportSettings>().Name.ShouldEqual("custom");
+            runtime.Factory.Get<ChannelGraph>().Name.ShouldEqual("custom");
 
             FubuTransport.For<OtherRegistry>().StructureMap(new Container()).Bootstrap()
-                         .Factory.Get<TransportSettings>().Name.ShouldEqual("other");
+                         .Factory.Get<ChannelGraph>().Name.ShouldEqual("other");
         }
     }
 
