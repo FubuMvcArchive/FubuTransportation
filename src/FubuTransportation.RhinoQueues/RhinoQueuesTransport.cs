@@ -1,25 +1,21 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
-using Rhino.Queues.Model;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace FubuTransportation.RhinoQueues
 {
-    public class RhinoQueuesTransport : ITransport
+    public class RhinoQueuesTransport : TransportBase, ITransport
     {
-        
         private readonly IPersistentQueues _queues;
-        
+        private readonly RhinoQueueSettings _settings;
 
-        public RhinoQueuesTransport(IPersistentQueues queues)
+
+        public RhinoQueuesTransport(IPersistentQueues queues, RhinoQueueSettings settings)
         {
             _queues = queues;
+            _settings = settings;
         }
 
         public void Dispose()
@@ -28,16 +24,34 @@ namespace FubuTransportation.RhinoQueues
         }
 
         // TODO -- needs hard integration tests
-        public void OpenChannels(ChannelGraph graph)
-        {
-            var rhinoChannels = graph.Where(x => x.Protocol() == RhinoUri.Protocol).ToArray();
-            
-            _queues.Start(rhinoChannels.Select(x => new RhinoUri(x.Uri)));
+//        public void OpenChannels(ChannelGraph graph)
+//        {
+//            ChannelNode[] rhinoChannels = graph.Where(x => x.Protocol() == RhinoUri.Protocol).ToArray();
+//
+//            _queues.Start(rhinoChannels.Select(x => new RhinoUri(x.Uri)));
+//
+//            rhinoChannels.Each(node => { node.Channel = RhinoQueuesChannel.Build(new RhinoUri(node.Uri), _queues); });
+//        }
 
-            rhinoChannels.Each(node => {
-                node.Channel = RhinoQueuesChannel.Build(new RhinoUri(node.Uri), _queues);
-            });
+        public override string Protocol
+        {
+            get { return RhinoUri.Protocol; }
         }
 
+        protected override IChannel buildChannel(ChannelNode channelNode)
+        {
+            return RhinoQueuesChannel.Build(new RhinoUri(channelNode.Uri), _queues);
+        }
+
+        protected override void seedQueues(ChannelNode[] channels)
+        {
+            _queues.Start(channels.Select(x => new RhinoUri(x.Uri)));
+        }
+
+        protected override ChannelNode buildReplyChannel(ChannelGraph graph)
+        {
+            var uri = "{0}://localhost:{1}/{2}/replies".ToFormat(Protocol, _settings.DefaultPort,graph.Name ?? "node").ToUri().NormalizeLocalhost();
+            return new ChannelNode { Uri = uri };
+        }
     }
 }

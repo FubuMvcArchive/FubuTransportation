@@ -28,7 +28,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             node.Incoming = true;
 
             queues = new PersistentQueues();
-            transport = new RhinoQueuesTransport(queues);
+            transport = new RhinoQueuesTransport(queues, new RhinoQueueSettings());
 
             transport.OpenChannels(graph);
         }

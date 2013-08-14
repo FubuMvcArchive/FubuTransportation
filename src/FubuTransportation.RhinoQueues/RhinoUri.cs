@@ -29,7 +29,7 @@ namespace FubuTransportation.RhinoQueues
             _address = address;
             _port = address.Port;
 
-            if (address.Host.EqualsIgnoreCase("localhost"))
+            if (address.Host.EqualsIgnoreCase("localhost") || address.Host.EqualsIgnoreCase(Environment.MachineName))
             {
                 _endpoint = new IPEndPoint(IPAddress.Loopback, _port);
             }

@@ -69,6 +69,7 @@
     <Compile Include="PersistentQueues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoQueuesChannel.cs" />
+    <Compile Include="RhinoQueueSettings.cs" />
     <Compile Include="RhinoQueuesExtension.cs" />
     <Compile Include="RhinoQueuesTransport.cs" />
     <Compile Include="RhinoUri.cs" />
