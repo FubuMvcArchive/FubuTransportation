@@ -103,13 +103,13 @@
     <Compile Include="Runtime\BinarySerializer.cs" />
     <Compile Include="Runtime\CascadingHandlerInvoker.cs" />
     <Compile Include="Configuration\ChannelNode.cs" />
-    <Compile Include="Runtime\ChannelRouter.cs" />
+    <Compile Include="Runtime\Subscriptions.cs" />
     <Compile Include="Runtime\DictionaryHeaders.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\HandlerArguments.cs" />
     <Compile Include="Runtime\IChannel.cs" />
-    <Compile Include="Runtime\IChannelRouter.cs" />
+    <Compile Include="Runtime\ISubscriptions.cs" />
     <Compile Include="Runtime\IEnvelopeSender.cs" />
     <Compile Include="Runtime\IHeaders.cs" />
     <Compile Include="Runtime\IMessageCallback.cs" />

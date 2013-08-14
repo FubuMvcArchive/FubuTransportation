@@ -4,11 +4,11 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
 {
-    public class ChannelRouter : IChannelRouter
+    public class Subscriptions : ISubscriptions
     {
         private readonly ChannelGraph _graph;
 
-        public ChannelRouter(ChannelGraph graph)
+        public Subscriptions(ChannelGraph graph)
         {
             _graph = graph;
         }

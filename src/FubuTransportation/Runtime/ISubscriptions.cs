@@ -3,7 +3,7 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
 {
-    public interface IChannelRouter
+    public interface ISubscriptions
     {
         IEnumerable<ChannelNode> FindChannels(Envelope envelope);
     }

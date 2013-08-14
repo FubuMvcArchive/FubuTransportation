@@ -41,7 +41,7 @@ namespace FubuTransportation
 
             SetServiceIfNone(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
             SetServiceIfNone<IServiceBus, ServiceBus>();
-            SetServiceIfNone<IChannelRouter, ChannelRouter>();
+            SetServiceIfNone<ISubscriptions, Subscriptions>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
 

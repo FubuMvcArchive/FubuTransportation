@@ -35,7 +35,7 @@ namespace FubuTransportation.Testing.Runtime
             theLogger = new RecordingLogger();
             Services.Inject<ILogger>(theLogger);
 
-            MockFor<IChannelRouter>().Stub(x => x.FindChannels(theEnvelope))
+            MockFor<ISubscriptions>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);

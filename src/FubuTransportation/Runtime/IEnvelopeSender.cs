@@ -13,11 +13,11 @@ namespace FubuTransportation.Runtime
 
     public class EnvelopeSender : IEnvelopeSender
     {
-        private readonly IChannelRouter _router;
+        private readonly ISubscriptions _router;
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
 
-        public EnvelopeSender(IChannelRouter router, IEnvelopeSerializer serializer, ILogger logger)
+        public EnvelopeSender(ISubscriptions router, IEnvelopeSerializer serializer, ILogger logger)
         {
             _router = router;
             _serializer = serializer;

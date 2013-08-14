@@ -38,7 +38,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void channel_router_is_registered()
         {
-            registeredTypeIs<IChannelRouter, ChannelRouter>();
+            registeredTypeIs<ISubscriptions, Subscriptions>();
         }
 
         [Test]

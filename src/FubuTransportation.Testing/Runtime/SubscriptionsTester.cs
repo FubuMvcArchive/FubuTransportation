@@ -12,10 +12,10 @@ using FubuTestingSupport;
 namespace FubuTransportation.Testing.Runtime
 {
     [TestFixture]
-    public class ChannelRouterTester
+    public class SubscriptionsTester
     {
         private FubuRuntime runtime;
-        private IChannelRouter theRouter;
+        private ISubscriptions theRouter;
         private HarnessSettings settings;
 
         [SetUp]
@@ -27,7 +27,7 @@ namespace FubuTransportation.Testing.Runtime
 
             runtime = FubuTransport.For<RoutedRegistry>().StructureMap(container).Bootstrap();
 
-            theRouter = runtime.Factory.Get<IChannelRouter>();
+            theRouter = runtime.Factory.Get<ISubscriptions>();
         }
 
         [Test]
