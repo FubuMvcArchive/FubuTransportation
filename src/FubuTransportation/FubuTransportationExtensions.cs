@@ -29,9 +29,14 @@ namespace FubuTransportation
     {
         public FubuTransportServiceRegistry()
         {
+            // TODO -- this is awful.  Convenience method in 
             var eventAggregatorDef = ObjectDef.ForType<EventAggregator>();
             eventAggregatorDef.IsSingleton = true;
             SetServiceIfNone(typeof(IEventAggregator), eventAggregatorDef);
+
+            var subscriberDef = ObjectDef.ForType<Subscriptions>();
+            subscriberDef.IsSingleton = true;
+            SetServiceIfNone(typeof (ISubscriptions), subscriberDef);
 
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             SetServiceIfNone<IEnvelopeSender, EnvelopeSender>();
@@ -41,7 +46,6 @@ namespace FubuTransportation
 
             SetServiceIfNone(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
             SetServiceIfNone<IServiceBus, ServiceBus>();
-            SetServiceIfNone<ISubscriptions, Subscriptions>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
 

@@ -12,7 +12,7 @@ using FubuTestingSupport;
 namespace FubuTransportation.Testing.Runtime
 {
     [TestFixture]
-    public class SubscriptionsTester
+    public class SubscriptionsIntegrationTester
     {
         private FubuRuntime runtime;
         private ISubscriptions theRouter;

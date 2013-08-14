@@ -95,7 +95,7 @@ namespace FubuTransportation.Testing.Configuration
 
             graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
 
-            graph.StartReceiving(MockRepository.GenerateMock<IMessageInvoker>(), MockRepository.GenerateMock<IEnvelopeSender>());
+            graph.StartReceiving(new ServiceHub(null, null));
 
             node1.Channel.AssertWasCalled(x => x.StartReceiving(null, node1), x => x.IgnoreArguments());
             node2.Channel.AssertWasNotCalled(x => x.StartReceiving(null, node2), x => x.IgnoreArguments());

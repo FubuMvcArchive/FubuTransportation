@@ -14,16 +14,14 @@ namespace FubuTransportation
         private readonly IEnumerable<ITransport> _transports;
         private readonly ChannelGraph _graph;
         private readonly IServiceLocator _services;
-        private readonly IMessageInvoker _invoker;
-        private readonly IEnvelopeSender _sender;
+        private readonly ServiceHub _hub;
 
-        public TransportActivator(IEnumerable<ITransport> transports, ChannelGraph graph, IServiceLocator services, IMessageInvoker invoker, IEnvelopeSender sender)
+        public TransportActivator(IEnumerable<ITransport> transports, ChannelGraph graph, IServiceLocator services, ServiceHub hub)
         {
             _transports = transports;
             _graph = graph;
             _services = services;
-            _invoker = invoker;
-            _sender = sender;
+            _hub = hub;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
@@ -31,7 +29,7 @@ namespace FubuTransportation
             _graph.ReadSettings(_services);
             _transports.Each(x => x.OpenChannels(_graph));
 
-            _graph.StartReceiving(_invoker, _sender);
+            _graph.StartReceiving(_hub);
         }
     }
 }

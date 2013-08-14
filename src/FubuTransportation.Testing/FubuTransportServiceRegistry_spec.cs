@@ -36,9 +36,19 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void channel_router_is_registered()
+        public void subscriptions_is_registered_as_singleton()
         {
-            registeredTypeIs<ISubscriptions, Subscriptions>();
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var @default = BehaviorGraph.BuildFrom(registry).Services
+                                        .DefaultServiceFor<ISubscriptions>();
+
+            @default.ShouldNotBeNull();
+            @default.Type.ShouldEqual(typeof (Subscriptions));
+            @default.IsSingleton.ShouldBeTrue();
+
+
+
         }
 
         [Test]
