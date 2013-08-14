@@ -35,7 +35,12 @@ namespace FubuTransportation.Configuration
 
         protected FubuTransportRegistry()
         {
-            
+            AlterSettings<TransportSettings>(x => {
+                if (x.Name.IsEmpty())
+                {
+                    x.Name = GetType().Name.Replace("TransportRegistry", "").Replace("Registry", "").ToLower();
+                }
+            });
         }
 
         public void AlterSettings<T>(Action<T> alteration) where T : new()

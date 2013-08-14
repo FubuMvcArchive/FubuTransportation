@@ -29,7 +29,6 @@ namespace FubuTransportation.Testing
             graph.Behaviors.Count(x => typeof (Foo2) == x.InputType()).ShouldEqual(1);
             graph.Behaviors.Count(x => typeof (Foo3) == x.InputType()).ShouldEqual(1);
             graph.Behaviors.Count(x => typeof (Foo4) == x.InputType()).ShouldEqual(1);
-
         }
 
         [Test]

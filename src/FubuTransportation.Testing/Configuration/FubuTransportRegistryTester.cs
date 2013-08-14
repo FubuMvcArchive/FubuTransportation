@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
 using FubuTransportation.Configuration;
+using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using FubuTestingSupport;
+using FubuMVC.StructureMap;
+using StructureMap;
 
 namespace FubuTransportation.Testing.Configuration
 {
@@ -13,6 +16,31 @@ namespace FubuTransportation.Testing.Configuration
         {
             FubuTransportRegistry.FindTheCallingAssembly()
                                  .ShouldEqual(Assembly.GetExecutingAssembly());
+        }
+
+        [Test]
+        public void able_to_derive_the_node_name_from_fubu_transport_registry_name()
+        {
+            var runtime = FubuTransport.For<CustomTransportRegistry>().StructureMap(new Container()).Bootstrap();
+            runtime.Factory.Get<TransportSettings>().Name.ShouldEqual("custom");
+
+            FubuTransport.For<OtherRegistry>().StructureMap(new Container()).Bootstrap()
+                         .Factory.Get<TransportSettings>().Name.ShouldEqual("other");
+        }
+    }
+
+    public class CustomTransportRegistry : FubuTransportRegistry
+    {
+        public CustomTransportRegistry()
+        {
+           
+        }
+    }
+
+    public class OtherRegistry : FubuTransportRegistry
+    {
+        public OtherRegistry()
+        {
         }
     }
 }
