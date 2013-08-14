@@ -78,4 +78,6 @@ namespace FubuTransportation.Testing.InMemory
             received.Data.ShouldEqual(envelope.Data);
         }
     }
+
+    
 }

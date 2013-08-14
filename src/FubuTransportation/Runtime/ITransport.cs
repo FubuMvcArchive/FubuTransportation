@@ -22,7 +22,7 @@ namespace FubuTransportation.Runtime
             // TODO -- change this to a "role"
             replyNode.Incoming = true;
             replyNode.ForReplies = true;
-            replyNode.Key = "{0}:{1}".ToFormat(Protocol, "Replies");
+            replyNode.Key = "{0}:{1}".ToFormat(Protocol, "replies");
             graph.Add(replyNode);
 
             var nodes = graph.Where(x => x.Protocol() == Protocol).ToArray();

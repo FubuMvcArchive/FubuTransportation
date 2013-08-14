@@ -8,27 +8,43 @@ using FubuCore;
 
 namespace FubuTransportation.InMemory
 {
-    public class InMemoryTransport : ITransport
+    public class InMemoryTransport : TransportBase, ITransport
     {
         public void Dispose()
         {
             // nothing
         }
 
-        public void OpenChannels(ChannelGraph graph)
+        public override string Protocol
         {
-            graph.Where(x => x.Protocol() == InMemoryChannel.Protocol).Each(x => x.Channel = new InMemoryChannel(x));
+            get { return InMemoryChannel.Protocol; }
+        }
+
+        protected override IChannel buildChannel(ChannelNode channelNode)
+        {
+            return new InMemoryChannel(channelNode);
+        }
+
+        protected override void seedQueues(ChannelNode[] channels)
+        {
+            // no-op
+        }
+
+        protected override ChannelNode buildReplyChannel(ChannelGraph graph)
+        {
+            var uri = "{0}://localhost/{1}/replies".ToFormat(Protocol, graph.Name ?? "node").ToUri();
+            return new ChannelNode{Uri = uri};
         }
 
         public static T ToInMemory<T>() where T : new()
         {
             var type = typeof (T);
-            var settings = ToInMemory<T>(type);
+            var settings = ToInMemory(type);
 
             return (T) settings;
         }
 
-        public static object ToInMemory<T>(Type type) where T : new()
+        public static object ToInMemory(Type type)
         {
             var settings = Activator.CreateInstance(type);
 
@@ -39,6 +55,7 @@ namespace FubuTransportation.InMemory
 
                 accessor.SetValue(settings, new Uri(uri));
             });
+
             return settings;
         }
     }
