@@ -54,9 +54,9 @@ namespace FubuTransportation.Configuration
             _channels.Each(x => x.ReadSettings(services));
         }
 
-        public virtual void StartReceiving(ServiceHub hub)
+        public virtual void StartReceiving(IMessageInvoker invoker)
         {
-            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(this, hub));
+            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(this, invoker));
         }
 
         public static string ToKey(Accessor accessor)
