@@ -6,5 +6,6 @@ namespace FubuTransportation.Runtime
     public interface ISubscriptions
     {
         IEnumerable<ChannelNode> FindChannels(Envelope envelope);
+        void Start();
     }
 }

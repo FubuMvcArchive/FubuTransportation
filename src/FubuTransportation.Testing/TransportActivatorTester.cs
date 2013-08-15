@@ -15,23 +15,13 @@ namespace FubuTransportation.Testing
     public class when_activating_the_transport_subsystem : InteractionContext<TransportActivator>
     {
         private ChannelGraph theGraph;
-        private ITransport[] theTransports;
 
         protected override void beforeEach()
         {
             theGraph = MockFor<ChannelGraph>();
-
-            theTransports = Services.CreateMockArrayFor<ITransport>(5);
-            
             ClassUnderTest.Activate(new IPackageInfo[0], new PackageLog());
-        
         }
 
-        [Test]
-        public void starts_each_transport()
-        {
-            theTransports.Each(transport => transport.AssertWasCalled(x => x.OpenChannels(theGraph)));
-        }
 
         [Test]
         public void reads_the_settings()
@@ -39,10 +29,12 @@ namespace FubuTransportation.Testing
             theGraph.AssertWasCalled(x => x.ReadSettings(MockFor<IServiceLocator>()));
         }
 
+
+
         [Test]
-        public void should_start_receiving()
+        public void should_start_the_subscriptions()
         {
-            theGraph.AssertWasCalled(x => x.StartReceiving(MockFor<IMessageInvoker>()));
+            MockFor<ISubscriptions>().AssertWasCalled(x => x.Start());
         }
     }
 }

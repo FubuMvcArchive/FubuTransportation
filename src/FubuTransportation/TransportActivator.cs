@@ -11,25 +11,21 @@ namespace FubuTransportation
 {
     public class TransportActivator : IActivator
     {
-        private readonly IEnumerable<ITransport> _transports;
         private readonly ChannelGraph _graph;
         private readonly IServiceLocator _services;
-        private readonly IMessageInvoker _invoker;
+        private readonly ISubscriptions _subscriptions;
 
-        public TransportActivator(IEnumerable<ITransport> transports, ChannelGraph graph, IServiceLocator services, IMessageInvoker invoker)
+        public TransportActivator(ChannelGraph graph, IServiceLocator services, ISubscriptions subscriptions)
         {
-            _transports = transports;
             _graph = graph;
             _services = services;
-            _invoker = invoker;
+            _subscriptions = subscriptions;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
             _graph.ReadSettings(_services);
-            _transports.Each(x => x.OpenChannels(_graph));
-
-            _graph.StartReceiving(_invoker);
+            _subscriptions.Start();
         }
     }
 }

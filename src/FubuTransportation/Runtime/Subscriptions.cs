@@ -8,10 +8,14 @@ namespace FubuTransportation.Runtime
     public class Subscriptions : ISubscriptions, IDisposable
     {
         private readonly ChannelGraph _graph;
+        private readonly IEnumerable<ITransport> _transports;
+        private readonly Lazy<IMessageInvoker> _invoker;
 
-        public Subscriptions(ChannelGraph graph)
+        public Subscriptions(ChannelGraph graph, Func<IMessageInvoker> invoker, IEnumerable<ITransport> transports)
         {
             _graph = graph;
+            _transports = transports;
+            _invoker = new Lazy<IMessageInvoker>(invoker);
         }
 
         public IEnumerable<ChannelNode> FindChannels(Envelope envelope)
@@ -35,6 +39,13 @@ namespace FubuTransportation.Runtime
         public void Dispose()
         {
             _graph.Each(x => x.Channel.Dispose());
+        }
+
+        public void Start()
+        {
+            _transports.Each(x => x.OpenChannels(_graph));
+
+            _graph.StartReceiving(_invoker.Value);
         }
     }
 }

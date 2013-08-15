@@ -129,6 +129,7 @@
     <Compile Include="Runtime\simplest_possible_invocation.cs" />
     <Compile Include="Runtime\InvocationContext.cs" />
     <Compile Include="Runtime\SimpleHandlerInvokerTester.cs" />
+    <Compile Include="Runtime\when_starting_the_subscriptions.cs" />
     <Compile Include="ScenarioRunner.cs" />
     <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
     <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs" />
