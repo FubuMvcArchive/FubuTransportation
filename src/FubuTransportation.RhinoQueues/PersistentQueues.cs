@@ -52,5 +52,10 @@ namespace FubuTransportation.RhinoQueues
                 queueManager.Start();
             });
         }
+
+        public void CreateQueue(RhinoUri uri)
+        {
+            _queueManagers[uri.Endpoint].CreateQueues(uri.QueueName);
+        }
     }
 }

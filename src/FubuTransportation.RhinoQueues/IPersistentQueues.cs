@@ -9,5 +9,7 @@ namespace FubuTransportation.RhinoQueues
     {
         IQueueManager ManagerFor(IPEndPoint endpoint);
         void Start(IEnumerable<RhinoUri> uriList);
+
+        void CreateQueue(RhinoUri uri);
     }
 }

@@ -47,6 +47,7 @@ namespace FubuTransportation.Runtime
             // Do nothing for responses other than kick out the EnvelopeReceived.
             if (envelope.ResponseId.IsNotEmpty())
             {
+                _logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope });
                 return;
             }
 

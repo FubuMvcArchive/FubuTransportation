@@ -56,6 +56,8 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         public bool MatchesSentMessage(Message processed)
         {
+            if (processed.GetType() == _request.GetType() && processed.Id == _request.Id) return true;
+
             return processed is TReply && processed.Id == _request.Id;
         }
     }

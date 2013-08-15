@@ -20,6 +20,11 @@ namespace FubuTransportation.InMemory
             get { return InMemoryChannel.Protocol; }
         }
 
+        public IChannel BuildChannel(ChannelNode node)
+        {
+            return new InMemoryChannel(node);
+        }
+
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
             return new InMemoryChannel(channelNode);

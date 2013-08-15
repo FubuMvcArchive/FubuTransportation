@@ -26,8 +26,6 @@ namespace FubuTransportation.Runtime
 
         public string Send(Envelope envelope)
         {
-            envelope.CorrelationId = Guid.NewGuid().ToString();
-
             _serializer.Serialize(envelope);
 
             var channels = _router.FindChannels(envelope).ToArray();

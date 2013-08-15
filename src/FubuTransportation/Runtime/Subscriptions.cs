@@ -22,11 +22,7 @@ namespace FubuTransportation.Runtime
         {
             if (envelope.Destination != null)
             {
-                var destination = _graph.FirstOrDefault(x => x.Uri == envelope.Destination);
-                if (destination == null)
-                {
-                    throw new UnknownChannelException(envelope.Destination);
-                }
+                var destination = findDestination(envelope);
 
                 return new ChannelNode[]{destination};
             }
@@ -34,6 +30,28 @@ namespace FubuTransportation.Runtime
             // TODO -- gets a LOT more sophisticated later
             var inputType = envelope.Message.GetType();
             return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType)));
+        }
+
+        private ChannelNode findDestination(Envelope envelope)
+        {
+            var destination = _graph.FirstOrDefault(x => x.Uri == envelope.Destination);
+            if (destination == null)
+            {
+                var transport = _transports.FirstOrDefault(x => x.Protocol == envelope.Destination.Scheme);
+                if (transport == null)
+                {
+                    throw new UnknownChannelException(envelope.Destination);
+                }
+
+                var node = new ChannelNode {Uri = envelope.Destination, Key = envelope.Destination.ToString()};
+                node.Channel = transport.BuildChannel(node);
+
+                _graph.Add(node);
+
+                return node;
+            }
+
+            return destination;
         }
 
         public void Dispose()

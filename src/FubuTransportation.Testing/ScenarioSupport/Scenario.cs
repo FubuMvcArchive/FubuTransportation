@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
+using FubuCore.Logging;
 using FubuTransportation.InMemory;
 using System.Linq;
 
@@ -160,6 +161,63 @@ namespace FubuTransportation.Testing.ScenarioSupport
         {
             _steps.Add(step);
         }
+    }
+
+    public class ScenarioLogListener : ILogListener
+    {
+        private readonly string _nodeName;
+
+        public ScenarioLogListener(string nodeName)
+        {
+            _nodeName = nodeName;
+        }
+
+
+        public bool ListensFor(Type type)
+        {
+            return true;
+        }
+
+        private void write(object message)
+        {
+            System.Diagnostics.Debug.WriteLine("{0}: {1}", _nodeName, message);
+        }
+
+        public void DebugMessage(object message)
+        {
+            write(message);
+        }
+
+        public void InfoMessage(object message)
+        {
+            write(message);
+        }
+
+        public void Debug(string message)
+        {
+            write(message);
+        }
+
+        public void Info(string message)
+        {
+            write(message);
+        }
+
+        public void Error(string message, Exception ex)
+        {
+            write(message);
+            write(ex);
+        }
+
+        public void Error(object correlationId, string message, Exception ex)
+        {
+            write(correlationId);
+            write(message);
+            write(ex);
+        }
+
+        public bool IsDebugEnabled { get { return true; } }
+        public bool IsInfoEnabled { get { return true; } }
     }
 }
 

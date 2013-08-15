@@ -4,7 +4,6 @@ using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
-    // TODO -- give this a decent ToString()
     [Serializable]
     public class Envelope
     {
@@ -115,13 +114,28 @@ namespace FubuTransportation.Runtime
                 ParentId = CorrelationId
             };
 
-            if (Headers.Has(ReplyRequestedKey) && Headers[ReplyRequestedKey].EqualsIgnoreCase("true"))
+            if (ReplyRequested)
             {
                 child.Headers[ResponseIdKey] = CorrelationId;
                 child.Destination = ReplyUri;
             }
 
             return child;
+        }
+
+        public override string ToString()
+        {
+            var id = ResponseId.IsNotEmpty()
+                ? "{0} in response to {1}".ToFormat(CorrelationId, ResponseId) : CorrelationId;
+
+            if (Message != null)
+            {
+                return string.Format("Envelope for type {0} w/ Id {1}", Message.GetType().Name, id);
+            }
+            else
+            {
+                return "Envelope w/ Id {0}".ToFormat(id);
+            }
         }
     }
 }

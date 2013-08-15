@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuTransportation.Configuration;
@@ -36,6 +37,14 @@ namespace FubuTransportation.RhinoQueues
         public override string Protocol
         {
             get { return RhinoUri.Protocol; }
+        }
+
+        public IChannel BuildChannel(ChannelNode node)
+        {
+            var channel = buildChannel(node);
+            _queues.CreateQueue(new RhinoUri(node.Uri));
+
+            return channel;
         }
 
         protected override IChannel buildChannel(ChannelNode channelNode)

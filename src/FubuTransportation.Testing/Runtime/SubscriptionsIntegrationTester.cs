@@ -43,7 +43,19 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
-        public void destination_is_specified_but_The_channel_does_not_exist()
+        public void can_happily_build_and_open_a_new_channel_for_a_destination()
+        {
+            var envelope = new Envelope
+            {
+                Message = new Message1(),
+                Destination = "memory://dynamic".ToUri()
+            };
+
+            theRouter.FindChannels(envelope).Single().Uri.ShouldEqual(envelope.Destination);
+        }
+
+        [Test]
+        public void destination_is_specified_but_The_channel_does_not_exist_and_the_transport_is_unknown()
         {
             Exception<UnknownChannelException>.ShouldBeThrownBy(() => {
                 var envelope = new Envelope

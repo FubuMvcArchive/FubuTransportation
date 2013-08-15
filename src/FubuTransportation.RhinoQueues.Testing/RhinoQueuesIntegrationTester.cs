@@ -69,6 +69,32 @@ namespace FubuTransportation.RhinoQueues.Testing
             actual.Headers["foo"].ShouldEqual("bar");
         }
 
+
+        [Test]
+        [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
+        public void send_a_message_and_get_it_back_for_queue_built_at_runtime()
+        {
+            var envelope = new Envelope() { Data = new byte[] { 1, 2, 3, 4, 5 } };
+            envelope.Headers["foo"] = "bar";
+
+            var receiver = new RecordingReceiver();
+            var channel = transport.BuildChannel(new ChannelNode { Uri = new Uri("rhino.queues://localhost:2020/dynamic") });
+
+            channel.StartReceiving(receiver, new ChannelNode());
+            channel.As<RhinoQueuesChannel>().Send(envelope.Data, envelope.Headers);
+            Wait.Until(() => receiver.Received.Any());
+
+
+            graph.Each(x => x.Channel.Dispose());
+            queues.Dispose();
+
+            receiver.Received.Any().ShouldBeTrue();
+
+            Envelope actual = receiver.Received.Single();
+            actual.Data.ShouldEqual(envelope.Data);
+            actual.Headers["foo"].ShouldEqual("bar");
+        }
+
         [Test]
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void can_find_the_reply_channel()

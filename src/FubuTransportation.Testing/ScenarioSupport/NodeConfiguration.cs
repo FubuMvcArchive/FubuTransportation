@@ -40,6 +40,8 @@ namespace FubuTransportation.Testing.ScenarioSupport
             if (!_registry.IsValueCreated) return;
 
             var registry = _registry.Value;
+            var nodeName = ReflectionHelper.GetProperty(_expression).Name;
+            registry.NodeName = nodeName;
 
             registry.Channel(_expression).ReadIncoming(2);
 
@@ -50,8 +52,11 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
             // Make it all be 
             var harnessSettings = InMemoryTransport.ToInMemory<HarnessSettings>();
-            container.Inject(harnessSettings);
-            container.Configure(x => x.For<IListener>().Add<MessageWatcher>());
+            container.Configure(x => {
+                x.For<HarnessSettings>().Use(harnessSettings);
+                x.For<IListener>().Add<MessageWatcher>();
+                x.For<ILogListener>().Add(new ScenarioLogListener(nodeName));
+            });
 
             _uri = (Uri) ReflectionHelper.GetAccessor(_expression).GetValue(harnessSettings);
 
