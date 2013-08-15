@@ -29,15 +29,28 @@ namespace FubuTransportation
     public class ServiceBus : IServiceBus
     {
         private readonly IEnvelopeSender _sender;
+        private readonly IEventAggregator _events;
 
-        public ServiceBus(IEnvelopeSender sender)
+        public ServiceBus(IEnvelopeSender sender, IEventAggregator events)
         {
             _sender = sender;
+            _events = events;
         }
 
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
         {
-            return new TaskCompletionSource<TResponse>().Task;
+            var envelope = new Envelope
+            {
+                Message = request,
+                ReplyRequested = true
+            };
+
+            var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId);
+            _events.AddListener(listener);
+
+            _sender.Send(envelope);
+
+            return listener.Task;
         }
 
         public void Send<T>(T message)

@@ -13,7 +13,6 @@ namespace FubuTransportation.Testing.Runtime
     {
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
-        private TaskCompletionSource<Message1> theCompletion;
         private ReplyListener<Message1> theListener;
         private Message1 theMessage;
 
@@ -22,9 +21,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
 
-            theCompletion = new TaskCompletionSource<Message1>();
-
-            theListener = new ReplyListener<Message1>(theEvents, theCompletion, correlationId);
+            theListener = new ReplyListener<Message1>(theEvents, correlationId);
 
             theMessage = new Message1();
 
@@ -44,7 +41,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_set_the_completion_value()
         {
-            theCompletion.Task.Result.ShouldBeTheSameAs(theMessage);
+            theListener.Task.Result.ShouldBeTheSameAs(theMessage);
         }
 
         [Test]
@@ -59,7 +56,6 @@ namespace FubuTransportation.Testing.Runtime
     {
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
-        private TaskCompletionSource<Message1> theCompletion;
         private ReplyListener<Message1> theListener;
         private Message1 theMessage;
 
@@ -67,10 +63,7 @@ namespace FubuTransportation.Testing.Runtime
         public void SetUp()
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
-
-            theCompletion = new TaskCompletionSource<Message1>();
-
-            theListener = new ReplyListener<Message1>(theEvents, theCompletion, correlationId);
+            theListener = new ReplyListener<Message1>(theEvents, correlationId);
         }
 
         [Test]

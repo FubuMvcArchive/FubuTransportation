@@ -10,11 +10,16 @@ namespace FubuTransportation.Runtime
         private readonly TaskCompletionSource<T> _completion;
         private readonly string _originalId;
         // TODO -- do an expiration on this thing.
-        public ReplyListener(IEventAggregator events, TaskCompletionSource<T> completion, string originalId)
+        public ReplyListener(IEventAggregator events, string originalId)
         {
             _events = events;
-            _completion = completion;
+            _completion = new TaskCompletionSource<T>();
             _originalId = originalId;
+        }
+
+        public Task<T> Task
+        {
+            get { return _completion.Task; }
         }
 
         public void Handle(EnvelopeReceived message)

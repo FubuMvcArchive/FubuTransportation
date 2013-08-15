@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing.Runtime
                 Source = "foo://bar".ToUri()
             };
 
-            parent.Headers[Envelope.ReplyRequested] = true.ToString();
+            parent.Headers[Envelope.ReplyRequestedKey] = true.ToString();
 
             var childMessage = new Message1();
 
@@ -99,7 +99,7 @@ namespace FubuTransportation.Testing.Runtime
                 Source = "foo://bar".ToUri()
             };
 
-            parent.Headers.Has(Envelope.ReplyRequested).ShouldBeFalse();
+            parent.Headers.Has(Envelope.ReplyRequestedKey).ShouldBeFalse();
 
             var childMessage = new Message1();
 
@@ -186,6 +186,21 @@ namespace FubuTransportation.Testing.Runtime
 
             envelope.Headers[Envelope.DestinationKey].ShouldEqual(uri.ToString());
             envelope.Destination.ShouldEqual(uri);
+        }
+
+        [Test]
+        public void reply_requested()
+        {
+            var envelope = new Envelope();
+            envelope.ReplyRequested.ShouldBeFalse();
+
+
+            envelope.ReplyRequested = true;
+            envelope.Headers[Envelope.ReplyRequestedKey].ShouldEqual("true");
+            envelope.ReplyRequested.ShouldBeTrue();
+
+            envelope.ReplyRequested = false;
+            envelope.Headers.Has(Envelope.ReplyRequestedKey).ShouldBeFalse();
         }
     }
 }

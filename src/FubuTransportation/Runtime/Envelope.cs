@@ -14,7 +14,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
         public static readonly string SourceKey = "Source";
         public static readonly string ChannelKey = "Channel";
-        public static readonly string ReplyRequested = "Reply-Requested";
+        public static readonly string ReplyRequestedKey = "Reply-Requested";
         public static readonly string ResponseIdKey = "Response";
         public static readonly string DestinationKey = "Destination";
 
@@ -82,6 +82,22 @@ namespace FubuTransportation.Runtime
             set { Headers[IdKey] = value; }
         }
 
+        public bool ReplyRequested
+        {
+            get { return Headers.Has(ReplyRequestedKey) ? Headers[ReplyRequestedKey].EqualsIgnoreCase("true") : false; }
+            set
+            {
+                if (value)
+                {
+                    Headers[ReplyRequestedKey] = "true";
+                }
+                else
+                {
+                    Headers.Remove(ReplyRequestedKey);
+                }
+            }
+        }
+
         // TODO -- this is where the routing slip is going to come into place
         public Envelope ForResponse(object message)
         {
@@ -92,7 +108,7 @@ namespace FubuTransportation.Runtime
                 ParentId = CorrelationId
             };
 
-            if (Headers.Has(ReplyRequested) && Headers[ReplyRequested].EqualsIgnoreCase("true"))
+            if (Headers.Has(ReplyRequestedKey) && Headers[ReplyRequestedKey].EqualsIgnoreCase("true"))
             {
                 child.Headers[ResponseIdKey] = CorrelationId;
                 child.Destination = Source;

@@ -14,6 +14,7 @@ namespace FubuTransportation.Runtime
         NameValueCollection ToNameValues();
 
         bool Has(string key);
+        void Remove(string key);
     }
 
 }

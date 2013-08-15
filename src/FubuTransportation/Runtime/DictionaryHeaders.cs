@@ -51,5 +51,13 @@ namespace FubuTransportation.Runtime
         {
             return _inner.ContainsKey(key);
         }
+
+        public void Remove(string key)
+        {
+            if (Has(key))
+            {
+                _inner.Remove(key);
+            }
+        }
     }
 }
