@@ -16,7 +16,8 @@ using StructureMap;
 
 namespace FubuTransportation.Testing.Registration.Conventions
 {
-    [TestFixture]
+    /*
+    [MarkedForTermination]
     public class DefaultSagaConventionTester
     {
         private BehaviorGraph _graph;
@@ -62,7 +63,7 @@ namespace FubuTransportation.Testing.Registration.Conventions
                 .Any(x => x.Definition.Type == typeof(FakeRepository)).ShouldBeTrue();
         }
     }
-
+    */
     public class MyTestTransportRegistry : FubuTransportRegistry
     {
     }

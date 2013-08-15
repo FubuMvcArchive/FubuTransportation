@@ -132,6 +132,7 @@
     <Compile Include="Runtime\when_requesting_a_response.cs" />
     <Compile Include="Runtime\when_sending_with_the_expectation_of_a_response.cs" />
     <Compile Include="Runtime\when_starting_the_subscriptions.cs" />
+    <Compile Include="Sagas\SagaBehaviorTester.cs" />
     <Compile Include="ScenarioRunner.cs" />
     <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
     <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs" />

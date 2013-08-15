@@ -4,11 +4,12 @@ using Bottles.Manifest;
 using FubuCore;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.ObjectGraph;
-using FubuTransportation.Behaviors;
 using FubuTransportation.Runtime;
+using FubuTransportation.Sagas;
 
 namespace FubuTransportation.Registration.Nodes
 {
+    [MarkedForTermination]
     public class SagaNode : BehaviorNode
     {
         private readonly Type _handlerType;
@@ -21,9 +22,11 @@ namespace FubuTransportation.Registration.Nodes
         {
             _handlerType = handlerType;
             _inputType = inputType;
-            _behaviorType = canStartSaga 
-                ? typeof(InitiatingSagaHandlerBehavior<,,>).MakeGenericType(handlerType, sagaStateType, inputType) 
-                : typeof(SagaHandlerBehavior<,,>).MakeGenericType(handlerType, sagaStateType, inputType);
+
+            _behaviorType = typeof (SagaBehavior<,,>).MakeGenericType(sagaStateType, inputType, handlerType);
+//            _behaviorType = canStartSaga 
+//                ? typeof(InitiatingSagaHandlerBehavior<,,>).MakeGenericType(handlerType, sagaStateType, inputType) 
+//                : typeof(SagaHandlerBehavior<,,>).MakeGenericType(handlerType, sagaStateType, inputType);
         }
 
         protected override ObjectDef buildObjectDef()

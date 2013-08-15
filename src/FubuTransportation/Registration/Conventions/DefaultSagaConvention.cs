@@ -13,6 +13,8 @@ namespace FubuTransportation.Registration.Conventions
     {
         public void Configure(BehaviorGraph graph)
         {
+            return;
+
             graph.Handlers()
                 .Where(x => x.HandlerType.MatchesSagaConvention())
                 .Each(x =>

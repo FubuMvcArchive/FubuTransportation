@@ -58,12 +58,10 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Behaviors\InitiatingSagaHandlerBehavior.cs" />
-    <Compile Include="Behaviors\SagaHandlerBehavior.cs" />
     <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
-    <Compile Include="NewSagaSpike.cs" />
+    <Compile Include="Sagas\NewSagaSpike.cs" />
     <Compile Include="Registration\Conventions\DefaultSagaConvention.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
@@ -97,6 +95,7 @@
     <Compile Include="Registration\Nodes\SagaNode.cs" />
     <Compile Include="Runtime\ISagaRepository.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
+    <Compile Include="Sagas\SagaBehavior.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BasicJsonMessageSerializer.cs" />
