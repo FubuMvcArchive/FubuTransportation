@@ -17,6 +17,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ReplyRequestedKey = "Reply-Requested";
         public static readonly string ResponseIdKey = "Response";
         public static readonly string DestinationKey = "Destination";
+        public static readonly string ReplyUriKey = "Reply-Uri";
 
         public byte[] Data;
 
@@ -39,6 +40,12 @@ namespace FubuTransportation.Runtime
         {
             get { return Headers[SourceKey].ToUri(); }
             set { Headers[SourceKey] = value == null ? null : value.ToString(); }
+        }
+
+        public Uri ReplyUri
+        {
+            get { return Headers[ReplyUriKey].ToUri(); }
+            set { Headers[ReplyUriKey] = value == null ? null : value.ToString(); }
         }
 
         public string ContentType
@@ -111,7 +118,7 @@ namespace FubuTransportation.Runtime
             if (Headers.Has(ReplyRequestedKey) && Headers[ReplyRequestedKey].EqualsIgnoreCase("true"))
             {
                 child.Headers[ResponseIdKey] = CorrelationId;
-                child.Destination = Source;
+                child.Destination = ReplyUri;
             }
 
             return child;

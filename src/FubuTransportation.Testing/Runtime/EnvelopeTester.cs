@@ -76,7 +76,7 @@ namespace FubuTransportation.Testing.Runtime
             {
                 CorrelationId = Guid.NewGuid().ToString(),
                 OriginalId = Guid.NewGuid().ToString(),
-                Source = "foo://bar".ToUri()
+                ReplyUri = "foo://bar".ToUri()
             };
 
             parent.Headers[Envelope.ReplyRequestedKey] = true.ToString();
@@ -86,7 +86,7 @@ namespace FubuTransportation.Testing.Runtime
             var child = parent.ForResponse(childMessage);
 
             child.Headers[Envelope.ResponseIdKey].ShouldEqual(parent.CorrelationId);
-            child.Destination.ShouldEqual(parent.Source);
+            child.Destination.ShouldEqual(parent.ReplyUri);
         }
 
         [Test]
@@ -122,6 +122,21 @@ namespace FubuTransportation.Testing.Runtime
             envelope.Headers[Envelope.SourceKey].ShouldEqual(uri.ToString());
             envelope.Source.ShouldEqual(uri);
         }
+
+        [Test]
+        public void reply_uri_property()
+        {
+            var envelope = new Envelope();
+
+            envelope.ReplyUri.ShouldBeNull();
+
+            var uri = "fake://thing".ToUri();
+            envelope.ReplyUri = uri;
+
+            envelope.Headers[Envelope.ReplyUriKey].ShouldEqual(uri.ToString());
+            envelope.ReplyUri.ShouldEqual(uri);
+        }
+
 
         [Test]
         public void content_type()

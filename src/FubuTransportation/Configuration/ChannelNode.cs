@@ -84,13 +84,18 @@ namespace FubuTransportation.Configuration
         }
 
         // virtual for testing of course
-        public virtual void Send(Envelope envelope)
+        public virtual void Send(Envelope envelope, ChannelNode replyNode = null)
         {
             var clone = new NameValueHeaders();
             envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
 
             clone[Envelope.SourceKey] = Uri.ToString();
             clone[Envelope.ChannelKey] = Key;
+
+            if (replyNode != null)
+            {
+                clone[Envelope.ReplyUriKey] = replyNode.Uri.ToString();
+            }
 
             Channel.Send(envelope.Data, clone);
         }

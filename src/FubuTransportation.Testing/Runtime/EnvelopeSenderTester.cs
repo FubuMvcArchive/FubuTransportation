@@ -8,6 +8,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
+using FubuCore;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -78,15 +79,21 @@ namespace FubuTransportation.Testing.Runtime
     {
         public Envelope LastEnvelope;
 
-        public StubChannelNode()
+        public StubChannelNode(string protocol = null)
         {
             Key = Guid.NewGuid().ToString();
-            Uri = ("fake://" + Key).ToUri();
+            Uri = ("{0}://{1}".ToFormat(protocol ?? "fake", Key)).ToUri();
         }
 
-        public override void Send(Envelope envelope)
+        public override void Send(Envelope envelope, ChannelNode replyNode = null)
         {
+            if (replyNode != null)
+            {
+                envelope.ReplyUri = replyNode.Uri;
+            }
+
             LastEnvelope = envelope;
+
         }
     }
 }
