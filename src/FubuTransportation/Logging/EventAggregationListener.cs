@@ -53,8 +53,7 @@ namespace FubuTransportation.Logging
             // no-op
         }
 
-        // TODO -- do we wanna turn this on or off?
         public bool IsDebugEnabled { get { return _settings.DebugEnabled; } }
-        public bool IsInfoEnabled { get { return _settings.InfoEnabled; } }
+        public bool IsInfoEnabled { get { return true; } }
     }
 }

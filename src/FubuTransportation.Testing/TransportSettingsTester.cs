@@ -12,10 +12,5 @@ namespace FubuTransportation.Testing
             new TransportSettings().DebugEnabled.ShouldBeFalse();
         }
 
-        [Test]
-        public void info_is_enabled_by_default()
-        {
-            new TransportSettings().InfoEnabled.ShouldBeTrue();
-        }
     }
 }

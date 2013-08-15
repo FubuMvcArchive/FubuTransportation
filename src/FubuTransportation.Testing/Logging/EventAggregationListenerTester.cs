@@ -64,28 +64,6 @@ namespace FubuTransportation.Testing.Logging
             ClassUnderTest.IsDebugEnabled.ShouldBeTrue();
         }
 
-        [Test]
-        public void info_disabled()
-        {
-            Services.Inject(new TransportSettings
-            {
-                InfoEnabled = false
-            });
-
-            ClassUnderTest.IsInfoEnabled.ShouldBeFalse();
-        }
-
-        [Test]
-        public void Info_enabled()
-        {
-            Services.Inject(new TransportSettings
-            {
-                InfoEnabled = true
-            });
-
-            ClassUnderTest.IsInfoEnabled.ShouldBeTrue();
-        }
-
 
     }
 

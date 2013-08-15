@@ -6,6 +6,7 @@ using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using System.Collections.Generic;
+using FubuCore;
 
 namespace FubuTransportation.Runtime
 {
@@ -42,6 +43,12 @@ namespace FubuTransportation.Runtime
             }
 
             _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope});
+
+            // Do nothing for responses other than kick out the EnvelopeReceived.
+            if (envelope.ResponseId.IsNotEmpty())
+            {
+                return;
+            }
 
             var inputType = envelope.Message.GetType();
 
