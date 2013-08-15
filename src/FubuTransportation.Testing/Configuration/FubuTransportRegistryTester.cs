@@ -27,6 +27,13 @@ namespace FubuTransportation.Testing.Configuration
             FubuTransport.For<OtherRegistry>().StructureMap(new Container()).Bootstrap()
                          .Factory.Get<ChannelGraph>().Name.ShouldEqual("other");
         }
+
+        [Test]
+        public void can_set_the_node_name_programmatically()
+        {
+            FubuTransport.For(x => x.NodeName = "MyNode").StructureMap(new Container()).Bootstrap()
+                         .Factory.Get<ChannelGraph>().Name.ShouldEqual("MyNode");
+        }
     }
 
     public class CustomTransportRegistry : FubuTransportRegistry

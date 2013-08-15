@@ -48,6 +48,14 @@ namespace FubuTransportation.Configuration
             _alterations.Add(r => r.AlterSettings(alteration));
         }
 
+        public string NodeName
+        {
+            set
+            {
+                AlterSettings<ChannelGraph>(x => x.Name = value);
+            }
+        }
+
         internal Action<ChannelGraph> channel
         {
             set
