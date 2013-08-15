@@ -7,5 +7,7 @@ namespace FubuTransportation.Runtime
     {
         IEnumerable<ChannelNode> FindChannels(Envelope envelope);
         void Start();
+
+        ChannelNode ReplyNodeFor(ChannelNode destination);
     }
 }

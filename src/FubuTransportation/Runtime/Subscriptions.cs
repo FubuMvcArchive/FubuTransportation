@@ -47,5 +47,10 @@ namespace FubuTransportation.Runtime
 
             _graph.StartReceiving(_invoker.Value);
         }
+
+        public ChannelNode ReplyNodeFor(ChannelNode destination)
+        {
+            return _graph.FirstOrDefault(x => x.Protocol() == destination.Protocol() && x.ForReplies);
+        }
     }
 }

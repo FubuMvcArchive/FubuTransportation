@@ -33,6 +33,12 @@ namespace FubuTransportation.RhinoQueues.Testing
             transport.OpenChannels(graph);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            queues.Dispose();
+        }
+
         private PersistentQueues queues;
         private RhinoQueuesTransport transport;
         private ChannelGraph graph;
@@ -61,6 +67,16 @@ namespace FubuTransportation.RhinoQueues.Testing
             Envelope actual = receiver.Received.Single();
             actual.Data.ShouldEqual(envelope.Data);
             actual.Headers["foo"].ShouldEqual("bar");
+        }
+
+        [Test]
+        [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
+        public void can_find_the_reply_channel()
+        {
+            var subscriptions = new Subscriptions(graph, () => null, new ITransport[0]);
+            var replyNode = subscriptions.ReplyNodeFor(node);
+            replyNode.ShouldNotBeNull();
+            replyNode.Uri.ToString().ShouldEqual("rhino.queues://{0}:2020/node/replies".ToFormat(Environment.MachineName.ToLower()));
         }
     }
 
