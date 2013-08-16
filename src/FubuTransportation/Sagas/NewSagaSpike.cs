@@ -89,6 +89,11 @@ namespace FubuTransportation.Sagas
 
             return FuncBuilder.CompileGetter(property);
         }
+
+        public bool MatchesStateIdAndMessageCorrelationIdIdiom()
+        {
+            return MessageType.GetProperty(CorrelationId) != null && StateType.GetProperty(Id) != null;
+        }
     }
 
     public interface ISagaStorage

@@ -111,6 +111,36 @@ namespace FubuTransportation.Testing.Sagas
             func(state).ShouldEqual(state.Id);
 
         }
+
+        [Test]
+        public void saga_types_matches_idiom()
+        {
+            new SagaTypes
+            {
+                MessageType = typeof(SagaMessageOne),
+                StateType = typeof(MySagaState)
+            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeTrue();
+        }
+
+        [Test]
+        public void saga_types_does_not_match_idiom_because_of_state_type_not_having_id()
+        {
+            new SagaTypes
+            {
+                MessageType = typeof(SagaMessageOne),
+                StateType = GetType()
+            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeFalse();
+        }
+
+        [Test]
+        public void saga_types_does_not_match_idiom_because_of_message_type_not_having_correlation_id()
+        {
+            new SagaTypes
+            {
+                MessageType = GetType(),
+                StateType = typeof(MySagaState)
+            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeFalse();
+        }
     }
 
     public class MySagaState
