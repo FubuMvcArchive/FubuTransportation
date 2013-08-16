@@ -8,7 +8,7 @@ namespace FubuTransportation.InMemory
     {
         public ObjectDef RepositoryFor(SagaTypes sagaTypes)
         {
-            if (!sagaTypes.MatchesStateIdAndMessageCorrelationIdIdiom())
+            if (sagaTypes.StateType.GetProperty(SagaTypes.Id) == null)
             {
                 return null;
             }

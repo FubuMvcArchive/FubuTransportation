@@ -9,6 +9,18 @@ namespace FubuTransportation.Testing.Sagas
     public class SagaTypesTester
     {
         [Test]
+        public void saga_types_gives_an_empty_guid_func_if_correlation_id_does_not_exist()
+        {
+            var types = new SagaTypes
+            {
+                MessageType = GetType()
+            };
+
+            var func = types.ToCorrelationIdFunc().ShouldBeOfType<Func<SagaTypesTester, Guid>>();
+            func(this).ShouldEqual(Guid.Empty);
+        }
+
+        [Test]
         public void saga_types_being_able_to_gimme_a_correlation_id_getter_from_the_message_type()
         {
             var types = new SagaTypes

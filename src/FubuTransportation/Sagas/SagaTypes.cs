@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuTransportation.Registration;
+using FubuCore;
 
 namespace FubuTransportation.Sagas
 {
@@ -15,6 +16,11 @@ namespace FubuTransportation.Sagas
         public object ToCorrelationIdFunc()
         {
             var property = MessageType.GetProperty(CorrelationId);
+
+            if (property == null)
+            {
+                return typeof (EmptyGuidMaker<>).CloseAndBuildAs<EmptyGuid>(MessageType).GetEmptyFunc();
+            }
 
             return FuncBuilder.CompileGetter(property);
         }
@@ -34,6 +40,21 @@ namespace FubuTransportation.Sagas
         public override string ToString()
         {
             return string.Format("HandlerType: {0}, MessageType: {1}, StateType: {2}", HandlerType, MessageType, StateType);
+        }
+
+        public interface EmptyGuid
+        {
+            object GetEmptyFunc();
+        }
+
+        public class EmptyGuidMaker<T> : EmptyGuid
+        {
+            public object GetEmptyFunc()
+            {
+                Func<T, Guid> func = x => Guid.Empty;
+
+                return func;
+            }
         }
     }
 }

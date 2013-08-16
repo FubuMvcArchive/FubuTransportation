@@ -2,6 +2,7 @@
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.InMemory;
 using FubuTransportation.Sagas;
+using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
 
@@ -52,6 +53,49 @@ namespace FubuTransportation.Testing.InMemory
 
             objectDef.FindDependencyValueFor<Func<SagaMessageOne, Guid>>()
                 (message).ShouldEqual(message.CorrelationId);
+        }
+    }
+
+    [TestFixture]
+    public class when_building_the_object_def_for_an_in_memory_saga_where_the_message_has_no_correlation_id
+    {
+        private ObjectDef objectDef;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var storage = new InMemorySagaStorage();
+
+            objectDef = storage.RepositoryFor(new SagaTypes
+            {
+                MessageType = typeof(Message1),
+                StateType = typeof(MySagaState)
+            });
+        }
+
+        [Test]
+        public void should_be_in_memory_repository_type()
+        {
+            objectDef.Type.ShouldEqual(typeof(InMemorySagaRepository<MySagaState, Message1>));
+        }
+
+        [Test]
+        public void state_id_getter()
+        {
+            var state = new MySagaState
+            {
+                Id = Guid.NewGuid()
+            };
+
+            objectDef.FindDependencyValueFor<Func<MySagaState, Guid>>()
+                (state).ShouldEqual(state.Id);
+        }
+
+        [Test]
+        public void message_id_getter()
+        {
+            objectDef.FindDependencyValueFor<Func<Message1, Guid>>()
+                (new Message1()).ShouldEqual(Guid.Empty);
         }
     }
 
