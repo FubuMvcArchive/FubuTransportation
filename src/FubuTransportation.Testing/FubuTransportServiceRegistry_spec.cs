@@ -114,10 +114,5 @@ namespace FubuTransportation.Testing
             registeredTypeIs<IActivator, TransportActivator>();
         }
 
-        [Test]
-        public void InMemorySagaRepository_is_registered()
-        {
-            registeredTypeIs(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
-        }
     }
 }

@@ -44,7 +44,6 @@ namespace FubuTransportation
             AddService<IActivator, TransportActivator>();
             AddService<ITransport, InMemoryTransport>();
 
-            SetServiceIfNone(typeof(ISagaRepository<>), typeof(InMemorySagaRepository<>));
             SetServiceIfNone<IServiceBus, ServiceBus>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();

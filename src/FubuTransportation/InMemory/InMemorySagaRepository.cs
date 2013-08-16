@@ -1,9 +1,11 @@
 ﻿using System;
+using FubuCore;
 using FubuCore.Util;
 using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Runtime
 {
+    [MarkedForTermination]
     //TODO Should we serialize the state?
     public class InMemorySagaRepository<TMessage> : ISagaRepository<TMessage> where TMessage : class
     {

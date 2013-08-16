@@ -80,6 +80,7 @@ namespace FubuTransportation.Registration
         /// <summary>
         /// Find Handlers suffixed with 'Saga' that have public properties of 'State' and 'IsCompleted'
         /// </summary>
+        [MarkedForTermination("At least change this")]
         public void IncludeClassesMatchingSagaConvention()
         {
             _description.WriteLine("Public classes suffixed with Saga that have public properties of 'State' and 'IsCompleted'");

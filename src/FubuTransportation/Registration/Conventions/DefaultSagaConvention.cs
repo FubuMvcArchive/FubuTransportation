@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
@@ -8,6 +9,7 @@ using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Registration.Conventions
 {
+    [MarkedForTermination]
     [ConfigurationType(ConfigurationType.Attachment)] 
     public class DefaultSagaConvention : IConfigurationAction
     {
