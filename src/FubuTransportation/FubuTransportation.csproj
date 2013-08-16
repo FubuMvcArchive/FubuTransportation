@@ -64,7 +64,10 @@
     <Compile Include="InMemory\InMemorySagaStorage.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />
-    <Compile Include="Sagas\NewSagaSpike.cs" />
+    <Compile Include="Sagas\ISagaRepository.cs" />
+    <Compile Include="Sagas\ISagaStorage.cs" />
+    <Compile Include="Sagas\IStatefulSaga.cs" />
+    <Compile Include="Sagas\StatefulSagaNode.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
     <Compile Include="Configuration\FubuTransportRegistry.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Runtime\ReplyListener.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
     <Compile Include="Sagas\SagaBehavior.cs" />
+    <Compile Include="Sagas\SagaRepositoryUnresolvableException.cs" />
     <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />

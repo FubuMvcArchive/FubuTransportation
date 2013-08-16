@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using FubuCore;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
@@ -28,9 +27,16 @@ namespace FubuTransportation.Sagas
             });
         }
 
+
         public static bool IsSagaHandler(HandlerCall call)
         {
-            return call.HandlerType.Closes(typeof (IStatefulSaga<>));
+            var handlerType = call.HandlerType;
+            return IsSagaHandler(handlerType);
+        }
+
+        public static bool IsSagaHandler(Type handlerType)
+        {
+            return handlerType.Closes(typeof (IStatefulSaga<>));
         }
 
         public static bool IsSagaChain(BehaviorChain chain)
@@ -64,18 +70,6 @@ namespace FubuTransportation.Sagas
                 MessageType = call.InputType(),
                 StateType = call.HandlerType.FindInterfaceThatCloses(typeof(IStatefulSaga<>)).GetGenericArguments().Single()
             };
-        }
-    }
-
-    [Serializable]
-    public class SagaRepositoryUnresolvableException : Exception
-    {
-        public SagaRepositoryUnresolvableException(SagaTypes sagaTypes) : base("Unable to determine a saga repository for {0}.  Does the saga type have a property Id:Guid and the message type a property of CorrelationId:Guid?".ToFormat(sagaTypes))
-        {
-        }
-
-        protected SagaRepositoryUnresolvableException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
         }
     }
 }

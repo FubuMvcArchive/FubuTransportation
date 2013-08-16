@@ -10,6 +10,7 @@ using FubuCore.Util;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Sagas;
 
 namespace FubuTransportation.Registration
 {
@@ -80,11 +81,10 @@ namespace FubuTransportation.Registration
         /// <summary>
         /// Find Handlers suffixed with 'Saga' that have public properties of 'State' and 'IsCompleted'
         /// </summary>
-        [MarkedForTermination("At least change this")]
         public void IncludeClassesMatchingSagaConvention()
         {
             _description.WriteLine("Public classes suffixed with Saga that have public properties of 'State' and 'IsCompleted'");
-            IncludeTypes(x => x.MatchesSagaConvention());
+            IncludeTypes(x => StatefulSagaConvention.IsSagaHandler(x));
         }
 
         public void IncludeTypesNamed(Expression<Func<string, bool>> filter)
