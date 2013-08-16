@@ -62,6 +62,17 @@ namespace FubuTransportation.Testing.Sagas
             StatefulSagaConvention.IsSagaChain(chain)
                 .ShouldBeTrue();
         }
+
+        [Test]
+        public void to_saga_types_for_a_handler_call()
+        {
+            var call = HandlerCall.For<SimpleSagaHandler>(x => x.Last(null));
+            var types = StatefulSagaConvention.ToSagaTypes(call);
+
+            types.HandlerType.ShouldEqual(typeof (SimpleSagaHandler));
+            types.MessageType.ShouldEqual(typeof (SagaMessageThree));
+            types.StateType.ShouldEqual(typeof (MySagaState));
+        }
     }
 
     public class MySagaState

@@ -114,5 +114,22 @@ namespace FubuTransportation.Sagas
 
             return false;
         }
+
+        public static SagaTypes ToSagaTypes(HandlerCall call)
+        {
+            return new SagaTypes
+            {
+                HandlerType = call.HandlerType,
+                MessageType = call.InputType(),
+                StateType = call.HandlerType.FindInterfaceThatCloses(typeof(IStatefulSaga<>)).GetGenericArguments().Single()
+            };
+        }
+    }
+
+    public class SagaTypes
+    {
+        public Type HandlerType;
+        public Type MessageType;
+        public Type StateType;
     }
 }
