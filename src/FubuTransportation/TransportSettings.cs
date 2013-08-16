@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Sagas;
 
 namespace FubuTransportation
@@ -16,7 +17,5 @@ namespace FubuTransportation
         }
 
         public bool DebugEnabled { get; set; }
-
-        
     }
 }

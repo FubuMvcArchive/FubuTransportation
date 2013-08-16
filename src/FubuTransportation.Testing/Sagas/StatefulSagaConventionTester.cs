@@ -1,11 +1,14 @@
 ﻿using System;
 using FubuMVC.Core.Registration.Nodes;
+using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using FubuTestingSupport;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Sagas
 {
@@ -74,72 +77,109 @@ namespace FubuTransportation.Testing.Sagas
             types.StateType.ShouldEqual(typeof (MySagaState));
         }
 
+
         [Test]
-        public void saga_types_being_able_to_gimme_a_correlation_id_getter_from_the_message_type()
+        public void no_registered_storage_and_matches_the_idiom_so_use_in_memory_cache()
         {
             var types = new SagaTypes
             {
-                MessageType = typeof (SagaMessageOne)
+                MessageType = typeof (SagaMessageOne),
+                StateType = typeof (MySagaState)
             };
 
-            var func = types.ToCorrelationIdFunc().ShouldBeOfType<Func<SagaMessageOne, Guid>>();
-
-            var message = new SagaMessageOne
-            {
-                CorrelationId = Guid.NewGuid()
-            };
-
-            func(message).ShouldEqual(message.CorrelationId);
+            StatefulSagaConvention.DetermineSagaRepositoryDef(new TransportSettings(), types)
+                                  .Type.ShouldEqual(typeof (InMemorySagaRepository<MySagaState, SagaMessageOne>));
         }
 
         [Test]
-        public void saga_types_being_able_to_gimme_an_id_getter_for_the_state_object()
+        public void use_matching_storage_to_build_the_repository()
         {
             var types = new SagaTypes
             {
-                MessageType = typeof(SagaMessageOne),
-                StateType = typeof(MySagaState)
+                MessageType = GetType(),
+                StateType = typeof (MySagaState)
             };
 
-            var func = types.ToSagaIdFunc().ShouldBeOfType<Func<MySagaState, Guid>>();
+            var storage1 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage2 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage3 = MockRepository.GenerateMock<ISagaStorage>();
 
-            var state = new MySagaState
-            {
-                Id = Guid.NewGuid()
-            };
+            var settings = new TransportSettings();
+            settings.SagaStorageProviders.Add(storage1);
+            settings.SagaStorageProviders.Add(storage2);
+            settings.SagaStorageProviders.Add(storage3);
 
-            func(state).ShouldEqual(state.Id);
+            var def = new ObjectDef();
+            storage3.Stub(x => x.RepositoryFor(types))
+                    .Return(def);
 
+            StatefulSagaConvention.DetermineSagaRepositoryDef(settings, types)
+                                  .ShouldBeTheSameAs(def);
         }
 
         [Test]
-        public void saga_types_matches_idiom()
+        public void use_matching_storage_to_build_the_repository_2()
         {
-            new SagaTypes
-            {
-                MessageType = typeof(SagaMessageOne),
-                StateType = typeof(MySagaState)
-            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeTrue();
-        }
-
-        [Test]
-        public void saga_types_does_not_match_idiom_because_of_state_type_not_having_id()
-        {
-            new SagaTypes
-            {
-                MessageType = typeof(SagaMessageOne),
-                StateType = GetType()
-            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeFalse();
-        }
-
-        [Test]
-        public void saga_types_does_not_match_idiom_because_of_message_type_not_having_correlation_id()
-        {
-            new SagaTypes
+            var types = new SagaTypes
             {
                 MessageType = GetType(),
                 StateType = typeof(MySagaState)
-            }.MatchesStateIdAndMessageCorrelationIdIdiom().ShouldBeFalse();
+            };
+
+            var storage1 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage2 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage3 = MockRepository.GenerateMock<ISagaStorage>();
+
+            var settings = new TransportSettings();
+            settings.SagaStorageProviders.Add(storage1);
+            settings.SagaStorageProviders.Add(storage2);
+            settings.SagaStorageProviders.Add(storage3);
+
+            var def = new ObjectDef();
+            storage2.Stub(x => x.RepositoryFor(types))
+                    .Return(def);
+
+            StatefulSagaConvention.DetermineSagaRepositoryDef(settings, types)
+                                  .ShouldBeTheSameAs(def);
+        }
+
+
+        [Test]
+        public void use_matching_storage_to_build_the_repository_3()
+        {
+            var types = new SagaTypes
+            {
+                MessageType = GetType(),
+                StateType = typeof(MySagaState)
+            };
+
+            var storage1 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage2 = MockRepository.GenerateMock<ISagaStorage>();
+            var storage3 = MockRepository.GenerateMock<ISagaStorage>();
+
+            var settings = new TransportSettings();
+            settings.SagaStorageProviders.Add(storage1);
+            settings.SagaStorageProviders.Add(storage2);
+            settings.SagaStorageProviders.Add(storage3);
+
+            var def = new ObjectDef();
+            storage1.Stub(x => x.RepositoryFor(types))
+                    .Return(def);
+
+            StatefulSagaConvention.DetermineSagaRepositoryDef(settings, types)
+                                  .ShouldBeTheSameAs(def);
+        }
+
+        [Test]
+        public void unable_to_determine_a_saga_repository_blows_up()
+        {
+            Exception<SagaRepositoryUnresolvableException>.ShouldBeThrownBy(() => {
+                StatefulSagaConvention.DetermineSagaRepositoryDef(new TransportSettings(), new SagaTypes
+                {
+                    MessageType = GetType(),
+                    StateType = GetType()
+                });
+            });
         }
     }
 

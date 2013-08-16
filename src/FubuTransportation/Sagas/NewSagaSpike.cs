@@ -2,7 +2,6 @@
 using System.Reflection;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.ObjectGraph;
-using FubuTransportation.Registration;
 
 namespace FubuTransportation.Sagas
 {
@@ -64,35 +63,6 @@ namespace FubuTransportation.Sagas
             def.Dependency(repositoryType, Repository);
 
             return def;
-        }
-    }
-
-    public class SagaTypes
-    {
-        public const string CorrelationId = "CorrelationId";
-        public const string Id = "Id";
-
-        public Type HandlerType;
-        public Type MessageType;
-        public Type StateType;
-
-        public object ToCorrelationIdFunc()
-        {
-            var property = MessageType.GetProperty(CorrelationId);
-
-            return FuncBuilder.CompileGetter(property);
-        }
-
-        public object ToSagaIdFunc()
-        {
-            var property = StateType.GetProperty(Id);
-
-            return FuncBuilder.CompileGetter(property);
-        }
-
-        public bool MatchesStateIdAndMessageCorrelationIdIdiom()
-        {
-            return MessageType.GetProperty(CorrelationId) != null && StateType.GetProperty(Id) != null;
         }
     }
 

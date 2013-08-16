@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using FubuCore;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
+using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.Sagas
@@ -39,6 +43,19 @@ namespace FubuTransportation.Sagas
             return false;
         }
 
+        public static ObjectDef DetermineSagaRepositoryDef(TransportSettings settings, SagaTypes sagaTypes)
+        {
+            var def = settings.SagaStorageProviders.FirstValue(x => x.RepositoryFor(sagaTypes))
+                      ?? new InMemorySagaStorage().RepositoryFor(sagaTypes);
+
+            if (def == null)
+            {
+                throw new SagaRepositoryUnresolvableException(sagaTypes);
+            }
+
+            return def;
+        }
+
         public static SagaTypes ToSagaTypes(HandlerCall call)
         {
             return new SagaTypes
@@ -47,6 +64,18 @@ namespace FubuTransportation.Sagas
                 MessageType = call.InputType(),
                 StateType = call.HandlerType.FindInterfaceThatCloses(typeof(IStatefulSaga<>)).GetGenericArguments().Single()
             };
+        }
+    }
+
+    [Serializable]
+    public class SagaRepositoryUnresolvableException : Exception
+    {
+        public SagaRepositoryUnresolvableException(SagaTypes sagaTypes) : base("Unable to determine a saga repository for {0}.  Does the saga type have a property Id:Guid and the message type a property of CorrelationId:Guid?".ToFormat(sagaTypes))
+        {
+        }
+
+        protected SagaRepositoryUnresolvableException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

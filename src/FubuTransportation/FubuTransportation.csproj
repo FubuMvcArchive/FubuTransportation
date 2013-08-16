@@ -96,6 +96,7 @@
     <Compile Include="Runtime\ReplyListener.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
     <Compile Include="Sagas\SagaBehavior.cs" />
+    <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
