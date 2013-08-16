@@ -34,7 +34,7 @@ namespace FubuTransportation.Sagas
             _types = types;
         }
 
-        public ISagaRepositoryNode Repository { get; set; }
+        public ObjectDef Repository { get; set; }
 
         public override BehaviorCategory Category
         {
@@ -61,22 +61,17 @@ namespace FubuTransportation.Sagas
 
             var def = new ObjectDef(typeof (SagaBehavior<,,>), _types.StateType, _types.MessageType, _types.HandlerType);
             var repositoryType = typeof (ISagaRepository<,>).MakeGenericType(_types.StateType, _types.MessageType);
-            def.Dependency(repositoryType, Repository.BuildRepositoryDef(_types.StateType, _types.MessageType));
+            def.Dependency(repositoryType, Repository);
 
             return def;
         }
     }
 
-    // Thinking that there would be one for RavenDb sagas etc.
-    // Smart enough to do the expression/func business to get at correlation id's
-    public interface ISagaRepositoryNode
-    {
-        ObjectDef BuildRepositoryDef(Type stateType, Type messageType);
-    }
-
     public class SagaTypes
     {
         public const string CorrelationId = "CorrelationId";
+        public const string Id = "Id";
+
         public Type HandlerType;
         public Type MessageType;
         public Type StateType;
@@ -87,5 +82,22 @@ namespace FubuTransportation.Sagas
 
             return FuncBuilder.CompileGetter(property);
         }
+
+        public object ToSagaIdFunc()
+        {
+            var property = StateType.GetProperty(Id);
+
+            return FuncBuilder.CompileGetter(property);
+        }
+    }
+
+    public interface ISagaStorage
+    {
+        /// <summary>
+        /// Can be null!
+        /// </summary>
+        /// <param name="sagaTypes"></param>
+        /// <returns></returns>
+        ObjectDef RepositoryFor(SagaTypes sagaTypes);
     }
 }

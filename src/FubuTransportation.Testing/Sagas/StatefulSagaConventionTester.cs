@@ -91,11 +91,31 @@ namespace FubuTransportation.Testing.Sagas
 
             func(message).ShouldEqual(message.CorrelationId);
         }
+
+        [Test]
+        public void saga_types_being_able_to_gimme_an_id_getter_for_the_state_object()
+        {
+            var types = new SagaTypes
+            {
+                MessageType = typeof(SagaMessageOne),
+                StateType = typeof(MySagaState)
+            };
+
+            var func = types.ToSagaIdFunc().ShouldBeOfType<Func<MySagaState, Guid>>();
+
+            var state = new MySagaState
+            {
+                Id = Guid.NewGuid()
+            };
+
+            func(state).ShouldEqual(state.Id);
+
+        }
     }
 
     public class MySagaState
     {
-        
+        public Guid Id { get; set; }
     }
 
     public class SagaMessageOne

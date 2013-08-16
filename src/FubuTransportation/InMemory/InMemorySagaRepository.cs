@@ -1,37 +1,50 @@
 ﻿using System;
-using FubuCore;
-using FubuCore.Util;
+using System.Collections.Generic;
+using System.Threading;
 using FubuMVC.Core.Runtime;
+using FubuTransportation.Sagas;
 
-namespace FubuTransportation.Runtime
+namespace FubuTransportation.InMemory
 {
-    [MarkedForTermination]
-    //TODO Should we serialize the state?
-    public class InMemorySagaRepository<TMessage> : ISagaRepository<TMessage> where TMessage : class
+    public class InMemorySagaRepository<TState, TMessage> : ISagaRepository<TState, TMessage> where TState : class
     {
-        private readonly Lazy<Guid> _correlationId; 
-        private static Cache<Guid, object> _states = new Cache<Guid, object>(); 
+        private readonly Func<TMessage, Guid> _messageGetter;
+        private readonly Func<TState, Guid> _stateGetter;
+        private readonly ISagaStateCache<TState> _cache;
 
-        public InMemorySagaRepository(IFubuRequest fubuRequest, Func<TMessage, Guid> correlationIdGet)
+        public static InMemorySagaRepository<TState, TMessage> Create()
         {
-            _correlationId = new Lazy<Guid>(() => correlationIdGet(fubuRequest.Get<TMessage>()));
+            var types = new SagaTypes
+            {
+                StateType = typeof (TState),
+                MessageType = typeof (TMessage)
+            };
+
+            return new InMemorySagaRepository<TState, TMessage>((Func<TMessage, Guid>) types.ToCorrelationIdFunc(), (Func<TState, Guid>) types.ToSagaIdFunc(), new SagaStateCache<TState>());
+        } 
+
+        public InMemorySagaRepository(Func<TMessage, Guid> messageGetter, Func<TState, Guid> stateGetter, ISagaStateCache<TState> cache)
+        {
+            _messageGetter = messageGetter;
+            _stateGetter = stateGetter;
+            _cache = cache;
         }
 
-        public void Save<TState>(TState state) where TState : class
+        public void Save(TState state)
         {
-            _states[_correlationId.Value] = state;
+            _cache.Store(_stateGetter(state), state);
         }
 
-        public TState Load<TState>() where TState : class
+        public TState Find(TMessage message)
         {
-            if (!_states.Has(_correlationId.Value))
-                return null;
-            return _states[_correlationId.Value] as TState;
+            var correlationId = _messageGetter(message);
+            return _cache.Find(correlationId);
         }
 
-        public void Delete<TState>(TState state) where TState : class
+        public void Delete(TState state)
         {
-            _states.Remove(_correlationId.Value);
+            var id = _stateGetter(state);
+            _cache.Delete(id);
         }
     }
 }

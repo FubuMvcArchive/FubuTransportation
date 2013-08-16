@@ -90,6 +90,15 @@ namespace FubuTransportation.Testing
 
         }
 
+
+        [Test]
+        public void saga_state_cache_is_registered_as_a_singleton()
+        {
+            registeredTypeIs(typeof(ISagaStateCache<>), typeof(SagaStateCache<>));
+
+        }
+
+
         [Test]
         public void EnvelopeSerializer_is_registered()
         {

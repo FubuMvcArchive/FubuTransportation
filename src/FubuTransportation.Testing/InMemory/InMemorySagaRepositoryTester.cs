@@ -1,44 +1,48 @@
 ﻿using System;
-using FubuMVC.Core.Runtime;
-using FubuTestingSupport;
-using FubuTransportation.Runtime;
+using FubuTransportation.InMemory;
 using NUnit.Framework;
+using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.InMemory
 {
     [TestFixture]
-    public class InMemorySagaRepositoryTester : InteractionContext<InMemorySagaRepository<FakeMessage>>
+    public class InMemorySagaRepositoryTester
     {
-        protected override void beforeEach()
+        [Test]
+        public void find_from_empty_state()
         {
-            var message = new FakeMessage();
-            var fubuRequest = new InMemoryFubuRequest();
-            fubuRequest.Set(message);
-            Services.Inject(typeof(IFubuRequest), fubuRequest);
-            var correlationIdFunc = new Func<FakeMessage, Guid>(x => x.CorrelationId);
-            Services.Inject(correlationIdFunc);
+            var repository = InMemorySagaRepository<FakeState, FakeMessage>.Create();
+            repository.Find(new FakeMessage{CorrelationId = Guid.NewGuid()})
+                .ShouldBeNull();
         }
 
         [Test]
-        public void can_add_new_saga_state()
+        public void save_and_find()
         {
-            ClassUnderTest.Save(new FakeSagaState {Message = "Test"});
-            ClassUnderTest.Load<FakeSagaState>().Message.ShouldEqual("Test");
+            var repository = InMemorySagaRepository<FakeState, FakeMessage>.Create();
+            var id = Guid.NewGuid();
+            
+            var state = new FakeState {Id = id};
+            repository.Save(state);
+
+            repository.Find(new FakeMessage {CorrelationId = id})
+                      .ShouldBeTheSameAs(state);
+
+
         }
 
         [Test]
-        public void can_delete_saga_state()
+        public void save_and_delete_then_find_returns_null()
         {
-            ClassUnderTest.Save(new FakeSagaState { Message = "Test" });
-            var sagaState = ClassUnderTest.Load<FakeSagaState>();
-            ClassUnderTest.Delete(sagaState);
-            ClassUnderTest.Load<FakeSagaState>().ShouldBeNull();
-        }
+            var repository = InMemorySagaRepository<FakeState, FakeMessage>.Create();
+            var id = Guid.NewGuid();
 
-        [Test]
-        public void load_returns_null_when_not_found()
-        {
-            ClassUnderTest.Load<FakeSagaState>().ShouldBeNull();
+            var state = new FakeState { Id = id };
+            repository.Save(state);
+            repository.Delete(state);
+
+            repository.Find(new FakeMessage {CorrelationId = id})
+                      .ShouldBeNull();
         }
     }
 
@@ -47,8 +51,8 @@ namespace FubuTransportation.Testing.InMemory
         public Guid CorrelationId { get; set; }
     }
 
-    public class FakeSagaState
+    public class FakeState
     {
-        public string Message { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -61,8 +61,9 @@
     <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
+    <Compile Include="InMemory\ISagaStateCache.cs" />
+    <Compile Include="InMemory\SagaStateCache.cs" />
     <Compile Include="Sagas\NewSagaSpike.cs" />
-    <Compile Include="Registration\Conventions\DefaultSagaConvention.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
     <Compile Include="Configuration\FubuTransportRegistry.cs" />
@@ -92,8 +93,6 @@
     <Compile Include="Logging\NoHandlerForMessage.cs" />
     <Compile Include="InMemory\InMemorySagaRepository.cs" />
     <Compile Include="Runtime\ReplyListener.cs" />
-    <Compile Include="Registration\Nodes\SagaNode.cs" />
-    <Compile Include="Runtime\ISagaRepository.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
     <Compile Include="Sagas\SagaBehavior.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />

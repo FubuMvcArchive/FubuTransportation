@@ -6,7 +6,6 @@ using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
-using FubuTransportation.Registration.Conventions;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 
@@ -20,7 +19,6 @@ namespace FubuTransportation
             // needs to be after authentication
 
             registry.Policies.Add<ImportHandlers>();
-            registry.Policies.Add<DefaultSagaConvention>();
             registry.Services<FubuTransportServiceRegistry>();
         }
     }
@@ -37,6 +35,8 @@ namespace FubuTransportation
             var subscriberDef = ObjectDef.ForType<Subscriptions>();
             subscriberDef.IsSingleton = true;
             SetServiceIfNone(typeof (ISubscriptions), subscriberDef);
+
+            SetServiceIfNone(typeof (ISagaStateCache<>), typeof (SagaStateCache<>));
 
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             SetServiceIfNone<IEnvelopeSender, EnvelopeSender>();
