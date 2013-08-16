@@ -100,14 +100,16 @@ namespace FubuTransportation.Sagas
             });
         }
 
+        public static bool IsSagaHandler(HandlerCall call)
+        {
+            return call.HandlerType.Closes(typeof (IStatefulSaga<>));
+        }
+
         public static bool IsSagaChain(BehaviorChain chain)
         {
             if (chain is HandlerChain)
             {
-                if (chain.OfType<HandlerCall>().Any(x => x.HandlerType.Closes(typeof (IStatefulSaga<>))))
-                {
-                    return true;
-                }
+                return chain.OfType<HandlerCall>().Any(IsSagaHandler);
             }
 
             return false;
