@@ -134,6 +134,7 @@
     <Compile Include="Runtime\when_sending_with_the_expectation_of_a_response.cs" />
     <Compile Include="Runtime\when_starting_the_subscriptions.cs" />
     <Compile Include="Sagas\SagaBehaviorTester.cs" />
+    <Compile Include="Sagas\SagaIntegrationTester.cs" />
     <Compile Include="Sagas\SagaTypesTester.cs" />
     <Compile Include="Sagas\StatefulSagaConventionTester.cs" />
     <Compile Include="ScenarioRunner.cs" />
