@@ -1,19 +1,15 @@
 ﻿using System;
-using FubuMVC.Core.Registration;
+using System.Reflection;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.ObjectGraph;
-using System.Linq;
-using FubuTransportation.Configuration;
-using FubuTransportation.Registration.Nodes;
-using FubuCore;
-using System.Collections.Generic;
+using FubuTransportation.Registration;
 
 namespace FubuTransportation.Sagas
 {
     public interface IStatefulSaga<TState>
     {
-        bool IsCompleted();
         TState State { get; set; }
+        bool IsCompleted();
     }
 
     // I know I didn't like the sound of the double generics before,
@@ -31,32 +27,14 @@ namespace FubuTransportation.Sagas
 
     public class StatefulSagaNode : BehaviorNode
     {
-        private readonly Type _handlerType;
-        private readonly Type _stateType;
-        private readonly Type _messageType;
+        private readonly SagaTypes _types;
 
-        public StatefulSagaNode(Type handlerType, Type stateType, Type messageType)
+        public StatefulSagaNode(SagaTypes types)
         {
-            _handlerType = handlerType;
-            _stateType = stateType;
-            _messageType = messageType;
+            _types = types;
         }
 
         public ISagaRepositoryNode Repository { get; set; }
-
-        protected override ObjectDef buildObjectDef()
-        {
-            if (Repository == null)
-            {
-                throw new InvalidOperationException("something descriptive here saying you don't know how to do the repo for the saga");
-            }
-
-            var def = new ObjectDef(typeof (SagaBehavior<,,>), _stateType, _messageType, _handlerType);
-            var repositoryType = typeof (ISagaRepository<,>).MakeGenericType(_stateType, _messageType);
-            def.Dependency(repositoryType, Repository.BuildRepositoryDef(_stateType, _messageType));
-
-            return def;
-        }
 
         public override BehaviorCategory Category
         {
@@ -65,12 +43,27 @@ namespace FubuTransportation.Sagas
 
         public Type StateType
         {
-            get { return _stateType; }
+            get { return _types.StateType; }
         }
 
         public Type MessageType
         {
-            get { return _messageType; }
+            get { return _types.MessageType; }
+        }
+
+        protected override ObjectDef buildObjectDef()
+        {
+            if (Repository == null)
+            {
+                throw new InvalidOperationException(
+                    "something descriptive here saying you don't know how to do the repo for the saga");
+            }
+
+            var def = new ObjectDef(typeof (SagaBehavior<,,>), _types.StateType, _types.MessageType, _types.HandlerType);
+            var repositoryType = typeof (ISagaRepository<,>).MakeGenericType(_types.StateType, _types.MessageType);
+            def.Dependency(repositoryType, Repository.BuildRepositoryDef(_types.StateType, _types.MessageType));
+
+            return def;
         }
     }
 
@@ -81,55 +74,18 @@ namespace FubuTransportation.Sagas
         ObjectDef BuildRepositoryDef(Type stateType, Type messageType);
     }
 
-    // Thinking that something else is going to have to come from behind for the repo's
-    public class StatefulSagaConvention : IConfigurationAction
-    {
-        public void Configure(BehaviorGraph graph)
-        {
-            var sagaHandlers = graph.Behaviors.SelectMany(x => x).OfType<HandlerCall>()
-                 .Where(x => x.HandlerType.Closes(typeof (IStatefulSaga<>)))
-                 .ToArray();
-
-            sagaHandlers.Each(call => {
-                var sagaInterface = call.HandlerType.FindInterfaceThatCloses(typeof (IStatefulSaga<>));
-                var stateType = sagaInterface.GetGenericArguments().Single();
-                var messageType = call.InputType();
-
-                var sagaNode = new StatefulSagaNode(call.HandlerType, stateType, messageType);
-                call.AddBefore(sagaNode);
-            });
-        }
-
-        public static bool IsSagaHandler(HandlerCall call)
-        {
-            return call.HandlerType.Closes(typeof (IStatefulSaga<>));
-        }
-
-        public static bool IsSagaChain(BehaviorChain chain)
-        {
-            if (chain is HandlerChain)
-            {
-                return chain.OfType<HandlerCall>().Any(IsSagaHandler);
-            }
-
-            return false;
-        }
-
-        public static SagaTypes ToSagaTypes(HandlerCall call)
-        {
-            return new SagaTypes
-            {
-                HandlerType = call.HandlerType,
-                MessageType = call.InputType(),
-                StateType = call.HandlerType.FindInterfaceThatCloses(typeof(IStatefulSaga<>)).GetGenericArguments().Single()
-            };
-        }
-    }
-
     public class SagaTypes
     {
+        public const string CorrelationId = "CorrelationId";
         public Type HandlerType;
         public Type MessageType;
         public Type StateType;
+
+        public object ToCorrelationIdFunc()
+        {
+            var property = MessageType.GetProperty(CorrelationId);
+
+            return FuncBuilder.CompileGetter(property);
+        }
     }
 }

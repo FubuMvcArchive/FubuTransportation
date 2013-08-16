@@ -73,6 +73,24 @@ namespace FubuTransportation.Testing.Sagas
             types.MessageType.ShouldEqual(typeof (SagaMessageThree));
             types.StateType.ShouldEqual(typeof (MySagaState));
         }
+
+        [Test]
+        public void saga_types_being_able_to_gimme_a_correlation_id_getter_from_the_message_type()
+        {
+            var types = new SagaTypes
+            {
+                MessageType = typeof (SagaMessageOne)
+            };
+
+            var func = types.ToCorrelationIdFunc().ShouldBeOfType<Func<SagaMessageOne, Guid>>();
+
+            var message = new SagaMessageOne
+            {
+                CorrelationId = Guid.NewGuid()
+            };
+
+            func(message).ShouldEqual(message.CorrelationId);
+        }
     }
 
     public class MySagaState

@@ -8,5 +8,6 @@ namespace FubuTransportation
         {
             return type.GetProperty(name) != null;
         }
+
     }
 }
