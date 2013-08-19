@@ -31,5 +31,18 @@ namespace FubuTransportation.Configuration
             return For(extension);
  
         }
+
+        static FubuTransport()
+        {
+            Reset();
+        }
+
+        public static void Reset()
+        {
+            UseSynchronousLogging = ApplyMessageHistoryWatching = false;
+        }
+
+        public static bool UseSynchronousLogging { get; set; }
+        public static bool ApplyMessageHistoryWatching { get; set; }
     }
 }

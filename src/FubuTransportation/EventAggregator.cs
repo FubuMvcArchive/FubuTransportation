@@ -21,12 +21,12 @@ namespace FubuTransportation
             _listeners.AddRange(listeners);
         }
 
-        public void SendMessage<T>(T message)
+        public virtual void SendMessage<T>(T message)
         {
             Task.Factory.StartNew(() => sendMessageToListeners(message));
         }
 
-        private void sendMessageToListeners<T>(T message)
+        protected void sendMessageToListeners<T>(T message)
         {
             var listeners = _lock.Read(() => _listeners.OfType<IListener<T>>().ToArray());
 

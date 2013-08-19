@@ -87,6 +87,7 @@
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
     <Compile Include="FubuTransportRegistry_application_of_policies_Tester.cs" />
+    <Compile Include="FubuTransport_default_options_Tester.cs" />
     <Compile Include="HandlerExtensionsTester.cs" />
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />

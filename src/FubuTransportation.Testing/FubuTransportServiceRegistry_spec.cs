@@ -4,6 +4,7 @@ using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
@@ -79,8 +80,10 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void event_aggregator_is_registered_as_a_singleton()
+        public void event_aggregator_is_registered_as_a_singleton_by_default()
         {
+            FubuTransport.UseSynchronousLogging = false;
+
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();
             var @default = BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<IEventAggregator>();
@@ -90,6 +93,18 @@ namespace FubuTransportation.Testing
 
         }
 
+        [Test]
+        public void use_synchronous_event_aggregator_if_FubuTransport_UseSynchronousLogging()
+        {
+            FubuTransport.UseSynchronousLogging = true;
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var @default = BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<IEventAggregator>();
+
+            @default.Type.ShouldEqual(typeof(SynchronousEventAggregator));
+            @default.IsSingleton.ShouldBeTrue();
+        }
 
         [Test]
         public void saga_state_cache_is_registered_as_a_singleton()
@@ -128,6 +143,9 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IActivator, TransportActivator>();
         }
+
+
+
 
     }
 }
