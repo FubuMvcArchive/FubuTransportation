@@ -8,6 +8,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.TestSupport;
 using NUnit.Framework;
 using System.Linq;
 
@@ -119,6 +120,27 @@ namespace FubuTransportation.Testing
 
         }
 
+        [Test]
+        public void message_watcher_is_registered_as_listener_if_FubuTransport_messagewatching_is_applied()
+        {
+            FubuTransport.ApplyMessageHistoryWatching = true;
+            
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<IListener>().Any(x => x.Type == typeof (MessageWatcher)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void message_watcher_is_NOT_registered_as_listener_if_FubuTransport_messagewatching_is_NOT_applied()
+        {
+            FubuTransport.ApplyMessageHistoryWatching = false;
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<IListener>().Any(x => x.Type == typeof(MessageWatcher)).ShouldBeFalse();
+        }
 
         [Test]
         public void EnvelopeSerializer_is_registered()

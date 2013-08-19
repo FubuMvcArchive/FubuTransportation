@@ -9,6 +9,7 @@ using FubuTransportation.Logging;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Sagas;
+using FubuTransportation.TestSupport;
 
 namespace FubuTransportation
 {
@@ -55,6 +56,11 @@ namespace FubuTransportation
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
 
             AddService<ILogListener, EventAggregationListener>();
+
+            if (FubuTransport.ApplyMessageHistoryWatching)
+            {
+                AddService<IListener, MessageWatcher>();
+            }
         }
     }
 
