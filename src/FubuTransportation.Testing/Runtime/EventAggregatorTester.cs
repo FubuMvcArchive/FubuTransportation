@@ -174,6 +174,14 @@ namespace FubuTransportation.Testing.Runtime
     {
     }
 
+    public class Message5
+    {
+    }
+
+    public class Message6
+    {
+    }
+
     public interface IMessageHandler1
     {
         void HandleMessage(Message1 message);

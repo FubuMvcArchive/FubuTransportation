@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FubuCore;
 using System.Linq;
+using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Registration.Nodes;
 
@@ -71,13 +72,22 @@ namespace FubuTransportation.Configuration
                 if (_chains.ContainsKey(inputType))
                 {
                     var original = _chains[inputType];
-                    chain.OfType<HandlerCall>().Each(x => x.AddClone(original));
+
+                    chain.ToArray().Each(original.AddToEnd);
                 }
                 else
                 {
                     _chains.Add(inputType, chain);
                 }
             });
+        }
+
+        public void ApplyPolicies(ConfigurationActionSet actions)
+        {
+            var graph = new BehaviorGraph();
+            _chains.Values.Each(graph.AddChain);
+
+            actions.RunActions(graph);
         }
     }
 }

@@ -1,14 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Bottles.Services.Messaging.Tracking;
+using FubuMVC.Core;
+using FubuMVC.Core.Registration;
+using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Sagas;
+using FubuTransportation.TestSupport;
 using NUnit.Framework;
+using FubuCore;
+using StructureMap;
+using FubuMVC.StructureMap;
+using FubuTestingSupport;
+using System.Linq;
 
 namespace FubuTransportation.Testing.Sagas
 {
-    [TestFixture]
+    [TestFixture, Ignore("Not ready yet")]
     public class SagaIntegrationTester
     {
+        private SagaLogger theLogger;
+        private Container theContainer;
+        private FubuRuntime theRuntime;
 
+        [SetUp]
+        public void SetUp()
+        {
+            theLogger = new SagaLogger();
+            theContainer = new Container(x => {
+                x.For<SagaSettings>().Use(InMemoryTransport.ToInMemory<SagaSettings>());
+                x.For<SagaLogger>().Use(theLogger);
+                x.For<IListener>().Add<MessageWatcher>();
+            });
+
+            theRuntime = FubuTransport.For<SagaTestRegistry>().StructureMap(theContainer).Bootstrap();
+
+            MessageHistory.ClearAll();
+        }
+
+        [Test]
+        public void got_the_handler_chains_for_the_saga()
+        {
+            var graph = theContainer.GetInstance<HandlerGraph>();
+            graph.ChainFor(typeof (TestSagaStart)).ShouldNotBeNull();
+            graph.ChainFor(typeof (TestSagaUpdate)).ShouldNotBeNull();
+            graph.ChainFor(typeof (TestSagaFinish)).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void try_to_run_the_saga_from_beginning_to_end()
+        {
+            theContainer.GetInstance<IServiceBus>().Send(new TestSagaStart{Name = "Jeremy"});
+
+            Wait.Until(() => !MessageHistory.Outstanding().Any());
+
+            var messages = theLogger.Traces.Select(x => x.Message);
+            messages.Each(x => Debug.WriteLine(x));
+
+            messages
+                .ShouldHaveTheSameElementsAs("1", "2", "3");
+        }
+    }
+
+    public class SagaTestRegistry : FubuTransportRegistry<SagaSettings>
+    {
+        public SagaTestRegistry()
+        {
+            Channel(x => x.Queue)
+                .PublishesMessagesInAssemblyContainingType<SagaTestRegistry>()
+                .ReadIncoming(2);
+        }
+    }
+
+    public class SagaSettings
+    {
+        public Uri Queue { get; set; }
     }
 
     public class SagaLogger
@@ -34,12 +101,8 @@ namespace FubuTransportation.Testing.Sagas
     public class TestSagaState
     {
         public Guid Id { get; set; }
-        public int Accessed { get; set; }
 
-        public override string ToString()
-        {
-            return string.Format("Accessed {0} times");
-        }
+        public string Name { get; set; }
 
     }
 
@@ -59,17 +122,46 @@ namespace FubuTransportation.Testing.Sagas
         {
             return _isCompleted;
         }
+
+        public TestSagaUpdate Handle(TestSagaStart start)
+        {
+            State = new TestSagaState{Id = Guid.NewGuid(), Name = start.Name};
+            _logger.Trace(State.Id, "Started " + start.Name);
+
+            return new TestSagaUpdate{CorrelationId = State.Id};
+        }
+
+        public TestSagaFinish Handle(TestSagaUpdate update)
+        {
+            _logger.Trace(State.Id, "Updated " + State.Name);
+
+            State.Name = "Updated " + State.Name;
+
+            return new TestSagaFinish {CorrelationId = State.Id};
+        }
+
+        public void Handle(TestSagaFinish finish)
+        {
+            _isCompleted = true;
+            _logger.Trace(State.Id, "Finished with {0}!".ToFormat(State.Name));
+        }
     }
 
     public class TestSagaStart
     {
-        
+        public string Name { get; set; }
     }
 
-    public class TestSagaAction
+    public class TestSagaUpdate
     {
         public Guid CorrelationId { get; set; }
     }
+
+    public class TestSagaFinish
+    {
+        public Guid CorrelationId { get; set; }
+    }
+
 
 
 }

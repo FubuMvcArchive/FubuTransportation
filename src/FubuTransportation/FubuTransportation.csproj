@@ -59,6 +59,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ChannelGraph.cs" />
+    <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
     <Compile Include="InMemory\InMemorySagaStorage.cs" />

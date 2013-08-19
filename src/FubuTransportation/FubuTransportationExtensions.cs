@@ -62,6 +62,9 @@ namespace FubuTransportation
 
             handlers.ApplyGeneralizedHandlers();
 
+            var policies = graph.Settings.Get<HandlerPolicies>();
+            handlers.ApplyPolicies(policies.GlobalPolicies);
+
             foreach (var chain in handlers)
             {
                 graph.AddChain(chain);

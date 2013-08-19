@@ -8,6 +8,10 @@ using Bottles;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core;
+using FubuMVC.Core.Configuration;
+using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Conventions;
+using FubuMVC.Core.Registration.Diagnostics;
 using FubuTransportation.Registration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
@@ -19,6 +23,8 @@ namespace FubuTransportation.Configuration
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>(); 
+        private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
+        private ProvenanceChain _provenance;
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
         {
@@ -35,6 +41,8 @@ namespace FubuTransportation.Configuration
 
         protected FubuTransportRegistry()
         {
+            _provenance = new ProvenanceChain(new Provenance[] {new FubuTransportRegistryProvenance(this)});
+
             AlterSettings<ChannelGraph>(x => {
                 if (x.Name.IsEmpty())
                 {
@@ -90,7 +98,7 @@ namespace FubuTransportation.Configuration
             var allCalls = allSources().SelectMany(x => x.FindCalls());
             graph.Add(allCalls);
 
-            // TODO -- apply policies of some sort
+            graph.ApplyPolicies(_localPolicies);
 
             registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
 
@@ -175,6 +183,44 @@ namespace FubuTransportation.Configuration
         public void DefaultContentType(string contentType)
         {
             channel = graph => graph.DefaultContentType = contentType;
+        }
+
+        public PoliciesExpression Policies
+        {
+            get{return new PoliciesExpression(this);}
+        }
+
+        public class PoliciesExpression
+        {
+            private readonly FubuTransportRegistry _parent;
+
+            public PoliciesExpression(FubuTransportRegistry parent)
+            {
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Applies a Policy to the handler chains created by only this
+            /// FubuTransportRegistry
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <returns></returns>
+            public PoliciesExpression Local<T>() where T : IConfigurationAction, new()
+            {
+                _parent._localPolicies.Fill(_parent._provenance,new T());
+                return this;
+            }
+
+            /// <summary>
+            /// Applies a Policy to all FubuTransportation Handler chains
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <returns></returns>
+            public PoliciesExpression Global<T>() where T : IConfigurationAction, new()
+            {
+                _parent.AlterSettings<HandlerPolicies>(x => x.AddGlobal(new T(), _parent));
+                return this;
+            }
         }
     }
 

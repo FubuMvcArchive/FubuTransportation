@@ -71,5 +71,7 @@ namespace FubuTransportation.Sagas
                 StateType = call.HandlerType.FindInterfaceThatCloses(typeof(IStatefulSaga<>)).GetGenericArguments().Single()
             };
         }
+
+
     }
 }
