@@ -25,5 +25,15 @@ namespace FubuTransportation.Testing
             FubuTransport.ApplyMessageHistoryWatching.ShouldBeFalse();
         }
 
+
+        [Test]
+        public void use_in_memory_queues_is_defaulted_to_false()
+        {
+            FubuTransport.AllQueuesInMemory = true;
+            FubuTransport.Reset();
+
+            FubuTransport.AllQueuesInMemory.ShouldBeFalse();
+        }
+
     }
 }

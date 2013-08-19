@@ -39,10 +39,11 @@ namespace FubuTransportation.Configuration
 
         public static void Reset()
         {
-            UseSynchronousLogging = ApplyMessageHistoryWatching = false;
+            UseSynchronousLogging = ApplyMessageHistoryWatching = AllQueuesInMemory = false;
         }
 
         public static bool UseSynchronousLogging { get; set; }
         public static bool ApplyMessageHistoryWatching { get; set; }
+        public static bool AllQueuesInMemory { get; set; }
     }
 }
