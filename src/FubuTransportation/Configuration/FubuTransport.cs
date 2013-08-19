@@ -45,5 +45,10 @@ namespace FubuTransportation.Configuration
         public static bool UseSynchronousLogging { get; set; }
         public static bool ApplyMessageHistoryWatching { get; set; }
         public static bool AllQueuesInMemory { get; set; }
+
+        public static void SetupForInMemoryTesting()
+        {
+            UseSynchronousLogging = ApplyMessageHistoryWatching = AllQueuesInMemory = true;
+        }
     }
 }

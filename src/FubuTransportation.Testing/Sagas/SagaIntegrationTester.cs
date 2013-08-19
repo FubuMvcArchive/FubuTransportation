@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace FubuTransportation.Testing.Sagas
 {
-    [TestFixture, Ignore("Need to fix up the test listening first")]
+    [TestFixture]
     public class SagaIntegrationTester
     {
         private SagaLogger theLogger;
@@ -27,6 +27,8 @@ namespace FubuTransportation.Testing.Sagas
         [SetUp]
         public void SetUp()
         {
+            FubuTransport.SetupForInMemoryTesting();
+
             theLogger = new SagaLogger();
             theContainer = new Container(x => {
                 x.For<SagaSettings>().Use(InMemoryTransport.ToInMemory<SagaSettings>());
@@ -37,6 +39,12 @@ namespace FubuTransportation.Testing.Sagas
             theRuntime = FubuTransport.For<SagaTestRegistry>().StructureMap(theContainer).Bootstrap();
 
             MessageHistory.ClearAll();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            FubuTransport.Reset();
         }
 
 

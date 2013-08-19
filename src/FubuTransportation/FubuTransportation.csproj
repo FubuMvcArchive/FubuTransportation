@@ -62,6 +62,7 @@
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
+    <Compile Include="InMemory\AllQueuesInMemoryPolicy.cs" />
     <Compile Include="InMemory\InMemorySagaStorage.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />

@@ -56,7 +56,7 @@ namespace FubuTransportation.InMemory
             type.GetProperties().Where(x => x.CanWrite && x.PropertyType == typeof (Uri)).Each(prop => {
                 var accessor = new SingleProperty(prop);
                 var uri = "{0}://{1}/{2}".ToFormat(InMemoryChannel.Protocol, accessor.OwnerType.Name.Replace("Settings", ""),
-                                                   accessor.Name);
+                                                   accessor.Name).ToLower();
 
                 accessor.SetValue(settings, new Uri(uri));
             });

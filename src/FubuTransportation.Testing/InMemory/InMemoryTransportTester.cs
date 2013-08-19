@@ -13,8 +13,8 @@ namespace FubuTransportation.Testing.InMemory
         {
             var settings = InMemoryTransport.ToInMemory<NodeSettings>();
 
-            settings.Inbound.ShouldEqual(new Uri("memory://Node/Inbound"));
-            settings.Outbound.ShouldEqual(new Uri("memory://Node/Outbound"));
+            settings.Inbound.ShouldEqual(new Uri("memory://node/inbound"));
+            settings.Outbound.ShouldEqual(new Uri("memory://node/outbound"));
         }
     }
 

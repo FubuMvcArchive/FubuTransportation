@@ -22,6 +22,12 @@ namespace FubuTransportation
 
             registry.Policies.Add<ImportHandlers>();
             registry.Services<FubuTransportServiceRegistry>();
+
+
+            if (FubuTransport.AllQueuesInMemory)
+            {
+                registry.Policies.Add<AllQueuesInMemoryPolicy>();
+            }
         }
     }
 
@@ -61,6 +67,7 @@ namespace FubuTransportation
             {
                 AddService<IListener, MessageWatcher>();
             }
+
         }
     }
 

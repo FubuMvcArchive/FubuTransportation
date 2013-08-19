@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Sagas;
@@ -8,7 +9,8 @@ namespace FubuTransportation
     [ApplicationLevel]
     public class TransportSettings
     {
-        public readonly IList<ISagaStorage> SagaStorageProviders; 
+        public readonly IList<ISagaStorage> SagaStorageProviders;
+        public readonly IList<Type> SettingTypes = new List<Type>(); 
 
         public TransportSettings()
         {

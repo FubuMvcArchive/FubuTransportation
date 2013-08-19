@@ -235,6 +235,7 @@ namespace FubuTransportation.Configuration
     {
         protected FubuTransportRegistry()
         {
+            AlterSettings<TransportSettings>(x => x.SettingTypes.Fill(typeof (T)));
         }
 
 
