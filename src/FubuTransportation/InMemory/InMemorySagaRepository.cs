@@ -10,7 +10,7 @@ namespace FubuTransportation.InMemory
     {
         private readonly Func<TMessage, Guid> _messageGetter;
         private readonly Func<TState, Guid> _stateGetter;
-        private readonly ISagaStateCache<TState> _cache;
+        private readonly ISagaStateCacheFactory _cacheFactory;
 
         public static InMemorySagaRepository<TState, TMessage> Create()
         {
@@ -20,31 +20,36 @@ namespace FubuTransportation.InMemory
                 MessageType = typeof (TMessage)
             };
 
-            return new InMemorySagaRepository<TState, TMessage>((Func<TMessage, Guid>) types.ToCorrelationIdFunc(), (Func<TState, Guid>) types.ToSagaIdFunc(), new SagaStateCache<TState>());
+            return new InMemorySagaRepository<TState, TMessage>((Func<TMessage, Guid>) types.ToCorrelationIdFunc(), (Func<TState, Guid>) types.ToSagaIdFunc(), new SagaStateCacheFactory());
         } 
 
-        public InMemorySagaRepository(Func<TMessage, Guid> messageGetter, Func<TState, Guid> stateGetter, ISagaStateCache<TState> cache)
+        public InMemorySagaRepository(Func<TMessage, Guid> messageGetter, Func<TState, Guid> stateGetter, ISagaStateCacheFactory cacheFactory)
         {
             _messageGetter = messageGetter;
             _stateGetter = stateGetter;
-            _cache = cache;
+            _cacheFactory = cacheFactory;
         }
+
+        private ISagaStateCache<TState> cache
+        {
+            get { return _cacheFactory.FindCache<TState>(); }
+        } 
 
         public void Save(TState state)
         {
-            _cache.Store(_stateGetter(state), state);
+            cache.Store(_stateGetter(state), state);
         }
 
         public TState Find(TMessage message)
         {
             var correlationId = _messageGetter(message);
-            return _cache.Find(correlationId);
+            return cache.Find(correlationId);
         }
 
         public void Delete(TState state)
         {
             var id = _stateGetter(state);
-            _cache.Delete(id);
+            cache.Delete(id);
         }
     }
 }

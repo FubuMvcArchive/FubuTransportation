@@ -12,9 +12,11 @@ using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Conventions;
 using FubuMVC.Core.Registration.Diagnostics;
+using FubuTransportation.InMemory;
 using FubuTransportation.Registration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.Sagas;
 
 namespace FubuTransportation.Configuration
 {
@@ -48,6 +50,11 @@ namespace FubuTransportation.Configuration
                 {
                     x.Name = GetType().Name.Replace("TransportRegistry", "").Replace("Registry", "").ToLower();
                 }
+            });
+
+            Policies.Global<StatefulSagaConvention>();
+            AlterSettings<TransportSettings>(x => {
+                x.SagaStorageProviders.Add(new InMemorySagaStorage());
             });
         }
 

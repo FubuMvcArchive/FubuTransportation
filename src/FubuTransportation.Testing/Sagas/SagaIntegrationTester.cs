@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace FubuTransportation.Testing.Sagas
 {
-    [TestFixture, Ignore("Not ready yet")]
+    [TestFixture, Ignore("Need to fix up the test listening first")]
     public class SagaIntegrationTester
     {
         private SagaLogger theLogger;
@@ -39,28 +39,69 @@ namespace FubuTransportation.Testing.Sagas
             MessageHistory.ClearAll();
         }
 
-        [Test]
-        public void got_the_handler_chains_for_the_saga()
-        {
-            var graph = theContainer.GetInstance<HandlerGraph>();
-            graph.ChainFor(typeof (TestSagaStart)).ShouldNotBeNull();
-            graph.ChainFor(typeof (TestSagaUpdate)).ShouldNotBeNull();
-            graph.ChainFor(typeof (TestSagaFinish)).ShouldNotBeNull();
-        }
 
         [Test]
         public void try_to_run_the_saga_from_beginning_to_end()
         {
-            theContainer.GetInstance<IServiceBus>().Send(new TestSagaStart{Name = "Jeremy"});
+            var serviceBus = theContainer.GetInstance<IServiceBus>();
+            serviceBus.Send(new TestSagaStart{Name = "Jeremy"});
 
-            Wait.Until(() => !MessageHistory.Outstanding().Any());
+            Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds:60000);
+
+            MessageHistory.Outstanding().Any().ShouldBeFalse();
 
             var messages = theLogger.Traces.Select(x => x.Message);
-            messages.Each(x => Debug.WriteLine(x));
+            messages.Each(x => Console.WriteLine(x));
+
+            theLogger.Traces.Select(x => x.Id).Distinct()
+                     .Count().ShouldEqual(1); // should be the same correlation id all the way through
 
             messages
-                .ShouldHaveTheSameElementsAs("1", "2", "3");
+                .ShouldHaveTheSameElementsAs("Started Jeremy", "Updated Jeremy", "Finished with Updated Jeremy!");
         }
+    }
+
+    [TestFixture]
+    public class Stateful_saga_registration_tester
+    {
+        private SagaLogger theLogger;
+        private Container theContainer;
+        private FubuRuntime theRuntime;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theLogger = new SagaLogger();
+            theContainer = new Container(x =>
+            {
+                x.For<SagaSettings>().Use(InMemoryTransport.ToInMemory<SagaSettings>());
+                x.For<SagaLogger>().Use(theLogger);
+                x.For<IListener>().Add<MessageWatcher>();
+            });
+
+            theRuntime = FubuTransport.For<SagaTestRegistry>().StructureMap(theContainer).Bootstrap();
+
+            MessageHistory.ClearAll();
+        }
+
+        [Test]
+        public void got_the_handler_chains_for_the_saga()
+        {
+            var graph = theContainer.GetInstance<HandlerGraph>();
+            graph.ChainFor(typeof(TestSagaStart)).ShouldNotBeNull();
+            graph.ChainFor(typeof(TestSagaUpdate)).ShouldNotBeNull();
+            graph.ChainFor(typeof(TestSagaFinish)).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void there_is_a_saga_node_with_object_def_for_saga_repository()
+        {
+            var graph = theContainer.GetInstance<HandlerGraph>();
+            graph.ChainFor(typeof(TestSagaStart)).OfType<StatefulSagaNode>().Single().Repository.ShouldNotBeNull();
+            graph.ChainFor(typeof(TestSagaUpdate)).OfType<StatefulSagaNode>().Single().Repository.ShouldNotBeNull();
+            graph.ChainFor(typeof(TestSagaFinish)).OfType<StatefulSagaNode>().Single().Repository.ShouldNotBeNull();
+        }
+
     }
 
     public class SagaTestRegistry : FubuTransportRegistry<SagaSettings>

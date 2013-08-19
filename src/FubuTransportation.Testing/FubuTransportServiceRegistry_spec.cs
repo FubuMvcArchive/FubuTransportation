@@ -94,7 +94,13 @@ namespace FubuTransportation.Testing
         [Test]
         public void saga_state_cache_is_registered_as_a_singleton()
         {
-            registeredTypeIs(typeof(ISagaStateCache<>), typeof(SagaStateCache<>));
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var @default = BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<ISagaStateCacheFactory>();
+
+            @default.Type.ShouldEqual(typeof(SagaStateCacheFactory));
+            @default.IsSingleton.ShouldBeTrue();
+
 
         }
 

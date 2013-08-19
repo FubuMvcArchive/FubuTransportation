@@ -23,20 +23,24 @@ namespace FubuTransportation
 
         public void SendMessage<T>(T message)
         {
-            Task.Factory.StartNew(() => {
-                var listeners = _lock.Read(() => _listeners.OfType<IListener<T>>().ToArray());
-                
-                listeners.Each(x => {
-                    try
-                    {
-                        x.Handle(message);
-                        _logger.Value.Debug(() => "Successfully processed event {0} with listener {1} in event aggregation".ToFormat(message, x));
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Value.Error("Failed while trying to process event {0} with listener {1}".ToFormat(message, x), e);
-                    }
-                });
+            Task.Factory.StartNew(() => sendMessageToListeners(message));
+        }
+
+        private void sendMessageToListeners<T>(T message)
+        {
+            var listeners = _lock.Read(() => _listeners.OfType<IListener<T>>().ToArray());
+
+            listeners.Each(x => {
+                try
+                {
+                    x.Handle(message);
+                    _logger.Value.Debug(
+                        () => "Successfully processed event {0} with listener {1} in event aggregation".ToFormat(message, x));
+                }
+                catch (Exception e)
+                {
+                    _logger.Value.Error("Failed while trying to process event {0} with listener {1}".ToFormat(message, x), e);
+                }
             });
         }
 

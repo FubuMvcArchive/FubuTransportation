@@ -8,6 +8,7 @@ using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
+using FubuTransportation.Sagas;
 
 namespace FubuTransportation
 {
@@ -36,7 +37,9 @@ namespace FubuTransportation
             subscriberDef.IsSingleton = true;
             SetServiceIfNone(typeof (ISubscriptions), subscriberDef);
 
-            SetServiceIfNone(typeof (ISagaStateCache<>), typeof (SagaStateCache<>));
+            var stateCacheDef = new ObjectDef(typeof (SagaStateCacheFactory));
+            stateCacheDef.IsSingleton = true;
+            SetServiceIfNone(typeof (ISagaStateCacheFactory), stateCacheDef);
 
             SetServiceIfNone<IMessageInvoker, MessageInvoker>();
             SetServiceIfNone<IEnvelopeSender, EnvelopeSender>();

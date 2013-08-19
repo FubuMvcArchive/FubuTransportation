@@ -19,10 +19,16 @@ namespace FubuTransportation.Sagas
                                     .Where(IsSagaHandler)
                                     .ToArray();
 
+            var settings = graph.Settings.Get<TransportSettings>();
+
             sagaHandlers.Each(call => {
                 var types = ToSagaTypes(call);
 
-                var sagaNode = new StatefulSagaNode(types);
+                var sagaNode = new StatefulSagaNode(types)
+                {
+                    Repository = DetermineSagaRepositoryDef(settings, types)
+                };
+
                 call.AddBefore(sagaNode);
             });
         }
