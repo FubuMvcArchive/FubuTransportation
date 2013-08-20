@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 using FubuTransportation.Testing.ScenarioSupport;
 using FubuTransportation.Testing.Scenarios;
 using NUnit.Framework;
@@ -32,10 +33,10 @@ namespace FubuTransportation.Testing
         {
             var writer = new ScenarioWriter();
 
-            //new Send_a_single_message_to_the_correct_node().Execute(writer);
+            new Send_a_single_message_to_the_correct_node().Execute(writer);
             //new Send_a_single_message_to_multiple_listening_nodes().Execute(writer);
             //new Send_a_message_that_raises_events().Execute(writer);
-            new Request_a_reply_for_a_single_message().Execute(writer);
+            //new Request_a_reply_for_a_single_message().Execute(writer);
 
             writer.FailureCount.ShouldEqual(0);
         }

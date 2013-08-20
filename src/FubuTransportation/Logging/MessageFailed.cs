@@ -11,7 +11,7 @@ namespace FubuTransportation.Logging
 
         protected bool Equals(MessageFailed other)
         {
-            return Equals(Envelope, other.Envelope);
+            return Equals(Envelope, other.Envelope) && Equals(Exception, other.Exception);
         }
 
         public override bool Equals(object obj)
@@ -24,7 +24,10 @@ namespace FubuTransportation.Logging
 
         public override int GetHashCode()
         {
-            return (Envelope != null ? Envelope.GetHashCode() : 0);
+            unchecked
+            {
+                return ((Envelope != null ? Envelope.GetHashCode() : 0)*397) ^ (Exception != null ? Exception.GetHashCode() : 0);
+            }
         }
 
         public override string ToString()

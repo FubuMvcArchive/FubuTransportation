@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
 using FubuCore.Logging;
+using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using System.Linq;
 
@@ -46,6 +47,8 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         internal void Execute(IScenarioWriter writer)
         {
+            FubuTransport.SetupForInMemoryTesting();
+
             InMemoryQueueManager.ClearAll();
             TestMessageRecorder.Clear();
             MessageHistory.ClearAll();

@@ -111,6 +111,7 @@
     <Compile Include="Runtime\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\BinarySerializerTester.cs" />
     <Compile Include="Runtime\CascadingHandlerInvokerTester.cs" />
+    <Compile Include="Runtime\MessageInvokerTester.cs" />
     <Compile Include="Runtime\SubscriptionsIntegrationTester.cs" />
     <Compile Include="Runtime\EnvelopeSenderTester.cs" />
     <Compile Include="Runtime\EnvelopeSerializerIntegratedTester.cs" />

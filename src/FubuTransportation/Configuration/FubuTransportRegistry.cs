@@ -26,7 +26,7 @@ namespace FubuTransportation.Configuration
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>(); 
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
-        private ProvenanceChain _provenance;
+        private readonly ProvenanceChain _provenance;
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
         {
@@ -34,6 +34,21 @@ namespace FubuTransportation.Configuration
             configure(registry);
 
             return registry;
+        }
+
+        public static HandlerGraph HandlerGraphFor(Action<FubuTransportRegistry> configure)
+        {
+            var registry = new FubuRegistry();
+            var transportRegistry = new FubuTransportRegistry();
+
+            configure(transportRegistry);
+
+            transportRegistry.As<IFubuRegistryExtension>()
+                .Configure(registry);
+
+            var behaviors = BehaviorGraph.BuildFrom(registry);
+
+            return behaviors.Settings.Get<HandlerGraph>();
         }
 
         public static FubuTransportRegistry Empty()
