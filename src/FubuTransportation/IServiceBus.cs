@@ -23,7 +23,7 @@ namespace FubuTransportation
         /// Error actions will not be executed and the message consumers will not be retried
         /// if an error happens.
         /// </summary>
-        //void ConsumeMessages(params object[] messages);
+        void Consume<T>(T message);
     }
 
     public class ServiceBus : IServiceBus
@@ -56,6 +56,11 @@ namespace FubuTransportation
         public void Send<T>(T message)
         {
             _sender.Send(new Envelope {Message = message});
+        }
+
+        public void Consume<T>(T message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
