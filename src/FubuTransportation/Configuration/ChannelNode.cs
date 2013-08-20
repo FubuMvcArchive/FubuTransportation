@@ -89,7 +89,7 @@ namespace FubuTransportation.Configuration
             var clone = new NameValueHeaders();
             envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
 
-            clone[Envelope.SourceKey] = Uri.ToString();
+            clone[Envelope.DestinationKey] = Uri.ToString();
             clone[Envelope.ChannelKey] = Key;
 
             if (replyNode != null)

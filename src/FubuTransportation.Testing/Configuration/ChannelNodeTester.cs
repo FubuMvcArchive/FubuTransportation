@@ -136,10 +136,10 @@ namespace FubuTransportation.Testing.Configuration
         }
 
         [Test]
-        public void sends_the_source_as_a_header()
+        public void sends_the_destination_as_a_header()
         {
             var sentHeaders = theChannel.Sent.Single().Headers;
-            sentHeaders[Envelope.SourceKey].ToUri().ShouldEqual(theNode.Uri);
+            sentHeaders[Envelope.DestinationKey].ToUri().ShouldEqual(theNode.Uri);
         }
     }
 
