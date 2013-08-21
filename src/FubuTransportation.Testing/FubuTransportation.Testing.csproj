@@ -172,6 +172,7 @@
     <Compile Include="ScenarioSupport\TestMessageRecorder.cs" />
     <Compile Include="ScenarioSupport\GenericHandler.cs" />
     <Compile Include="Runtime\XmlMessageSerializerTester.cs" />
+    <Compile Include="ServiceBus_Consume_right_now_Mr_Tester.cs" />
     <Compile Include="StandinTester.cs" />
     <Compile Include="ScenarioSupport\ThreeHandler.cs" />
     <Compile Include="ScenarioSupport\ThreeMessage.cs" />

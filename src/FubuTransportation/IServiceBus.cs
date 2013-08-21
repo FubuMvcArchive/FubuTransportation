@@ -32,11 +32,13 @@ namespace FubuTransportation
     {
         private readonly IEnvelopeSender _sender;
         private readonly IEventAggregator _events;
+        private readonly IMessageInvoker _invoker;
 
-        public ServiceBus(IEnvelopeSender sender, IEventAggregator events)
+        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IMessageInvoker invoker)
         {
             _sender = sender;
             _events = events;
+            _invoker = invoker;
         }
 
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
@@ -62,7 +64,7 @@ namespace FubuTransportation
 
         public void Consume<T>(T message)
         {
-            throw new NotImplementedException();
+            _invoker.InvokeNow(message);
         }
     }
 }
