@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore.Binding;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
@@ -14,10 +15,132 @@ using System.Linq;
 using FubuTestingSupport;
 using Rhino.Mocks;
 using System.Collections.Generic;
+using StructureMap.Pipeline;
 using Is = Rhino.Mocks.Constraints.Is;
 
 namespace FubuTransportation.Testing.Runtime
 {
+
+    [TestFixture]
+    public class when_invoking_a_message_right_now_happy_path : InteractionContext<MessageInvoker>
+    {
+        private OneMessage theMessage;
+        private HandlerGraph theGraph;
+        private HandlerChain theExpectedChain;
+        private StubServiceFactory theFactory;
+        private object[] cascadingMessages;
+
+        protected override void beforeEach()
+        {
+            theMessage = new OneMessage();
+            theGraph = FubuTransportRegistry.HandlerGraphFor(x => {
+                x.Handlers.Include<OneHandler>();
+                x.Handlers.Include<TwoHandler>();
+                x.Handlers.Include<ThreeHandler>();
+                x.Handlers.Include<FourHandler>();
+            });
+
+            Services.Inject<HandlerGraph>(theGraph);
+
+            theExpectedChain = theGraph.ChainFor(typeof (OneMessage));
+
+            cascadingMessages = new object[] { new object(), new object(), new object() };
+            theFactory = new StubServiceFactory(theExpectedChain, MockFor<IActionBehavior>(), cascadingMessages);
+            Services.Inject<IServiceFactory>(theFactory);
+
+            ClassUnderTest.InvokeNow(theMessage);
+
+        }
+
+        [Test]
+        public void executed_the_proper_chain_for_the_input_type()
+        {
+            MockFor<IActionBehavior>().AssertWasCalled(x => x.Invoke());
+        }
+
+        [Test]
+        public void cascaded_events_should_be_sent_to_the_bus()
+        {
+            cascadingMessages.Each(o => {
+
+                // This ugly bit of code is just proving that we have indeed sent an envelope
+                // where the inner message is one of our expected cascading messages
+                MockFor<IEnvelopeSender>().AssertWasCalled(x => x.Send(null), x => x.Constraints(Is.Matching<Envelope>(e => e.Message == o)));
+            });
+        }
+    }
+
+    [TestFixture]
+    public class WhenInvokingWithNoHandlerForMessageType : InteractionContext<MessageInvoker>
+    {
+        private HandlerGraph theGraph;
+ 
+        protected override void beforeEach()
+        {
+            theGraph = FubuTransportRegistry.HandlerGraphFor(x =>
+            {
+                x.Handlers.Include<OneHandler>();
+                x.Handlers.Include<TwoHandler>();
+                x.Handlers.Include<ThreeHandler>();
+                x.Handlers.Include<FourHandler>();
+            });
+
+            Services.Inject<HandlerGraph>(theGraph);
+        }
+
+
+        [Test]
+        public void should_throw_the_no_handler_exception()
+        {
+            Exception<NoHandlerException>.ShouldBeThrownBy(() => {
+                ClassUnderTest.InvokeNow(new Message1()); // we don't have a handler for this type
+            })
+            .Message.ShouldContain(typeof(Message1).FullName);
+        }
+    }
+
+    public class StubServiceFactory : IServiceFactory
+    {
+        private readonly HandlerChain _chain;
+        private readonly IActionBehavior _behavior;
+        private readonly object[] _cascadingMessages;
+        public HandlerArguments Arguments;
+
+        public StubServiceFactory(HandlerChain chain, IActionBehavior behavior, params object[] cascadingMessages)
+        {
+            _chain = chain;
+            _behavior = behavior;
+            _cascadingMessages = cascadingMessages;
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionBehavior BuildBehavior(ServiceArguments arguments, Guid behaviorId)
+        {
+            Arguments = arguments.ShouldBeOfType<HandlerArguments>();
+            _cascadingMessages.Each(x => Arguments.Enqueue(x));
+
+            _chain.UniqueId.ShouldEqual(behaviorId);
+
+            return _behavior;
+        }
+
+        public T Get<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<T> GetAll<T>()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
     [TestFixture]
     public class invocation_of_the_serialization : MessageInvokerContext
     {

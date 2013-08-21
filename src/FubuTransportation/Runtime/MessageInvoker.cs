@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration.Nodes;
@@ -64,6 +65,21 @@ namespace FubuTransportation.Runtime
 
         }
 
+        public void InvokeNow<T>(T message)
+        {
+            var envelope = new Envelope {Message = message};
+            var chain = FindChain(envelope);
+            if (chain == null)
+            {
+                throw new NoHandlerException(typeof(T));
+            }
+
+            var args = new HandlerArguments(envelope);
+            var behavior = _factory.BuildBehavior(args, chain.UniqueId);
+            behavior.Invoke();
+            sendCascadingMessages(envelope, args);
+        }
+
         public virtual HandlerChain FindChain(Envelope envelope)
         {
             var messageType = envelope.Message.GetType();
@@ -83,10 +99,7 @@ namespace FubuTransportation.Runtime
                 try
                 {
                     behavior.Invoke();
-                    args.Each(o => {
-                        var child = envelope.ForResponse(o);
-                        _sender.Send(child);
-                    });
+                    sendCascadingMessages(envelope, args);
 
                     callback.MarkSuccessful();
                     _logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope});
@@ -98,12 +111,34 @@ namespace FubuTransportation.Runtime
             }
         }
 
+        private void sendCascadingMessages(Envelope envelope, HandlerArguments args)
+        {
+            args.Each(o => {
+                var child = envelope.ForResponse(o);
+                _sender.Send(child);
+            });
+        }
+
 
         private void logFailure(Envelope envelope, IMessageCallback callback, Exception ex)
         {
             callback.MarkFailed();
             _logger.InfoMessage(() => new MessageFailed {Envelope = envelope, Exception = ex});
             _logger.Error(envelope.CorrelationId, ex);
+        }
+    }
+
+    [Serializable]
+    public class NoHandlerException : Exception
+    {
+        public NoHandlerException(Type messageType)
+            :base("No handler for messsage type " + messageType.FullName)
+        {
+            
+        }
+
+        protected NoHandlerException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

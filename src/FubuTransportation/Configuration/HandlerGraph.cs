@@ -50,7 +50,7 @@ namespace FubuTransportation.Configuration
 
         public HandlerChain ChainFor(Type inputType)
         {
-            return _chains[inputType];
+            return _chains.ContainsKey(inputType) ? _chains[inputType] : null;
         }
 
         public IEnumerator<HandlerChain> GetEnumerator()

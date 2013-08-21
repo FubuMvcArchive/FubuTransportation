@@ -92,6 +92,11 @@ namespace FubuTransportation.Testing.Runtime
             Invoked.Add(envelope);
         }
 
+        public void InvokeNow<T>(T message)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerator<object> GetEnumerator()
         {
             return Responses.GetEnumerator();

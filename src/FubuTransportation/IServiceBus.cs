@@ -24,6 +24,8 @@ namespace FubuTransportation
         /// if an error happens.
         /// </summary>
         void Consume<T>(T message);
+
+
     }
 
     public class ServiceBus : IServiceBus

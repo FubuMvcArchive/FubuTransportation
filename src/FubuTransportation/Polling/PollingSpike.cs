@@ -8,10 +8,17 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuCore.Descriptions;
 using FubuCore.Reflection;
+using FubuMVC.Core;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.ObjectGraph;
+using System.Linq;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Polling
 {
+
+
+
     public interface IJob
     {
         void Execute();
@@ -133,6 +140,80 @@ namespace FubuTransportation.Polling
         }
     }
 
+    public class PollingJobExpression
+    {
+        private readonly FubuTransportRegistry _parent;
+
+        public PollingJobExpression(FubuTransportRegistry parent)
+        {
+            _parent = parent;
+        }
+
+        public class IntervalExpression<TJob> where TJob : IJob
+        {
+            private readonly PollingJobExpression _parent;
+
+            public IntervalExpression(PollingJobExpression parent)
+            {
+                _parent = parent;
+            }
+
+            public PollingJobExpression ScheduledAtInterval<TSettings>(
+                Expression<Func<TSettings, double>> intervalInMillisecondsProperty)
+            {
+                var definition = new PollingJobDefinition
+                {
+                    JobType = typeof (TJob),
+                    SettingType = typeof (TSettings),
+                    IntervalSource = intervalInMillisecondsProperty
+                };
+
+                _parent._parent.AlterSettings<PollingJobSettings>(x => {
+                    x.Jobs.Add(definition);
+                });
+
+                return _parent;
+            }
+        }
+    }
+
+    [ApplicationLevel]
+    public class PollingJobSettings
+    {
+        public readonly IList<PollingJobDefinition> Jobs = new List<PollingJobDefinition>(); 
+    }
+
+    // TODO -- need to register this
+    [ConfigurationType(ConfigurationType.Services)]
+    public class RegisterPollingJobs : IConfigurationAction
+    {
+        public void Configure(BehaviorGraph graph)
+        {
+            var settings = graph.Settings.Get<PollingJobSettings>();
+            settings.Jobs.Select(x => x.ToObjectDef()).Each(x => {
+                graph.Services.AddService(typeof(IPollingJob), x);
+            });
+        }
+    }
+
+    public class PollingJobDefinition
+    {
+        public Type JobType { get; set; }
+        public Type SettingType { get; set; }
+        public Expression IntervalSource { get; set; }
+
+        public ObjectDef ToObjectDef()
+        {
+            var def = new ObjectDef(typeof (PollingJob<,>), JobType, SettingType);
+
+            var funcType = typeof (Func<,>).MakeGenericType(SettingType, typeof (double));
+            var intervalSourceType = typeof (Expression<>).MakeGenericType(funcType);
+            def.DependencyByValue(intervalSourceType, IntervalSource);
+
+            return def;
+        }
+    }
+
     public class PollingJob<TJob, TSettings> : DescribesItself, IPollingJob where TJob : IJob
     {
         private readonly IServiceBus _bus;
@@ -169,6 +250,7 @@ namespace FubuTransportation.Polling
 
         public void RunNow()
         {
+            // TODO -- harden & instrument
             _bus.Consume(new JobRequest<TJob>());
         }
 
