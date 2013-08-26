@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using Bottles;
-using Bottles.Diagnostics;
 using FubuCore.Descriptions;
 using FubuCore.Logging;
 using FubuCore.Reflection;
@@ -81,56 +79,6 @@ namespace FubuTransportation.Polling
         {
             // NEED MORE.
             SetServiceIfNone<ITimer, DefaultTimer>();
-        }
-    }
-
-    public class PollingJobActivator : IActivator
-    {
-        private readonly IPollingJobs _jobs;
-
-        public PollingJobActivator(IPollingJobs jobs)
-        {
-            _jobs = jobs;
-        }
-
-        public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
-        {
-            _jobs.Each(x => {
-                try
-                {
-                    log.Trace("Starting " + Description.For(x).Title);
-                    x.Start();
-                }
-                catch (Exception ex)
-                {
-                    log.MarkFailure(ex);
-                    throw;
-                }
-            });
-        }
-    }
-
-    public class PollingJobDeactivator : IDeactivator
-    {
-        private readonly IPollingJobs _jobs;
-
-        public PollingJobDeactivator(IPollingJobs jobs)
-        {
-            _jobs = jobs;
-        }
-
-        public void Deactivate(IPackageLog log)
-        {
-            _jobs.Each(x => {
-                try
-                {
-                    x.Stop();
-                }
-                catch (Exception ex)
-                {
-                    log.MarkFailure(ex);
-                }
-            });
         }
     }
 

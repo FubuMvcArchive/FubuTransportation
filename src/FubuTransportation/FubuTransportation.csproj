@@ -69,6 +69,8 @@
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\ITimer.cs" />
     <Compile Include="Polling\JobRunner.cs" />
+    <Compile Include="Polling\PollingJobActivator.cs" />
+    <Compile Include="Polling\PollingJobDeactivator.cs" />
     <Compile Include="Runtime\Delayed\DelayedSpike.cs" />
     <Compile Include="Polling\PollingSpike.cs" />
     <Compile Include="Runtime\ChainExecutionWatcher.cs" />
