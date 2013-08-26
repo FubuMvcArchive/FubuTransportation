@@ -17,6 +17,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ResponseIdKey = "Response";
         public static readonly string DestinationKey = "Destination";
         public static readonly string ReplyUriKey = "Reply-Uri";
+        public static readonly string ExecutionTimeKey = "Execution-Time";
 
         public byte[] Data;
 
@@ -101,6 +102,23 @@ namespace FubuTransportation.Runtime
                 {
                     Headers.Remove(ReplyRequestedKey);
                 }
+            }
+        }
+
+        public DateTime? ExecutionTime
+        {
+            get { return Headers.Has(ExecutionTimeKey) ? DateTime.Parse(Headers[ExecutionTimeKey]) : (DateTime?) null; }
+            set
+            {
+                if (value == null)
+                {
+                    Headers.Remove(ExecutionTimeKey);
+                }
+                else
+                {
+                    Headers[ExecutionTimeKey] = value.Value.ToString();
+                }
+                
             }
         }
 

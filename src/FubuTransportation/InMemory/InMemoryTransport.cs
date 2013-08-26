@@ -5,6 +5,7 @@ using FubuCore.Reflection;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuCore;
+using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.InMemory
 {
@@ -23,6 +24,11 @@ namespace FubuTransportation.InMemory
         public IChannel BuildChannel(ChannelNode node)
         {
             return new InMemoryChannel(node);
+        }
+
+        public IDelayedChannel DelayedChannel()
+        {
+            throw new NotImplementedException();
         }
 
         protected override IChannel buildChannel(ChannelNode channelNode)

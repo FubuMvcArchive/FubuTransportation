@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Runtime
 {
@@ -16,5 +17,7 @@ namespace FubuTransportation.Runtime
         /// <param name="node"></param>
         /// <returns></returns>
         IChannel BuildChannel(ChannelNode node);
+
+        IDelayedChannel DelayedChannel();
     }
 }

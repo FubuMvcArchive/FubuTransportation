@@ -217,5 +217,35 @@ namespace FubuTransportation.Testing.Runtime
             envelope.ReplyRequested = false;
             envelope.Headers.Has(Envelope.ReplyRequestedKey).ShouldBeFalse();
         }
+
+        [Test]
+        public void execution_time_is_null_by_default()
+        {
+            new Envelope().ExecutionTime.ShouldBeNull();
+        }
+
+        [Test]
+        public void execution_time_set_and_get()
+        {
+            var time = DateTime.Today.AddHours(8).ToUniversalTime();
+
+            var envelope = new Envelope();
+            envelope.ExecutionTime = time;
+
+            envelope.ExecutionTime.ShouldEqual(time);
+        }
+
+        [Test]
+        public void nulling_out_the_execution_time()
+        {
+            var time = DateTime.Today.AddHours(8).ToUniversalTime();
+
+            var envelope = new Envelope();
+            envelope.ExecutionTime = time;
+
+            envelope.ExecutionTime = null;
+
+            envelope.ExecutionTime.ShouldBeNull();
+        }
     }
 }

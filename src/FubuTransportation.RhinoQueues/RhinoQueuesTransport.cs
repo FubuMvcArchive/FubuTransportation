@@ -4,6 +4,7 @@ using System.Linq;
 using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.RhinoQueues
 {
@@ -45,6 +46,11 @@ namespace FubuTransportation.RhinoQueues
             _queues.CreateQueue(new RhinoUri(node.Uri));
 
             return channel;
+        }
+
+        public IDelayedChannel DelayedChannel()
+        {
+            throw new NotImplementedException();
         }
 
         protected override IChannel buildChannel(ChannelNode channelNode)
