@@ -48,7 +48,7 @@ namespace FubuTransportation.RhinoQueues
             return channel;
         }
 
-        public IDelayedChannel DelayedChannel()
+        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
         {
             throw new NotImplementedException();
         }

@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuTransportation.Configuration;
-using FubuTransportation.Runtime.Delayed;
-
 namespace FubuTransportation.Runtime
 {
     public interface ITransport : IDisposable
@@ -18,6 +17,6 @@ namespace FubuTransportation.Runtime
         /// <returns></returns>
         IChannel BuildChannel(ChannelNode node);
 
-        IDelayedChannel DelayedChannel();
+        IEnumerable<Envelope> ReplayDelayed(DateTime currentTime);
     }
 }

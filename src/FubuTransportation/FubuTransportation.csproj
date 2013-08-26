@@ -88,7 +88,9 @@
     <Compile Include="Polling\PollingJobSuccess.cs" />
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
-    <Compile Include="Runtime\Delayed\DelayedSpike.cs" />
+    <Compile Include="Runtime\Delayed\DelayedEnvelopeAddedBackToQueue.cs" />
+    <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessor.cs" />
+    <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
     <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\ChainExecutionWatcher.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />

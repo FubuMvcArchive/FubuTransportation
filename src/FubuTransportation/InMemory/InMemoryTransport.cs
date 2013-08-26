@@ -26,7 +26,7 @@ namespace FubuTransportation.InMemory
             return new InMemoryChannel(node);
         }
 
-        public IDelayedChannel DelayedChannel()
+        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
         {
             throw new NotImplementedException();
         }
