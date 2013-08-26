@@ -12,7 +12,7 @@ namespace FubuTransportation.Polling
             SetServiceIfNone<ITimer, DefaultTimer>();
             AddService<IActivator, PollingJobActivator>();
             AddService<IDeactivator, PollingJobDeactivator>();
-
+            SetServiceIfNone<IPollingJobLogger, PollingJobLogger>();
 
             var def = ObjectDef.ForType<PollingJobs>();
             def.IsSingleton = true;

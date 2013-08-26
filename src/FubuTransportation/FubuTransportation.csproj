@@ -69,6 +69,7 @@
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\IJob.cs" />
     <Compile Include="Polling\IPollingJob.cs" />
+    <Compile Include="Polling\IPollingJobLogger.cs" />
     <Compile Include="Polling\IPollingJobs.cs" />
     <Compile Include="Polling\ITimer.cs" />
     <Compile Include="Polling\JobRequest.cs" />
@@ -76,11 +77,17 @@
     <Compile Include="Polling\PollingJob.cs" />
     <Compile Include="Polling\PollingJobActivator.cs" />
     <Compile Include="Polling\PollingJobDeactivator.cs" />
+    <Compile Include="Polling\PollingJobDefinition.cs" />
+    <Compile Include="Polling\PollingJobExpression.cs" />
+    <Compile Include="Polling\PollingJobFailed.cs" />
     <Compile Include="Polling\PollingJobs.cs" />
+    <Compile Include="Polling\PollingJobSettings.cs" />
+    <Compile Include="Polling\PollingJobStarted.cs" />
+    <Compile Include="Polling\PollingJobSuccess.cs" />
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Runtime\Delayed\DelayedSpike.cs" />
-    <Compile Include="Polling\PollingSpike.cs" />
+    <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\ChainExecutionWatcher.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />
     <Compile Include="Sagas\ISagaStorage.cs" />
