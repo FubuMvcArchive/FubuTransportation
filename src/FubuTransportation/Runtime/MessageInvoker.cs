@@ -41,7 +41,7 @@ namespace FubuTransportation.Runtime
 
         public void Invoke(Envelope envelope, IMessageCallback callback)
         {
-            if (envelope.ExecutionTime != null && envelope.ExecutionTime > _systemTime.UtcNow())
+            if (envelope.IsDelayed(_systemTime.UtcNow()))
             {
                 try
                 {

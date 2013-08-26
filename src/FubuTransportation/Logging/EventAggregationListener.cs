@@ -41,16 +41,17 @@ namespace FubuTransportation.Logging
             // no-op
         }
 
-        // TODO -- Do we want to do something here?
         public void Error(string message, Exception ex)
         {
-            // no-op
+            System.Diagnostics.Debug.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine(ex);
         }
 
-        // TODO -- Do we want to do something here?
         public void Error(object correlationId, string message, Exception ex)
         {
-            // no-op
+            System.Diagnostics.Debug.WriteLine(correlationId);
+            System.Diagnostics.Debug.WriteLine(message);
+            System.Diagnostics.Debug.WriteLine(ex);
         }
 
         public bool IsDebugEnabled { get { return _settings.DebugEnabled; } }

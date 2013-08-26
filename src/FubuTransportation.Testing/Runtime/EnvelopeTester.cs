@@ -204,6 +204,20 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void received_at_property()
+        {
+            var envelope = new Envelope();
+
+            envelope.ReceivedAt.ShouldBeNull();
+
+            var uri = "fake://thing".ToUri();
+            envelope.ReceivedAt = uri;
+
+            envelope.Headers[Envelope.ReceivedAtKey].ShouldEqual(uri.ToString());
+            envelope.ReceivedAt.ShouldEqual(uri);
+        }
+
+        [Test]
         public void reply_requested()
         {
             var envelope = new Envelope();

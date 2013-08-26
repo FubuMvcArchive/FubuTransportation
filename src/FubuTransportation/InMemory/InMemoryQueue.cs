@@ -126,7 +126,7 @@ namespace FubuTransportation.InMemory
 
         public void MoveToDelayed()
         {
-            InMemoryQueueManager.DelayedQueue().Enqueue(_envelope);
+            InMemoryQueueManager.AddToDelayedQueue(_envelope);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FubuTransportation.RhinoQueues.Testing
                 });
 
                 queues.ManagerFor(new IPEndPoint(IPAddress.Loopback, 2424))
-                    .Queues.OrderBy(x => x).ShouldHaveTheSameElementsAs("other_queue", "some_queue", "third_queue");
+                    .Queues.OrderBy(x => x).ShouldHaveTheSameElementsAs(RhinoQueuesTransport.DelayedQueueName,"other_queue", "some_queue", "third_queue");
             }
         }
     }

@@ -28,7 +28,7 @@ namespace FubuTransportation.InMemory
 
         public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
         {
-            throw new NotImplementedException();
+            return InMemoryQueueManager.DequeueDelayedEnvelopes(currentTime);
         }
 
         protected override IChannel buildChannel(ChannelNode channelNode)

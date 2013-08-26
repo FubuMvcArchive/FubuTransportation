@@ -24,6 +24,11 @@ namespace FubuTransportation.Testing.ScenarioSupport
             processed.Message.ShouldEqual(message);
         }
 
+        public static bool HasProcessed(Message message)
+        {
+            return _processed.Any(x => message.Equals(x.Message));
+        }
+
         public static void Processed(string description, Message message)
         {
             _processed.Fill(new MessageProcessed

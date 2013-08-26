@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using FubuMVC.Core.Http;
 using FubuCore;
 
@@ -7,6 +9,8 @@ namespace FubuTransportation.Runtime
     [Serializable]
     public class Envelope
     {
+        private static readonly BinaryFormatter formatter = new BinaryFormatter();
+
         public static readonly string OriginalIdKey = "OriginalId";
         public static readonly string IdKey = "Id";
         public static readonly string ParentIdKey = "ParentId";
@@ -18,6 +22,7 @@ namespace FubuTransportation.Runtime
         public static readonly string DestinationKey = "Destination";
         public static readonly string ReplyUriKey = "Reply-Uri";
         public static readonly string ExecutionTimeKey = "Execution-Time";
+        public static readonly string ReceivedAtKey = "Received-At";
 
         public byte[] Data;
 
@@ -78,6 +83,12 @@ namespace FubuTransportation.Runtime
             set { Headers[DestinationKey] = value == null ? null : value.ToString(); }
         }
 
+        public Uri ReceivedAt
+        {
+            get { return Headers[ReceivedAtKey].ToUri(); }
+            set { Headers[ReceivedAtKey] = value == null ? null : value.ToString(); }
+        }
+
         public IHeaders Headers { get; private set; }
 
         public string CorrelationId
@@ -116,7 +127,7 @@ namespace FubuTransportation.Runtime
                 }
                 else
                 {
-                    Headers[ExecutionTimeKey] = value.Value.ToString();
+                    Headers[ExecutionTimeKey] = value.Value.ToUniversalTime().ToString();
                 }
                 
             }
@@ -154,6 +165,23 @@ namespace FubuTransportation.Runtime
             {
                 return "Envelope w/ Id {0}".ToFormat(id);
             }
+        }
+
+        public bool IsDelayed(DateTime utcNow)
+        {
+            if (!Headers.Has(ExecutionTimeKey)) return false;
+
+            return ExecutionTime.Value > utcNow;
+        }
+
+        public Envelope Clone()
+        {
+            var stream = new MemoryStream();
+            formatter.Serialize(stream, this);
+
+            stream.Position = 0;
+
+            return (Envelope) formatter.Deserialize(stream);
         }
     }
 }

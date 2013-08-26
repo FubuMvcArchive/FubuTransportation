@@ -23,7 +23,7 @@ namespace FubuTransportation.Runtime
 
         public void Receive(Envelope envelope, IMessageCallback callback)
         {
-            envelope.Destination = _address;
+            envelope.ReceivedAt = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
             _messageInvoker.Invoke(envelope, callback);

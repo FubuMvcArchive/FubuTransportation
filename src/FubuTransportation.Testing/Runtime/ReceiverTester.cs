@@ -147,7 +147,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_copy_the_channel_address_to_the_envelope()
         {
-            envelope.Destination.ShouldEqual(address);
+            envelope.ReceivedAt.ShouldEqual(address);
         }
 
         [Test]
