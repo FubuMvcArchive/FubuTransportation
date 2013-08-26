@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Runtime;
+using System.Linq;
 
 namespace FubuTransportation.InMemory
 {
@@ -41,7 +42,10 @@ namespace FubuTransportation.InMemory
             }
         }
 
-
+        public IEnumerable<Envelope> Peek()
+        {
+            return _queue.ToArray().Select(x => _formatter.Deserialize(new MemoryStream(x)).As<Envelope>());
+        } 
 
         public void Dispose()
         {
@@ -122,7 +126,7 @@ namespace FubuTransportation.InMemory
 
         public void MoveToDelayed()
         {
-            throw new NotImplementedException();
+            InMemoryQueueManager.DelayedQueue().Enqueue(_envelope);
         }
     }
 }

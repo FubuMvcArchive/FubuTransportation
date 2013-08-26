@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore.Dates;
 using FubuTransportation.Runtime;
 using System.Linq;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace FubuTransportation
         /// </summary>
         void Consume<T>(T message);
 
-
+        void DelaySend<T>(T message, DateTime time);
+        void DelaySend<T>(T message, TimeSpan delay);
     }
 
     public class ServiceBus : IServiceBus
@@ -28,12 +30,14 @@ namespace FubuTransportation
         private readonly IEnvelopeSender _sender;
         private readonly IEventAggregator _events;
         private readonly IMessageInvoker _invoker;
+        private readonly ISystemTime _systemTime;
 
-        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IMessageInvoker invoker)
+        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IMessageInvoker invoker, ISystemTime systemTime)
         {
             _sender = sender;
             _events = events;
             _invoker = invoker;
+            _systemTime = systemTime;
         }
 
         public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
@@ -60,6 +64,20 @@ namespace FubuTransportation
         public void Consume<T>(T message)
         {
             _invoker.InvokeNow(message);
+        }
+
+        public void DelaySend<T>(T message, DateTime time)
+        {
+            _sender.Send(new Envelope
+            {
+                Message = message,
+                ExecutionTime = time.ToUniversalTime()
+            });
+        }
+
+        public void DelaySend<T>(T message, TimeSpan delay)
+        {
+            DelaySend(message, _systemTime.UtcNow().Add(delay));
         }
     }
 }

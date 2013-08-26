@@ -10,9 +10,10 @@ namespace FubuTransportation.RhinoQueues
 {
     public class RhinoQueuesTransport : TransportBase, ITransport
     {
+        public static readonly string DelayedQueueName = "delayed";
+
         private readonly IPersistentQueues _queues;
         private readonly RhinoQueueSettings _settings;
-
 
         public RhinoQueuesTransport(IPersistentQueues queues, RhinoQueueSettings settings)
         {
@@ -24,16 +25,6 @@ namespace FubuTransportation.RhinoQueues
         {
             // IPersistentQueues is disposable
         }
-
-        // TODO -- needs hard integration tests
-//        public void OpenChannels(ChannelGraph graph)
-//        {
-//            ChannelNode[] rhinoChannels = graph.Where(x => x.Protocol() == RhinoUri.Protocol).ToArray();
-//
-//            _queues.Start(rhinoChannels.Select(x => new RhinoUri(x.Uri)));
-//
-//            rhinoChannels.Each(node => { node.Channel = RhinoQueuesChannel.Build(new RhinoUri(node.Uri), _queues); });
-//        }
 
         public override string Protocol
         {
@@ -50,7 +41,7 @@ namespace FubuTransportation.RhinoQueues
 
         public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
         {
-            throw new NotImplementedException();
+            return _queues.ReplayDelayed(currentTime);
         }
 
         protected override IChannel buildChannel(ChannelNode channelNode)

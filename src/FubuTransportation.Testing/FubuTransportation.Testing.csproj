@@ -91,8 +91,10 @@
     <Compile Include="FubuTransportRegistry_registration_of_services_Tester.cs" />
     <Compile Include="FubuTransport_default_options_Tester.cs" />
     <Compile Include="HandlerExtensionsTester.cs" />
+    <Compile Include="InMemory\InMemoryCallbackTester.cs" />
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
+    <Compile Include="InMemory\ReplayDelayedQueueIntegrationTester.cs" />
     <Compile Include="InMemory\SagaStateCacheTester.cs" />
     <Compile Include="Polling\DefaultTimerTester.cs" />
     <Compile Include="Polling\JobRunnerTester.cs" />
@@ -156,7 +158,7 @@
     <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs" />
     <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs" />
     <Compile Include="ScenarioWriterSmokeTester.cs" />
-    <Compile Include="ServiceBusTester.cs" />
+    <Compile Include="ServiceBus_DelaySend_Tester.cs" />
     <Compile Include="ScenarioSupport\AnotherOneHandler.cs" />
     <Compile Include="ScenarioSupport\DifferentOneHandler.cs" />
     <Compile Include="ScenarioSupport\FourHandler.cs" />

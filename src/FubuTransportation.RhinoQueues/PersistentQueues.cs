@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FubuCore.Util;
+using FubuTransportation.Runtime;
 using Rhino.Queues;
 
 namespace FubuTransportation.RhinoQueues
@@ -49,6 +51,8 @@ namespace FubuTransportation.RhinoQueues
 
                 var queueManager = _queueManagers[@group.Key];
                 queueManager.CreateQueues(queueNames);
+                queueManager.CreateQueues(RhinoQueuesTransport.DelayedQueueName);
+                
                 queueManager.Start();
             });
         }
@@ -56,6 +60,18 @@ namespace FubuTransportation.RhinoQueues
         public void CreateQueue(RhinoUri uri)
         {
             _queueManagers[uri.Endpoint].CreateQueues(uri.QueueName);
+        }
+
+        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
+        {
+            return _queueManagers.SelectMany(x => ReplayDelayed(x, currentTime));
+        }
+
+        public IEnumerable<Envelope> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
+        {
+            throw new NotImplementedException();
+//            var queue = queueManager.GetQueue(RhinoQueuesTransport.DelayedQueueName);
+//            queue.EnqueueDirectlyTo();        
         }
     }
 }
