@@ -20,5 +20,15 @@ namespace FubuTransportation.Polling
 
             return def;
         }
+
+        public static PollingJobDefinition For<TJob, TSettings>(Expression<Func<TSettings, double>> intervalSource) where TJob : IJob
+        {
+            return new PollingJobDefinition
+            {
+                JobType = typeof(TJob),
+                IntervalSource = intervalSource,
+                SettingType = typeof(TSettings)
+            };
+        }
     }
 }

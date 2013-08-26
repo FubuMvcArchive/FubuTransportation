@@ -36,8 +36,10 @@ namespace FubuTransportation.Testing.Polling
         [Test]
         public void there_are_polling_jobs_registered()
         {
+
+            // The polling job for delayed messages is registered by default.
             container.GetInstance<IPollingJobs>().Count()
-                     .ShouldEqual(3);
+                     .ShouldEqual(4);
         }
 
         [Test]

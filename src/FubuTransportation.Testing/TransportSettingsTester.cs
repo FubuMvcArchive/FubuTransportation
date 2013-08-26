@@ -12,5 +12,11 @@ namespace FubuTransportation.Testing
             new TransportSettings().DebugEnabled.ShouldBeFalse();
         }
 
+        [Test]
+        public void the_default_delayed_message_polling_is_5_seconds()
+        {
+            new TransportSettings().DelayMessagePolling.ShouldEqual(5000);
+        }
+
     }
 }
