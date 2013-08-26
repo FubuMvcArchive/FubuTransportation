@@ -6,6 +6,7 @@ using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
+using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Sagas;
@@ -17,11 +18,11 @@ namespace FubuTransportation
     {
         public void Configure(FubuRegistry registry)
         {
-            // TODO -- need something that pulls HandlerGraph into the larger BehaviorGraph, just before instrumentation?
-            // needs to be after authentication
-
             registry.Policies.Add<ImportHandlers>();
             registry.Services<FubuTransportServiceRegistry>();
+            registry.Services<PollingServicesRegistry>();
+            registry.Policies.Add<RegisterPollingJobs>();
+
 
 
             if (FubuTransport.AllQueuesInMemory)

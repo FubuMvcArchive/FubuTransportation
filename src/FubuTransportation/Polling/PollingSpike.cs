@@ -2,25 +2,13 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.Logging;
-using FubuMVC.Core;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
-using System.Linq;
 using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Polling
 {
-
-
-
-    public interface IJob
-    {
-        void Execute();
-    }
-
-    public class JobRequest<T> where T : IJob{}
-
     public interface IPollingJobLogger
     {
         void Starting(IJob job);
@@ -51,23 +39,7 @@ namespace FubuTransportation.Polling
             return (Description != null ? Description.GetHashCode() : 0);
         }
     }
-    
 
-
-    public interface IPollingJob
-    {
-        bool IsRunning();
-        void Start();
-        void RunNow();
-        void Stop();
-        void ResetInterval(double interval);
-
-    }
-
-    public interface IPollingJobs : IEnumerable<IPollingJob>
-    {
-
-    }
 
     public class PollingJobExpression
     {
@@ -110,19 +82,6 @@ namespace FubuTransportation.Polling
     public class PollingJobSettings
     {
         public readonly IList<PollingJobDefinition> Jobs = new List<PollingJobDefinition>(); 
-    }
-
-    // TODO -- need to register this
-    [ConfigurationType(ConfigurationType.Services)]
-    public class RegisterPollingJobs : IConfigurationAction
-    {
-        public void Configure(BehaviorGraph graph)
-        {
-            var settings = graph.Settings.Get<PollingJobSettings>();
-            settings.Jobs.Select(x => x.ToObjectDef()).Each(x => {
-                graph.Services.AddService(typeof(IPollingJob), x);
-            });
-        }
     }
 
     public class PollingJobDefinition
