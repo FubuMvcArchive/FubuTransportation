@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -71,35 +70,6 @@ namespace FubuTransportation.Polling
     public interface IPollingJobs : IEnumerable<IPollingJob>
     {
 
-    }
-
-    public class PollingServicesRegistry : ServiceRegistry
-    {
-        public PollingServicesRegistry()
-        {
-            // NEED MORE.
-            SetServiceIfNone<ITimer, DefaultTimer>();
-        }
-    }
-
-    public class PollingJobs : IPollingJobs
-    {
-        private readonly IEnumerable<IPollingJob> _jobs;
-
-        public PollingJobs(IEnumerable<IPollingJob> jobs)
-        {
-            _jobs = jobs;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public IEnumerator<IPollingJob> GetEnumerator()
-        {
-            return _jobs.GetEnumerator();
-        }
     }
 
     public class PollingJobExpression

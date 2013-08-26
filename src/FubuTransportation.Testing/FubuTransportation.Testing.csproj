@@ -96,6 +96,7 @@
     <Compile Include="Polling\DefaultTimerTester.cs" />
     <Compile Include="Polling\JobRunnerTester.cs" />
     <Compile Include="Polling\PollingJobActivatorTester.cs" />
+    <Compile Include="Polling\PollingServicesRegistry_spec.cs" />
     <Compile Include="Registration\FuncBuilderTester.cs" />
     <Compile Include="Registration\Nodes\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
