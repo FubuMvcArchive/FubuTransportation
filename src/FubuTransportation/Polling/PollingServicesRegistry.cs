@@ -1,5 +1,6 @@
 ﻿using Bottles;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.ObjectGraph;
 
 namespace FubuTransportation.Polling
 {
@@ -11,7 +12,11 @@ namespace FubuTransportation.Polling
             SetServiceIfNone<ITimer, DefaultTimer>();
             AddService<IActivator, PollingJobActivator>();
             AddService<IDeactivator, PollingJobDeactivator>();
-            SetServiceIfNone<IPollingJobs, PollingJobs>();
+
+
+            var def = ObjectDef.ForType<PollingJobs>();
+            def.IsSingleton = true;
+            SetServiceIfNone(typeof (IPollingJobs), def);
         }
     }
 }

@@ -66,7 +66,6 @@ namespace FubuTransportation.Polling
 
     }
 
-    // Has to be a singleton
     public interface IPollingJobs : IEnumerable<IPollingJob>
     {
 

@@ -55,6 +55,8 @@ namespace FubuTransportation.Testing.Polling
         public void polling_jobs_is_registered()
         {
             registeredTypeIs<IPollingJobs, PollingJobs>();
+            services().DefaultServiceFor<IPollingJobs>().IsSingleton
+                .ShouldBeTrue();
         }
     }
 }
