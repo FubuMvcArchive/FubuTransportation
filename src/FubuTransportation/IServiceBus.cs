@@ -10,12 +10,7 @@ namespace FubuTransportation
     {
         Task<TResponse> Request<TRequest, TResponse>(TRequest request);
 
-        // MUST be a receiver or it fails
         void Send<T>(T message);
-
-        // Doesn't have to be a receiver
-        //void Publish(params object[] messages);
-
 
         /// <summary>
         /// Invoke consumers for the relevant messages managed by the current

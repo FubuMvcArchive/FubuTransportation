@@ -66,6 +66,8 @@
     <Compile Include="InMemory\InMemorySagaStorage.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />
+    <Compile Include="Polling\DefaultTimer.cs" />
+    <Compile Include="Polling\ITimer.cs" />
     <Compile Include="Runtime\Delayed\DelayedSpike.cs" />
     <Compile Include="Polling\PollingSpike.cs" />
     <Compile Include="Runtime\ChainExecutionWatcher.cs" />

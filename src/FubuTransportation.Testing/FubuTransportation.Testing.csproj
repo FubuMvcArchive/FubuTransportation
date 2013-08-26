@@ -93,6 +93,7 @@
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
     <Compile Include="InMemory\SagaStateCacheTester.cs" />
+    <Compile Include="Polling\DefaultTimerTester.cs" />
     <Compile Include="Registration\FuncBuilderTester.cs" />
     <Compile Include="Registration\Nodes\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />
