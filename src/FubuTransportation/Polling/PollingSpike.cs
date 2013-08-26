@@ -6,8 +6,10 @@ using System.Linq.Expressions;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuCore.Descriptions;
+using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuMVC.Core;
+using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using System.Linq;
@@ -25,23 +27,36 @@ namespace FubuTransportation.Polling
 
     public class JobRequest<T> where T : IJob{}
 
-
-    public class JobRunner<T> where T : IJob
+    public interface IPollingJobLogger
     {
-        private readonly T _job;
+        void Starting(IJob job);
+        void Successful(IJob job);
+        void Failed(IJob job, Exception ex);
+    }
 
-        public JobRunner(T job)
+    public class PollingJobSuccess : LogRecord
+    {
+        public string Description { get; set; }
+
+        protected bool Equals(PollingJobSuccess other)
         {
-            _job = job;
+            return string.Equals(Description, other.Description);
         }
 
-        public void Run()
+        public override bool Equals(object obj)
         {
-            // TODO -- do other things of some sort
-            // TODO -- log job completion
-            _job.Execute();
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((PollingJobSuccess) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Description != null ? Description.GetHashCode() : 0);
         }
     }
+    
 
 
     public interface IPollingJob
