@@ -11,6 +11,7 @@ using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Sagas;
 using FubuTransportation.TestSupport;
+using FubuCore;
 
 namespace FubuTransportation
 {
@@ -23,14 +24,13 @@ namespace FubuTransportation
             registry.Services<PollingServicesRegistry>();
             registry.Policies.Add<RegisterPollingJobs>();
 
-
-
             if (FubuTransport.AllQueuesInMemory)
             {
                 registry.Policies.Add<AllQueuesInMemoryPolicy>();
             }
         }
     }
+
 
     public class FubuTransportServiceRegistry : ServiceRegistry
     {

@@ -14,6 +14,7 @@ using FubuMVC.Core.Registration.Diagnostics;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration;
+using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Sagas;
@@ -104,6 +105,7 @@ namespace FubuTransportation.Configuration
 
         private IEnumerable<IHandlerSource> allSources()
         {
+
             if (_sources.Any())
             {
                 foreach (var handlerSource in _sources)
@@ -207,6 +209,14 @@ namespace FubuTransportation.Configuration
             public void FindBy(IHandlerSource source)
             {
                 _parent._sources.Add(source);
+            }
+
+            /// <summary>
+            /// Just disables handler loading for this registry
+            /// </summary>
+            public void DisableDefaultHandlerSource()
+            {
+                Include<NulloHandlerSource>();
             }
         }
 
@@ -406,5 +416,11 @@ namespace FubuTransportation.Configuration
         }
     }
 
-    
+    public class NulloHandlerSource : IHandlerSource
+    {
+        public IEnumerable<HandlerCall> FindCalls()
+        {
+            yield break;
+        }
+    }
 }

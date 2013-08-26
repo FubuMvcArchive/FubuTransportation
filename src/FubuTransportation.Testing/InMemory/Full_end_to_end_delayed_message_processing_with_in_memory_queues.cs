@@ -1,26 +1,23 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Bottles.Services.Messaging.Tracking;
+using FubuCore;
 using FubuCore.Dates;
-using FubuMVC.Core.Registration.ObjectGraph;
+using FubuMVC.StructureMap;
+using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Delayed;
-using FubuTransportation.Testing.Runtime;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
-using FubuMVC.StructureMap;
 using StructureMap;
-using System.Collections.Generic;
-using FubuCore;
-using System.Linq;
-using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.InMemory
 {
     [TestFixture]
-    public class ReplayDelayedQueueIntegrationTester
+    public class Full_end_to_end_delayed_message_processing_with_in_memory_queues
     {
         private IServiceBus theServiceBus;
         private SettableClock theClock;
@@ -28,7 +25,6 @@ namespace FubuTransportation.Testing.InMemory
         private OneMessage message2;
         private OneMessage message3;
         private OneMessage message4;
-        private DelayedEnvelopeProcessor theProcessor;
 
         [TestFixtureSetUp]
         public void SetUp()
@@ -41,9 +37,6 @@ namespace FubuTransportation.Testing.InMemory
 
             var runtime = FubuTransport.For<DelayedRegistry>().StructureMap(new Container())
                                        .Bootstrap();
-
-            // Disable polling!
-            runtime.Factory.Get<IPollingJobs>().Each(x => x.Stop());
 
             theServiceBus = runtime.Factory.Get<IServiceBus>();
 
@@ -59,7 +52,6 @@ namespace FubuTransportation.Testing.InMemory
             theServiceBus.DelaySend(message3, theClock.UtcNow().AddHours(2));
             theServiceBus.DelaySend(message4, theClock.UtcNow().AddHours(2));
 
-            theProcessor = runtime.Factory.Get<DelayedEnvelopeProcessor>();
         }
 
         [Test]
@@ -67,12 +59,10 @@ namespace FubuTransportation.Testing.InMemory
         {
             TestMessageRecorder.AllProcessed.Any().ShouldBeFalse();
 
-            theProcessor.Execute();
             Thread.Sleep(2000);
             TestMessageRecorder.AllProcessed.Any().ShouldBeFalse();
 
             theClock.LocalNow(theClock.LocalTime().Add(61.Minutes()));
-            theProcessor.Execute();
 
             Wait.Until(() => TestMessageRecorder.HasProcessed(message1)).ShouldBeTrue();
             Wait.Until(() => TestMessageRecorder.HasProcessed(message2)).ShouldBeTrue();
@@ -81,7 +71,6 @@ namespace FubuTransportation.Testing.InMemory
             TestMessageRecorder.HasProcessed(message4).ShouldBeFalse();
 
             theClock.LocalNow(theClock.LocalTime().Add(61.Minutes()));
-            theProcessor.Execute();
 
             Wait.Until(() => TestMessageRecorder.HasProcessed(message3)).ShouldBeTrue();
             Wait.Until(() => TestMessageRecorder.HasProcessed(message4)).ShouldBeTrue();
@@ -94,20 +83,8 @@ namespace FubuTransportation.Testing.InMemory
         [TestFixtureTearDown]
         public void TearDown()
         {
+            // TODO - HAVE TO DISPOSE THE RUNTIME!!!!!!!
             FubuTransport.Reset();
-        }
-    }
-
-    public class DelayedRegistry : FubuTransportRegistry<BusSettings>
-    {
-        public DelayedRegistry()
-        {
-            // Need this to be fast for the tests
-            AlterSettings<TransportSettings>(x => x.DelayMessagePolling = 100);
-
-            Services(x => x.ReplaceService<ISystemTime>(new SettableClock()));
-            Handlers.Include<SimpleHandler<OneMessage>>();
-            Channel(x => x.Downstream).ReadIncoming().PublishesMessagesInAssemblyContainingType<OneMessage>();
         }
     }
 }

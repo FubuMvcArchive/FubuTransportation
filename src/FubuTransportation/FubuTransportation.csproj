@@ -66,6 +66,7 @@
     <Compile Include="InMemory\InMemorySagaStorage.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />
+    <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\IJob.cs" />
     <Compile Include="Polling\IPollingJob.cs" />

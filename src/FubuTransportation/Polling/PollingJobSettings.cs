@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuMVC.Core.Registration;
-using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Polling
 {
@@ -9,10 +8,5 @@ namespace FubuTransportation.Polling
     public class PollingJobSettings
     {
         public readonly IList<PollingJobDefinition> Jobs = new List<PollingJobDefinition>();
-
-        public PollingJobSettings()
-        {
-            Jobs.Add(PollingJobDefinition.For<DelayedEnvelopeProcessor, TransportSettings>(x => x.DelayMessagePolling));
-        }
     }
 }

@@ -91,6 +91,7 @@
     <Compile Include="FubuTransportRegistry_registration_of_services_Tester.cs" />
     <Compile Include="FubuTransport_default_options_Tester.cs" />
     <Compile Include="HandlerExtensionsTester.cs" />
+    <Compile Include="InMemory\Full_end_to_end_delayed_message_processing_with_in_memory_queues.cs" />
     <Compile Include="InMemory\InMemoryCallbackTester.cs" />
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
