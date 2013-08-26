@@ -14,6 +14,11 @@ namespace FubuTransportation.Polling
             _logger = logger;
         }
 
+        public void Stopping(Type jobType)
+        {
+            _logger.InfoMessage(() => new PollingJobStopped{JobType = jobType});
+        }
+
         public void Starting(IJob job)
         {
             _logger.InfoMessage(() => new PollingJobStarted() { Description = job.ToString() });

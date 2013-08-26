@@ -10,9 +10,9 @@ using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
-using FubuMVC.Core.Registration.Conventions;
 using FubuMVC.Core.Registration.Diagnostics;
 using FubuTransportation.InMemory;
+using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
@@ -23,6 +23,7 @@ namespace FubuTransportation.Configuration
     public class FubuTransportRegistry : IFubuRegistryExtension
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
+        internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>(); 
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
@@ -38,6 +39,13 @@ namespace FubuTransportation.Configuration
 
         public static HandlerGraph HandlerGraphFor(Action<FubuTransportRegistry> configure)
         {
+            var behaviors = BehaviorGraphFor(configure);
+
+            return behaviors.Settings.Get<HandlerGraph>();
+        }
+
+        public static BehaviorGraph BehaviorGraphFor(Action<FubuTransportRegistry> configure)
+        {
             var registry = new FubuRegistry();
             var transportRegistry = new FubuTransportRegistry();
 
@@ -46,10 +54,10 @@ namespace FubuTransportation.Configuration
             transportRegistry.As<IFubuRegistryExtension>()
                 .Configure(registry);
 
-            var behaviors = BehaviorGraph.BuildFrom(registry);
-
-            return behaviors.Settings.Get<HandlerGraph>();
+            return BehaviorGraph.BuildFrom(registry);
         }
+
+        
 
         public static FubuTransportRegistry Empty()
         {
@@ -111,6 +119,11 @@ namespace FubuTransportation.Configuration
                 source.IncludeClassesMatchingSagaConvention();
 
                 yield return source;
+            }
+
+            if (_pollingJobs.HasAny())
+            {
+                yield return _pollingJobs;
             }
         } 
 
@@ -197,6 +210,14 @@ namespace FubuTransportation.Configuration
             }
         }
 
+        public PollingJobExpression Polling
+        {
+            get
+            {
+                return new PollingJobExpression(this);
+            }
+        }
+
         public void DefaultSerializer<T>() where T : IMessageSerializer, new()
         {
             channel = graph => graph.DefaultContentType = new T().ContentType;
@@ -243,6 +264,22 @@ namespace FubuTransportation.Configuration
                 _parent.AlterSettings<HandlerPolicies>(x => x.AddGlobal(new T(), _parent));
                 return this;
             }
+        }
+
+
+        /// <summary>
+        ///   Configures the <see cref = "IServiceRegistry" /> to specify dependencies. 
+        ///   This is an IoC-agnostic method of dependency configuration that will be consumed by the underlying implementation (e.g., StructureMap)
+        /// </summary>
+        public void Services(Action<ServiceRegistry> configure)
+        {
+            _alterations.Add(r => r.Services(configure));
+        }
+
+
+        public void Services<T>() where T : ServiceRegistry, new()
+        {
+            _alterations.Add(r => r.Services<T>());
         }
     }
 

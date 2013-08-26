@@ -41,18 +41,6 @@ namespace FubuTransportation.Testing.Polling
         }
 
         [Test]
-        public void reset_the_interval()
-        {
-            MockFor<ITimer>().Stub(x => x.Enabled).Return(true);
-
-            ClassUnderTest.ResetInterval(500);
-
-            MockFor<ITimer>().AssertWasCalled(x => x.Stop());
-
-            MockFor<ITimer>().AssertWasCalled(x => x.Start(null, 500), x => x.Constraints(Is.Anything(), Is.Equal(500.0)));
-        }
-
-        [Test]
         public void smoke_test_describe()
         {
             var description = Description.For(ClassUnderTest);

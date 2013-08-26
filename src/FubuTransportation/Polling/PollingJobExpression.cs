@@ -13,6 +13,11 @@ namespace FubuTransportation.Polling
             _parent = parent;
         }
 
+        public IntervalExpression<TJob> RunJob<TJob>() where TJob : IJob
+        {
+            return new IntervalExpression<TJob>(this);
+        } 
+
         public class IntervalExpression<TJob> where TJob : IJob
         {
             private readonly PollingJobExpression _parent;
@@ -32,6 +37,7 @@ namespace FubuTransportation.Polling
                     IntervalSource = intervalInMillisecondsProperty
                 };
 
+                _parent._parent._pollingJobs.AddJobType(typeof(TJob));
                 _parent._parent.AlterSettings<PollingJobSettings>(x => {
                     x.Jobs.Add(definition);
                 });

@@ -14,11 +14,11 @@ namespace FubuTransportation.Polling
         private readonly Expression<Func<TSettings, double>> _intervalSource;
         private double _interval;
 
-        public PollingJob(IServiceBus bus, IPollingJobLogger logger, ITimer timer, TSettings settings, Expression<Func<TSettings, double>> intervalSource)
+        public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings, Expression<Func<TSettings, double>> intervalSource)
         {
             _bus = bus;
             _logger = logger;
-            _timer = timer;
+            _timer = new DefaultTimer();
             _intervalSource = intervalSource;
 
             _interval = _intervalSource.Compile()(settings);
@@ -56,6 +56,7 @@ namespace FubuTransportation.Polling
 
         public void Stop()
         {
+            _logger.Stopping(typeof(TJob));
             _timer.Stop();
         }
 

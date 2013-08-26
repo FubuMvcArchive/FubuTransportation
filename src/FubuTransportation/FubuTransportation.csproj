@@ -80,9 +80,11 @@
     <Compile Include="Polling\PollingJobDefinition.cs" />
     <Compile Include="Polling\PollingJobExpression.cs" />
     <Compile Include="Polling\PollingJobFailed.cs" />
+    <Compile Include="Polling\PollingJobHandlerSource.cs" />
     <Compile Include="Polling\PollingJobs.cs" />
     <Compile Include="Polling\PollingJobSettings.cs" />
     <Compile Include="Polling\PollingJobStarted.cs" />
+    <Compile Include="Polling\PollingJobStopped.cs" />
     <Compile Include="Polling\PollingJobSuccess.cs" />
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />

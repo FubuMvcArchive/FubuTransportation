@@ -5,7 +5,7 @@ using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Polling
 {
-    [ConfigurationType(ConfigurationType.Services)]
+    [ConfigurationType(ConfigurationType.Policy)]
     public class RegisterPollingJobs : IConfigurationAction
     {
         public void Configure(BehaviorGraph graph)
