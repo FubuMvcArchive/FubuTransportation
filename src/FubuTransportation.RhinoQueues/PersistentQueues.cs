@@ -69,6 +69,12 @@ namespace FubuTransportation.RhinoQueues
 
         public IEnumerable<Envelope> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
         {
+            // Corey,
+            // My thought here is within a transaction we'll move all the messages from the "Delayed" queue back to the
+            // queue specified by the "Received-At" header, then return an enumerable of the Envelope's that are getting
+            // moved back in for the purpose of auditing.  I'm not completely sure what the easiest thing to do w/
+            // the rhino queue API is and betting you do.
+
             throw new NotImplementedException();
 //            var queue = queueManager.GetQueue(RhinoQueuesTransport.DelayedQueueName);
 //            queue.EnqueueDirectlyTo();        
