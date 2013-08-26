@@ -4,5 +4,7 @@
     {
         void MarkSuccessful();
         void MarkFailed();
+
+        void MoveToDelayed();
     }
 }

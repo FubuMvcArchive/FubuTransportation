@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuCore.Binding;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
@@ -9,6 +10,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using System.Linq;
@@ -17,6 +19,7 @@ using Rhino.Mocks;
 using System.Collections.Generic;
 using StructureMap.Pipeline;
 using Is = Rhino.Mocks.Constraints.Is;
+using FubuCore;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -295,7 +298,7 @@ namespace FubuTransportation.Testing.Runtime
                 x.Handlers.Include<TwoHandler>();
             });
 
-            var invoker = new MessageInvoker(null, graph, null, null, null);
+            var invoker = new MessageInvoker(null, graph, null, null, null, SystemTime.Default());
 
             invoker.FindChain(new Envelope {Message = new OneMessage()})
                    .OfType<HandlerCall>().Single()
@@ -343,6 +346,61 @@ namespace FubuTransportation.Testing.Runtime
             assertInfoMessageWasLogged(new MessageSuccessful { Envelope = theEnvelope });
         }
 
+    }
+
+    [TestFixture]
+    public class when_executing_an_envelope_that_is_delayed : MessageInvokerContext
+    {
+        protected override void theContextIs()
+        {
+            LocalSystemTime = DateTime.Today.AddHours(8);
+
+            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(10);
+
+            ClassUnderTest.Invoke(theEnvelope, theCallback);
+        }
+
+        [Test]
+        public void should_happily_redirect_the_callback_to_the_delayed_queue()
+        {
+            theCallback.AssertWasCalled(x => x.MoveToDelayed());
+        }
+
+        [Test]
+        public void does_not_try_to_do_anything_else()
+        {
+            theCallback.AssertWasNotCalled(x => x.MarkFailed());
+            theCallback.AssertWasNotCalled(x => x.MarkSuccessful());
+        }
+
+        [Test]
+        public void does_log_the_envelope_is_delayed()
+        {
+            theLogger.InfoMessages.Single().ShouldEqual(new DelayedEnvelopeReceived {Envelope = theEnvelope});
+        }
+    }
+
+    [TestFixture]
+    public class when_executing_an_envelope_that_has_an_execution_time_in_the_past : MessageInvokerContext
+    {
+        protected override void theContextIs()
+        {
+            LocalSystemTime = DateTime.Today.AddHours(8);
+
+            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(-10);
+
+            theChain = new HandlerChain();
+
+            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain, theCallback));
+
+            ClassUnderTest.Invoke(theEnvelope, theCallback);
+        }
+
+        [Test]
+        public void proceeds_to_the_normal_processing()
+        {
+            ClassUnderTest.VerifyAllExpectations();
+        }
     }
 
     [TestFixture]

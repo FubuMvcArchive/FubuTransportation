@@ -23,5 +23,10 @@ namespace FubuTransportation.RhinoQueues
         {
             _transaction.Rollback();
         }
+
+        public void MoveToDelayed()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -119,5 +119,10 @@ namespace FubuTransportation.InMemory
         {
             Debug.WriteLine("Message was marked as failed!");
         }
+
+        public void MoveToDelayed()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

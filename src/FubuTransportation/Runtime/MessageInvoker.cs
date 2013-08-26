@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration.Nodes;
@@ -8,6 +9,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using System.Collections.Generic;
 using FubuCore;
+using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Runtime
 {
@@ -20,14 +22,16 @@ namespace FubuTransportation.Runtime
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
         private readonly IEnvelopeSender _sender;
+        private readonly ISystemTime _systemTime;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
+        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender, ISystemTime systemTime)
         {
             _factory = factory;
             _graph = graph;
             _serializer = serializer;
             _logger = logger;
             _sender = sender;
+            _systemTime = systemTime;
         }
 
         public IEnvelopeSerializer Serializer
@@ -37,6 +41,21 @@ namespace FubuTransportation.Runtime
 
         public void Invoke(Envelope envelope, IMessageCallback callback)
         {
+            if (envelope.ExecutionTime != null && envelope.ExecutionTime > _systemTime.UtcNow())
+            {
+                try
+                {
+                    callback.MoveToDelayed();
+                    _logger.InfoMessage(() => new DelayedEnvelopeReceived{Envelope = envelope});
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
+                }
+
+                return;
+            }
+
             if (envelope.Message == null)
             {
                 _serializer.Deserialize(envelope);
