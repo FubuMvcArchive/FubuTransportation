@@ -69,6 +69,7 @@
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\ITimer.cs" />
     <Compile Include="Polling\JobRunner.cs" />
+    <Compile Include="Polling\PollingJob.cs" />
     <Compile Include="Polling\PollingJobActivator.cs" />
     <Compile Include="Polling\PollingJobDeactivator.cs" />
     <Compile Include="Polling\PollingJobs.cs" />

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq.Expressions;
-using FubuCore.Descriptions;
 using FubuCore.Logging;
-using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
@@ -29,6 +26,7 @@ namespace FubuTransportation.Polling
         void Starting(IJob job);
         void Successful(IJob job);
         void Failed(IJob job, Exception ex);
+        void FailedToSchedule(Type jobType, Exception exception);
     }
 
     public class PollingJobSuccess : LogRecord
@@ -143,63 +141,5 @@ namespace FubuTransportation.Polling
 
             return def;
         }
-    }
-
-    public class PollingJob<TJob, TSettings> : DescribesItself, IPollingJob where TJob : IJob
-    {
-        private readonly IServiceBus _bus;
-        private readonly ITimer _timer;
-        private readonly Expression<Func<TSettings, double>> _intervalSource;
-        private double _interval;
-
-        public PollingJob(IServiceBus bus, ITimer timer, TSettings settings, Expression<Func<TSettings, double>> intervalSource)
-        {
-            _bus = bus;
-            _timer = timer;
-            _intervalSource = intervalSource;
-
-            _interval = _intervalSource.Compile()(settings);
-        }
-
-        public void Describe(Description description)
-        {
-            description.Title = "Polling Job for " + typeof (TJob).Name;
-            typeof(TJob).ForAttribute<DescriptionAttribute>(att => description.ShortDescription = att.Description);
-            description.Properties["Interval"] = _interval.ToString();
-            description.Properties["Config"] = _intervalSource.ToString();
-        }
-
-        public bool IsRunning()
-        {
-            return _timer.Enabled;
-        }
-
-        public void Start()
-        {
-            _timer.Start(RunNow, _interval);
-        }
-
-        public void RunNow()
-        {
-            // TODO -- harden & instrument
-            _bus.Consume(new JobRequest<TJob>());
-        }
-
-        public void Stop()
-        {
-            _timer.Stop();
-        }
-
-        public void ResetInterval(double interval)
-        {
-            _interval = interval;
-            
-            if (_timer.Enabled)
-            {
-                Stop();
-                Start();
-            }
-        }
-
     }
 }
