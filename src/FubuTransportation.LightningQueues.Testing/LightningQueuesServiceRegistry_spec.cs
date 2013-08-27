@@ -4,24 +4,24 @@ using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 
-namespace FubuTransportation.RhinoQueues.Testing
+namespace FubuTransportation.LightningQueues.Testing
 {
     //TODO test failures under resharper
     [TestFixture]
-    public class RhinoQueuesServiceRegistry_spec
+    public class LightningQueuesServiceRegistry_spec
     {
         private void registeredTypeIs<TService, TImplementation>()
         {
             var registry = new FubuRegistry();
-            registry.Services<RhinoQueuesServiceRegistry>();
+            registry.Services<LightningQueuesServiceRegistry>();
             BehaviorGraph.BuildFrom(registry).Services.DefaultServiceFor<TService>().Type.ShouldEqual(
                 typeof(TImplementation));
         }
 
         [Test]
-        public void RhinoQueuesTransport_is_registered()
+        public void LightningQueuesTransport_is_registered()
         {
-            registeredTypeIs<ITransport, RhinoQueuesTransport>();
+            registeredTypeIs<ITransport, LightningQueuesTransport>();
         }
 
         [Test]

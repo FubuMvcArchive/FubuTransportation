@@ -1,2 +1,2 @@
-FubuTransportation.RhinoQueues.Testing
+FubuTransportation.LightningQueues.Testing
 FubuTransportation.Testing
