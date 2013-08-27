@@ -55,7 +55,7 @@ namespace FubuTransportation.Runtime.Invocation
 
             if (envelope.Message == null)
             {
-                _serializer.Deserialize(envelope);
+                envelope.Message = _serializer.Deserialize(envelope);
             }
 
             _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope});

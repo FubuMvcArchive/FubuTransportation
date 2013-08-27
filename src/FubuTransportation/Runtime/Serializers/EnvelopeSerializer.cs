@@ -9,7 +9,7 @@ namespace FubuTransportation.Runtime.Serializers
 {
     public interface IEnvelopeSerializer
     {
-        void Deserialize(Envelope envelope);
+        object Deserialize(Envelope envelope);
         void Serialize(Envelope envelope);
     }
 
@@ -24,7 +24,7 @@ namespace FubuTransportation.Runtime.Serializers
             _serializers = serializers;
         }
 
-        public void Deserialize(Envelope envelope)
+        public object Deserialize(Envelope envelope)
         {
             if (envelope.Data == null) throw new InvalidOperationException("No data on this envelope to deserialize");
 
@@ -33,7 +33,7 @@ namespace FubuTransportation.Runtime.Serializers
             
             using (var stream = new MemoryStream(envelope.Data))
             {
-                envelope.Message = serializer.Deserialize(stream);
+                return serializer.Deserialize(stream);
             }
         }
 

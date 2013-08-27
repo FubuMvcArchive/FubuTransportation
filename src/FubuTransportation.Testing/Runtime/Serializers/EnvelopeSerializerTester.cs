@@ -34,9 +34,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
             var o = new object();
             serializers[3].Stub(x => x.Deserialize(null)).IgnoreArguments().Return(o);
 
-            ClassUnderTest.Deserialize(theEnvelope);
-
-            theEnvelope.Message.ShouldBeTheSameAs(o);
+            ClassUnderTest.Deserialize(theEnvelope).ShouldBeTheSameAs(o);
         }
 
         [Test]
