@@ -29,6 +29,8 @@ namespace FubuTransportation.Runtime.Invocation
             get { return _envelope; }
         }
 
+        public IContinuation Continuation { get; set; }
+
         public void EnqueueCascading(object message)
         {
             var enumerable = message as IEnumerable<object>;

@@ -115,6 +115,17 @@ namespace FubuTransportation.Testing.Runtime
 
         // just to satisfy the interface
         public Envelope Envelope { get; set; }
+        public IContinuation Continuation { get; set; }
+
+        public bool Matches(Envelope envelope)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IContinuation Handle(Envelope envelope)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

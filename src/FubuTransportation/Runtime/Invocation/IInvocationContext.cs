@@ -18,5 +18,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         IEnumerable<object> OutgoingMessages();
         Envelope Envelope { get; }
+
+        IContinuation Continuation { get; set; }
     }
 }

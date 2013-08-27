@@ -94,6 +94,7 @@
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
     <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
+    <Compile Include="Runtime\Invocation\InvocationClasses.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />
     <Compile Include="Sagas\ISagaStorage.cs" />
     <Compile Include="Sagas\IStatefulSaga.cs" />

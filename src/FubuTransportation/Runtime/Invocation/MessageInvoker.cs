@@ -142,6 +142,17 @@ namespace FubuTransportation.Runtime.Invocation
             _logger.InfoMessage(() => new MessageFailed {Envelope = envelope, Exception = ex});
             _logger.Error(envelope.CorrelationId, ex);
         }
+
+        public bool Matches(Envelope envelope)
+        {
+            // NO, got to check to see if the chain exists!
+            throw new NotImplementedException();
+        }
+
+        public IContinuation Handle(Envelope envelope)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [Serializable]
