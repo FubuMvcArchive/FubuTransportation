@@ -124,7 +124,7 @@ namespace FubuTransportation.Testing.Runtime
         public IActionBehavior BuildBehavior(ServiceArguments arguments, Guid behaviorId)
         {
             Arguments = arguments.ShouldBeOfType<HandlerArguments>();
-            _cascadingMessages.Each(x => Arguments.Enqueue(x));
+            _cascadingMessages.Each(x => Arguments.EnqueueCascading(x));
 
             _chain.UniqueId.ShouldEqual(behaviorId);
 

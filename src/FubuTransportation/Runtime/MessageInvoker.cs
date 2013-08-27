@@ -13,8 +13,6 @@ using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Runtime
 {
-    // TODO -- need to apply unit tests to this thing as the error handling req's
-    // solidify
     public class MessageInvoker : IMessageInvoker
     {
         private readonly IServiceFactory _factory;
@@ -132,7 +130,7 @@ namespace FubuTransportation.Runtime
 
         private void sendCascadingMessages(Envelope envelope, HandlerArguments args)
         {
-            args.Each(o => {
+            args.OutgoingMessages().Each(o => {
                 var child = envelope.ForResponse(o);
                 _sender.Send(child);
             });

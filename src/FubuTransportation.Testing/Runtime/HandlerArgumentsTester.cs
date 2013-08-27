@@ -15,10 +15,10 @@ namespace FubuTransportation.Testing.Runtime
             var m1 = new Message1();
             var m2 = new Message2();
 
-            messages.Enqueue(m1);
-            messages.Enqueue(m2);
+            messages.EnqueueCascading(m1);
+            messages.EnqueueCascading(m2);
 
-            messages.ShouldHaveTheSameElementsAs(m1, m2);
+            messages.OutgoingMessages().ShouldHaveTheSameElementsAs(m1, m2);
         }
 
         [Test]
@@ -28,9 +28,9 @@ namespace FubuTransportation.Testing.Runtime
             var m1 = new Message1();
             var m2 = new Message2();
 
-            messages.Enqueue(new object[]{m1, m2});
+            messages.EnqueueCascading(new object[]{m1, m2});
 
-            messages.ShouldHaveTheSameElementsAs(m1, m2);
+            messages.OutgoingMessages().ShouldHaveTheSameElementsAs(m1, m2);
         }
     }
 
@@ -58,7 +58,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void registers_itself_as_the_outgoing_messages()
         {
-            theArgs.Get<IOutgoingMessages>().ShouldBeTheSameAs(theArgs);
+            theArgs.Get<IInvocationContext>().ShouldBeTheSameAs(theArgs);
         }
 
         [Test]

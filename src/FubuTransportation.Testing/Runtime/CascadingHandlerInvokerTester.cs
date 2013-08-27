@@ -43,7 +43,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void records_the_output_back_to_outgoing_messages()
         {
-            MockFor<IOutgoingMessages>().AssertWasCalled(x => x.Enqueue(expectedOutput));
+            MockFor<IInvocationContext>().AssertWasCalled(x => x.EnqueueCascading(expectedOutput));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void records_the_output_back_to_outgoing_messages()
         {
-            MockFor<IOutgoingMessages>().AssertWasCalled(x => x.Enqueue(expectedOutput));
+            MockFor<IInvocationContext>().AssertWasCalled(x => x.EnqueueCascading(expectedOutput));
         }
 
         [Test]

@@ -6,7 +6,7 @@ using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Runtime
 {
-    public class HandlerArguments : ServiceArguments, IOutgoingMessages
+    public class HandlerArguments : ServiceArguments, IInvocationContext
     {
         private readonly Envelope _envelope;
         private readonly IList<object> _messages = new List<object>();
@@ -21,7 +21,7 @@ namespace FubuTransportation.Runtime
             request.Set(inputType, _envelope.Message);
             
             Set(typeof(IFubuRequest), request);
-            Set(typeof(IOutgoingMessages), this);
+            Set(typeof(IInvocationContext), this);
             Set(typeof(Envelope), envelope);
         }
 
@@ -30,7 +30,7 @@ namespace FubuTransportation.Runtime
             get { return _envelope; }
         }
 
-        public void Enqueue(object message)
+        public void EnqueueCascading(object message)
         {
             var enumerable = message as IEnumerable<object>;
             if (enumerable == null)
@@ -43,14 +43,9 @@ namespace FubuTransportation.Runtime
             }
         }
 
-        public IEnumerator<object> GetEnumerator()
+        public IEnumerable<object> OutgoingMessages()
         {
-            return _messages.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return _messages;
         }
 
         protected bool Equals(HandlerArguments other)

@@ -10,10 +10,10 @@ namespace FubuTransportation.Runtime
     {
         private readonly IFubuRequest _request;
         private readonly THandler _handler;
-        private readonly IOutgoingMessages _messages;
+        private readonly IInvocationContext _messages;
         private readonly Func<THandler, TInput, TOutput> _action;
 
-        public CascadingHandlerInvoker(IFubuRequest request, THandler handler, Func<THandler, TInput, TOutput> action, IOutgoingMessages messages) : base(PartialBehavior.Executes)
+        public CascadingHandlerInvoker(IFubuRequest request, THandler handler, Func<THandler, TInput, TOutput> action, IInvocationContext messages) : base(PartialBehavior.Executes)
         {
             _request = request;
             _handler = handler;
@@ -26,7 +26,7 @@ namespace FubuTransportation.Runtime
             var input = _request.Find<TInput>().Single();
             var output = _action(_handler, input);
 
-            _messages.Enqueue(output);
+            _messages.EnqueueCascading(output);
 
             return DoNext.Continue;
         }

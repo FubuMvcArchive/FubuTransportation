@@ -81,7 +81,7 @@ namespace FubuTransportation.Testing.Runtime
 
     }
 
-    public class RecordingMessageInvoker : IMessageInvoker, IOutgoingMessages
+    public class RecordingMessageInvoker : IMessageInvoker, IInvocationContext
     {
         public IList<Envelope> Invoked = new List<Envelope>();
 
@@ -102,15 +102,18 @@ namespace FubuTransportation.Testing.Runtime
             return Responses.GetEnumerator();
         }
 
-        public void Enqueue(object message)
+        public void EnqueueCascading(object message)
         {
             Responses.Add(message);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public IEnumerable<object> OutgoingMessages()
         {
-            return GetEnumerator();
+            return Responses;
         }
+
+        // just to satisfy the interface
+        public Envelope Envelope { get; set; }
     }
 
 
