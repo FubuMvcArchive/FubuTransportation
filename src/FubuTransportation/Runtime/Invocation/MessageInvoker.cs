@@ -38,6 +38,8 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Invoke(Envelope envelope)
         {
+            envelope.UseSerializer(_serializer);
+
             if (envelope.IsDelayed(_systemTime.UtcNow()))
             {
                 try
@@ -51,11 +53,6 @@ namespace FubuTransportation.Runtime.Invocation
                 }
 
                 return;
-            }
-
-            if (envelope.Message == null)
-            {
-                envelope.Message = _serializer.Deserialize(envelope);
             }
 
             _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope});

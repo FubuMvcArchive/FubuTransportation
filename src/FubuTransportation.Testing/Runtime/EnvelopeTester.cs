@@ -1,7 +1,9 @@
 ﻿using System;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -260,6 +262,23 @@ namespace FubuTransportation.Testing.Runtime
             envelope.ExecutionTime = null;
 
             envelope.ExecutionTime.ShouldBeNull();
+        }
+
+        [Test]
+        public void use_serializer()
+        {
+            var envelope = new Envelope
+            {
+                Data = new byte[] {1, 2, 3, 4}
+            };
+
+            var serializer = MockRepository.GenerateMock<IEnvelopeSerializer>();
+            var theExpectedMessage = new object();
+            serializer.Stub(x => x.Deserialize(envelope)).Return(theExpectedMessage);
+
+            envelope.UseSerializer(serializer);
+
+            envelope.Message.ShouldBeTheSameAs(theExpectedMessage);
         }
     }
 }

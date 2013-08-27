@@ -143,32 +143,6 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
 
 
-    [TestFixture]
-    public class invocation_of_the_serialization : MessageInvokerContext
-    {
-        [Test]
-        public void do_deserialize_if_the_message_is_not_already_set()
-        {
-            theChain = null;
-            theEnvelope.Message = null;
-            
-
-            ClassUnderTest.Invoke(theEnvelope);
-
-            MockFor<IEnvelopeSerializer>().AssertWasCalled(x => x.Deserialize(theEnvelope));
-        }
-
-        [Test]
-        public void do_not_deserialize_if_the_envelope_message_is_not_null()
-        {
-            theChain = null;
-            theEnvelope.Message = new OneMessage();
-
-            ClassUnderTest.Invoke(theEnvelope);
-
-            MockFor<IEnvelopeSerializer>().AssertWasNotCalled(x => x.Deserialize(theEnvelope));
-        }
-    }
 
     [TestFixture]
     public class when_receiving_an_envelope_that_is_marked_as_a_response : MessageInvokerContext

@@ -7,6 +7,7 @@ using FubuMVC.Core.Http;
 using FubuCore;
 using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime
 {
@@ -42,6 +43,11 @@ namespace FubuTransportation.Runtime
             {
                 _message = new Lazy<object>(() => value);
             }
+        }
+
+        public void UseSerializer(IEnvelopeSerializer serializer)
+        {
+            _message = new Lazy<object>(() => serializer.Deserialize(this));
         }
 
 
