@@ -30,7 +30,21 @@ namespace FubuTransportation.Runtime
 
         public byte[] Data;
 
-        [NonSerialized] public object Message;
+        [NonSerialized]
+        private Lazy<object> _message;
+            
+            
+            
+        public object Message
+        {
+            get { return _message == null ? null : _message.Value; }   
+            set
+            {
+                _message = new Lazy<object>(() => value);
+            }
+        }
+
+
         [NonSerialized] private IMessageCallback _callback;
 
         // TODO -- do routing slip tracking later
