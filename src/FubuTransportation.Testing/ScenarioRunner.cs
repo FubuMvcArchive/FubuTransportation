@@ -12,7 +12,7 @@ using FubuTestingSupport;
 
 namespace FubuTransportation.Testing
 {
-    [TestFixture]
+    [TestFixture, Explicit]
     public class ScenarioRunner
     {
         [Test, Explicit]
@@ -28,6 +28,46 @@ namespace FubuTransportation.Testing
             });
         }
 
+        [Test]
+        public void send_a_single_message_to_the_correct_node()
+        {
+            var writer = new ScenarioWriter();
+
+            new Send_a_single_message_to_the_correct_node().Execute(writer);
+
+            writer.FailureCount.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Send_a_single_message_to_multiple_listening_nodes()
+        {
+            var writer = new ScenarioWriter();
+
+            new Send_a_single_message_to_multiple_listening_nodes().Execute(writer);
+
+            writer.FailureCount.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Send_a_message_that_raises_events()
+        {
+            var writer = new ScenarioWriter();
+
+            new Send_a_message_that_raises_events().Execute(writer);
+
+            writer.FailureCount.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Request_a_reply_for_a_single_message()
+        {
+            var writer = new ScenarioWriter();
+
+            new Request_a_reply_for_a_single_message().Execute(writer);
+
+            writer.FailureCount.ShouldEqual(0);
+        }
+
         [Test, Explicit]
         public void try_one()
         {
@@ -35,8 +75,8 @@ namespace FubuTransportation.Testing
 
             //new Send_a_single_message_to_the_correct_node().Execute(writer);
             //new Send_a_single_message_to_multiple_listening_nodes().Execute(writer);
-            //new Send_a_message_that_raises_events().Execute(writer);
-            new Request_a_reply_for_a_single_message().Execute(writer);
+            new Send_a_message_that_raises_events().Execute(writer);
+            //new Request_a_reply_for_a_single_message().Execute(writer);
 
             writer.FailureCount.ShouldEqual(0);
         }

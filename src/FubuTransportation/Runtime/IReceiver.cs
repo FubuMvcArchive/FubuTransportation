@@ -4,6 +4,6 @@ namespace FubuTransportation.Runtime
 {
     public interface IReceiver
     {
-        void Receive(Envelope envelope, IMessageCallback callback);
+        void Receive(Envelope envelope);
     }
 }

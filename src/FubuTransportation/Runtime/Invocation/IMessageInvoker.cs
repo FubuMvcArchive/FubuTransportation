@@ -2,7 +2,7 @@
 {
     public interface IMessageInvoker : IEnvelopeHandler
     {
-        void Invoke(Envelope envelope, IMessageCallback callback);
+        void Invoke(Envelope envelope);
         void InvokeNow<T>(T message);
     }
 }

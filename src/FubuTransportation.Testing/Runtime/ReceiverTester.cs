@@ -47,7 +47,8 @@ namespace FubuTransportation.Testing.Runtime
             var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
 
-            theReceiver.Receive(envelope, theCallback);
+            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
+            theReceiver.Receive(envelope);
 
             envelope.ContentType.ShouldEqual("text/json");
         }
@@ -60,8 +61,9 @@ namespace FubuTransportation.Testing.Runtime
 
             var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
+            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
 
-            theReceiver.Receive(envelope, theCallback);
+            theReceiver.Receive(envelope);
 
             envelope.ContentType.ShouldEqual("text/xml");
         }
@@ -74,8 +76,9 @@ namespace FubuTransportation.Testing.Runtime
 
             var envelope = new Envelope();
             envelope.ContentType = "text/plain";
+            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
 
-            theReceiver.Receive(envelope, theCallback);
+            theReceiver.Receive(envelope);
 
             envelope.ContentType.ShouldEqual("text/plain");
         }
@@ -88,7 +91,7 @@ namespace FubuTransportation.Testing.Runtime
 
         public IList<object> Responses = new List<object>(); 
 
-        public void Invoke(Envelope envelope, IMessageCallback callback)
+        public void Invoke(Envelope envelope)
         {
             Invoked.Add(envelope);
         }
@@ -152,11 +155,12 @@ namespace FubuTransportation.Testing.Runtime
 
             Services.Inject(theNode);
 
-            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null, null)).IgnoreArguments();
+            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null)).IgnoreArguments();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
+            envelope.Callback = theCallback;
 
-            ClassUnderTest.Receive(envelope, theCallback);
+            ClassUnderTest.Receive(envelope);
         }
 
         [Test]
@@ -168,7 +172,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_call_through_to_the_invoker()
         {
-            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(envelope, theCallback));
+            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(envelope));
         }
     }
 }

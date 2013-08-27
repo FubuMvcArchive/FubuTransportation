@@ -36,13 +36,13 @@ namespace FubuTransportation.Runtime.Invocation
             get { return _serializer; }
         }
 
-        public void Invoke(Envelope envelope, IMessageCallback callback)
+        public void Invoke(Envelope envelope)
         {
             if (envelope.IsDelayed(_systemTime.UtcNow()))
             {
                 try
                 {
-                    callback.MoveToDelayed();
+                    envelope.Callback.MoveToDelayed();
                     _logger.InfoMessage(() => new DelayedEnvelopeReceived{Envelope = envelope});
                 }
                 catch (Exception e)
@@ -64,7 +64,7 @@ namespace FubuTransportation.Runtime.Invocation
             if (envelope.ResponseId.IsNotEmpty())
             {
                 _logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope });
-                callback.MarkSuccessful();
+                envelope.Callback.MarkSuccessful();
                 return;
             }
 
@@ -72,11 +72,11 @@ namespace FubuTransportation.Runtime.Invocation
             if (chain == null)
             {
                 _logger.InfoMessage(() => new NoHandlerForMessage { Envelope = envelope });
-                callback.MarkSuccessful();
+                envelope.Callback.MarkSuccessful();
                 return;
             }
 
-            ExecuteChain(envelope, chain, callback);
+            ExecuteChain(envelope, chain);
 
 
         }
@@ -105,7 +105,7 @@ namespace FubuTransportation.Runtime.Invocation
         }
 
 
-        public virtual void ExecuteChain(Envelope envelope, HandlerChain chain, IMessageCallback callback)
+        public virtual void ExecuteChain(Envelope envelope, HandlerChain chain)
         {
             using (new ChainExecutionWatcher(_logger, chain, envelope))
             {
@@ -117,12 +117,12 @@ namespace FubuTransportation.Runtime.Invocation
                     behavior.Invoke();
                     sendCascadingMessages(envelope, args);
 
-                    callback.MarkSuccessful();
+                    envelope.Callback.MarkSuccessful();
                     _logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope});
                 }
                 catch (Exception ex)
                 {
-                    logFailure(envelope, callback, ex);
+                    logFailure(envelope, ex);
                 }
             }
         }
@@ -136,9 +136,9 @@ namespace FubuTransportation.Runtime.Invocation
         }
 
 
-        private void logFailure(Envelope envelope, IMessageCallback callback, Exception ex)
+        private void logFailure(Envelope envelope, Exception ex)
         {
-            callback.MarkFailed();
+            envelope.Callback.MarkFailed();
             _logger.InfoMessage(() => new MessageFailed {Envelope = envelope, Exception = ex});
             _logger.Error(envelope.CorrelationId, ex);
         }

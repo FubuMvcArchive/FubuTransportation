@@ -151,8 +151,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theChain = null;
             theEnvelope.Message = null;
+            
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
 
             MockFor<IEnvelopeSerializer>().AssertWasCalled(x => x.Deserialize(theEnvelope));
         }
@@ -163,7 +164,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theChain = null;
             theEnvelope.Message = new OneMessage();
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
 
             MockFor<IEnvelopeSerializer>().AssertWasNotCalled(x => x.Deserialize(theEnvelope));
         }
@@ -178,10 +179,10 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theEnvelope.ResponseId = Guid.NewGuid().ToString();
 
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain, theCallback))
+            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
                           .Repeat.Never();
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -219,10 +220,10 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theChain = null;
 
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain, theCallback))
+            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
                           .IgnoreArguments().Repeat.Never();
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -261,9 +262,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theChain = new HandlerChain();
 
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain, theCallback));
+            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -324,7 +325,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
 
 
-            ClassUnderTest.ExecuteChain(theEnvelope, theChain, theCallback);
+            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
         }
 
         [Test]
@@ -356,7 +357,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(10);
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -390,9 +391,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theChain = new HandlerChain();
 
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain, theCallback));
+            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
 
-            ClassUnderTest.Invoke(theEnvelope, theCallback);
+            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -421,7 +422,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theExceptionThrown = new NotImplementedException();
             theBehavior.Expect(x => x.Invoke()).Throw(theExceptionThrown);
 
-            ClassUnderTest.ExecuteChain(theEnvelope, theChain, theCallback);
+            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
         }
 
         [Test]
@@ -457,6 +458,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theEnvelope = new Envelope {Data = new byte[] {1, 2, 3, 4}, Message = new OneMessage()};
             theCallback = MockFor<IMessageCallback>();
+
+            theEnvelope.Callback = theCallback;
+
             theLogger = new RecordingLogger();
 
             Services.Inject<ILogger>(theLogger);

@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         public void Consume(Message message)
         {
-            message.Source = _envelope.Source;
+            message.Source = _envelope.ReceivedAt;
             message.Envelope = _envelope;
 
             MessageHistory.Record(MessageTrack.ForReceived(message, message.Id.ToString()));

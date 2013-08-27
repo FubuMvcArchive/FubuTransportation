@@ -11,11 +11,11 @@ namespace FubuTransportation.Testing
     {
         public IList<Envelope> Received = new List<Envelope>(); 
 
-        public void Receive(Envelope envelope, IMessageCallback callback)
+        public void Receive(Envelope envelope)
         {
             Received.Add(envelope);
 
-            callback.MarkSuccessful();
+            envelope.Callback.MarkSuccessful();
         }
     }
 

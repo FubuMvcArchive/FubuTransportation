@@ -22,12 +22,14 @@ namespace FubuTransportation.Runtime
             _address = node.Uri;
         }
 
-        public void Receive(Envelope envelope, IMessageCallback callback)
+        public void Receive(Envelope envelope)
         {
+            if (envelope.Callback == null) throw new InvalidOperationException("Envelope.Callback cannot be null in this method");
+
             envelope.ReceivedAt = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
-            _messageInvoker.Invoke(envelope, callback);
+            _messageInvoker.Invoke(envelope);
         }
 
         protected bool Equals(Receiver other)

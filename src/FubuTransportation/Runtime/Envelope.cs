@@ -6,6 +6,7 @@ using System.Xml;
 using FubuMVC.Core.Http;
 using FubuCore;
 using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Runtime
 {
@@ -30,6 +31,7 @@ namespace FubuTransportation.Runtime
         public byte[] Data;
 
         [NonSerialized] public object Message;
+        [NonSerialized] private IMessageCallback _callback;
 
         // TODO -- do routing slip tracking later
 
@@ -42,6 +44,19 @@ namespace FubuTransportation.Runtime
         {
             Headers = new NameValueHeaders();
             CorrelationId = Guid.NewGuid().ToString();
+        }
+
+        public Envelope(byte[] data, IHeaders headers, IMessageCallback callback)
+        {
+            Data = data;
+            Callback = callback;
+            Headers = headers;
+        }
+
+        public IMessageCallback Callback
+        {
+            get { return _callback; }
+            set { _callback = value; }
         }
 
         public Uri Source

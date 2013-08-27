@@ -66,6 +66,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         protected Envelope sendMessage(params Message[] message)
         {
             var envelope = new Envelope();
+            envelope.Callback = theCallback;
             envelope.Message = message.Length == 1 ? (object) message.Single() : message.Select(x => x as object).ToArray();
 
             sendEnvelope(envelope);
@@ -80,7 +81,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             _invoker.Value.As<MessageInvoker>().Serializer.Serialize(envelope);
             envelope.Message = null;
         
-            _invoker.Value.Invoke(envelope, theCallback);
+            _invoker.Value.Invoke(envelope);
         }
 
         
