@@ -30,7 +30,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             message.Headers["b"] = "2";
             message.Headers["c"] = "3";
 
-            theEnvelope = RhinoQueuesChannel.ToEnvelope(message);
+            theEnvelope = message.ToEnvelope();
         }
 
         [Test]

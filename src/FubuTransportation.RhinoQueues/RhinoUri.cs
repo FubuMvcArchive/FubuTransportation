@@ -61,4 +61,17 @@ namespace FubuTransportation.RhinoQueues
             get { return _queueName; }
         }
     }
+
+    public static class UriExtensions
+    {
+        public static RhinoUri ToRhinoUri(this Uri uri)
+        {
+            return new RhinoUri(uri);
+        }
+
+        public static RhinoUri ToRhinoUri(this string uri)
+        {
+            return new RhinoUri(uri);
+        }
+    }
 }

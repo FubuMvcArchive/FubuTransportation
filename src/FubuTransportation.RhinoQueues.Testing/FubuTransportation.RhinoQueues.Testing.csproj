@@ -95,7 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Full_end_to_end_delayed_message_processing_with_in_memory_queues.cs" />
+    <Compile Include="Full_end_to_end_delayed_message_processing_with_Rhino_Queues.cs" />
     <Compile Include="PersistentQueueTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RhinoQueuesChannelTester.cs" />

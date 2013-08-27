@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Transactions;
+using FubuCore.Dates;
+using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Runtime;
 using Rhino.Queues;
@@ -10,29 +13,17 @@ namespace FubuTransportation.RhinoQueues
 {
     public class PersistentQueues : IPersistentQueues
     {
+        private readonly ILogger _logger;
         // TODO -- Corey, does this need to be unique per endpoint??????
         public const string EsentPath = "fubutransportation.esent";
 
         private readonly Cache<IPEndPoint, QueueManager> _queueManagers =
             new Cache<IPEndPoint, QueueManager>(ip => new QueueManager(ip, EsentPath));
 
-
-//        public void Start()
-//        {
-//            var queueNames = _settings.Queues.Select(x => x.QueueName).ToArray();
-//            _queueManager.CreateQueues(queueNames);
-//            _queueManager.Start();
-//        }
-//
-//        public void Send(Uri destination, MessagePayload messagePayload)
-//        {
-//            _queueManager.Send(destination, messagePayload);
-//        }
-//
-//        public Message Receive(string queueName)
-//        {
-//            return _queueManager.Receive(queueName);
-//        }
+        public PersistentQueues(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void Dispose()
         {
@@ -69,15 +60,32 @@ namespace FubuTransportation.RhinoQueues
 
         public IEnumerable<Envelope> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
         {
-            // Corey,
-            // My thought here is within a transaction we'll move all the messages from the "Delayed" queue back to the
-            // queue specified by the "Received-At" header, then return an enumerable of the Envelope's that are getting
-            // moved back in for the purpose of auditing.  I'm not completely sure what the easiest thing to do w/
-            // the rhino queue API is and betting you do.
+            var list = new List<Envelope>();
 
-            throw new NotImplementedException();
-//            var queue = queueManager.GetQueue(RhinoQueuesTransport.DelayedQueueName);
-//            queue.EnqueueDirectlyTo();        
+            var transactionalScope = queueManager.BeginTransactionalScope();
+
+
+            try
+            {
+                var messages = queueManager.GetQueue(RhinoQueuesTransport.DelayedQueueName).GetAllMessages(null)
+                    .Where(x => x.ExecutionTime() <= currentTime).ToArray();
+
+                messages.Each(msg => {
+                    var uri = msg.Headers[Envelope.ReceivedAtKey].ToRhinoUri();
+                    queueManager.MoveTo(uri.QueueName, msg);
+
+                    list.Add(new Envelope());
+                });
+
+                transactionalScope.Commit();
+            }
+            catch (Exception e)
+            {
+                transactionalScope.Rollback();
+                _logger.Error("Error trying to move delayed messages back to the original queue", e);
+            }
+
+            return list;
         }
     }
 }

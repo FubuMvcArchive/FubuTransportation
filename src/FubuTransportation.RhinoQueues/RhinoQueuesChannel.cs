@@ -59,21 +59,11 @@ namespace FubuTransportation.RhinoQueues
                 var transactionalScope = _queueManager.BeginTransactionalScope();
                 var message = transactionalScope.Receive(queueName);
 
-                var envelope = ToEnvelope(message);
+                var envelope = message.ToEnvelope();
 
                 receiver.Receive(envelope, new TransactionCallback(transactionalScope, message, _queueManager));
             }
 
-        }
-
-        public static Envelope ToEnvelope(Message message)
-        {
-            var envelope = new Envelope(new NameValueHeaders(message.Headers))
-            {
-                Data = message.Data
-            };
-
-            return envelope;
         }
 
         public void Dispose()
@@ -110,6 +100,24 @@ namespace FubuTransportation.RhinoQueues
             //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
 
+        }
+    }
+
+    public static class MessageExtensions
+    {
+        public static Envelope ToEnvelope(this Message message)
+        {
+            var envelope = new Envelope(new NameValueHeaders(message.Headers))
+            {
+                Data = message.Data
+            };
+
+            return envelope;
+        }
+
+        public static DateTime ExecutionTime(this Message message)
+        {
+            return message.ToEnvelope().ExecutionTime.Value;
         }
     }
 }

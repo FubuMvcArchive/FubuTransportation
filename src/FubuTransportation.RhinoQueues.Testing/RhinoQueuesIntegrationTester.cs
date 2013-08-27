@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FubuCore;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -27,7 +28,7 @@ namespace FubuTransportation.RhinoQueues.Testing
             node.Uri = new Uri("rhino.queues://localhost:2020/upstream");
             node.Incoming = true;
 
-            queues = new PersistentQueues();
+            queues = new PersistentQueues(new RecordingLogger());
             transport = new RhinoQueuesTransport(queues, new RhinoQueueSettings());
 
             transport.OpenChannels(graph);

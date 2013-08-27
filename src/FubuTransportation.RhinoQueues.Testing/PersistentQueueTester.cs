@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using NUnit.Framework;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace FubuTransportation.RhinoQueues.Testing
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void creates_queues_when_started()
         {
-            using (var queues = new PersistentQueues())
+            using (var queues = new PersistentQueues(new RecordingLogger()))
             {
                 queues.Start(new RhinoUri[]
                 {

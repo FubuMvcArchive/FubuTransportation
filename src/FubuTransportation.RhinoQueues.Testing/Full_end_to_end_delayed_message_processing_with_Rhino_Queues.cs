@@ -1,23 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
-using Bottles.Services.Messaging.Tracking;
 using FubuCore;
 using FubuCore.Dates;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
-using FubuTransportation.InMemory;
-using FubuTransportation.Polling;
-using FubuTransportation.Runtime.Delayed;
+using FubuTransportation.Testing;
+using FubuTransportation.Testing.InMemory;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using StructureMap;
 
-namespace FubuTransportation.Testing.InMemory
+namespace FubuTransportation.RhinoQueues.Testing
 {
-    [TestFixture, Ignore("Need a bit of help from Corey on this one")]
-    public class Full_end_to_end_delayed_message_processing_with_in_memory_queues
+    [TestFixture, Explicit]
+    public class Full_end_to_end_delayed_message_processing_with_Rhino_Queues
     {
         private IServiceBus theServiceBus;
         private SettableClock theClock;

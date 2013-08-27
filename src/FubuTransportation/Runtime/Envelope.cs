@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml;
 using FubuMVC.Core.Http;
 using FubuCore;
 
@@ -118,7 +120,7 @@ namespace FubuTransportation.Runtime
 
         public DateTime? ExecutionTime
         {
-            get { return Headers.Has(ExecutionTimeKey) ? DateTime.Parse(Headers[ExecutionTimeKey]) : (DateTime?) null; }
+            get { return Headers.Has(ExecutionTimeKey) ? XmlConvert.ToDateTime(Headers[ExecutionTimeKey], XmlDateTimeSerializationMode.Utc) : (DateTime?)null; }
             set
             {
                 if (value == null)
@@ -127,7 +129,7 @@ namespace FubuTransportation.Runtime
                 }
                 else
                 {
-                    Headers[ExecutionTimeKey] = value.Value.ToUniversalTime().ToString();
+                    Headers[ExecutionTimeKey] = value.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                 }
                 
             }
