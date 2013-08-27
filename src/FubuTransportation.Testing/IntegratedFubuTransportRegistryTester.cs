@@ -8,6 +8,7 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
 using System.Linq;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.InMemory
 {

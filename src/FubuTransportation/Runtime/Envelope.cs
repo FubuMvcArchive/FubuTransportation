@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using FubuMVC.Core.Http;
 using FubuCore;
+using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
 {

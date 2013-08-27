@@ -4,6 +4,8 @@ using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using System.Linq;
 

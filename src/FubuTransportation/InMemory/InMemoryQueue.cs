@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Runtime;
 using System.Linq;
+using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.InMemory
 {

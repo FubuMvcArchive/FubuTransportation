@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Testing
 {

@@ -8,6 +8,7 @@ using FubuMVC.Core;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Registration.Nodes
 {

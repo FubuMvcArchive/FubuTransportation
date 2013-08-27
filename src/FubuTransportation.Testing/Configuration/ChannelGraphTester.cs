@@ -4,6 +4,8 @@ using FubuCore.Logging;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Collections.Generic;

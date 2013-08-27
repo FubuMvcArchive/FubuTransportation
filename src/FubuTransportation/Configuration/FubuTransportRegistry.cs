@@ -17,6 +17,7 @@ using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
 
 namespace FubuTransportation.Configuration

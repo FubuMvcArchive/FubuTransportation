@@ -3,6 +3,7 @@ using FubuCore.Reflection;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using NUnit.Framework;
 using Rhino.Mocks;

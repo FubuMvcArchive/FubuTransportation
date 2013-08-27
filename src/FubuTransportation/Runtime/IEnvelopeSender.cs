@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Logging;
 using FubuTransportation.Logging;
+using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime
 {

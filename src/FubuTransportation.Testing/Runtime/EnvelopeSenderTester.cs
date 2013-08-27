@@ -5,6 +5,7 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;

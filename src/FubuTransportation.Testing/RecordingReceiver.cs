@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Testing
 {

@@ -8,6 +8,8 @@ using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.TestSupport;
 using NUnit.Framework;
 using System.Linq;

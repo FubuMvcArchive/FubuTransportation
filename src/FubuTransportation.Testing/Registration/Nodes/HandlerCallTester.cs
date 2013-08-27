@@ -5,6 +5,7 @@ using FubuMVC.Core.Registration.Nodes;
 using FubuTestingSupport;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Registration.Nodes

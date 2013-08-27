@@ -1,4 +1,4 @@
-﻿using FubuTransportation.Runtime;
+using FubuTransportation.Runtime;
 using LightningQueues;
 using LightningQueues.Model;
 

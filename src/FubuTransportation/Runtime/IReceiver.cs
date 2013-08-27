@@ -1,4 +1,6 @@
-﻿namespace FubuTransportation.Runtime
+﻿using FubuTransportation.Runtime.Invocation;
+
+namespace FubuTransportation.Runtime
 {
     public interface IReceiver
     {
