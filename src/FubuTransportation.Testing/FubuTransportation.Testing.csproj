@@ -124,7 +124,8 @@
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandlerTester.cs" />
-    <Compile Include="Runtime\Invocation\ChainExecutionTester.cs" />
+    <Compile Include="Runtime\Invocation\ChainFailureContinuationTester.cs" />
+    <Compile Include="Runtime\Invocation\ChainSuccessContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandlerTester.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Runtime\Invocation\CascadingHandlerInvokerTester.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessorTester.cs" />
     <Compile Include="Runtime\Delayed\Delayed_Processing_Job_Registration_Tester.cs" />
-    <Compile Include="Runtime\Invocation\MessageInvokerTester.cs" />
+    <Compile Include="Runtime\Invocation\ChainInvokerTester.cs" />
     <Compile Include="Runtime\SubscriptionsIntegrationTester.cs" />
     <Compile Include="Runtime\EnvelopeSenderTester.cs" />
     <Compile Include="Runtime\Serializers\EnvelopeSerializerIntegratedTester.cs" />
@@ -148,7 +149,7 @@
     <Compile Include="Runtime\Headers\Headers_testing.cs" />
     <Compile Include="InMemory\InMemoryReplyQueueIntegratedTester.cs" />
     <Compile Include="Runtime\Invocation\multiple_handlers_for_one_message.cs" />
-    <Compile Include="Runtime\Invocation\HandlerArgumentsTester.cs" />
+    <Compile Include="Runtime\Invocation\InvocationContextTester.cs" />
     <Compile Include="Runtime\ReceiverTester.cs" />
     <Compile Include="Runtime\RecordingEnvelopeSender.cs" />
     <Compile Include="Runtime\ReplyListenerTester.cs" />

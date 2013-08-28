@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         private readonly HandlerChain _chain;
         private readonly IActionBehavior _behavior;
         private readonly object[] _cascadingMessages;
-        public HandlerArguments Arguments;
+        public FubuTransportation.Runtime.Invocation.InvocationContext Arguments;
 
         public StubServiceFactory(HandlerChain chain, IActionBehavior behavior, params object[] cascadingMessages)
         {
@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
         public IActionBehavior BuildBehavior(ServiceArguments arguments, Guid behaviorId)
         {
-            Arguments = arguments.ShouldBeOfType<HandlerArguments>();
+            Arguments = arguments.ShouldBeOfType<FubuTransportation.Runtime.Invocation.InvocationContext>();
             _cascadingMessages.Each(x => Arguments.EnqueueCascading(x));
 
             _chain.UniqueId.ShouldEqual(behaviorId);

@@ -5,12 +5,12 @@ using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    public class HandlerArguments : ServiceArguments, IInvocationContext
+    public class InvocationContext : ServiceArguments, IInvocationContext
     {
         private readonly Envelope _envelope;
         private readonly IList<object> _messages = new List<object>();
 
-        public HandlerArguments(Envelope envelope)
+        public InvocationContext(Envelope envelope)
         {
             if (envelope == null) throw new ArgumentNullException("envelope");
             
@@ -49,7 +49,7 @@ namespace FubuTransportation.Runtime.Invocation
             return _messages;
         }
 
-        protected bool Equals(HandlerArguments other)
+        protected bool Equals(InvocationContext other)
         {
             return Equals(_envelope, other._envelope);
         }
@@ -59,7 +59,7 @@ namespace FubuTransportation.Runtime.Invocation
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((HandlerArguments) obj);
+            return Equals((InvocationContext) obj);
         }
 
         public override int GetHashCode()

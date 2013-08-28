@@ -35,18 +35,6 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         }
 
         [Test]
-        public void successful_processing_calls_back_on_the_envelope()
-        {
-            handler<OneHandler, TwoHandler, ThreeHandler, FourHandler>();
-
-            var theMessage = new TwoMessage();
-            sendMessage(theMessage);
-
-            theCallback.AssertWasCalled(x => x.MarkSuccessful());
-
-        }
-
-        [Test]
         public void single_message_for_single_handler_three()
         {
             handler<OneHandler, TwoHandler, ThreeHandler, FourHandler>();

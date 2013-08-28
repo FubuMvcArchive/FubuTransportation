@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
-using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -38,6 +36,7 @@ namespace FubuTransportation.Runtime.Invocation
             ExecuteChain(envelope, chain);
         }
 
+        // TODO -- start moving much more of this code into IServiceBus
         public void InvokeNow<T>(T message)
         {
             // TODO -- log failures, but throw the exception
@@ -48,7 +47,7 @@ namespace FubuTransportation.Runtime.Invocation
                 throw new NoHandlerException(typeof (T));
             }
 
-            var args = new HandlerArguments(envelope);
+            var args = new InvocationContext(envelope);
             var behavior = _factory.BuildBehavior(args, chain.UniqueId);
             behavior.Invoke();
 
@@ -64,78 +63,17 @@ namespace FubuTransportation.Runtime.Invocation
         }
 
 
-        public void ExecuteChain(Envelope envelope, HandlerChain chain)
+        public IInvocationContext ExecuteChain(Envelope envelope, HandlerChain chain)
         {
             using (new ChainExecutionWatcher(_logger, chain, envelope))
             {
-                var args = new HandlerArguments(envelope);
-                var behavior = _factory.BuildBehavior(args, chain.UniqueId);
+                var context = new InvocationContext(envelope);
+                var behavior = _factory.BuildBehavior(context, chain.UniqueId);
+                
+                behavior.Invoke();
 
-                try
-                {
-                    behavior.Invoke();
-                    _sender.SendOutgoingMessages(envelope, args.OutgoingMessages());
-
-                    envelope.Callback.MarkSuccessful();
-                    _logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope.ToToken()});
-                }
-                catch (Exception ex)
-                {
-                    logFailure(envelope, ex);
-                }
+                return context;
             }
-        }
-
-        private void logFailure(Envelope envelope, Exception ex)
-        {
-            envelope.Callback.MarkFailed();
-            _logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = ex});
-            _logger.Error(envelope.CorrelationId, ex);
-        }
-    }
-
-    public class ChainSuccessContinuation : IContinuation
-    {
-        private readonly IEnvelopeSender _sender;
-        private readonly IInvocationContext _context;
-
-        public ChainSuccessContinuation(IEnvelopeSender sender, IInvocationContext context)
-        {
-            _sender = sender;
-            _context = context;
-        }
-
-        public void Execute(Envelope envelope, ILogger logger)
-        {
-            _sender.SendOutgoingMessages(envelope, _context.OutgoingMessages());
-
-            envelope.Callback.MarkSuccessful();
-            logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
-        }
-    }
-
-    public class ChainFailureContinuation : IContinuation
-    {
-        private readonly Exception _ex;
-
-        public ChainFailureContinuation(Exception ex)
-        {
-            _ex = ex;
-        }
-
-        public void Execute(Envelope envelope, ILogger logger)
-        {
-            envelope.Callback.MarkFailed();
-            logger.InfoMessage(() => new MessageFailed { Envelope = envelope.ToToken(), Exception = _ex });
-            logger.Error(envelope.CorrelationId, _ex);
-        }
-    }
-
-    public class NoHandlerException : Exception
-    {
-        public NoHandlerException(Type messageType)
-            : base("No registered handler for message type " + messageType.FullName)
-        {
         }
     }
 }

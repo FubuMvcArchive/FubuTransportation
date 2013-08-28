@@ -1,4 +1,5 @@
-﻿using FubuTestingSupport;
+﻿using System;
+using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -8,7 +9,7 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class ChainExecutionEnvelopeHandlerTester : InteractionContext<ChainExecutionEnvelopeHandler>
+    public class when_the_chain_does_not_exist : InteractionContext<ChainExecutionEnvelopeHandler>
     {
         private Envelope theEnvelope;
         private IChainInvoker theInvoker;
@@ -17,29 +18,77 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theEnvelope = ObjectMother.Envelope();
             theInvoker = MockFor<IChainInvoker>();
-        }
 
-        [Test]
-        public void handle_with_no_matching_chain()
-        {
             theInvoker.Stub(x => x.FindChain(theEnvelope))
                       .Return(null);
-
-            ClassUnderTest.Handle(theEnvelope).ShouldBeNull();
         }
 
         [Test]
-        public void handle_with_a_matching_chain()
+        public void should_not_return_any_continuation()
         {
-            var chain = new HandlerChain();
+            ClassUnderTest.Handle(theEnvelope).ShouldBeNull();
+        }
+    }
+
+
+    [TestFixture]
+    public class when_there_is_a_chain : InteractionContext<ChainExecutionEnvelopeHandler>
+    {
+        private Envelope theEnvelope;
+        private IChainInvoker theInvoker;
+        private HandlerChain theChain;
+
+        protected override void beforeEach()
+        {
+            theEnvelope = ObjectMother.Envelope();
+            theInvoker = MockFor<IChainInvoker>();
+            theChain = new HandlerChain();
 
             theInvoker.Stub(x => x.FindChain(theEnvelope))
-                      .Return(chain);
+                      .Return(theChain);
+        }
 
-            var continuation = ClassUnderTest.Handle(theEnvelope).ShouldBeOfType<ChainExecution>();
+        [Test]
+        public void if_the_chain_invocation_succeeds_and_there_is_no_explicit_continuation_use_successful_continuation()
+        {
+            theInvoker.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+                      .Return(MockFor<IInvocationContext>());
 
-            continuation.Chain.ShouldBeTheSameAs(chain);
-            continuation.Invoker.ShouldBeTheSameAs(theInvoker);
+            MockFor<IInvocationContext>().Stub(x => x.Continuation).Return(null);
+
+
+            ClassUnderTest.Handle(theEnvelope)
+                          .ShouldBeOfType<ChainSuccessContinuation>()
+                          .Context.ShouldBeTheSameAs(MockFor<IInvocationContext>());
+
+        }
+
+        [Test]
+        public void if_the_chain_invocation_succeeds_and_there_is_an_explicit_continuation()
+        {
+            theInvoker.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+                      .Return(MockFor<IInvocationContext>());
+
+            var explicitContinuation = MockRepository.GenerateMock<IContinuation>();
+            MockFor<IInvocationContext>().Stub(x => x.Continuation).Return(explicitContinuation);
+
+
+            ClassUnderTest.Handle(theEnvelope)
+                          .ShouldBeTheSameAs(explicitContinuation);
+        }
+
+        [Test]
+        public void if_the_chain_invocation_blows_up_return_a_chain_failure_continuation()
+        {
+            var exception = new NotImplementedException();
+
+            theInvoker.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+                      .Throw(exception);
+
+            ClassUnderTest.Handle(theEnvelope)
+                          .ShouldBeOfType<ChainFailureContinuation>()
+                          .Exception.ShouldBeTheSameAs(exception);
+
         }
     }
 }

@@ -1,12 +1,16 @@
-﻿namespace FubuTransportation.Runtime.Invocation
+﻿using System;
+
+namespace FubuTransportation.Runtime.Invocation
 {
     public class ChainExecutionEnvelopeHandler : IEnvelopeHandler
     {
         private readonly IChainInvoker _invoker;
+        private readonly IEnvelopeSender _sender;
 
-        public ChainExecutionEnvelopeHandler(IChainInvoker invoker)
+        public ChainExecutionEnvelopeHandler(IChainInvoker invoker, IEnvelopeSender sender)
         {
             _invoker = invoker;
+            _sender = sender;
         }
 
         public IContinuation Handle(Envelope envelope)
@@ -17,9 +21,17 @@
                 return null;
             }
 
-            
+            try
+            {
+                var context = _invoker.ExecuteChain(envelope, chain);
+                return context.Continuation ?? new ChainSuccessContinuation(_sender, context);
 
-            return new ChainExecution(_invoker, chain);
+            }
+            catch (Exception ex)
+            {
+                // TODO -- might be nice to capture the Chain
+                return new ChainFailureContinuation(ex);
+            }
         }
     }
 }

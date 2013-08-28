@@ -100,14 +100,16 @@
     <Compile Include="Runtime\Delayed\DelayedMessageCache.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
-    <Compile Include="Runtime\Invocation\ChainExecution.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
+    <Compile Include="Runtime\Invocation\ChainFailureContinuation.cs" />
+    <Compile Include="Runtime\Invocation\ChainSuccessContinuation.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipeline.cs" />
     <Compile Include="Runtime\Invocation\IContinuation.cs" />
     <Compile Include="Runtime\Invocation\IEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\IHandlerPipeline.cs" />
+    <Compile Include="Runtime\Invocation\NoHandlerException.cs" />
     <Compile Include="Runtime\Invocation\SimpleEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\NoSubscriberHandler.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandler.cs" />
@@ -161,7 +163,7 @@
     <Compile Include="Runtime\Headers\DictionaryHeaders.cs" />
     <Compile Include="Runtime\Envelope.cs" />
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
-    <Compile Include="Runtime\Invocation\HandlerArguments.cs" />
+    <Compile Include="Runtime\Invocation\InvocationContext.cs" />
     <Compile Include="Runtime\IChannel.cs" />
     <Compile Include="Runtime\ISubscriptions.cs" />
     <Compile Include="Runtime\IEnvelopeSender.cs" />

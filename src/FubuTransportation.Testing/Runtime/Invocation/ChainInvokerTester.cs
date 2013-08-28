@@ -48,16 +48,16 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     public class when_executing_the_chain_happy_path : MessageInvokerContext
     {
         private IActionBehavior theBehavior;
-        private HandlerArguments handlerArguments;
+        private FubuTransportation.Runtime.Invocation.InvocationContext _invocationContext;
 
         protected override void theContextIs()
         {
             theBehavior = MockFor<IActionBehavior>();
             theChain = new HandlerChain();
 
-            handlerArguments = new HandlerArguments(theEnvelope);
+            _invocationContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
 
-            MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(handlerArguments, theChain.UniqueId))
+            MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(_invocationContext, theChain.UniqueId))
                 .Return(theBehavior);
 
 
@@ -71,61 +71,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theBehavior.AssertWasCalled(x => x.Invoke());
         }
 
-        [Test]
-        public void should_mark_the_callback_as_successful()
-        {
-            theCallback.AssertWasCalled(x => x.MarkSuccessful());
-        }
 
-        [Test]
-        public void should_log_message_successful()
-        {
-            assertInfoMessageWasLogged(new MessageSuccessful { Envelope = theEnvelope.ToToken() });
-        }
-
-    }
-
-
-    [TestFixture]
-    public class when_executing_the_chain_and_if_fails : MessageInvokerContext
-    {
-        private IActionBehavior theBehavior;
-        private HandlerArguments handlerArguments;
-        private NotImplementedException theExceptionThrown;
-
-        protected override void theContextIs()
-        {
-            theBehavior = MockFor<IActionBehavior>();
-            theChain = new HandlerChain();
-            handlerArguments = new HandlerArguments(theEnvelope);
-
-            MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(handlerArguments, theChain.UniqueId))
-                .Return(theBehavior);
-
-            theExceptionThrown = new NotImplementedException();
-            theBehavior.Expect(x => x.Invoke()).Throw(theExceptionThrown);
-            
-            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
-        }
-
-        [Test]
-        public void should_mark_the_callback_as_failed()
-        {
-            theCallback.AssertWasCalled(x => x.MarkFailed());
-        }
-
-        [Test]
-        public void should_log_failure_message()
-        {
-            assertInfoMessageWasLogged(new MessageFailed{Envelope = theEnvelope.ToToken(), Exception = theExceptionThrown});
-        }
-
-        [Test]
-        public void should_log_the_exception()
-        {
-            var report = theLogger.ErrorMessages.OfType<ExceptionReport>().Single();
-            report.ExceptionText.ShouldEqual(theExceptionThrown.ToString());
-        }
     }
 
     

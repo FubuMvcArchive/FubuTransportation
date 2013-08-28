@@ -7,12 +7,12 @@ using FubuTestingSupport;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class HandlerArgumentsTester
+    public class InvocationContextTester
     {
         [Test]
         public void enqueue()
         {
-            var messages = new HandlerArguments(new Envelope{Message = new Message1()});
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Message1()});
             var m1 = new Message1();
             var m2 = new Message2();
 
@@ -23,9 +23,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         }
 
         [Test]
-        public void nequeue_an_oject_array()
+        public void enqueue_an_oject_array()
         {
-            var messages = new HandlerArguments(new Envelope{Message = new Message1()});
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Message1()});
             var m1 = new Message1();
             var m2 = new Message2();
 
@@ -39,14 +39,14 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     public class when_building_a_new_handler_arguments_object
     {
         private Envelope theEnvelope;
-        private HandlerArguments theArgs;
+        private FubuTransportation.Runtime.Invocation.InvocationContext theArgs;
 
         [SetUp]
         public void SetUp()
         {
             theEnvelope = new Envelope{Message = new Message2()};
 
-            theArgs = new HandlerArguments(theEnvelope);
+            theArgs = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
         }
 
         [Test]
