@@ -124,6 +124,9 @@
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandlerTester.cs" />
+    <Compile Include="Runtime\Invocation\StubServiceFactory.cs" />
+    <Compile Include="Runtime\Invocation\WhenInvokingWithNoHandlerForMessageType.cs" />
+    <Compile Include="Runtime\Invocation\when_invoking_a_message_right_now_happy_path.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\Serializers\BinarySerializerTester.cs" />
     <Compile Include="Runtime\Invocation\CascadingHandlerInvokerTester.cs" />

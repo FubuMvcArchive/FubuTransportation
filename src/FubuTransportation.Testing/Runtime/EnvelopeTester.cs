@@ -1,9 +1,11 @@
 ﻿using System;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
 using Rhino.Mocks;
+using FubuCore;
 
 namespace FubuTransportation.Testing.Runtime
 {
@@ -20,6 +22,23 @@ namespace FubuTransportation.Testing.Runtime
             new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
             new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
             new Envelope().CorrelationId.ShouldNotEqual(new Envelope().CorrelationId);
+        }
+
+        [Test]
+        public void does_not_override_an_existing_correlation_id()
+        {
+            var headers = new NameValueHeaders();
+            headers[Envelope.IdKey] = "FOO";
+
+            var envelope = new Envelope(headers);
+            envelope.CorrelationId.ShouldEqual("FOO");
+        }
+
+        [Test]
+        public void will_assign_a_new_correlation_id_if_none_in_headers()
+        {
+            new Envelope(new NameValueHeaders()).CorrelationId
+                .IsEmpty().ShouldBeFalse();
         }
 
         [Test]

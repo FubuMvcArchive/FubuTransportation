@@ -38,7 +38,14 @@ namespace FubuTransportation.Runtime
             get { return _message == null ? null : _message.Value; }   
             set
             {
-                _message = new Lazy<object>(() => value);
+                if (value == null)
+                {
+                    _message = null;
+                }
+                else
+                {
+                    _message = new Lazy<object>(() => value);
+                }
             }
         }
 
@@ -55,19 +62,23 @@ namespace FubuTransportation.Runtime
         public Envelope(IHeaders headers)
         {
             Headers = headers;
-            CorrelationId = Guid.NewGuid().ToString();
+
+            if (CorrelationId.IsEmpty())
+            {
+                CorrelationId = Guid.NewGuid().ToString();
+            }
+            
         }
 
         public Envelope() : this(new NameValueHeaders())
         {
-            Headers = new NameValueHeaders();
+
         }
 
-        public Envelope(byte[] data, IHeaders headers, IMessageCallback callback)
+        public Envelope(byte[] data, IHeaders headers, IMessageCallback callback) : this(headers)
         {
             Data = data;
             Callback = callback;
-            Headers = headers;
         }
 
         public IMessageCallback Callback

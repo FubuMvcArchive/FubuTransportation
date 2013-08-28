@@ -57,7 +57,7 @@ namespace FubuTransportation.Runtime.Invocation
             sendCascadingMessages(envelope, args);
         }
 
-        public HandlerChain FindChain(Envelope envelope)
+        public virtual HandlerChain FindChain(Envelope envelope)
         {
             var messageType = envelope.Message.GetType();
 
@@ -102,6 +102,13 @@ namespace FubuTransportation.Runtime.Invocation
             envelope.Callback.MarkFailed();
             _logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = ex});
             _logger.Error(envelope.CorrelationId, ex);
+        }
+    }
+
+    public class NoHandlerException : Exception
+    {
+        public NoHandlerException(Type messageType) : base("No registered handler for message type " + messageType.FullName)
+        {
         }
     }
 

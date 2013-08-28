@@ -77,10 +77,6 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
         protected void sendEnvelope(Envelope envelope)
         {
-            envelope.ContentType = new XmlMessageSerializer().ContentType;
-            _invoker.Value.As<MessageInvoker>().Serializer.Serialize(envelope);
-            envelope.Message = null;
-        
             _invoker.Value.Invoke(envelope);
         }
 
