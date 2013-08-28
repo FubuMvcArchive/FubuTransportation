@@ -45,12 +45,11 @@ namespace FubuTransportation.Testing.Runtime
         {
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = null;
-            var envelope = new Envelope();
-            envelope.ContentType.ShouldBeNull();
-            Assert.Fail("NWO");
-//            theReceiver.Receive(new byte[0], new NameValueHeaders(), MockRepository.GenerateMock<IMessageCallback>());
-//
-//            envelope.ContentType.ShouldEqual("text/json");
+
+            var headers = new NameValueHeaders();
+            theReceiver.Receive(new byte[0], headers, MockRepository.GenerateMock<IMessageCallback>());
+
+            headers[Envelope.ContentTypeKey].ShouldEqual("text/json");
         }
 
         [Test]
@@ -59,13 +58,11 @@ namespace FubuTransportation.Testing.Runtime
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = "text/xml";
 
-            var envelope = new Envelope();
-            envelope.ContentType.ShouldBeNull();
-            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
-            Assert.Fail("NWO");
-            //theReceiver.Receive(TODO, TODO, TODO);
 
-            envelope.ContentType.ShouldEqual("text/xml");
+            var headers = new NameValueHeaders();
+            theReceiver.Receive(new byte[0], headers, MockRepository.GenerateMock<IMessageCallback>());
+
+            headers[Envelope.ContentTypeKey].ShouldEqual("text/xml");
         }
 
         [Test]
@@ -74,14 +71,12 @@ namespace FubuTransportation.Testing.Runtime
             theGraph.DefaultContentType = "text/json";
             theNode.DefaultContentType = "text/xml";
 
-            var envelope = new Envelope();
-            envelope.ContentType = "text/plain";
-            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
 
-            Assert.Fail("NWO");
-            //theReceiver.Receive(TODO, TODO, TODO);
+            var headers = new NameValueHeaders();
+            headers[Envelope.ContentTypeKey] = "text/plain";
+            theReceiver.Receive(new byte[0], headers, MockRepository.GenerateMock<IMessageCallback>());
 
-            envelope.ContentType.ShouldEqual("text/plain");
+            headers[Envelope.ContentTypeKey].ShouldEqual("text/plain");
         }
 
     }
@@ -141,6 +136,8 @@ namespace FubuTransportation.Testing.Runtime
         private IChannel theChannel;
         private ChannelNode theNode;
         private IMessageCallback theCallback;
+        private byte[] theData;
+        private NameValueHeaders theHeaders;
 
         protected override void beforeEach()
         {
@@ -159,22 +156,22 @@ namespace FubuTransportation.Testing.Runtime
             MockFor<IMessageInvoker>().Stub(x => x.Invoke(null)).IgnoreArguments();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
-            envelope.Callback = theCallback;
+            theData = new byte[] {1, 2, 3};
+            theHeaders = new NameValueHeaders();
 
-            Assert.Fail("NWO");
-            //ClassUnderTest.Receive(TODO, TODO, TODO);
+            ClassUnderTest.Receive(theData, theHeaders, theCallback);
         }
 
         [Test]
         public void should_copy_the_channel_address_to_the_envelope()
         {
-            envelope.ReceivedAt.ShouldEqual(address);
+            new HeaderWrapper{Headers = theHeaders}.ReceivedAt.ShouldEqual(address);
         }
 
         [Test]
         public void should_call_through_to_the_invoker()
         {
-            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(envelope));
+            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
         }
     }
 }

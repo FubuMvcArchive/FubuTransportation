@@ -126,8 +126,7 @@ namespace FubuTransportation.Runtime
             {
                 Data = Data,
                 Headers = Headers,
-                Message = _message
-
+                MessageSource = _message
             };
 
             

@@ -29,7 +29,7 @@ namespace FubuTransportation.Runtime
             get { return _message == null ? null : _message.Value; }
             set
             {
-                _message = new Lazy<object>(() => _message);
+                _message = new Lazy<object>(() => value);
             }
         }
 

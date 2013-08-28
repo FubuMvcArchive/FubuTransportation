@@ -284,7 +284,18 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void to_token()
         {
-            Assert.Fail("Do.");
+            var envelope = new Envelope
+            {
+                Data = new byte[] {1, 3, 4, 4},
+                Message = new Message1()
+            };
+
+            var token = envelope.ToToken();
+
+            // Hey, this HAS to work, so we're UT'ing it.
+            token.Headers.ShouldBeTheSameAs(envelope.Headers);
+            token.Message.ShouldEqual(envelope.Message);
+            token.Data.ShouldEqual(envelope.Data);
         }
     }
 }
