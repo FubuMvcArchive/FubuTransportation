@@ -279,7 +279,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 x.Handlers.Include<TwoHandler>();
             });
 
-            var invoker = new MessageInvoker(null, graph, null, null, null, SystemTime.Default());
+            var invoker = new MessageInvoker(null, graph, null, null, null);
 
             invoker.FindChain(new Envelope {Message = new OneMessage()})
                    .OfType<HandlerCall>().Single()

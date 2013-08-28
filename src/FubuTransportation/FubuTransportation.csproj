@@ -96,11 +96,16 @@
     <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
+    <Compile Include="Runtime\Invocation\ChainExecution.cs" />
+    <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipeline.cs" />
+    <Compile Include="Runtime\Invocation\IContinuation.cs" />
+    <Compile Include="Runtime\Invocation\IEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\IHandlerPipeline.cs" />
-    <Compile Include="Runtime\Invocation\InvocationClasses.cs" />
+    <Compile Include="Runtime\Invocation\SimpleEnvelopeHandler.cs" />
+    <Compile Include="Runtime\Invocation\NoSubscriberHandler.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandler.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />
     <Compile Include="Sagas\ISagaStorage.cs" />

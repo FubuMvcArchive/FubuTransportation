@@ -97,6 +97,16 @@ namespace FubuTransportation.Testing.Runtime
             throw new NotImplementedException();
         }
 
+        public void ExecuteChain(Envelope envelope, HandlerChain chain)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HandlerChain FindChain(Envelope envelope)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerator<object> GetEnumerator()
         {
             return Responses.GetEnumerator();

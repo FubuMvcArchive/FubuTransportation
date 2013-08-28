@@ -19,16 +19,14 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
         private readonly IEnvelopeSender _sender;
-        private readonly ISystemTime _systemTime;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender, ISystemTime systemTime)
+        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
         {
             _factory = factory;
             _graph = graph;
             _serializer = serializer;
             _logger = logger;
             _sender = sender;
-            _systemTime = systemTime;
         }
 
         public IEnvelopeSerializer Serializer
@@ -38,48 +36,14 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Invoke(Envelope envelope)
         {
-//            envelope.UseSerializer(_serializer);
-
-//            if (envelope.IsDelayed(_systemTime.UtcNow()))
-//            {
-//                try
-//                {
-//                    envelope.Callback.MoveToDelayed();
-//                    _logger.InfoMessage(() => new DelayedEnvelopeReceived{Envelope = envelope.ToToken()});
-//                }
-//                catch (Exception e)
-//                {
-//                    _logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
-//                }
-//
-//                return;
-//            }
-
-//            _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope.ToToken()});
-
-            // Do nothing for responses other than kick out the EnvelopeReceived.
-//            if (envelope.ResponseId.IsNotEmpty())
-//            {
-//                _logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
-//                envelope.Callback.MarkSuccessful();
-//                return;
-//            }
-
             var chain = FindChain(envelope);
-            if (chain == null)
-            {
-                _logger.InfoMessage(() => new NoHandlerForMessage { Envelope = envelope.ToToken() });
-                envelope.Callback.MarkSuccessful();
-                return;
-            }
 
             ExecuteChain(envelope, chain);
-
-
         }
 
         public void InvokeNow<T>(T message)
         {
+            // TODO -- log failures, but throw the exception
             var envelope = new Envelope {Message = message};
             var chain = FindChain(envelope);
             if (chain == null)
@@ -93,7 +57,7 @@ namespace FubuTransportation.Runtime.Invocation
             sendCascadingMessages(envelope, args);
         }
 
-        public virtual HandlerChain FindChain(Envelope envelope)
+        public HandlerChain FindChain(Envelope envelope)
         {
             var messageType = envelope.Message.GetType();
 
@@ -102,7 +66,7 @@ namespace FubuTransportation.Runtime.Invocation
         }
 
 
-        public virtual void ExecuteChain(Envelope envelope, HandlerChain chain)
+        public void ExecuteChain(Envelope envelope, HandlerChain chain)
         {
             using (new ChainExecutionWatcher(_logger, chain, envelope))
             {
@@ -139,30 +103,6 @@ namespace FubuTransportation.Runtime.Invocation
             _logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = ex});
             _logger.Error(envelope.CorrelationId, ex);
         }
-
-        public bool Matches(Envelope envelope)
-        {
-            // NO, got to check to see if the chain exists!
-            throw new NotImplementedException();
-        }
-
-        public IContinuation Handle(Envelope envelope)
-        {
-            throw new NotImplementedException();
-        }
     }
 
-    [Serializable]
-    public class NoHandlerException : Exception
-    {
-        public NoHandlerException(Type messageType)
-            :base("No handler for messsage type " + messageType.FullName)
-        {
-            
-        }
-
-        protected NoHandlerException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
 }

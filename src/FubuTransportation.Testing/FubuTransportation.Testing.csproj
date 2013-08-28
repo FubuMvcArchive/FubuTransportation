@@ -119,6 +119,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
+    <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandlerTester.cs" />
+    <Compile Include="Runtime\Invocation\ChainExecutionTester.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandlerTester.cs" />
