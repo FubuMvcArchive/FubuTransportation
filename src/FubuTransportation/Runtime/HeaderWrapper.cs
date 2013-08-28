@@ -6,6 +6,7 @@ using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
 {
+    [Serializable]
     public class HeaderWrapper
     {
         public Uri Source

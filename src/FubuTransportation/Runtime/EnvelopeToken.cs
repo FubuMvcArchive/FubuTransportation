@@ -1,9 +1,17 @@
 ﻿using System;
+using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
 {
+    [Serializable]
     public class EnvelopeToken : HeaderWrapper
     {
+        public EnvelopeToken()
+        {
+            Headers = new NameValueHeaders();
+            CorrelationId = Guid.NewGuid().ToString();
+        }
+
         public byte[] Data;
         public Lazy<object> MessageSource
         {

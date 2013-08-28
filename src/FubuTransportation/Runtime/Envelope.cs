@@ -9,7 +9,6 @@ using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime
 {
-    [Serializable]
     public class Envelope : HeaderWrapper
     {
         private static readonly BinaryFormatter formatter = new BinaryFormatter();
