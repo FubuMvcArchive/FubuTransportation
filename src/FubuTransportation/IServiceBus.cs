@@ -30,10 +30,10 @@ namespace FubuTransportation
     {
         private readonly IEnvelopeSender _sender;
         private readonly IEventAggregator _events;
-        private readonly IMessageInvoker _invoker;
+        private readonly IChainInvoker _invoker;
         private readonly ISystemTime _systemTime;
 
-        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IMessageInvoker invoker, ISystemTime systemTime)
+        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IChainInvoker invoker, ISystemTime systemTime)
         {
             _sender = sender;
             _events = events;

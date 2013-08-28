@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void delegate_to_chain_invoker()
         {
-            var invoker = MockRepository.GenerateMock<IMessageInvoker>();
+            var invoker = MockRepository.GenerateMock<IChainInvoker>();
             var chain = new HandlerChain();
             var envelope = ObjectMother.Envelope();
 

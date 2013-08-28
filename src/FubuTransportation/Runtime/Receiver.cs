@@ -10,14 +10,14 @@ namespace FubuTransportation.Runtime
 {
     public class Receiver : IReceiver
     {
-        private readonly IMessageInvoker _messageInvoker;
+        private readonly IHandlerPipeline _pipeline;
         private readonly ChannelGraph _graph;
         private readonly ChannelNode _node;
         private readonly Uri _address;
 
-        public Receiver(IMessageInvoker messageInvoker, ChannelGraph graph, ChannelNode node)
+        public Receiver(IHandlerPipeline pipeline, ChannelGraph graph, ChannelNode node)
         {
-            _messageInvoker = messageInvoker;
+            _pipeline = pipeline;
             _graph = graph;
             _node = node;
             _address = node.Uri;
@@ -34,12 +34,12 @@ namespace FubuTransportation.Runtime
             envelope.ReceivedAt = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
 
-            _messageInvoker.Invoke(envelope);
+            _pipeline.Invoke(envelope);
         }
 
         protected bool Equals(Receiver other)
         {
-            return Equals(_messageInvoker, other._messageInvoker) && Equals(_graph, other._graph) && Equals(_node, other._node);
+            return Equals(_pipeline, other._pipeline) && Equals(_graph, other._graph) && Equals(_node, other._node);
         }
 
         public override bool Equals(object obj)
@@ -54,7 +54,7 @@ namespace FubuTransportation.Runtime
         {
             unchecked
             {
-                var hashCode = (_messageInvoker != null ? _messageInvoker.GetHashCode() : 0);
+                var hashCode = (_pipeline != null ? _pipeline.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (_graph != null ? _graph.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ (_node != null ? _node.GetHashCode() : 0);
                 return hashCode;

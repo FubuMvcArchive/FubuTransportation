@@ -11,12 +11,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     public class ChainExecutionEnvelopeHandlerTester : InteractionContext<ChainExecutionEnvelopeHandler>
     {
         private Envelope theEnvelope;
-        private IMessageInvoker theInvoker;
+        private IChainInvoker theInvoker;
 
         protected override void beforeEach()
         {
             theEnvelope = ObjectMother.Envelope();
-            theInvoker = MockFor<IMessageInvoker>();
+            theInvoker = MockFor<IChainInvoker>();
         }
 
         [Test]

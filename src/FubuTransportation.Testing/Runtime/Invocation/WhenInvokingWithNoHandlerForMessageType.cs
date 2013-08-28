@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class WhenInvokingWithNoHandlerForMessageType : InteractionContext<MessageInvoker>
+    public class WhenInvokingWithNoHandlerForMessageType : InteractionContext<ChainInvoker>
     {
         private HandlerGraph theGraph;
  

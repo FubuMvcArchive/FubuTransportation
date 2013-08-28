@@ -58,7 +58,7 @@ namespace FubuTransportation.Configuration
             return Uri.Scheme;
         }
 
-        public void StartReceiving(ChannelGraph graph, IMessageInvoker invoker)
+        public void StartReceiving(ChannelGraph graph, IHandlerPipeline invoker)
         {
             if (Incoming)
             {

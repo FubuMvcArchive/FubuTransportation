@@ -54,7 +54,7 @@ namespace FubuTransportation
             stateCacheDef.IsSingleton = true;
             SetServiceIfNone(typeof(ISagaStateCacheFactory), stateCacheDef);
 
-            SetServiceIfNone<IMessageInvoker, MessageInvoker>();
+            SetServiceIfNone<IChainInvoker, ChainInvoker>();
             SetServiceIfNone<IEnvelopeSender, EnvelopeSender>();
             AddService<IMessageSerializer, XmlMessageSerializer>();
             AddService<IActivator, TransportActivator>();

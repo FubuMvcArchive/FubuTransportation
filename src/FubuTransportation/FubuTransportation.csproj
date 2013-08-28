@@ -163,12 +163,12 @@
     <Compile Include="Runtime\IEnvelopeSender.cs" />
     <Compile Include="Runtime\Headers\IHeaders.cs" />
     <Compile Include="Runtime\Invocation\IMessageCallback.cs" />
-    <Compile Include="Runtime\Invocation\IMessageInvoker.cs" />
+    <Compile Include="Runtime\Invocation\IChainInvoker.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Invocation\IInvocationContext.cs" />
     <Compile Include="Runtime\IReceiver.cs" />
     <Compile Include="Runtime\ITransport.cs" />
-    <Compile Include="Runtime\Invocation\MessageInvoker.cs" />
+    <Compile Include="Runtime\Invocation\ChainInvoker.cs" />
     <Compile Include="Runtime\Headers\NameValueHeaders.cs" />
     <Compile Include="Runtime\Receiver.cs" />
     <Compile Include="Runtime\Routing\AssemblyRule.cs" />

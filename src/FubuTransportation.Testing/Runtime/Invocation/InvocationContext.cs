@@ -16,7 +16,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     public abstract class InvocationContext
     {
         private FubuTransportRegistry theTransportRegistry;
-        private Lazy<IMessageInvoker> _invoker;
+        private Lazy<IChainInvoker> _invoker;
 
         protected IMessageCallback theCallback;
             
@@ -28,11 +28,11 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theTransportRegistry = FubuTransportRegistry.Empty();
             TestMessageRecorder.Clear();
 
-            _invoker = new Lazy<IMessageInvoker>(() => {
+            _invoker = new Lazy<IChainInvoker>(() => {
                 var container = new Container();
                 FubuTransport.For(theTransportRegistry).StructureMap(container).Bootstrap();
 
-                return container.GetInstance<IMessageInvoker>();
+                return container.GetInstance<IChainInvoker>();
             });
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();

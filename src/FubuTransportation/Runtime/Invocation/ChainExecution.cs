@@ -5,10 +5,10 @@ namespace FubuTransportation.Runtime.Invocation
 {
     public class ChainExecution : IContinuation
     {
-        private readonly IMessageInvoker _invoker;
+        private readonly IChainInvoker _invoker;
         private readonly HandlerChain _chain;
 
-        public ChainExecution(IMessageInvoker invoker, HandlerChain chain)
+        public ChainExecution(IChainInvoker invoker, HandlerChain chain)
         {
             _invoker = invoker;
             _chain = chain;
@@ -19,7 +19,7 @@ namespace FubuTransportation.Runtime.Invocation
             _invoker.ExecuteChain(envelope, _chain);
         }
 
-        public IMessageInvoker Invoker
+        public IChainInvoker Invoker
         {
             get { return _invoker; }
         }

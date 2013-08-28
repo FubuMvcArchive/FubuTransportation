@@ -13,7 +13,7 @@ using Is = Rhino.Mocks.Constraints.Is;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class when_invoking_a_message_right_now_happy_path : InteractionContext<MessageInvoker>
+    public class when_invoking_a_message_right_now_happy_path : InteractionContext<ChainInvoker>
     {
         private OneMessage theMessage;
         private HandlerGraph theGraph;

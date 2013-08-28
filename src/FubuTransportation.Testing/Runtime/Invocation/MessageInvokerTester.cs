@@ -35,7 +35,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 x.Handlers.Include<TwoHandler>();
             });
 
-            var invoker = new MessageInvoker(null, graph, null, null, null);
+            var invoker = new ChainInvoker(null, graph, null, null, null);
 
             invoker.FindChain(new Envelope {Message = new OneMessage()})
                    .OfType<HandlerCall>().Single()
@@ -130,7 +130,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     }
 
     
-    public abstract class MessageInvokerContext : InteractionContext<MessageInvoker>
+    public abstract class MessageInvokerContext : InteractionContext<ChainInvoker>
     {
         protected RecordingLogger theLogger;
         protected IMessageCallback theCallback;

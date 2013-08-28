@@ -2,7 +2,7 @@
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    public interface IMessageInvoker
+    public interface IChainInvoker
     {
         void Invoke(Envelope envelope);
         void InvokeNow<T>(T message);

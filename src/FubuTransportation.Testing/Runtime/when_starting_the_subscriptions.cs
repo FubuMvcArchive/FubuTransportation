@@ -32,7 +32,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_start_receiving()
         {
-            theGraph.AssertWasCalled(x => x.StartReceiving(MockFor<IMessageInvoker>()));
+            theGraph.AssertWasCalled(x => x.StartReceiving(MockFor<IHandlerPipeline>()));
         }
     }
 }

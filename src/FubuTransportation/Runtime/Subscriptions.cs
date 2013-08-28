@@ -10,13 +10,13 @@ namespace FubuTransportation.Runtime
     {
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ITransport> _transports;
-        private readonly Lazy<IMessageInvoker> _invoker;
+        private readonly Lazy<IHandlerPipeline> _pipeline;
 
-        public Subscriptions(ChannelGraph graph, Func<IMessageInvoker> invoker, IEnumerable<ITransport> transports)
+        public Subscriptions(ChannelGraph graph, Func<IHandlerPipeline> invoker, IEnumerable<ITransport> transports)
         {
             _graph = graph;
             _transports = transports;
-            _invoker = new Lazy<IMessageInvoker>(invoker);
+            _pipeline = new Lazy<IHandlerPipeline>(invoker);
         }
 
         public IEnumerable<ChannelNode> FindChannels(Envelope envelope)
@@ -64,7 +64,7 @@ namespace FubuTransportation.Runtime
         {
             _transports.Each(x => x.OpenChannels(_graph));
 
-            _graph.StartReceiving(_invoker.Value);
+            _graph.StartReceiving(_pipeline.Value);
         }
 
         public ChannelNode ReplyNodeFor(ChannelNode destination)

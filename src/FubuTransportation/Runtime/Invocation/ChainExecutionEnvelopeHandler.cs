@@ -2,9 +2,9 @@
 {
     public class ChainExecutionEnvelopeHandler : IEnvelopeHandler
     {
-        private readonly IMessageInvoker _invoker;
+        private readonly IChainInvoker _invoker;
 
-        public ChainExecutionEnvelopeHandler(IMessageInvoker invoker)
+        public ChainExecutionEnvelopeHandler(IChainInvoker invoker)
         {
             _invoker = invoker;
         }

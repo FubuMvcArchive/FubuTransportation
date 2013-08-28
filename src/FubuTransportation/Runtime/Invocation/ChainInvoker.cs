@@ -12,7 +12,7 @@ using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    public class MessageInvoker : IMessageInvoker
+    public class ChainInvoker : IChainInvoker
     {
         private readonly IServiceFactory _factory;
         private readonly HandlerGraph _graph;
@@ -20,7 +20,7 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly ILogger _logger;
         private readonly IEnvelopeSender _sender;
 
-        public MessageInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
+        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
         {
             _factory = factory;
             _graph = graph;

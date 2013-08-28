@@ -21,7 +21,7 @@ namespace FubuTransportation.Testing.Runtime
     {
         private ChannelGraph theGraph;
         private ChannelNode theNode;
-        private RecordingMessageInvoker theInvoker;
+        private RecordingHandlerPipeline theInvoker;
         private Receiver theReceiver;
         private IMessageCallback theCallback;
         private RecordingLogger theLogger;
@@ -32,7 +32,7 @@ namespace FubuTransportation.Testing.Runtime
             theGraph = new ChannelGraph();
             theNode = new ChannelNode();
 
-            theInvoker = new RecordingMessageInvoker();
+            theInvoker = new RecordingHandlerPipeline();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
             theLogger = new RecordingLogger();
@@ -81,7 +81,7 @@ namespace FubuTransportation.Testing.Runtime
 
     }
 
-    public class RecordingMessageInvoker : IMessageInvoker, IInvocationContext
+    public class RecordingHandlerPipeline : IHandlerPipeline, IInvocationContext
     {
         public IList<Envelope> Invoked = new List<Envelope>();
 
@@ -163,7 +163,7 @@ namespace FubuTransportation.Testing.Runtime
 
             Services.Inject(theNode);
 
-            MockFor<IMessageInvoker>().Stub(x => x.Invoke(null)).IgnoreArguments();
+            MockFor<IChainInvoker>().Stub(x => x.Invoke(null)).IgnoreArguments();
 
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
             theData = new byte[] {1, 2, 3};
@@ -179,9 +179,9 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
-        public void should_call_through_to_the_invoker()
+        public void should_call_through_to_the_pipeline()
         {
-            MockFor<IMessageInvoker>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
+            MockFor<IHandlerPipeline>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
         }
     }
 }

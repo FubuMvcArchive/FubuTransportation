@@ -153,7 +153,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void MessageInvoker_is_registered()
         {
-            registeredTypeIs<IMessageInvoker, MessageInvoker>();
+            registeredTypeIs<IChainInvoker, ChainInvoker>();
         }
 
         [Test]

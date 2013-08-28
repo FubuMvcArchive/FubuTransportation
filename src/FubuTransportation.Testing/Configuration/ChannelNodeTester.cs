@@ -62,7 +62,7 @@ namespace FubuTransportation.Testing.Configuration
         [Test]
         public void start_receiving()
         {
-            var invoker = MockRepository.GenerateMock<IMessageInvoker>();
+            var invoker = MockRepository.GenerateMock<IHandlerPipeline>();
 
             var node = new ChannelNode
             {

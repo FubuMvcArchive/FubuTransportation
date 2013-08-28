@@ -56,9 +56,9 @@ namespace FubuTransportation.Configuration
             _channels.Each(x => x.ReadSettings(services));
         }
 
-        public virtual void StartReceiving(IMessageInvoker invoker)
+        public virtual void StartReceiving(IHandlerPipeline pipeline)
         {
-            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(this, invoker));
+            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(this, pipeline));
         }
 
         public static string ToKey(Accessor accessor)
