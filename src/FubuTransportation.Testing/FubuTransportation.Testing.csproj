@@ -97,6 +97,7 @@
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
     <Compile Include="InMemory\ReplayDelayedQueueIntegrationTester.cs" />
     <Compile Include="InMemory\SagaStateCacheTester.cs" />
+    <Compile Include="ObjectMother.cs" />
     <Compile Include="Polling\DefaultTimerTester.cs" />
     <Compile Include="Polling\JobRunnerTester.cs" />
     <Compile Include="Polling\PollingJobActivatorTester.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
+    <Compile Include="Runtime\Invocation\DelayedMessageHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\Serializers\BinarySerializerTester.cs" />

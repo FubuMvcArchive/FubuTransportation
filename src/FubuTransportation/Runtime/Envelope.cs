@@ -155,13 +155,5 @@ namespace FubuTransportation.Runtime
                 return hashCode;
             }
         }
-
-        public static Envelope Fake()
-        {
-            return new Envelope
-            {
-                Data = new byte[]{1,2,3,4}
-            };
-        }
     }
 }

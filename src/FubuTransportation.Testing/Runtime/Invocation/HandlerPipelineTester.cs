@@ -27,7 +27,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             Services.Inject<ILogger>(theLogger);
 
             theContinuation = MockFor<IContinuation>();
-            theEnvelope = Envelope.Fake();
+            theEnvelope = ObjectMother.Envelope();
             theEnvelope.Callback = MockFor<IMessageCallback>();
 
             Services.PartialMockTheClassUnderTest();
@@ -51,7 +51,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_invoke_the_continuation()
         {
-            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope));
+            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope, theLogger));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             Services.Inject<ILogger>(theLogger);
 
             theContinuation = MockFor<IContinuation>();
-            theEnvelope = Envelope.Fake();
+            theEnvelope = ObjectMother.Envelope();
 
             theHandlers[3].Stub(x => x.Handle(theEnvelope))
                           .Return(theContinuation);

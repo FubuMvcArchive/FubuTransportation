@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using FubuCore.Logging;
-using FubuTransportation.Logging;
-using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
 {
     public interface IContinuation
     {
-        void Execute(Envelope envelope);
+        void Execute(Envelope envelope, ILogger logger);
     }
 
     // Another handler for no subscriber rules!
@@ -18,60 +14,16 @@ namespace FubuTransportation.Runtime.Invocation
         IContinuation Handle(Envelope envelope);
     }
 
-    public interface IHandlerPipeline
-    {
-        void Invoke(Envelope envelope);
-    }
 
-    public class HandlerPipeline : IHandlerPipeline
+    public abstract class SimpleEnvelopeHandler : IEnvelopeHandler, IContinuation
     {
-        private readonly IEnvelopeSerializer _serializer;
-        private readonly ILogger _logger;
-        private readonly IList<IEnvelopeHandler> _handlers = new List<IEnvelopeHandler>();
-
-        public HandlerPipeline(IEnvelopeSerializer serializer, ILogger logger, IEnumerable<IEnvelopeHandler> handlers)
+        public IContinuation Handle(Envelope envelope)
         {
-            _serializer = serializer;
-            _logger = logger;
-            _handlers.AddRange(handlers);
+            return Matches(envelope) ? this : null;
         }
 
-        public void Invoke(Envelope envelope)
-        {
-            envelope.UseSerializer(_serializer);
+        public abstract bool Matches(Envelope envelope);
 
-            _logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
-
-            var continuation = FindContinuation(envelope);
-            continuation.Execute(envelope);
-        }
-
-        // virtual for testing as usual
-        public virtual IContinuation FindContinuation(Envelope envelope)
-        {
-            foreach (var handler in _handlers)
-            {
-                var continuation = handler.Handle(envelope);
-                if (continuation != null)
-                {
-                    _logger.DebugMessage(() => new EnvelopeContinuationChosen
-                    {
-                        ContinuationType = continuation.GetType(),
-                        HandlerType = handler.GetType(),
-                        Envelope = envelope.ToToken()
-                    });
-
-                    return continuation;
-                }
-            }
-
-            throw new NotSupportedException();
-        }
+        public abstract void Execute(Envelope envelope, ILogger logger);
     }
-
-    public class DelayedMessageHandler
-    {
-        
-    }
-
 }
