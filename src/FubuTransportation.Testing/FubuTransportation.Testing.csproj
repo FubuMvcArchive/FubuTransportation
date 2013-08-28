@@ -119,8 +119,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
-    <Compile Include="Runtime\Invocation\DelayedMessageHandlerTester.cs" />
+    <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
+    <Compile Include="Runtime\Invocation\ResponseEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializerTester.cs" />
     <Compile Include="Runtime\Serializers\BinarySerializerTester.cs" />
     <Compile Include="Runtime\Invocation\CascadingHandlerInvokerTester.cs" />

@@ -12,7 +12,7 @@ using System.Linq;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class DelayedMessageHandlerTester
+    public class DelayedEnvelopeHandlerTester
     {
         [Test]
         public void matches_positive()
@@ -21,7 +21,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var envelope = new Envelope();
             envelope.ExecutionTime = systemTime.UtcNow().AddHours(1);
 
-            var handler = new DelayedMessageHandler(systemTime);
+            var handler = new DelayedEnvelopeHandler(systemTime);
 
             envelope.IsDelayed(systemTime.UtcNow()).ShouldBeTrue();
             handler.Matches(envelope).ShouldBeTrue();
@@ -33,7 +33,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var systemTime = SystemTime.Default();
             var envelope = new Envelope();
 
-            var handler = new DelayedMessageHandler(systemTime);
+            var handler = new DelayedEnvelopeHandler(systemTime);
 
             envelope.IsDelayed(systemTime.UtcNow()).ShouldBeFalse();
             handler.Matches(envelope).ShouldBeFalse();
@@ -46,7 +46,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var envelope = new Envelope();
             envelope.ExecutionTime = systemTime.UtcNow().AddHours(-1);
 
-            var handler = new DelayedMessageHandler(systemTime);
+            var handler = new DelayedEnvelopeHandler(systemTime);
 
             envelope.IsDelayed(systemTime.UtcNow()).ShouldBeFalse();
             handler.Matches(envelope).ShouldBeFalse();
@@ -58,7 +58,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var logger = new RecordingLogger();
             var envelope = ObjectMother.Envelope();
 
-            new DelayedMessageHandler(null).Execute(envelope, logger);
+            new DelayedEnvelopeHandler(null).Execute(envelope, logger);
 
             envelope.Callback.AssertWasCalled(x => x.MoveToDelayed());
 
@@ -75,7 +75,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var exception = new NotImplementedException();
             envelope.Callback.Stub(x => x.MoveToDelayed()).Throw(exception);
 
-            new DelayedMessageHandler(SystemTime.Default()).Execute(envelope, logger);
+            new DelayedEnvelopeHandler(SystemTime.Default()).Execute(envelope, logger);
 
             envelope.Callback.AssertWasCalled(x => x.MarkFailed());
 

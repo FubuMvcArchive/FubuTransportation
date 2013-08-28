@@ -97,10 +97,11 @@
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
-    <Compile Include="Runtime\Invocation\DelayedMessageHandler.cs" />
+    <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipeline.cs" />
     <Compile Include="Runtime\Invocation\IHandlerPipeline.cs" />
     <Compile Include="Runtime\Invocation\InvocationClasses.cs" />
+    <Compile Include="Runtime\Invocation\ResponseEnvelopeHandler.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />
     <Compile Include="Sagas\ISagaStorage.cs" />
     <Compile Include="Sagas\IStatefulSaga.cs" />

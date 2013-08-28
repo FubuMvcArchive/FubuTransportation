@@ -38,32 +38,32 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Invoke(Envelope envelope)
         {
-            envelope.UseSerializer(_serializer);
+//            envelope.UseSerializer(_serializer);
 
-            if (envelope.IsDelayed(_systemTime.UtcNow()))
-            {
-                try
-                {
-                    envelope.Callback.MoveToDelayed();
-                    _logger.InfoMessage(() => new DelayedEnvelopeReceived{Envelope = envelope.ToToken()});
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
-                }
+//            if (envelope.IsDelayed(_systemTime.UtcNow()))
+//            {
+//                try
+//                {
+//                    envelope.Callback.MoveToDelayed();
+//                    _logger.InfoMessage(() => new DelayedEnvelopeReceived{Envelope = envelope.ToToken()});
+//                }
+//                catch (Exception e)
+//                {
+//                    _logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
+//                }
+//
+//                return;
+//            }
 
-                return;
-            }
-
-            _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope.ToToken()});
+//            _logger.InfoMessage(() => new EnvelopeReceived{Envelope = envelope.ToToken()});
 
             // Do nothing for responses other than kick out the EnvelopeReceived.
-            if (envelope.ResponseId.IsNotEmpty())
-            {
-                _logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
-                envelope.Callback.MarkSuccessful();
-                return;
-            }
+//            if (envelope.ResponseId.IsNotEmpty())
+//            {
+//                _logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
+//                envelope.Callback.MarkSuccessful();
+//                return;
+//            }
 
             var chain = FindChain(envelope);
             if (chain == null)

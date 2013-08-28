@@ -26,6 +26,8 @@ namespace FubuTransportation.Runtime.Invocation
             _logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
 
             var continuation = FindContinuation(envelope);
+
+            // Harden this!!!!!  No exceptions get through, ever.
             continuation.Execute(envelope, _logger);
         }
 
