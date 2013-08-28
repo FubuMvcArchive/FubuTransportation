@@ -48,4 +48,16 @@ namespace FubuTransportation.Runtime
             return envelope.CorrelationId;
         }
     }
+
+    public static class EnvelopeSenderExtensions
+    {
+        public static void SendOutgoingMessages(this IEnvelopeSender sender, Envelope envelope,
+                                                 IEnumerable<object> messages)
+        {
+            messages.Each(o => {
+                var child = envelope.ForResponse(o);
+                sender.Send(child);
+            });
+        }
+    }
 }

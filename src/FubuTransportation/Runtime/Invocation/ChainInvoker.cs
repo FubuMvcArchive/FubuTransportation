@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Runtime.Serialization;
-using FubuCore.Dates;
+using System.Collections.Generic;
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
-using System.Collections.Generic;
-using FubuCore;
-using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -16,11 +12,12 @@ namespace FubuTransportation.Runtime.Invocation
     {
         private readonly IServiceFactory _factory;
         private readonly HandlerGraph _graph;
-        private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
         private readonly IEnvelopeSender _sender;
+        private readonly IEnvelopeSerializer _serializer;
 
-        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger, IEnvelopeSender sender)
+        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger,
+                            IEnvelopeSender sender)
         {
             _factory = factory;
             _graph = graph;
@@ -48,13 +45,14 @@ namespace FubuTransportation.Runtime.Invocation
             var chain = FindChain(envelope);
             if (chain == null)
             {
-                throw new NoHandlerException(typeof(T));
+                throw new NoHandlerException(typeof (T));
             }
 
             var args = new HandlerArguments(envelope);
             var behavior = _factory.BuildBehavior(args, chain.UniqueId);
             behavior.Invoke();
-            sendCascadingMessages(envelope, args);
+
+            _sender.SendOutgoingMessages(envelope, args.OutgoingMessages());
         }
 
         public virtual HandlerChain FindChain(Envelope envelope)
@@ -62,7 +60,7 @@ namespace FubuTransportation.Runtime.Invocation
             var messageType = envelope.Message.GetType();
 
             // TODO -- going to get rid of this in favor of a formal "Batch" concept
-            return _graph.ChainFor(messageType == typeof(object[]) ? typeof(object[]) : messageType);
+            return _graph.ChainFor(messageType == typeof (object[]) ? typeof (object[]) : messageType);
         }
 
 
@@ -76,7 +74,7 @@ namespace FubuTransportation.Runtime.Invocation
                 try
                 {
                     behavior.Invoke();
-                    sendCascadingMessages(envelope, args);
+                    _sender.SendOutgoingMessages(envelope, args.OutgoingMessages());
 
                     envelope.Callback.MarkSuccessful();
                     _logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope.ToToken()});
@@ -88,15 +86,6 @@ namespace FubuTransportation.Runtime.Invocation
             }
         }
 
-        private void sendCascadingMessages(Envelope envelope, HandlerArguments args)
-        {
-            args.OutgoingMessages().Each(o => {
-                var child = envelope.ForResponse(o);
-                _sender.Send(child);
-            });
-        }
-
-
         private void logFailure(Envelope envelope, Exception ex)
         {
             envelope.Callback.MarkFailed();
@@ -105,11 +94,48 @@ namespace FubuTransportation.Runtime.Invocation
         }
     }
 
-    public class NoHandlerException : Exception
+    public class ChainSuccessContinuation : IContinuation
     {
-        public NoHandlerException(Type messageType) : base("No registered handler for message type " + messageType.FullName)
+        private readonly IEnvelopeSender _sender;
+        private readonly IInvocationContext _context;
+
+        public ChainSuccessContinuation(IEnvelopeSender sender, IInvocationContext context)
         {
+            _sender = sender;
+            _context = context;
+        }
+
+        public void Execute(Envelope envelope, ILogger logger)
+        {
+            _sender.SendOutgoingMessages(envelope, _context.OutgoingMessages());
+
+            envelope.Callback.MarkSuccessful();
+            logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
         }
     }
 
+    public class ChainFailureContinuation : IContinuation
+    {
+        private readonly Exception _ex;
+
+        public ChainFailureContinuation(Exception ex)
+        {
+            _ex = ex;
+        }
+
+        public void Execute(Envelope envelope, ILogger logger)
+        {
+            envelope.Callback.MarkFailed();
+            logger.InfoMessage(() => new MessageFailed { Envelope = envelope.ToToken(), Exception = _ex });
+            logger.Error(envelope.CorrelationId, _ex);
+        }
+    }
+
+    public class NoHandlerException : Exception
+    {
+        public NoHandlerException(Type messageType)
+            : base("No registered handler for message type " + messageType.FullName)
+        {
+        }
+    }
 }

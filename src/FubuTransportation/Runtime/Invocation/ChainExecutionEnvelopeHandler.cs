@@ -12,7 +12,14 @@
         public IContinuation Handle(Envelope envelope)
         {
             var chain = _invoker.FindChain(envelope);
-            return chain == null ? null : new ChainExecution(_invoker, chain);
+            if (chain == null)
+            {
+                return null;
+            }
+
+            
+
+            return new ChainExecution(_invoker, chain);
         }
     }
 }
