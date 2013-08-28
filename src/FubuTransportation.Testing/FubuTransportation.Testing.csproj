@@ -87,6 +87,7 @@
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
+    <Compile Include="envelope_handlers_are_registered_in_the_right_order.cs" />
     <Compile Include="FubuTransportRegistry_application_of_policies_Tester.cs" />
     <Compile Include="FubuTransportRegistry_registration_of_services_Tester.cs" />
     <Compile Include="FubuTransport_default_options_Tester.cs" />

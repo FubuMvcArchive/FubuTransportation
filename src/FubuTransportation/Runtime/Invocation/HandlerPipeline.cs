@@ -52,5 +52,10 @@ namespace FubuTransportation.Runtime.Invocation
 
             throw new NotSupportedException();
         }
+
+        public IList<IEnvelopeHandler> Handlers
+        {
+            get { return _handlers; }
+        }
     }
 }

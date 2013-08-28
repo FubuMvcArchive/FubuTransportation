@@ -73,6 +73,11 @@ namespace FubuTransportation
                 AddService<IListener, MessageWatcher>();
             }
 
+
+            AddService<IEnvelopeHandler, DelayedEnvelopeHandler>();
+            AddService<IEnvelopeHandler, ResponseEnvelopeHandler>();
+            AddService<IEnvelopeHandler, ChainExecutionEnvelopeHandler>();
+            AddService<IEnvelopeHandler, NoSubscriberHandler>();
         }
     }
 

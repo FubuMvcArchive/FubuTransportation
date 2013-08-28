@@ -174,6 +174,5 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IHandlerPipeline, HandlerPipeline>();
         }
-
     }
 }
