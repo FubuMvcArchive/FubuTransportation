@@ -22,7 +22,7 @@ namespace FubuTransportation.Runtime.Invocation
             _logger.DebugMessage(() => new ChainExecutionStarted
             {
                 ChainId = chain.UniqueId,
-                Envelope = envelope
+                Envelope = envelope.ToToken()
             });
 
             _stopwatch.Start();
@@ -36,7 +36,7 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 ChainId = _chain.UniqueId,
                 ElapsedMilliseconds = _stopwatch.ElapsedMilliseconds,
-                Envelope = _envelope
+                Envelope = _envelope.ToToken()
             });
         }
     }

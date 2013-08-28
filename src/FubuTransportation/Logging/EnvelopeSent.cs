@@ -11,7 +11,7 @@ namespace FubuTransportation.Logging
         {
         }
 
-        public EnvelopeSent(Envelope envelope, ChannelNode node)
+        public EnvelopeSent(EnvelopeToken envelope, ChannelNode node)
         {
             Envelope = envelope;
 
@@ -19,7 +19,7 @@ namespace FubuTransportation.Logging
             Key = node.Key;
         }
 
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
         public Uri Uri { get; set; }
         public string Key { get; set; }
 

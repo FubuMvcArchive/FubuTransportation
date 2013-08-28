@@ -31,7 +31,7 @@ namespace FubuTransportation.Runtime
             }
         }
 
-        public bool Matches(Envelope envelope)
+        public bool Matches(EnvelopeToken envelope)
         {
             return envelope.Message is T && envelope.ResponseId == _originalId;
         }

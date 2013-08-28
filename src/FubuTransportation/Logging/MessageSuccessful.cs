@@ -5,7 +5,7 @@ namespace FubuTransportation.Logging
 {
     public class MessageSuccessful : LogRecord
     {
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
 
         protected bool Equals(MessageSuccessful other)
         {

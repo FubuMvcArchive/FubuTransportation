@@ -24,8 +24,8 @@ namespace FubuTransportation.Testing.Runtime
             theListener = new ReplyListener<Message1>(theEvents, correlationId);
 
             theMessage = new Message1();
-
-            var envelope = new Envelope
+            
+            var envelope = new EnvelopeToken
             {
                 Message = theMessage
             };
@@ -69,7 +69,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void matches_if_type_is_right_and_correlation_id_matches()
         {
-            theListener.Matches(new Envelope
+            theListener.Matches(new EnvelopeToken
             {
                 ResponseId = correlationId,
                 Message = new Message1()
@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void does_not_match_if_correlation_id_is_wrong()
         {
-            theListener.Matches(new Envelope
+            theListener.Matches(new EnvelopeToken
             {
                 ResponseId = Guid.NewGuid().ToString(),
                 Message = new Message1()
@@ -89,7 +89,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void does_not_match_if_the_message_type_is_wrong()
         {
-            theListener.Matches(new Envelope
+            theListener.Matches(new EnvelopeToken
             {
                 ResponseId = correlationId,
                 Message = new Message2()

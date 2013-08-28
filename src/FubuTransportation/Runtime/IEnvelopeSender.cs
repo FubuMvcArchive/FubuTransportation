@@ -39,7 +39,7 @@ namespace FubuTransportation.Runtime
 
             // TODO -- harden this and log any exceptions
             channels.Each(x => {
-                _logger.InfoMessage(() => new EnvelopeSent(envelope, x));
+                _logger.InfoMessage(() => new EnvelopeSent(envelope.ToToken(), x));
 
                 // TODO -- this is such crap.  The way it's modeled does not work any longer
                 x.Send(envelope, envelope.ReplyRequested ? _router.ReplyNodeFor(x) : null);

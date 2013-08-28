@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.InMemory
         {
             InMemoryQueueManager.ClearAll();
 
-            var envelope = new Envelope();
+            var envelope = new EnvelopeToken();
             var callback = new InMemoryCallback(null, envelope);
             callback.MoveToDelayed();
 

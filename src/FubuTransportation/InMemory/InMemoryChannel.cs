@@ -32,7 +32,12 @@ namespace FubuTransportation.InMemory
 
         public void Send(byte[] data, IHeaders headers)
         {
-            var envelope = new Envelope(headers) {Data = data};
+            var envelope = new EnvelopeToken
+            {
+                Data = data,
+                Headers = headers
+            };
+
             _queue.Enqueue(envelope);
         }
     }

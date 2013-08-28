@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml;
 using FubuMVC.Core.Http;
 using FubuCore;
 using FubuTransportation.Runtime.Headers;
@@ -12,7 +10,7 @@ using FubuTransportation.Runtime.Serializers;
 namespace FubuTransportation.Runtime
 {
     [Serializable]
-    public class Envelope
+    public class Envelope : HeaderWrapper
     {
         private static readonly BinaryFormatter formatter = new BinaryFormatter();
 
@@ -79,98 +77,6 @@ namespace FubuTransportation.Runtime
             set { _callback = value; }
         }
 
-        public Uri Source
-        {
-            get { return Headers[SourceKey].ToUri(); }
-            set { Headers[SourceKey] = value == null ? null : value.ToString(); }
-        }
-
-        public Uri ReplyUri
-        {
-            get { return Headers[ReplyUriKey].ToUri(); }
-            set { Headers[ReplyUriKey] = value == null ? null : value.ToString(); }
-        }
-
-        public string ContentType
-        {
-            get { return Headers[ContentTypeKey]; }
-            set { Headers[ContentTypeKey] = value; }
-        }
-
-        public string OriginalId
-        {
-            get { return Headers[OriginalIdKey]; }
-            set { Headers[OriginalIdKey] = value; }
-        }
-
-        public string ParentId
-        {
-            get { return Headers[ParentIdKey]; }
-            set { Headers[ParentIdKey] = value; }
-        }
-
-        public string ResponseId
-        {
-            get { return Headers[ResponseIdKey]; }
-            set { Headers[ResponseIdKey] = value; }
-        }
-
-        public Uri Destination
-        {
-            get { return Headers[DestinationKey].ToUri(); }
-            set { Headers[DestinationKey] = value == null ? null : value.ToString(); }
-        }
-
-        public Uri ReceivedAt
-        {
-            get { return Headers[ReceivedAtKey].ToUri(); }
-            set { Headers[ReceivedAtKey] = value == null ? null : value.ToString(); }
-        }
-
-        public IHeaders Headers { get; private set; }
-
-        public string CorrelationId
-        {
-            get
-            {
-                return Headers[IdKey];
-            }
-            set { Headers[IdKey] = value; }
-        }
-
-        public bool ReplyRequested
-        {
-            get { return Headers.Has(ReplyRequestedKey) ? Headers[ReplyRequestedKey].EqualsIgnoreCase("true") : false; }
-            set
-            {
-                if (value)
-                {
-                    Headers[ReplyRequestedKey] = "true";
-                }
-                else
-                {
-                    Headers.Remove(ReplyRequestedKey);
-                }
-            }
-        }
-
-        public DateTime? ExecutionTime
-        {
-            get { return Headers.Has(ExecutionTimeKey) ? XmlConvert.ToDateTime(Headers[ExecutionTimeKey], XmlDateTimeSerializationMode.Utc) : (DateTime?)null; }
-            set
-            {
-                if (value == null)
-                {
-                    Headers.Remove(ExecutionTimeKey);
-                }
-                else
-                {
-                    Headers[ExecutionTimeKey] = value.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                }
-                
-            }
-        }
-
         // TODO -- this is where the routing slip is going to come into place
         public Envelope ForResponse(object message)
         {
@@ -205,13 +111,6 @@ namespace FubuTransportation.Runtime
             }
         }
 
-        public bool IsDelayed(DateTime utcNow)
-        {
-            if (!Headers.Has(ExecutionTimeKey)) return false;
-
-            return ExecutionTime.Value > utcNow;
-        }
-
         public Envelope Clone()
         {
             var stream = new MemoryStream();
@@ -220,6 +119,43 @@ namespace FubuTransportation.Runtime
             stream.Position = 0;
 
             return (Envelope) formatter.Deserialize(stream);
+        }
+
+        public EnvelopeToken ToToken()
+        {
+            return new EnvelopeToken
+            {
+                Data = Data,
+                Headers = Headers,
+                Message = _message
+
+            };
+
+            
+        }
+
+        protected bool Equals(Envelope other)
+        {
+            return Equals(Data, other.Data) && Equals(Message, other.Message) && Equals(_callback, other._callback) && Equals(Headers, other.Headers);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Envelope) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Data != null ? Data.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_message != null ? _message.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_callback != null ? _callback.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

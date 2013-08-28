@@ -280,5 +280,11 @@ namespace FubuTransportation.Testing.Runtime
 
             envelope.Message.ShouldBeTheSameAs(theExpectedMessage);
         }
+
+        [Test]
+        public void to_token()
+        {
+            Assert.Fail("Do.");
+        }
     }
 }

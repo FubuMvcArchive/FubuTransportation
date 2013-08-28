@@ -37,7 +37,7 @@ namespace FubuTransportation.TestSupport
             handle(message.Envelope, MessageTrack.Sent, message.Uri);
         }
 
-        private void handle(Envelope envelope, string status, Uri uri)
+        private void handle(EnvelopeToken envelope, string status, Uri uri)
         {
             MessageHistory.Record(new MessageTrack
             {

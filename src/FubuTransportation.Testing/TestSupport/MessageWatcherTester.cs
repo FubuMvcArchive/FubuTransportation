@@ -20,7 +20,7 @@ namespace FubuTransportation.Testing.TestSupport
 
             var @event = new ChainExecutionStarted
             {
-                ChainId = Guid.NewGuid(), Envelope = new Envelope()
+                ChainId = Guid.NewGuid(), Envelope = new EnvelopeToken()
             };
             new MessageWatcher().Handle(@event);
 
@@ -38,7 +38,7 @@ namespace FubuTransportation.Testing.TestSupport
             var @event = new ChainExecutionStarted
             {
                 ChainId = Guid.NewGuid(),
-                Envelope = new Envelope()
+                Envelope = new EnvelopeToken()
             };
             var messageWatcher = new MessageWatcher();
             messageWatcher.Handle(@event);
@@ -64,7 +64,7 @@ namespace FubuTransportation.Testing.TestSupport
         {
             MessageHistory.ClearAll();
 
-            var envelope1 = new Envelope();
+            var envelope1 = new EnvelopeToken();
             var node1 = new StubChannelNode();
             var node2 = new StubChannelNode();
 
@@ -97,8 +97,8 @@ namespace FubuTransportation.Testing.TestSupport
         {
             MessageHistory.ClearAll();
 
-            var envelope1 = new Envelope();
-            var envelope2 = new Envelope();
+            var envelope1 = new EnvelopeToken();
+            var envelope2 = new EnvelopeToken();
             var node1 = new StubChannelNode();
 
             var messageWatcher = new MessageWatcher();
@@ -132,7 +132,7 @@ namespace FubuTransportation.Testing.TestSupport
         {
             MessageHistory.ClearAll();
 
-            var envelope1 = new Envelope();
+            var envelope1 = new EnvelopeToken();
             var node1 = new StubChannelNode();
             var node2 = new StubChannelNode();
 
@@ -165,8 +165,8 @@ namespace FubuTransportation.Testing.TestSupport
         {
             MessageHistory.ClearAll();
 
-            var envelope1 = new Envelope();
-            var envelope2 = new Envelope();
+            var envelope1 = new EnvelopeToken();
+            var envelope2 = new EnvelopeToken();
             var node1 = new StubChannelNode();
 
             var messageWatcher = new MessageWatcher();

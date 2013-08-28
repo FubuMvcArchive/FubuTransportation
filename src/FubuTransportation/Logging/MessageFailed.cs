@@ -6,7 +6,7 @@ namespace FubuTransportation.Logging
 {
     public class MessageFailed : LogRecord
     {
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
         public Exception Exception { get; set; }
 
         protected bool Equals(MessageFailed other)

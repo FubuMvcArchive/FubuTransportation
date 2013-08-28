@@ -37,7 +37,8 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Invoke(Envelope envelope, IMessageCallback callback)
         {
-            // TODO -- blow up if envelope callback is null
+
+
 
             // TODO -- log received
 

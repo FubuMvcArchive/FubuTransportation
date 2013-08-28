@@ -47,9 +47,9 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_audit_each_node_sender_for_the_envelope()
         {
-            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node1));
-            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node2));
-            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope, node3));
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope.ToToken(), node1));
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope.ToToken(), node2));
+            theLogger.InfoMessages.ShouldContain(new EnvelopeSent(theEnvelope.ToToken(), node3));
         }
 
         [Test]

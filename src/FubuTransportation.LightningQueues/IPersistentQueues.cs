@@ -12,6 +12,6 @@ namespace FubuTransportation.LightningQueues
         void Start(IEnumerable<LightningUri> uriList);
 
         void CreateQueue(LightningUri uri);
-        IEnumerable<Envelope> ReplayDelayed(DateTime currentTime);
+        IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime);
     }
 }

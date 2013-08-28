@@ -8,6 +8,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -46,11 +47,10 @@ namespace FubuTransportation.Testing.Runtime
             theNode.DefaultContentType = null;
             var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
-
-            envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
-            theReceiver.Receive(envelope);
-
-            envelope.ContentType.ShouldEqual("text/json");
+            Assert.Fail("NWO");
+//            theReceiver.Receive(new byte[0], new NameValueHeaders(), MockRepository.GenerateMock<IMessageCallback>());
+//
+//            envelope.ContentType.ShouldEqual("text/json");
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace FubuTransportation.Testing.Runtime
             var envelope = new Envelope();
             envelope.ContentType.ShouldBeNull();
             envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
-
-            theReceiver.Receive(envelope);
+            Assert.Fail("NWO");
+            //theReceiver.Receive(TODO, TODO, TODO);
 
             envelope.ContentType.ShouldEqual("text/xml");
         }
@@ -78,7 +78,8 @@ namespace FubuTransportation.Testing.Runtime
             envelope.ContentType = "text/plain";
             envelope.Callback = MockRepository.GenerateMock<IMessageCallback>();
 
-            theReceiver.Receive(envelope);
+            Assert.Fail("NWO");
+            //theReceiver.Receive(TODO, TODO, TODO);
 
             envelope.ContentType.ShouldEqual("text/plain");
         }
@@ -160,7 +161,8 @@ namespace FubuTransportation.Testing.Runtime
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
             envelope.Callback = theCallback;
 
-            ClassUnderTest.Receive(envelope);
+            Assert.Fail("NWO");
+            //ClassUnderTest.Receive(TODO, TODO, TODO);
         }
 
         [Test]

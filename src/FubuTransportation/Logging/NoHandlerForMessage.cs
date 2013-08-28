@@ -5,7 +5,7 @@ namespace FubuTransportation.Logging
 {
     public class NoHandlerForMessage : LogRecord
     {
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
 
         protected bool Equals(NoHandlerForMessage other)
         {

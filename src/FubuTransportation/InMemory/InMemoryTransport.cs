@@ -26,7 +26,7 @@ namespace FubuTransportation.InMemory
             return new InMemoryChannel(node);
         }
 
-        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
+        public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)
         {
             return InMemoryQueueManager.DequeueDelayedEnvelopes(currentTime);
         }

@@ -8,6 +8,6 @@ namespace FubuTransportation.Logging
     {
         // TODO -- add a decent ToString()
         public Guid ChainId { get; set; }
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
     }
 }

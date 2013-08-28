@@ -4,7 +4,7 @@ namespace FubuTransportation.Runtime.Delayed
 {
     public class DelayedEnvelopeReceived : LogRecord
     {
-        public Envelope Envelope { get; set; }
+        public EnvelopeToken Envelope { get; set; }
 
         protected bool Equals(DelayedEnvelopeReceived other)
         {

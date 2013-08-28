@@ -15,7 +15,7 @@ namespace FubuTransportation.InMemory
         public static readonly Uri DelayedUri = "memory://localhost/delayed".ToUri();
 
         private static readonly Cache<Uri, InMemoryQueue> _queues = new Cache<Uri,InMemoryQueue>(x => new InMemoryQueue(x));
-        private static readonly IList<Envelope> _delayed = new List<Envelope>(); 
+        private static readonly IList<EnvelopeToken> _delayed = new List<EnvelopeToken>(); 
         private static readonly ReaderWriterLockSlim _delayedLock = new ReaderWriterLockSlim();
     
         public static void ClearAll()
@@ -29,32 +29,32 @@ namespace FubuTransportation.InMemory
             _queues.ClearAll();
         }
 
-        public static void AddToDelayedQueue(Envelope envelope)
+        public static void AddToDelayedQueue(EnvelopeToken envelope)
         {
             _delayedLock.Write(() => {
                 _delayed.Add(envelope);
             });
         }
 
-        public static IEnumerable<Envelope> DequeueDelayedEnvelopes(DateTime currentTime)
+        public static IEnumerable<EnvelopeToken> DequeueDelayedEnvelopes(DateTime currentTime)
         {
             var delayed = _delayedLock.Read(() => {
-                return _delayed.Where(x => x.ExecutionTime.Value <= currentTime).ToArray();
+                return _delayed.Where(x => new Envelope(x.Headers).ExecutionTime.Value <= currentTime).ToArray();
             });
 
-            var list = new List<Envelope>();
+            var list = new List<EnvelopeToken>();
 
-            foreach (Envelope envelope in delayed)
+            foreach (EnvelopeToken token in delayed)
             {
                 _delayedLock.Write(() => {
                     try
                     {
-                        _delayed.Remove(envelope);
-                        var clone = envelope.Clone();
+                        _delayed.Remove(token);
 
-                        _queues[clone.ReceivedAt].Enqueue(clone);
+                        var envelope = new Envelope(token.Headers);
+                        _queues[envelope.ReceivedAt].Enqueue(token);
 
-                        list.Add(clone);
+                        list.Add(token);
                     }
                     catch (Exception ex)
                     {
@@ -72,7 +72,7 @@ namespace FubuTransportation.InMemory
             return _queues[uri];
         }
 
-        public static IEnumerable<Envelope> DelayedEnvelopes()
+        public static IEnumerable<EnvelopeToken> DelayedEnvelopes()
         {
             return _delayedLock.Read(() => {
                 return _delayed.ToArray();

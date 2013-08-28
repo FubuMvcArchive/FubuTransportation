@@ -3,6 +3,7 @@ using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using System.Collections.Generic;
 using FubuTransportation.Logging;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Runtime
@@ -22,9 +23,13 @@ namespace FubuTransportation.Runtime
             _address = node.Uri;
         }
 
-        public void Receive(Envelope envelope)
+        public void Receive(byte[] data, IHeaders headers, IMessageCallback callback)
         {
-            if (envelope.Callback == null) throw new InvalidOperationException("Envelope.Callback cannot be null in this method");
+            if (data == null) throw new ArgumentNullException("data");
+            if (headers == null) throw new ArgumentNullException("headers");
+            if (callback == null) throw new ArgumentNullException("callback");
+
+            var envelope = new Envelope(data, headers, callback);
 
             envelope.ReceivedAt = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;

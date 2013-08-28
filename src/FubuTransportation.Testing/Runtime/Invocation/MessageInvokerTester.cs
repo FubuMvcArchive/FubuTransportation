@@ -10,6 +10,7 @@ using FubuTransportation.Logging;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Testing.ScenarioSupport;
@@ -150,13 +151,13 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         protected override void theContextIs()
         {
             theChain = new HandlerChain();
-
-            theEnvelope.ResponseId = Guid.NewGuid().ToString();
-
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
-                          .Repeat.Never();
-
-            ClassUnderTest.Invoke(theEnvelope);
+            Assert.Fail("NWO");
+//            theEnvelope.ResponseId = Guid.NewGuid().ToString();
+//
+//            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+//                          .Repeat.Never();
+//
+//            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -168,16 +169,18 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_log_message_successful()
         {
-            assertInfoMessageWasLogged(new MessageSuccessful{Envelope = theEnvelope});
+            Assert.Fail("NWO");
+            //assertInfoMessageWasLogged(new MessageSuccessful{Envelope = theEnvelope});
         }
 
         [Test]
         public void should_log_that_the_envelope_was_received()
         {
-            assertInfoMessageWasLogged(new EnvelopeReceived
-            {
-                Envelope = theEnvelope
-            });
+            Assert.Fail("NWO");
+//            assertInfoMessageWasLogged(new EnvelopeReceived
+//            {
+//                Envelope = theEnvelope
+//            });
         }
 
         [Test]
@@ -194,10 +197,11 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theChain = null;
 
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
-                          .IgnoreArguments().Repeat.Never();
-
-            ClassUnderTest.Invoke(theEnvelope);
+            Assert.Fail("NWO");
+//            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+//                          .IgnoreArguments().Repeat.Never();
+//
+//            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -209,16 +213,18 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_log_that_the_envelope_was_received()
         {
-            assertInfoMessageWasLogged(new EnvelopeReceived
-            {
-                Envelope = theEnvelope
-            });
+            Assert.Fail("NWO");
+//            assertInfoMessageWasLogged(new EnvelopeReceived
+//            {
+//                Envelope = theEnvelope
+//            });
         }
 
         [Test]
         public void should_log_no_handler()
         {
-            assertInfoMessageWasLogged(new NoHandlerForMessage{Envelope = theEnvelope});
+            Assert.Fail("NWO");
+            //assertInfoMessageWasLogged(new NoHandlerForMessage{Envelope = theEnvelope});
         }
 
         [Test]
@@ -235,19 +241,20 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         protected override void theContextIs()
         {
             theChain = new HandlerChain();
-
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
-
-            ClassUnderTest.Invoke(theEnvelope);
+            Assert.Fail("NWO");
+//            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
+//
+//            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
         public void should_log_that_the_envelope_was_received()
         {
-            assertInfoMessageWasLogged(new EnvelopeReceived
-            {
-                Envelope = theEnvelope
-            });
+            Assert.Fail("NWO");
+//            assertInfoMessageWasLogged(new EnvelopeReceived
+//            {
+//                Envelope = theEnvelope
+//            });
         }
 
 
@@ -292,14 +299,17 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theBehavior = MockFor<IActionBehavior>();
             theChain = new HandlerChain();
-            handlerArguments = new HandlerArguments(theEnvelope);
 
-            MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(handlerArguments, theChain.UniqueId))
-                .Return(theBehavior);
+            Assert.Fail("NWO");
 
-
-
-            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
+//            handlerArguments = new HandlerArguments(theEnvelope);
+//
+//            MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(handlerArguments, theChain.UniqueId))
+//                .Return(theBehavior);
+//
+//
+//
+//            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
         }
 
         [Test]
@@ -317,7 +327,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_log_message_successful()
         {
-            assertInfoMessageWasLogged(new MessageSuccessful { Envelope = theEnvelope });
+            Assert.Fail("NWO");
+            //assertInfoMessageWasLogged(new MessageSuccessful { Envelope = theEnvelope });
         }
 
     }
@@ -328,10 +339,10 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         protected override void theContextIs()
         {
             LocalSystemTime = DateTime.Today.AddHours(8);
-
-            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(10);
-
-            ClassUnderTest.Invoke(theEnvelope);
+            Assert.Fail("NWO");
+//            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(10);
+//
+//            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -350,7 +361,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void does_log_the_envelope_is_delayed()
         {
-            theLogger.InfoMessages.Single().ShouldEqual(new DelayedEnvelopeReceived {Envelope = theEnvelope});
+            Assert.Fail("NWO");
+            //theLogger.InfoMessages.Single().ShouldEqual(new DelayedEnvelopeReceived {Envelope = theEnvelope});
         }
     }
 
@@ -360,14 +372,14 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         protected override void theContextIs()
         {
             LocalSystemTime = DateTime.Today.AddHours(8);
-
-            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(-10);
-
-            theChain = new HandlerChain();
-
-            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
-
-            ClassUnderTest.Invoke(theEnvelope);
+            Assert.Fail("NWO");
+//            theEnvelope.ExecutionTime = UtcSystemTime.AddMinutes(-10);
+//
+//            theChain = new HandlerChain();
+//
+//            ClassUnderTest.Expect(x => x.ExecuteChain(theEnvelope, theChain));
+//
+//            ClassUnderTest.Invoke(theEnvelope);
         }
 
         [Test]
@@ -388,15 +400,15 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theBehavior = MockFor<IActionBehavior>();
             theChain = new HandlerChain();
-            handlerArguments = new HandlerArguments(theEnvelope);
+            //handlerArguments = new HandlerArguments(theEnvelope);
 
             MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(handlerArguments, theChain.UniqueId))
                 .Return(theBehavior);
 
             theExceptionThrown = new NotImplementedException();
             theBehavior.Expect(x => x.Invoke()).Throw(theExceptionThrown);
-
-            ClassUnderTest.ExecuteChain(theEnvelope, theChain);
+            Assert.Fail("NWO");
+            //ClassUnderTest.ExecuteChain(theEnvelope, theChain);
         }
 
         [Test]
@@ -408,7 +420,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_log_failure_message()
         {
-            assertInfoMessageWasLogged(new MessageFailed{Envelope = theEnvelope, Exception = theExceptionThrown});
+            Assert.Fail("NWO");
+            //assertInfoMessageWasLogged(new MessageFailed{Envelope = theEnvelope, Exception = theExceptionThrown});
         }
 
         [Test]
@@ -422,18 +435,20 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     
     public abstract class MessageInvokerContext : InteractionContext<MessageInvoker>
     {
-        protected Envelope theEnvelope;
         protected RecordingLogger theLogger;
         protected IMessageCallback theCallback;
         private HandlerChain _chain;
+        protected byte[] theData;
+        protected OneMessage theMessage;
+        protected NameValueHeaders theHeaders;
 
 
         protected sealed override void beforeEach()
         {
-            theEnvelope = new Envelope {Data = new byte[] {1, 2, 3, 4}, Message = new OneMessage()};
+            theData = new byte[] {1, 2, 3, 4};
+            theMessage = new OneMessage();
             theCallback = MockFor<IMessageCallback>();
-
-            theEnvelope.Callback = theCallback;
+            theHeaders = new NameValueHeaders();
 
             theLogger = new RecordingLogger();
 
@@ -452,7 +467,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             set
             {
-                ClassUnderTest.Stub(x => x.FindChain(theEnvelope))
+                ClassUnderTest.Stub(x => x.FindChain(new Envelope(theData, theHeaders, theCallback)))
                               .Return(value);
 
                 _chain = value;

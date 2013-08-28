@@ -30,7 +30,7 @@ namespace FubuTransportation.InMemory
             get { return _uri; }
         }
 
-        public void Enqueue(Envelope envelope)
+        public void Enqueue(EnvelopeToken envelope)
         {
             using (var stream = new MemoryStream())
             {
@@ -87,11 +87,11 @@ namespace FubuTransportation.InMemory
 
                         using (var stream = new MemoryStream(data))
                         {
-                            var envelope = _parent._formatter.Deserialize(stream).As<Envelope>();
+                            var token = _parent._formatter.Deserialize(stream).As<EnvelopeToken>();
 
-                            envelope.Callback = new InMemoryCallback(_parent, envelope);
+                            var callback = new InMemoryCallback(_parent, token);
 
-                            _receiver.Receive(envelope);
+                            _receiver.Receive(token.Data, token.Headers, callback);
                         }
                     }
                 });
@@ -110,12 +110,12 @@ namespace FubuTransportation.InMemory
     public class InMemoryCallback : IMessageCallback
     {
         private readonly InMemoryQueue _parent;
-        private readonly Envelope _envelope;
+        private readonly EnvelopeToken _token;
 
-        public InMemoryCallback(InMemoryQueue parent, Envelope envelope)
+        public InMemoryCallback(InMemoryQueue parent, EnvelopeToken token)
         {
             _parent = parent;
-            _envelope = envelope;
+            _token = token;
         }
 
         public void MarkSuccessful()
@@ -130,7 +130,7 @@ namespace FubuTransportation.InMemory
 
         public void MoveToDelayed()
         {
-            InMemoryQueueManager.AddToDelayedQueue(_envelope);
+            InMemoryQueueManager.AddToDelayedQueue(_token);
         }
     }
 }
