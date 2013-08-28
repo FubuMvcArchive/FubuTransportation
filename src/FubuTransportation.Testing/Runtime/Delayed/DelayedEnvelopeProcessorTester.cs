@@ -34,20 +34,18 @@ namespace FubuTransportation.Testing.Runtime.Delayed
             var logger = new RecordingLogger();
             Services.Inject<ILogger>(logger);
 
-            var envelopes = new Envelope[] {new Envelope(), new Envelope(), new Envelope()};
+            var envelopes = new EnvelopeToken[] {new EnvelopeToken(), new EnvelopeToken(), new EnvelopeToken()};
             LocalSystemTime = DateTime.Today.AddHours(5);
             var theTransport = MockFor<ITransport>();
 
-            Assert.Fail("NWO");
+            theTransport.Stub(x => x.ReplayDelayed(UtcSystemTime))
+                        .Return(envelopes);
 
-//            theTransport.Stub(x => x.ReplayDelayed(UtcSystemTime))
-//                        .Return(envelopes);
+            ClassUnderTest.DequeuFromTransport(theTransport, UtcSystemTime);
 
-//            ClassUnderTest.DequeuFromTransport(theTransport, UtcSystemTime);
-//
-//            envelopes.Each(env => {
-//                logger.InfoMessages.ShouldContain(new DelayedEnvelopeAddedBackToQueue{Envelope = env});
-//            });
+            envelopes.Each(env => {
+                logger.InfoMessages.ShouldContain(new DelayedEnvelopeAddedBackToQueue{Envelope = env});
+            });
         }
     }
 

@@ -43,7 +43,7 @@ namespace FubuTransportation.Runtime
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Envelope)obj);
+            return Equals((EnvelopeToken)obj);
         }
 
         public override int GetHashCode()
