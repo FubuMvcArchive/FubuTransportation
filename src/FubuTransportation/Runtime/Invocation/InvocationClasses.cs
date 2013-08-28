@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Logging;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
 {
     public interface IContinuation
     {
-        void Execute(Envelope envelope, IMessageCallback callback);
+        void Execute(Envelope envelope);
     }
 
     // Another handler for no subscriber rules!
@@ -19,7 +20,7 @@ namespace FubuTransportation.Runtime.Invocation
 
     public interface IHandlerPipeline
     {
-        void Invoke(Envelope envelope, IMessageCallback callback);
+        void Invoke(Envelope envelope);
     }
 
     public class HandlerPipeline : IHandlerPipeline
@@ -35,30 +36,31 @@ namespace FubuTransportation.Runtime.Invocation
             _handlers.AddRange(handlers);
         }
 
-        public void Invoke(Envelope envelope, IMessageCallback callback)
+        public void Invoke(Envelope envelope)
         {
+            envelope.UseSerializer(_serializer);
 
-
-
-            // TODO -- log received
-
-            if (envelope.Message == null)
-            {
-                _serializer.Deserialize(envelope);
-            }
+            _logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
 
             var continuation = FindContinuation(envelope);
-            continuation.Execute(envelope, callback);
+            continuation.Execute(envelope);
         }
 
-        public IContinuation FindContinuation(Envelope envelope)
+        // virtual for testing as usual
+        public virtual IContinuation FindContinuation(Envelope envelope)
         {
-            foreach (IEnvelopeHandler handler in _handlers)
+            foreach (var handler in _handlers)
             {
                 var continuation = handler.Handle(envelope);
                 if (continuation != null)
                 {
-                    // TODO log something
+                    _logger.DebugMessage(() => new EnvelopeContinuationChosen
+                    {
+                        ContinuationType = continuation.GetType(),
+                        HandlerType = handler.GetType(),
+                        Envelope = envelope.ToToken()
+                    });
+
                     return continuation;
                 }
             }

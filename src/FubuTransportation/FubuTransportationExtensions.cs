@@ -63,6 +63,8 @@ namespace FubuTransportation
             SetServiceIfNone<IServiceBus, ServiceBus>();
 
             SetServiceIfNone<IEnvelopeSerializer, EnvelopeSerializer>();
+            SetServiceIfNone<IHandlerPipeline, HandlerPipeline>();
+
 
             AddService<ILogListener, EventAggregationListener>();
 

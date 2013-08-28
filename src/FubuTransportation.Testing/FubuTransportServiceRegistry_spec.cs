@@ -169,7 +169,11 @@ namespace FubuTransportation.Testing
         }
 
 
-
+        [Test]
+        public void handler_pipeline_is_registered()
+        {
+            registeredTypeIs<IHandlerPipeline, HandlerPipeline>();
+        }
 
     }
 }

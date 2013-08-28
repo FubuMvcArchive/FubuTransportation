@@ -35,7 +35,7 @@ namespace FubuTransportation.Runtime
 
         protected bool Equals(EnvelopeToken other)
         {
-            return Equals(Data, other.Data) && Equals(Message, other.Message) && Equals(Headers, other.Headers);
+            return Equals(Data, other.Data) && Equals(Headers, other.Headers);
         }
 
         public override bool Equals(object obj)

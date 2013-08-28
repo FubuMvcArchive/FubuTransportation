@@ -55,12 +55,12 @@ namespace FubuTransportation.Runtime
         public Envelope(IHeaders headers)
         {
             Headers = headers;
+            CorrelationId = Guid.NewGuid().ToString();
         }
 
-        public Envelope()
+        public Envelope() : this(new NameValueHeaders())
         {
             Headers = new NameValueHeaders();
-            CorrelationId = Guid.NewGuid().ToString();
         }
 
         public Envelope(byte[] data, IHeaders headers, IMessageCallback callback)
@@ -154,6 +154,14 @@ namespace FubuTransportation.Runtime
                 hashCode = (hashCode*397) ^ (_callback != null ? _callback.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public static Envelope Fake()
+        {
+            return new Envelope
+            {
+                Data = new byte[]{1,2,3,4}
+            };
         }
     }
 }
