@@ -25,6 +25,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ReplyUriKey = "Reply-Uri";
         public static readonly string ExecutionTimeKey = "Execution-Time";
         public static readonly string ReceivedAtKey = "Received-At";
+        public static readonly string AttemptsKey = "Attempts";
 
         public byte[] Data;
 
@@ -56,6 +57,11 @@ namespace FubuTransportation.Runtime
 
 
         [NonSerialized] private IMessageCallback _callback;
+        public int Attempts
+        {
+            get { return Headers.Has(AttemptsKey) ? int.Parse(Headers[AttemptsKey]) : 0; }
+            set { Headers[AttemptsKey] = value.ToString(); }
+        }
 
         // TODO -- do routing slip tracking later
 

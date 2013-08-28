@@ -316,5 +316,16 @@ namespace FubuTransportation.Testing.Runtime
             token.Message.ShouldEqual(envelope.Message);
             token.Data.ShouldEqual(envelope.Data);
         }
+
+        [Test]
+        public void attempts()
+        {
+            var envelope = new Envelope();
+            envelope.Attempts.ShouldEqual(0);
+
+            envelope.Attempts++;
+
+            envelope.Attempts.ShouldEqual(1);
+        }
     }
 }
