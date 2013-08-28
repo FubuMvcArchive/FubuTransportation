@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using FubuCore.Logging;
+﻿using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
-using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
 {
@@ -12,21 +10,13 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly HandlerGraph _graph;
         private readonly ILogger _logger;
         private readonly IEnvelopeSender _sender;
-        private readonly IEnvelopeSerializer _serializer;
 
-        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, IEnvelopeSerializer serializer, ILogger logger,
-                            IEnvelopeSender sender)
+        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IEnvelopeSender sender)
         {
             _factory = factory;
             _graph = graph;
-            _serializer = serializer;
             _logger = logger;
             _sender = sender;
-        }
-
-        public IEnvelopeSerializer Serializer
-        {
-            get { return _serializer; }
         }
 
         public void Invoke(Envelope envelope)
@@ -36,7 +26,6 @@ namespace FubuTransportation.Runtime.Invocation
             ExecuteChain(envelope, chain);
         }
 
-        // TODO -- start moving much more of this code into IServiceBus
         public void InvokeNow<T>(T message)
         {
             // TODO -- log failures, but throw the exception
@@ -69,7 +58,7 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 var context = new InvocationContext(envelope);
                 var behavior = _factory.BuildBehavior(context, chain.UniqueId);
-                
+
                 behavior.Invoke();
 
                 return context;
