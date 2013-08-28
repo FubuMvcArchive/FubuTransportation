@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using LightningQueues;
 using LightningQueues.Model;
 
@@ -57,9 +58,7 @@ namespace FubuTransportation.LightningQueues
                 var transactionalScope = _queueManager.BeginTransactionalScope();
                 var message = transactionalScope.Receive(queueName);
 
-                var envelope = message.ToEnvelope();
-
-                receiver.Receive(envelope, new TransactionCallback(transactionalScope, message, _queueManager));
+                receiver.Receive(message.Data, new NameValueHeaders(message.Headers), new TransactionCallback(transactionalScope, message, _queueManager));
             }
 
         }

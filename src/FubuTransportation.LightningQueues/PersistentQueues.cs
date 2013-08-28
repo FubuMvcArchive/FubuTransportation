@@ -35,13 +35,14 @@ namespace FubuTransportation.LightningQueues
 
         public void Start(IEnumerable<LightningUri> uriList)
         {
-            uriList.GroupBy(x => x.Endpoint).Each(group => {
+            uriList.GroupBy(x => x.Endpoint).Each(group =>
+            {
                 string[] queueNames = group.Select(x => x.QueueName).ToArray();
 
                 var queueManager = _queueManagers[@group.Key];
                 queueManager.CreateQueues(queueNames);
                 queueManager.CreateQueues(LightningQueuesTransport.DelayedQueueName);
-                
+
                 queueManager.Start();
             });
         }
@@ -51,13 +52,15 @@ namespace FubuTransportation.LightningQueues
             _queueManagers[uri.Endpoint].CreateQueues(uri.QueueName);
         }
 
-        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
+        public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)
         {
             return _queueManagers.SelectMany(x => ReplayDelayed(x, currentTime));
         }
 
-        public IEnumerable<Envelope> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
+        public IEnumerable<EnvelopeToken> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
         {
+            throw new NotImplementedException();
+
             var list = new List<Envelope>();
 
             var transactionalScope = queueManager.BeginTransactionalScope();
@@ -65,17 +68,18 @@ namespace FubuTransportation.LightningQueues
 
             try
             {
-                var messages = queueManager.GetQueue(LightningQueuesTransport.DelayedQueueName).GetAllMessages(null)
-                    .Where(x => x.ExecutionTime() <= currentTime).ToArray();
-
-                messages.Each(msg => {
-                    var uri = msg.Headers[Envelope.ReceivedAtKey].ToLightningUri();
-                    queueManager.MoveTo(uri.QueueName, msg);
-
-                    list.Add(new Envelope());
-                });
-
-                transactionalScope.Commit();
+//                var messages = queueManager.GetQueue(LightningQueuesTransport.DelayedQueueName).GetAllMessages(null)
+//                    .Where(x => x.ExecutionTime() <= currentTime).ToArray();
+//
+//                messages.Each(msg =>
+//                {
+//                    var uri = msg.Headers[Envelope.ReceivedAtKey].ToLightningUri();
+//                    queueManager.MoveTo(uri.QueueName, msg);
+//
+//                    list.Add(new Envelope());
+//                });
+//
+//                transactionalScope.Commit();
             }
             catch (Exception e)
             {
@@ -83,7 +87,7 @@ namespace FubuTransportation.LightningQueues
                 _logger.Error("Error trying to move delayed messages back to the original queue", e);
             }
 
-            return list;
+            //return list;
         }
     }
 }

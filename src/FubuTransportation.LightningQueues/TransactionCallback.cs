@@ -1,4 +1,4 @@
-using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 using LightningQueues;
 using LightningQueues.Model;
 
@@ -6,9 +6,9 @@ namespace FubuTransportation.LightningQueues
 {
     public class TransactionCallback : IMessageCallback
     {
-        private readonly ITransactionalScope _transaction;
         private readonly Message _message;
         private readonly IQueueManager _queues;
+        private readonly ITransactionalScope _transaction;
 
         public TransactionCallback(ITransactionalScope transaction, Message message, IQueueManager queues)
         {

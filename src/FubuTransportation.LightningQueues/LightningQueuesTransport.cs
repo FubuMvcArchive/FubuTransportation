@@ -38,7 +38,7 @@ namespace FubuTransportation.LightningQueues
             return channel;
         }
 
-        public IEnumerable<Envelope> ReplayDelayed(DateTime currentTime)
+        public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)
         {
             return _queues.ReplayDelayed(currentTime);
         }
