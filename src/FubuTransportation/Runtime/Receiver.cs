@@ -29,10 +29,13 @@ namespace FubuTransportation.Runtime
             if (headers == null) throw new ArgumentNullException("headers");
             if (callback == null) throw new ArgumentNullException("callback");
 
-            var envelope = new Envelope(data, headers, callback);
+            var envelope = new Envelope(data, headers, callback)
+            {
+                ReceivedAt = _address
+            };
 
-            envelope.ReceivedAt = _address;
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
+            envelope.Attempts++;
 
             _pipeline.Invoke(envelope);
         }

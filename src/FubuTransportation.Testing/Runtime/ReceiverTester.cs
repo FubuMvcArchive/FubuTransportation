@@ -167,6 +167,7 @@ namespace FubuTransportation.Testing.Runtime
             theCallback = MockRepository.GenerateMock<IMessageCallback>();
             theData = new byte[] {1, 2, 3};
             theHeaders = new NameValueHeaders();
+            theHeaders[Envelope.AttemptsKey] = "2";
 
             ClassUnderTest.Receive(theData, theHeaders, theCallback);
         }
@@ -181,6 +182,12 @@ namespace FubuTransportation.Testing.Runtime
         public void should_call_through_to_the_pipeline()
         {
             MockFor<IHandlerPipeline>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
+        }
+
+        [Test]
+        public void should_increment_the_attempts_count()
+        {
+            theHeaders[Envelope.AttemptsKey].ShouldEqual("3");
         }
     }
 }
