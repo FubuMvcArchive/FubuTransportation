@@ -1,5 +1,4 @@
 ﻿using FubuCore.Logging;
-using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;

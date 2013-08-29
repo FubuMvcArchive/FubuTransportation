@@ -1,6 +1,5 @@
 ﻿using System;
 using FubuCore.Logging;
-using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
