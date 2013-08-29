@@ -1,5 +1,6 @@
 using System;
 using FubuTransportation.Runtime.Delayed;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime.Invocation;
 using LightningQueues;
 using LightningQueues.Model;
@@ -33,6 +34,11 @@ namespace FubuTransportation.LightningQueues
         {
             _delayedMessages.Add(_message.Id, time);
             _transaction.EnqueueDirectlyTo(LightningQueuesTransport.DelayedQueueName, _message.ToPayload());
+        }
+
+        public void MoveToErrors(ErrorReport report)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

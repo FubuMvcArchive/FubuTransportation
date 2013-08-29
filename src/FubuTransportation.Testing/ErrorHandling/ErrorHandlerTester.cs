@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         public void continuation_is_move_to_error_queue_by_default()
         {
             new ErrorHandler().Continuation
-                              .ShouldBeOfType<MoveToErrorQueue>();
+                              .ShouldBeOfType<RequeueContinuation>();
         }
 
         [Test]

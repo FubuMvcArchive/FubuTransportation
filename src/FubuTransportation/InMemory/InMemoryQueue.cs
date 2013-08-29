@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using System.Linq;
 using FubuTransportation.Runtime.Delayed;
@@ -133,6 +134,11 @@ namespace FubuTransportation.InMemory
         {
             //TODO leverage delayed message cache?
             InMemoryQueueManager.AddToDelayedQueue(_token);
+        }
+
+        public void MoveToErrors(ErrorReport report)
+        {
+            throw new NotImplementedException();
         }
     }
 }

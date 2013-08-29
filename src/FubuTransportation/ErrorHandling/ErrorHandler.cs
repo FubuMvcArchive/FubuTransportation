@@ -10,7 +10,7 @@ namespace FubuTransportation.ErrorHandling
     {
         private readonly IList<IExceptionMatch> _conditions = new List<IExceptionMatch>(); 
 
-        public IContinuation Continuation = new MoveToErrorQueue();
+        public IContinuation Continuation = new RequeueContinuation();
 
         public void AddCondition(IExceptionMatch condition)
         {

@@ -25,6 +25,7 @@ namespace FubuTransportation.ErrorHandling
 
         public void Invoke()
         {
+            // log the exception no matter what!
             throw new NotImplementedException();
         }
 
@@ -56,14 +57,4 @@ namespace FubuTransportation.ErrorHandling
             throw new NotImplementedException();
         }
     }
-
-    public class MoveToErrorQueue : IContinuation
-    {
-        public void Execute(Envelope envelope, ILogger logger)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
 }

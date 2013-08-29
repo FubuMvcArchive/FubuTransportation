@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+﻿using FubuTransportation.ErrorHandling;
 
 namespace FubuTransportation.Runtime.Invocation
 {
@@ -8,5 +9,6 @@ namespace FubuTransportation.Runtime.Invocation
         void MarkFailed();
 
         void MoveToDelayedUntil(DateTime time);
+        void MoveToErrors(ErrorReport report);
     }
 }
