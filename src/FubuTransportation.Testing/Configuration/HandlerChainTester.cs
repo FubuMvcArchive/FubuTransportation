@@ -20,5 +20,11 @@ namespace FubuTransportation.Testing.Configuration
             var chain = new HandlerChain();
             chain.IsPartialOnly.ShouldBeTrue();
         }
+
+        [Test]
+        public void the_default_number_of_maximum_attempts_is_1()
+        {
+            new HandlerChain().MaximumAttempts.ShouldEqual(1);
+        }
     }
 }
