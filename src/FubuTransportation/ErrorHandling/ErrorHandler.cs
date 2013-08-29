@@ -6,18 +6,18 @@ using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.ErrorHandling
 {
-    public class ErrorHandler : IErrorHandler, IErrorCondition
+    public class ErrorHandler : IErrorHandler, IExceptionMatch
     {
-        private readonly IList<IErrorCondition> _conditions = new List<IErrorCondition>(); 
+        private readonly IList<IExceptionMatch> _conditions = new List<IExceptionMatch>(); 
 
         public IContinuation Continuation = new MoveToErrorQueue();
 
-        public void AddCondition(IErrorCondition condition)
+        public void AddCondition(IExceptionMatch condition)
         {
             _conditions.Add(condition);
         }
 
-        public IEnumerable<IErrorCondition> Conditions
+        public IEnumerable<IExceptionMatch> Conditions
         {
             get { return _conditions; }
         }

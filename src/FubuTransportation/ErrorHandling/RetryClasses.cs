@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuTransportation.Configuration;
@@ -51,31 +52,6 @@ namespace FubuTransportation.ErrorHandling
         public string ExceptionType { get; set; }
         public string ExceptionMessage { get; set; }
         public string ExceptionText { get; set; }
-    }
-
-    public interface IErrorCondition
-    {
-        bool Matches(Envelope envelope, Exception ex);
-    }
-
-    public class ExceptionType<T> : IErrorCondition where T : Exception
-    {
-        public bool Matches(Envelope envelope, Exception ex)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MessageContains : IErrorCondition
-    {
-        public MessageContains(string text)
-        {
-        }
-
-        public bool Matches(Envelope envelope, Exception ex)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class RequeueContinuation : IContinuation

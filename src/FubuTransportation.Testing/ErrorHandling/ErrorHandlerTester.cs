@@ -1,9 +1,8 @@
 ﻿using System;
+using FubuTestingSupport;
 using FubuTransportation.ErrorHandling;
-using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
-using FubuTestingSupport;
 using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ErrorHandling
@@ -22,7 +21,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         public void matches_with_no_rules_is_true()
         {
             new ErrorHandler().Matches(ObjectMother.Envelope(), new Exception())
-                .ShouldBeTrue();
+                              .ShouldBeTrue();
         }
 
         [Test]
@@ -31,10 +30,10 @@ namespace FubuTransportation.Testing.ErrorHandling
             var exception = new Exception();
             var envelope = ObjectMother.Envelope();
 
-            var matchingCondition1 = MockRepository.GenerateMock<IErrorCondition>();
-            var matchingCondition2 = MockRepository.GenerateMock<IErrorCondition>();
-            var matchingCondition3 = MockRepository.GenerateMock<IErrorCondition>();
-            var conditionThatDoesNotMatch = MockRepository.GenerateMock<IErrorCondition>();
+            var matchingCondition1 = MockRepository.GenerateMock<IExceptionMatch>();
+            var matchingCondition2 = MockRepository.GenerateMock<IExceptionMatch>();
+            var matchingCondition3 = MockRepository.GenerateMock<IExceptionMatch>();
+            var conditionThatDoesNotMatch = MockRepository.GenerateMock<IExceptionMatch>();
 
             matchingCondition1.Stub(x => x.Matches(envelope, exception)).Return(true);
             matchingCondition2.Stub(x => x.Matches(envelope, exception)).Return(true);
@@ -62,14 +61,14 @@ namespace FubuTransportation.Testing.ErrorHandling
             var exception = new Exception();
             var envelope = ObjectMother.Envelope();
 
-            var conditionThatDoesNotMatch = MockRepository.GenerateMock<IErrorCondition>();
+            var conditionThatDoesNotMatch = MockRepository.GenerateMock<IExceptionMatch>();
 
 
             var handler = new ErrorHandler();
             handler.AddCondition(conditionThatDoesNotMatch);
 
             handler.DetermineContinuation(envelope, exception)
-                .ShouldBeNull();
+                   .ShouldBeNull();
         }
 
         [Test]
@@ -77,8 +76,8 @@ namespace FubuTransportation.Testing.ErrorHandling
         {
             var exception = new Exception();
             var envelope = ObjectMother.Envelope();
-            
-            var matchingCondition1 = MockRepository.GenerateMock<IErrorCondition>();
+
+            var matchingCondition1 = MockRepository.GenerateMock<IExceptionMatch>();
             matchingCondition1.Stub(x => x.Matches(envelope, exception)).Return(true);
 
             var handler = new ErrorHandler();
@@ -89,9 +88,7 @@ namespace FubuTransportation.Testing.ErrorHandling
             handler.Matches(envelope, exception).ShouldBeTrue();
 
             handler.DetermineContinuation(envelope, exception)
-                .ShouldBeTheSameAs(handler.Continuation);
+                   .ShouldBeTheSameAs(handler.Continuation);
         }
-
-
     }
 }
