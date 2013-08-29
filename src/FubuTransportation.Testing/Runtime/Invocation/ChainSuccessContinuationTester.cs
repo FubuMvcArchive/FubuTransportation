@@ -18,12 +18,15 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         private RecordingEnvelopeSender theSender;
         private ChainSuccessContinuation theContinuation;
         private RecordingLogger theLogger;
+        private TestContinuationContext theContinuationContext;
 
         [SetUp]
         public void SetUp()
         {
             theEnvelope = ObjectMother.Envelope();
             theEnvelope.Message = new object();
+
+            theContinuationContext = new TestContinuationContext();
 
             theContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
 
@@ -37,7 +40,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theLogger = new RecordingLogger();
 
-            theContinuation.Execute(theEnvelope, theLogger);
+            theContinuation.Execute(theEnvelope, theContinuationContext);
         }
 
         [Test]
@@ -49,7 +52,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_log_the_chain_success()
         {
-            theLogger.InfoMessages.Single()
+            theContinuationContext.RecordedLogs.InfoMessages.Single()
                      .ShouldEqual(new MessageSuccessful {Envelope = theEnvelope.ToToken()});
         }
 

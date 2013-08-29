@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         {
             var envelope = ObjectMother.Envelope();
 
-            new RequeueContinuation().Execute(envelope, new RecordingLogger());
+            new RequeueContinuation().Execute(envelope, new TestContinuationContext());
 
             envelope.Callback.AssertWasCalled(x => x.Requeue());
         }

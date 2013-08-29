@@ -11,9 +11,9 @@ namespace FubuTransportation.Runtime.Invocation
             return envelope.ResponseId.IsNotEmpty();
         }
 
-        public override void Execute(Envelope envelope, ILogger logger)
+        public override void Execute(Envelope envelope, ContinuationContext context)
         {
-            logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
+            context.Logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
             envelope.Callback.MarkSuccessful();
         }
     }

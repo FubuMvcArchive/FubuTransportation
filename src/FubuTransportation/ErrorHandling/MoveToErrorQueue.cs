@@ -1,5 +1,4 @@
 ﻿using System;
-using FubuCore.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
@@ -14,7 +13,7 @@ namespace FubuTransportation.ErrorHandling
             _exception = exception;
         }
 
-        public void Execute(Envelope envelope, ILogger logger)
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
             var report = new ErrorReport(envelope, _exception);
             envelope.Callback.MoveToErrors(report);

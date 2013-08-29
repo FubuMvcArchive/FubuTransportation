@@ -6,7 +6,7 @@ namespace FubuTransportation.ErrorHandling
 {
     public class RequeueContinuation : IContinuation
     {
-        public void Execute(Envelope envelope, ILogger logger)
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
             envelope.Callback.Requeue();
         }

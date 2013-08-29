@@ -209,6 +209,7 @@
     <Compile Include="ScenarioSupport\ThreeMessage.cs" />
     <Compile Include="ScenarioSupport\TwoHandler.cs" />
     <Compile Include="ScenarioSupport\TwoMessage.cs" />
+    <Compile Include="TestContinuationContext.cs" />
     <Compile Include="TestSupport\MessageWatcherTester.cs" />
     <Compile Include="TransportActivatorTester.cs" />
     <Compile Include="TransportSettingsTester.cs" />

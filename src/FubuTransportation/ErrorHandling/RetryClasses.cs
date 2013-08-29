@@ -44,7 +44,7 @@ namespace FubuTransportation.ErrorHandling
             _delay = delay;
         }
 
-        public void Execute(Envelope envelope, ILogger logger)
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
             throw new NotImplementedException();
         }

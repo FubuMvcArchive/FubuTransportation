@@ -55,33 +55,33 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void execute_happy_path()
         {
-            var logger = new RecordingLogger();
+            var context = new TestContinuationContext();
             var envelope = ObjectMother.Envelope();
             envelope.ExecutionTime = DateTime.Today;
 
-            new DelayedEnvelopeHandler(null).Execute(envelope, logger);
+            new DelayedEnvelopeHandler(null).Execute(envelope, context);
 
             envelope.Callback.AssertWasCalled(x => x.MoveToDelayedUntil(envelope.ExecutionTime.Value));
 
-            logger.InfoMessages.Single().ShouldBeOfType<DelayedEnvelopeReceived>()
+            context.RecordedLogs.InfoMessages.Single().ShouldBeOfType<DelayedEnvelopeReceived>()
                   .Envelope.ShouldEqual(envelope.ToToken());
         }
 
         [Test]
         public void execute_sad_path()
         {
-            var logger = new RecordingLogger();
+            var context = new TestContinuationContext();
             var envelope = ObjectMother.Envelope();
             envelope.ExecutionTime = DateTime.Today;
 
             var exception = new NotImplementedException();
             envelope.Callback.Stub(x => x.MoveToDelayedUntil(envelope.ExecutionTime.Value)).Throw(exception);
 
-            new DelayedEnvelopeHandler(SystemTime.Default()).Execute(envelope, logger);
+            new DelayedEnvelopeHandler(SystemTime.Default()).Execute(envelope, context);
 
             envelope.Callback.AssertWasCalled(x => x.MarkFailed());
 
-            var report = logger.ErrorMessages.Single().ShouldBeOfType<ExceptionReport>();
+            var report = context.RecordedLogs.ErrorMessages.Single().ShouldBeOfType<ExceptionReport>();
             report.CorrelationId.ShouldEqual(envelope.CorrelationId);
             report.ExceptionText.ShouldEqual(exception.ToString());
 

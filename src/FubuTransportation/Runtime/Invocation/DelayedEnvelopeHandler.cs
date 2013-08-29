@@ -21,17 +21,17 @@ namespace FubuTransportation.Runtime.Invocation
             return envelope.IsDelayed(_systemTime.UtcNow());
         }
 
-        public override void Execute(Envelope envelope, ILogger logger)
+        public override void Execute(Envelope envelope, ContinuationContext context)
         {
             try
             {
                 envelope.Callback.MoveToDelayedUntil(envelope.ExecutionTime.Value);
-                logger.InfoMessage(() => new DelayedEnvelopeReceived { Envelope = envelope.ToToken() });
+                context.Logger.InfoMessage(() => new DelayedEnvelopeReceived { Envelope = envelope.ToToken() });
             }
             catch (Exception e)
             {
                 envelope.Callback.MarkFailed();
-                logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
+                context.Logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
             }
         }
     }

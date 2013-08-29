@@ -9,10 +9,10 @@ namespace FubuTransportation.Runtime.Invocation
             return true;
         }
 
-        public override void Execute(Envelope envelope, ILogger logger)
+        public override void Execute(Envelope envelope, ContinuationContext context)
         {
             envelope.Callback.MarkSuccessful();
-            // TODO -- do more here.  Post haste
+            // TODO -- do more here.  There's a GH issue for this.
         }
     }
 }

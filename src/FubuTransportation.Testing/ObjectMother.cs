@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Runtime;
+﻿using FubuCore.Logging;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using Rhino.Mocks;
 

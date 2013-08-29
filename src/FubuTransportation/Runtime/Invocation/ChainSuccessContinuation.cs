@@ -14,12 +14,12 @@ namespace FubuTransportation.Runtime.Invocation
             _context = context;
         }
 
-        public void Execute(Envelope envelope, ILogger logger)
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
             _sender.SendOutgoingMessages(envelope, _context.OutgoingMessages());
 
             envelope.Callback.MarkSuccessful();
-            logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
+            context.Logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
         }
 
         public IInvocationContext Context

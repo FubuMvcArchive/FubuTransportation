@@ -16,14 +16,14 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     {
         private IContinuation theContinuation;
         private Envelope theEnvelope;
-        private RecordingLogger theLogger;
+        private TestContinuationContext theContext;
 
         protected override void beforeEach()
         {
             Services.Inject<IEnumerable<IEnvelopeHandler>>(new IEnvelopeHandler[0]);
 
-            theLogger = new RecordingLogger();
-            Services.Inject<ILogger>(theLogger);
+            theContext = new TestContinuationContext();
+            Services.Inject<ContinuationContext>(theContext);
 
             theContinuation = MockFor<IContinuation>();
             theEnvelope = ObjectMother.Envelope();
@@ -50,13 +50,13 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_invoke_the_continuation()
         {
-            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope, theLogger));
+            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope, theContext));
         }
 
         [Test]
         public void log_the_envelope_received()
         {
-            theLogger.InfoMessages.ShouldContain(new EnvelopeReceived
+            theContext.RecordedLogs.InfoMessages.ShouldContain(new EnvelopeReceived
             {
                 Envelope = theEnvelope.ToToken()
             });

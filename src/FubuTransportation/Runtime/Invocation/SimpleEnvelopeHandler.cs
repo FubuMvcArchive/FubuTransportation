@@ -12,6 +12,6 @@ namespace FubuTransportation.Runtime.Invocation
 
         public abstract bool Matches(Envelope envelope);
 
-        public abstract void Execute(Envelope envelope, ILogger logger);
+        public abstract void Execute(Envelope envelope, ContinuationContext context);
     }
 }

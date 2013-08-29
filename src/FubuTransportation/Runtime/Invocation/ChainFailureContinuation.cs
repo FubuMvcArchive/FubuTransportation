@@ -1,5 +1,4 @@
 ﻿using System;
-using FubuCore.Logging;
 using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -13,11 +12,11 @@ namespace FubuTransportation.Runtime.Invocation
             _exception = exception;
         }
 
-        public void Execute(Envelope envelope, ILogger logger)
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
             envelope.Callback.MarkFailed();
-            logger.InfoMessage(() => new MessageFailed { Envelope = envelope.ToToken(), Exception = _exception });
-            logger.Error(envelope.CorrelationId, _exception);
+            context.Logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = _exception});
+            context.Logger.Error(envelope.CorrelationId, _exception);
         }
 
         public Exception Exception

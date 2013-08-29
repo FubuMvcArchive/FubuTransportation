@@ -9,13 +9,13 @@ namespace FubuTransportation.Runtime.Invocation
     public class HandlerPipeline : IHandlerPipeline
     {
         private readonly IEnvelopeSerializer _serializer;
-        private readonly ILogger _logger;
+        private readonly ContinuationContext _context;
         private readonly IList<IEnvelopeHandler> _handlers = new List<IEnvelopeHandler>();
 
-        public HandlerPipeline(IEnvelopeSerializer serializer, ILogger logger, IEnumerable<IEnvelopeHandler> handlers)
+        public HandlerPipeline(IEnvelopeSerializer serializer, ContinuationContext context, IEnumerable<IEnvelopeHandler> handlers)
         {
             _serializer = serializer;
-            _logger = logger;
+            _context = context;
             _handlers.AddRange(handlers);
         }
 
@@ -23,12 +23,12 @@ namespace FubuTransportation.Runtime.Invocation
         {
             envelope.UseSerializer(_serializer);
 
-            _logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
+            _context.Logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
 
             var continuation = FindContinuation(envelope);
 
             // Harden this!!!!!  No exceptions get through, ever.
-            continuation.Execute(envelope, _logger);
+            continuation.Execute(envelope, _context);
         }
 
         // virtual for testing as usual
@@ -39,7 +39,7 @@ namespace FubuTransportation.Runtime.Invocation
                 var continuation = handler.Handle(envelope);
                 if (continuation != null)
                 {
-                    _logger.DebugMessage(() => new EnvelopeContinuationChosen
+                    _context.Logger.DebugMessage(() => new EnvelopeContinuationChosen
                     {
                         ContinuationType = continuation.GetType(),
                         HandlerType = handler.GetType(),

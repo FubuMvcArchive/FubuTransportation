@@ -34,12 +34,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void handle()
         {
             // pretty simple.  Effectively just shuts things down.
-            var logger = new RecordingLogger();
+            var context = new TestContinuationContext();
 
                         var envelope = ObjectMother.Envelope();
             envelope.ResponseId = Guid.NewGuid().ToString();
 
-            new ResponseEnvelopeHandler().Execute(envelope, logger);
+            new ResponseEnvelopeHandler().Execute(envelope, context);
 
             envelope.Callback.AssertWasCalled(x => x.MarkSuccessful());
         }

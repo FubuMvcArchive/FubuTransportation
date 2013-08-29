@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.ErrorHandling
 
             theLogger = MockRepository.GenerateMock<ILogger>();
 
-            new MoveToErrorQueue(theException).Execute(theEnvelope, theLogger);
+            new MoveToErrorQueue(theException).Execute(theEnvelope, null);
         }
 
         [Test]
