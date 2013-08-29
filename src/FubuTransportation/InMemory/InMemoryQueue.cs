@@ -140,5 +140,10 @@ namespace FubuTransportation.InMemory
         {
             throw new NotImplementedException();
         }
+
+        public void Requeue()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

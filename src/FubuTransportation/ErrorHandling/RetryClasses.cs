@@ -35,14 +35,6 @@ namespace FubuTransportation.ErrorHandling
         }
     }
 
-    public class RequeueContinuation : IContinuation
-    {
-        public void Execute(Envelope envelope, ILogger logger)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class DelayedRetryContinuation : IContinuation
     {
         private readonly TimeSpan _delay;

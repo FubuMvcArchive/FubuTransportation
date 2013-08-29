@@ -10,5 +10,6 @@ namespace FubuTransportation.Runtime.Invocation
 
         void MoveToDelayedUntil(DateTime time);
         void MoveToErrors(ErrorReport report);
+        void Requeue();
     }
 }

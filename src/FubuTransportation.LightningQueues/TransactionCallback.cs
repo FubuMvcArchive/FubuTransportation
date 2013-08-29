@@ -40,5 +40,10 @@ namespace FubuTransportation.LightningQueues
         {
             throw new System.NotImplementedException();
         }
+
+        public void Requeue()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

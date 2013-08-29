@@ -72,6 +72,7 @@
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="ErrorHandling\IExceptionMatch.cs" />
     <Compile Include="ErrorHandling\MoveToErrorQueue.cs" />
+    <Compile Include="ErrorHandling\RequeueContinuation.cs" />
     <Compile Include="ErrorHandling\RetryClasses.cs" />
     <Compile Include="HandlerExtensions.cs" />
     <Compile Include="InMemory\AllQueuesInMemoryPolicy.cs" />
