@@ -66,6 +66,7 @@
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\ErrorHandler.cs" />
+    <Compile Include="ErrorHandling\ErrorReport.cs" />
     <Compile Include="ErrorHandling\ExceptionMatch.cs" />
     <Compile Include="ErrorHandling\ExceptionMatchExpression.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />

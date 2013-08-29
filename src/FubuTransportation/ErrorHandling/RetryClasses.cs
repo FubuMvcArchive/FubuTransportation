@@ -34,26 +34,6 @@ namespace FubuTransportation.ErrorHandling
         }
     }
 
-    public class ErrorReport
-    {
-        public object Message { get; set; }
-
-        public ErrorReport(object message, Exception ex)
-        {
-            Message = message;
-            ExceptionText = ex.ToString();
-            ExceptionMessage = ex.Message;
-            ExceptionType = ex.GetType().FullName;
-            Explanation = "Exception Detected";
-        }
-
-        public string Explanation { get; set; }
-
-        public string ExceptionType { get; set; }
-        public string ExceptionMessage { get; set; }
-        public string ExceptionText { get; set; }
-    }
-
     public class RequeueContinuation : IContinuation
     {
         public void Execute(Envelope envelope, ILogger logger)
