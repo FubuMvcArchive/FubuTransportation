@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuTransportation.Configuration;
@@ -54,50 +53,9 @@ namespace FubuTransportation.ErrorHandling
         public string ExceptionText { get; set; }
     }
 
-    // Make this stateless
-    public interface IErrorHandler
-    {
-        IContinuation DetermineContinuation(Envelope envelope, Exception ex);
-    }
-
-    public class ErrorHandler : IErrorHandler, IErrorCondition
-    {
-        private readonly IList<IErrorCondition> _conditions = new List<IErrorCondition>(); 
-
-        public IContinuation Continuation = new MoveToErrorQueue();
-
-        public void AddCondition(IErrorCondition condition)
-        {
-            _conditions.Add(condition);
-        }
-
-        public IEnumerable<IErrorCondition> Conditions
-        {
-            get { return _conditions; }
-        }
-
-        public IContinuation DetermineContinuation(Envelope envelope, Exception ex)
-        {
-            return Matches(envelope, ex) ? Continuation : null;
-        }
-
-        public bool Matches(Envelope envelope, Exception ex)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public interface IErrorCondition
     {
         bool Matches(Envelope envelope, Exception ex);
-    }
-
-    public class Always : IErrorCondition
-    {
-        public bool Matches(Envelope envelope, Exception ex)
-        {
-            return true;
-        }
     }
 
     public class ExceptionType<T> : IErrorCondition where T : Exception
