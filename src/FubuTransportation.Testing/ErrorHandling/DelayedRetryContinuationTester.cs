@@ -19,9 +19,7 @@ namespace FubuTransportation.Testing.ErrorHandling
 
             continuation.Execute(envelope, context);
 
-            envelope.ExecutionTime.Value.ShouldEqual(context.SystemTime.UtcNow().AddMinutes(5));
-
-            envelope.Callback.AssertWasCalled(x => x.MoveToDelayed());
+            envelope.Callback.AssertWasCalled(x => x.MoveToDelayedUntil(context.SystemTime.UtcNow().AddMinutes(5)));
         }
     }
 }

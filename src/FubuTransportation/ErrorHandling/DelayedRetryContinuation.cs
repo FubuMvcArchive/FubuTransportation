@@ -15,8 +15,7 @@ namespace FubuTransportation.ErrorHandling
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            envelope.ExecutionTime = context.SystemTime.UtcNow().Add(_delay);
-            envelope.Callback.MoveToDelayed();
+            envelope.Callback.MoveToDelayedUntil(context.SystemTime.UtcNow().Add(_delay));
         }
     }
 }
