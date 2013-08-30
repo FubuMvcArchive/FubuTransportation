@@ -13,6 +13,11 @@ namespace FubuTransportation.ErrorHandling
             _exception = exception;
         }
 
+        public Exception Exception
+        {
+            get { return _exception; }
+        }
+
         public void Execute(Envelope envelope, ContinuationContext context)
         {
             var report = new ErrorReport(envelope, _exception);

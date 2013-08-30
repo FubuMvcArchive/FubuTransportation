@@ -91,8 +91,10 @@
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
     <Compile Include="envelope_handlers_are_registered_in_the_right_order.cs" />
+    <Compile Include="ErrorHandling\DelayedRetryContinuationTester.cs" />
     <Compile Include="ErrorHandling\ErrorHandlerTester.cs" />
     <Compile Include="ErrorHandling\ErrorReportTester.cs" />
+    <Compile Include="ErrorHandling\ExceptionHandlerBehaviorTester.cs" />
     <Compile Include="ErrorHandling\ExceptionMatchingExpression_and_ExpressionMatch_Tester.cs" />
     <Compile Include="ErrorHandling\MovetoErrorQueueTester.cs" />
     <Compile Include="ErrorHandling\RequeueContinuationTester.cs" />
