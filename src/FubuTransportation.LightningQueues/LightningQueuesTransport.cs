@@ -4,6 +4,8 @@ using System.Linq;
 using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
+using LightningQueues.Model;
 
 namespace FubuTransportation.LightningQueues
 {
@@ -13,11 +15,13 @@ namespace FubuTransportation.LightningQueues
 
         private readonly IPersistentQueues _queues;
         private readonly LightningQueueSettings _settings;
+        private readonly IDelayedMessageCache<MessageId> _delayedMessages;
 
-        public LightningQueuesTransport(IPersistentQueues queues, LightningQueueSettings settings)
+        public LightningQueuesTransport(IPersistentQueues queues, LightningQueueSettings settings, IDelayedMessageCache<MessageId> delayedMessages)
         {
             _queues = queues;
             _settings = settings;
+            _delayedMessages = delayedMessages;
         }
 
         public void Dispose()
@@ -45,7 +49,7 @@ namespace FubuTransportation.LightningQueues
 
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
-            return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues);
+            return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues, _delayedMessages);
         }
 
         protected override void seedQueues(ChannelNode[] channels)

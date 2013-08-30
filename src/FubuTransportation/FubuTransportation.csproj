@@ -97,6 +97,7 @@
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessor.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
     <Compile Include="Polling\PollingJobLogger.cs" />
+    <Compile Include="Runtime\Delayed\DelayedMessageCache.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
     <Compile Include="Runtime\Invocation\ChainExecution.cs" />

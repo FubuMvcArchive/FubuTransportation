@@ -5,21 +5,25 @@ using System.Net;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
 using LightningQueues;
+using LightningQueues.Model;
 
 namespace FubuTransportation.LightningQueues
 {
     public class PersistentQueues : IPersistentQueues
     {
         private readonly ILogger _logger;
+        private readonly IDelayedMessageCache<MessageId> _delayedMessages;
         // TODO -- Corey, does this need to be unique per endpoint??????
         public const string EsentPath = "fubutransportation.esent";
 
         private readonly Cache<IPEndPoint, QueueManager> _queueManagers;
 
-        public PersistentQueues(ILogger logger)
+        public PersistentQueues(ILogger logger, IDelayedMessageCache<MessageId> delayedMessages)
         {
             _logger = logger;
+            _delayedMessages = delayedMessages;
             _queueManagers = new Cache<IPEndPoint, QueueManager>(ip => new QueueManager(ip, EsentPath, new QueueManagerConfiguration(), _logger));
         }
 
@@ -59,35 +63,29 @@ namespace FubuTransportation.LightningQueues
 
         public IEnumerable<EnvelopeToken> ReplayDelayed(QueueManager queueManager, DateTime currentTime)
         {
-            throw new NotImplementedException();
-
-            var list = new List<Envelope>();
+            var list = new List<EnvelopeToken>();
 
             var transactionalScope = queueManager.BeginTransactionalScope();
-
-
             try
             {
-//                var messages = queueManager.GetQueue(LightningQueuesTransport.DelayedQueueName).GetAllMessages(null)
-//                    .Where(x => x.ExecutionTime() <= currentTime).ToArray();
-//
-//                messages.Each(msg =>
-//                {
-//                    var uri = msg.Headers[Envelope.ReceivedAtKey].ToLightningUri();
-//                    queueManager.MoveTo(uri.QueueName, msg);
-//
-//                    list.Add(new Envelope());
-//                });
-//
-//                transactionalScope.Commit();
+                var readyToSend = _delayedMessages.AllMessagesBefore(currentTime);
+                readyToSend.Each(x =>
+                {
+                    var message = transactionalScope.ReceiveById(LightningQueuesTransport.DelayedQueueName, x);
+                    var uri = message.Headers[Envelope.ReceivedAtKey].ToLightningUri();
+                    transactionalScope.EnqueueDirectlyTo(uri.QueueName, message.ToPayload());
+                    list.Add(message.ToToken());
+                });
+                transactionalScope.Commit();
             }
+
             catch (Exception e)
             {
                 transactionalScope.Rollback();
                 _logger.Error("Error trying to move delayed messages back to the original queue", e);
             }
 
-            //return list;
+            return list;
         }
     }
 }

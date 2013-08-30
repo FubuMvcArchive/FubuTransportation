@@ -25,7 +25,7 @@ namespace FubuTransportation.Runtime.Invocation
         {
             try
             {
-                envelope.Callback.MoveToDelayed();
+                envelope.Callback.MoveToDelayedUntil(envelope.ExecutionTime.Value);
                 logger.InfoMessage(() => new DelayedEnvelopeReceived { Envelope = envelope.ToToken() });
             }
             catch (Exception e)

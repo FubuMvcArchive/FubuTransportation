@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Runtime;
 using System.Linq;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.InMemory
@@ -128,8 +129,9 @@ namespace FubuTransportation.InMemory
             Debug.WriteLine("Message was marked as failed!");
         }
 
-        public void MoveToDelayed()
+        public void MoveToDelayedUntil(DateTime time)
         {
+            //TODO leverage delayed message cache?
             InMemoryQueueManager.AddToDelayedQueue(_token);
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Headers;
 using LightningQueues;
 using LightningQueues.Model;
@@ -14,20 +15,22 @@ namespace FubuTransportation.LightningQueues
         private readonly Uri _address;
         private readonly string _queueName;
         private readonly IQueueManager _queueManager;
+        private readonly IDelayedMessageCache<MessageId> _delayedMessages;
         private bool _disposed;
         private readonly List<Thread> _threads = new List<Thread>();
 
-        public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues)
+        public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues, IDelayedMessageCache<MessageId> delayedMessages)
         {
             var queueManager = queues.ManagerFor(uri.Endpoint);
-            return new LightningQueuesChannel(uri.Address, uri.QueueName, queueManager);
+            return new LightningQueuesChannel(uri.Address, uri.QueueName, queueManager, delayedMessages);
         }
 
-        public LightningQueuesChannel(Uri address, string queueName, IQueueManager queueManager)
+        public LightningQueuesChannel(Uri address, string queueName, IQueueManager queueManager, IDelayedMessageCache<MessageId> delayedMessages)
         {
             _address = address;
             _queueName = queueName;
             _queueManager = queueManager;
+            _delayedMessages = delayedMessages;
         }
 
         public Uri Address { get { return _address; } }
@@ -58,7 +61,7 @@ namespace FubuTransportation.LightningQueues
                 var transactionalScope = _queueManager.BeginTransactionalScope();
                 var message = transactionalScope.Receive(queueName);
 
-                receiver.Receive(message.Data, new NameValueHeaders(message.Headers), new TransactionCallback(transactionalScope, message, _queueManager));
+                receiver.Receive(message.Data, new NameValueHeaders(message.Headers), new TransactionCallback(transactionalScope, message, _delayedMessages));
             }
 
         }
@@ -110,6 +113,25 @@ namespace FubuTransportation.LightningQueues
             };
 
             return envelope;
+        }
+
+        public static EnvelopeToken ToToken(this Message message)
+        {
+            return new EnvelopeToken
+            {
+                Data = message.Data,
+                Headers = new NameValueHeaders(message.Headers)
+            };
+        }
+
+        public static MessagePayload ToPayload(this Message message)
+        {
+            var payload = new MessagePayload
+            {
+                Data = message.Data,
+                Headers = message.Headers,
+            };
+            return payload;
         }
 
         public static DateTime ExecutionTime(this Message message)

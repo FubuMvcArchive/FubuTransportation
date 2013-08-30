@@ -1,3 +1,5 @@
+using System;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Invocation;
 using LightningQueues;
 using LightningQueues.Model;
@@ -7,14 +9,14 @@ namespace FubuTransportation.LightningQueues
     public class TransactionCallback : IMessageCallback
     {
         private readonly Message _message;
-        private readonly IQueueManager _queues;
+        private readonly IDelayedMessageCache<MessageId> _delayedMessages;
         private readonly ITransactionalScope _transaction;
 
-        public TransactionCallback(ITransactionalScope transaction, Message message, IQueueManager queues)
+        public TransactionCallback(ITransactionalScope transaction, Message message, IDelayedMessageCache<MessageId> delayedMessages)
         {
             _transaction = transaction;
             _message = message;
-            _queues = queues;
+            _delayedMessages = delayedMessages;
         }
 
         public void MarkSuccessful()
@@ -27,9 +29,10 @@ namespace FubuTransportation.LightningQueues
             _transaction.Rollback();
         }
 
-        public void MoveToDelayed()
+        public void MoveToDelayedUntil(DateTime time)
         {
-            _queues.MoveTo(LightningQueuesTransport.DelayedQueueName, _message);
+            _delayedMessages.Add(_message.Id, time);
+            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.DelayedQueueName, _message.ToPayload());
         }
     }
 }

@@ -7,7 +7,9 @@ using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Testing;
+using LightningQueues.Model;
 using NUnit.Framework;
 
 namespace FubuTransportation.LightningQueues.Testing
@@ -28,8 +30,9 @@ namespace FubuTransportation.LightningQueues.Testing
             node.Uri = new Uri("lq.tcp://localhost:2020/upstream");
             node.Incoming = true;
 
-            queues = new PersistentQueues(new RecordingLogger());
-            transport = new LightningQueuesTransport(queues, new LightningQueueSettings());
+            var delayedCache = new DelayedMessageCache<MessageId>();
+            queues = new PersistentQueues(new RecordingLogger(), delayedCache);
+            transport = new LightningQueuesTransport(queues, new LightningQueueSettings(), delayedCache);
 
             transport.OpenChannels(graph);
         }

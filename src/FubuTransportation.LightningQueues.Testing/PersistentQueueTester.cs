@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
+using FubuTransportation.Runtime.Delayed;
+using LightningQueues.Model;
 using NUnit.Framework;
 
 namespace FubuTransportation.LightningQueues.Testing
@@ -21,7 +23,7 @@ namespace FubuTransportation.LightningQueues.Testing
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
         public void creates_queues_when_started()
         {
-            using (var queues = new PersistentQueues(new RecordingLogger()))
+            using (var queues = new PersistentQueues(new RecordingLogger(), new DelayedMessageCache<MessageId>()))
             {
                 queues.Start(new LightningUri[]
                 {

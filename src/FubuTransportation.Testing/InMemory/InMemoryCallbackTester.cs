@@ -1,4 +1,5 @@
-﻿using FubuTransportation.InMemory;
+﻿using System;
+using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace FubuTransportation.Testing.InMemory
 
             var envelope = new EnvelopeToken();
             var callback = new InMemoryCallback(null, envelope);
-            callback.MoveToDelayed();
+            callback.MoveToDelayedUntil(DateTime.Now);
 
             InMemoryQueueManager.DelayedEnvelopes()
                                 .Single().CorrelationId.ShouldEqual(envelope.CorrelationId);
