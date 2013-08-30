@@ -57,10 +57,11 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             var logger = new RecordingLogger();
             var envelope = ObjectMother.Envelope();
+            envelope.ExecutionTime = DateTime.Today;
 
             new DelayedEnvelopeHandler(null).Execute(envelope, logger);
 
-            envelope.Callback.AssertWasCalled(x => x.MoveToDelayedUntil(Arg<DateTime>.Is.Anything));
+            envelope.Callback.AssertWasCalled(x => x.MoveToDelayedUntil(envelope.ExecutionTime.Value));
 
             logger.InfoMessages.Single().ShouldBeOfType<DelayedEnvelopeReceived>()
                   .Envelope.ShouldEqual(envelope.ToToken());
@@ -71,9 +72,10 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             var logger = new RecordingLogger();
             var envelope = ObjectMother.Envelope();
+            envelope.ExecutionTime = DateTime.Today;
 
             var exception = new NotImplementedException();
-            envelope.Callback.Stub(x => x.MoveToDelayedUntil(Arg<DateTime>.Is.Anything)).Throw(exception);
+            envelope.Callback.Stub(x => x.MoveToDelayedUntil(envelope.ExecutionTime.Value)).Throw(exception);
 
             new DelayedEnvelopeHandler(SystemTime.Default()).Execute(envelope, logger);
 
