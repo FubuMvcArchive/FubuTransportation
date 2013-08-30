@@ -69,6 +69,7 @@
     <Compile Include="ErrorHandling\ErrorHandler.cs" />
     <Compile Include="ErrorHandling\ErrorReport.cs" />
     <Compile Include="ErrorHandling\ExceptionHandlerBehavior.cs" />
+    <Compile Include="ErrorHandling\ExceptionHandlerNode.cs" />
     <Compile Include="ErrorHandling\ExceptionMatch.cs" />
     <Compile Include="ErrorHandling\ExceptionMatchExpression.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
