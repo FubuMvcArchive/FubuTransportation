@@ -10,6 +10,7 @@ using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Conventions;
 using FubuMVC.Core.Registration.Diagnostics;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
@@ -77,7 +78,7 @@ namespace FubuTransportation.Configuration
                 }
             });
 
-            Policies.Global<StatefulSagaConvention>();
+            Global.Policy<StatefulSagaConvention>();
             AlterSettings<TransportSettings>(x => {
                 x.SagaStorageProviders.Add(new InMemorySagaStorage());
             });
@@ -239,43 +240,36 @@ namespace FubuTransportation.Configuration
             channel = graph => graph.DefaultContentType = contentType;
         }
 
-        public PoliciesExpression Policies
+        /// <summary>
+        /// Applies a Policy to the handler chains created by only this
+        /// FubuTransportRegistry
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public PoliciesExpression Local
         {
-            get{return new PoliciesExpression(this);}
+            get
+            {
+                return new PoliciesExpression(x => _localPolicies.Fill(_provenance, x));
+            }
         }
 
-        public class PoliciesExpression
+        /// <summary>
+        /// Applies a Policy to all FubuTransportation Handler chains
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public PoliciesExpression Global
         {
-            private readonly FubuTransportRegistry _parent;
-
-            public PoliciesExpression(FubuTransportRegistry parent)
+            get
             {
-                _parent = parent;
-            }
-
-            /// <summary>
-            /// Applies a Policy to the handler chains created by only this
-            /// FubuTransportRegistry
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <returns></returns>
-            public PoliciesExpression Local<T>() where T : IConfigurationAction, new()
-            {
-                _parent._localPolicies.Fill(_parent._provenance,new T());
-                return this;
-            }
-
-            /// <summary>
-            /// Applies a Policy to all FubuTransportation Handler chains
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <returns></returns>
-            public PoliciesExpression Global<T>() where T : IConfigurationAction, new()
-            {
-                _parent.AlterSettings<HandlerPolicies>(x => x.AddGlobal(new T(), _parent));
-                return this;
+                return new PoliciesExpression(policy => {
+                    AlterSettings<HandlerPolicies>(x => x.AddGlobal(policy, this));
+                });
             }
         }
+
+
 
 
         /// <summary>

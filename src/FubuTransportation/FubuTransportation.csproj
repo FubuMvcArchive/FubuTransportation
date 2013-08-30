@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="Configuration\HandlerPolicies.cs" />
+    <Compile Include="Configuration\PoliciesExpression.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />

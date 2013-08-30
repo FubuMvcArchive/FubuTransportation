@@ -86,7 +86,7 @@ namespace FubuTransportation.Testing
     {
         public RedRegistry()
         {
-            Policies.Global<WrapPolicy<RedWrapper>>();
+            Global.Policy<WrapPolicy<RedWrapper>>();
         }
     }
 
@@ -95,7 +95,7 @@ namespace FubuTransportation.Testing
         public GreenRegistry()
         {
             Handlers.Include<GreenHandler>();
-            Policies.Local<WrapPolicy<GreenWrapper>>();
+            Local.Policy<WrapPolicy<GreenWrapper>>();
         }
     }
 
@@ -104,7 +104,7 @@ namespace FubuTransportation.Testing
         public BlueRegistry()
         {
             Handlers.Include<BlueHandler>();
-            Policies.Local<WrapPolicy<BlueWrapper>>();
+            Local.Policy<WrapPolicy<BlueWrapper>>();
         }
     }
 
