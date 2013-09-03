@@ -174,5 +174,11 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IHandlerPipeline, HandlerPipeline>();
         }
+
+        [Test]
+        public void message_executor_is_registered()
+        {
+            registeredTypeIs<IMessageExecutor, MessageExecutor>();
+        }
     }
 }

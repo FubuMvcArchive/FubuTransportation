@@ -79,6 +79,8 @@ namespace FubuTransportation
             AddService<IEnvelopeHandler, ResponseEnvelopeHandler>();
             AddService<IEnvelopeHandler, ChainExecutionEnvelopeHandler>();
             AddService<IEnvelopeHandler, NoSubscriberHandler>();
+
+            SetServiceIfNone<IMessageExecutor, MessageExecutor>();
         }
     }
 

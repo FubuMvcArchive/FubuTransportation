@@ -123,6 +123,8 @@
     <Compile Include="Runtime\Invocation\IContinuation.cs" />
     <Compile Include="Runtime\Invocation\IEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\IHandlerPipeline.cs" />
+    <Compile Include="Runtime\Invocation\IMessageExecutor.cs" />
+    <Compile Include="Runtime\Invocation\MessageExecutor.cs" />
     <Compile Include="Runtime\Invocation\NoHandlerException.cs" />
     <Compile Include="Runtime\Invocation\SimpleEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\NoSubscriberHandler.cs" />
