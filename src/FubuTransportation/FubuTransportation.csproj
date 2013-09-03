@@ -78,6 +78,7 @@
     <Compile Include="ErrorHandling\IExceptionMatch.cs" />
     <Compile Include="ErrorHandling\MoveToErrorQueue.cs" />
     <Compile Include="ErrorHandling\RequeueContinuation.cs" />
+    <Compile Include="Events\ExpiringListenerCleanup.cs" />
     <Compile Include="Events\ExpiringListenerExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
     <Compile Include="Events\IExpiringListener.cs" />
