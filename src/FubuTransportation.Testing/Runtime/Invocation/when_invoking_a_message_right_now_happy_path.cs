@@ -49,15 +49,6 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             MockFor<IActionBehavior>().AssertWasCalled(x => x.Invoke());
         }
 
-        [Test]
-        public void cascaded_events_should_be_sent_to_the_bus()
-        {
-            cascadingMessages.Each(o => {
 
-                // This ugly bit of code is just proving that we have indeed sent an envelope
-                // where the inner message is one of our expected cascading messages
-                MockFor<IEnvelopeSender>().AssertWasCalled(x => x.Send(null), x => x.Constraints(Is.Matching<Envelope>(e => e.Message == o)));
-            });
-        }
     }
 }

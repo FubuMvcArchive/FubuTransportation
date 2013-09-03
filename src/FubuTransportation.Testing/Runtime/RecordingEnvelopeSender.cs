@@ -13,5 +13,9 @@ namespace FubuTransportation.Testing.Runtime
 
             return envelope.CorrelationId;
         }
+
+        public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
+        {
+        }
     }
 }

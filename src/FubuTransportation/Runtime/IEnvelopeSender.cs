@@ -10,6 +10,7 @@ namespace FubuTransportation.Runtime
     public interface IEnvelopeSender
     {
         string Send(Envelope envelope);
+        void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages);
     }
 
     public class EnvelopeSender : IEnvelopeSender
@@ -47,17 +48,15 @@ namespace FubuTransportation.Runtime
 
             return envelope.CorrelationId;
         }
-    }
 
-    public static class EnvelopeSenderExtensions
-    {
-        public static void SendOutgoingMessages(this IEnvelopeSender sender, Envelope envelope,
-                                                 IEnumerable<object> messages)
+        public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
         {
-            messages.Each(o => {
-                var child = envelope.ForResponse(o);
-                sender.Send(child);
+            cascadingMessages.Each(o =>
+            {
+                var child = original.ForResponse(o);
+                Send(child);
             });
         }
     }
+
 }

@@ -56,14 +56,5 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                      .ShouldEqual(new MessageSuccessful {Envelope = theEnvelope.ToToken()});
         }
 
-        [Test]
-        public void all_the_cascading_messages_are_sent()
-        {
-            theContext.OutgoingMessages().Each(o => {
-                theSender.Sent.Single(x => x.Message == o)
-                         .ParentId.ShouldEqual(theEnvelope.CorrelationId);
-            });
-        }
-
     }
 }
