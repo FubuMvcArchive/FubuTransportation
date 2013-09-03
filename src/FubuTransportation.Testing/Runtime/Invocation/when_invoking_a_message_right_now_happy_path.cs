@@ -7,6 +7,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
+using NUnit.Mocks;
 using Rhino.Mocks;
 using Is = Rhino.Mocks.Constraints.Is;
 
@@ -49,6 +50,10 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             MockFor<IActionBehavior>().AssertWasCalled(x => x.Invoke());
         }
 
-
+        [Test]
+        public void sends_the_outgoing_messages()
+        {
+            MockFor<IOutgoingSender>().AssertWasCalled(x => x.SendOutgoingMessages(null, null), x => x.IgnoreArguments());
+        }
     }
 }

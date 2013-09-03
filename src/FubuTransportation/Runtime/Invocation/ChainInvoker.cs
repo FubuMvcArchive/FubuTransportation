@@ -10,9 +10,9 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly IServiceFactory _factory;
         private readonly HandlerGraph _graph;
         private readonly ILogger _logger;
-        private readonly IEnvelopeSender _sender;
+        private readonly IOutgoingSender _sender;
 
-        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IEnvelopeSender sender)
+        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IOutgoingSender sender)
         {
             _factory = factory;
             _graph = graph;

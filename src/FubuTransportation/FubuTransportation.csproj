@@ -112,6 +112,7 @@
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
     <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\Delayed\DelayedMessageCache.cs" />
+    <Compile Include="Runtime\EnvelopeSender.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
     <Compile Include="Runtime\Invocation\Batching\BatchMessage.cs" />
@@ -131,6 +132,8 @@
     <Compile Include="Runtime\Invocation\SimpleEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\NoSubscriberHandler.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandler.cs" />
+    <Compile Include="Runtime\IOutgoingSender.cs" />
+    <Compile Include="Runtime\OutgoingSender.cs" />
     <Compile Include="Sagas\ISagaRepository.cs" />
     <Compile Include="Sagas\ISagaStorage.cs" />
     <Compile Include="Sagas\IStatefulSaga.cs" />

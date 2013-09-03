@@ -180,5 +180,11 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IMessageExecutor, MessageExecutor>();
         }
+
+        [Test]
+        public void outgoing_messages_is_registered()
+        {
+            registeredTypeIs<IOutgoingSender, OutgoingSender>();
+        }
     }
 }

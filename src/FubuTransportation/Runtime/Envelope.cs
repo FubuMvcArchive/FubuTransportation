@@ -94,7 +94,7 @@ namespace FubuTransportation.Runtime
         }
 
         // TODO -- this is where the routing slip is going to come into place
-        public Envelope ForResponse(object message)
+        public virtual Envelope ForResponse(object message)
         {
             var child = new Envelope
             {

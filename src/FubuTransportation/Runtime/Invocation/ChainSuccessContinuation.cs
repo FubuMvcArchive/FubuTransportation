@@ -5,10 +5,10 @@ namespace FubuTransportation.Runtime.Invocation
 {
     public class ChainSuccessContinuation : IContinuation
     {
-        private readonly IEnvelopeSender _sender;
+        private readonly IOutgoingSender _sender;
         private readonly IInvocationContext _context;
 
-        public ChainSuccessContinuation(IEnvelopeSender sender, IInvocationContext context)
+        public ChainSuccessContinuation(IOutgoingSender sender, IInvocationContext context)
         {
             _sender = sender;
             _context = context;

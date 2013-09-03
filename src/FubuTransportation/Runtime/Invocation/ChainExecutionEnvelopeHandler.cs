@@ -5,9 +5,9 @@ namespace FubuTransportation.Runtime.Invocation
     public class ChainExecutionEnvelopeHandler : IEnvelopeHandler
     {
         private readonly IChainInvoker _invoker;
-        private readonly IEnvelopeSender _sender;
+        private readonly IOutgoingSender _sender;
 
-        public ChainExecutionEnvelopeHandler(IChainInvoker invoker, IEnvelopeSender sender)
+        public ChainExecutionEnvelopeHandler(IChainInvoker invoker, IOutgoingSender sender)
         {
             _invoker = invoker;
             _sender = sender;
