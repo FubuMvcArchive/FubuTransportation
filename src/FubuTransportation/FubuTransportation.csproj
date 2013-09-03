@@ -114,6 +114,8 @@
     <Compile Include="Runtime\Delayed\DelayedMessageCache.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
+    <Compile Include="Runtime\Invocation\Batching\BatchMessage.cs" />
+    <Compile Include="Runtime\Invocation\Batching\IBatchMessage.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
     <Compile Include="Runtime\Invocation\ChainFailureContinuation.cs" />
@@ -171,7 +173,7 @@
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializer.cs" />
-    <Compile Include="Runtime\Invocation\BatchHandler.cs" />
+    <Compile Include="Runtime\Invocation\Batching\BatchConsumer.cs" />
     <Compile Include="Runtime\Serializers\BinarySerializer.cs" />
     <Compile Include="Runtime\Invocation\CascadingHandlerInvoker.cs" />
     <Compile Include="Configuration\ChannelNode.cs" />

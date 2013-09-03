@@ -1,4 +1,5 @@
-﻿using FubuMVC.Core.Runtime;
+﻿using FubuCore.Logging;
+using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -9,12 +10,16 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly IPartialFactory _factory;
         private readonly IFubuRequest _request;
         private readonly HandlerGraph _graph;
+        private readonly ILogger _logger;
+        private readonly Envelope _envelope;
 
-        public MessageExecutor(IPartialFactory factory, IFubuRequest request, HandlerGraph graph)
+        public MessageExecutor(IPartialFactory factory, IFubuRequest request, HandlerGraph graph, ILogger logger, Envelope envelope)
         {
             _factory = factory;
             _request = request;
             _graph = graph;
+            _logger = logger;
+            _envelope = envelope;
         }
 
         public void Execute(object message)
@@ -24,11 +29,25 @@ namespace FubuTransportation.Runtime.Invocation
 
             var chain = _graph.ChainFor(inputType);
 
-            // TODO -- do something when the chain is not found - THROW
+            if (chain == null)
+            {
+                throw new NoHandlerException(inputType);
+            }
 
             _factory.BuildPartial(chain).InvokePartial();
+            _logger.DebugMessage(() => new InlineMessageProcessed
+            {
+                Envelope = _envelope,
+                Message = message
+            });
 
             _request.Clear(inputType);
         }
+    }
+
+    public class InlineMessageProcessed : LogRecord
+    {
+        public object Message { get; set; }
+        public Envelope Envelope { get; set; }
     }
 }

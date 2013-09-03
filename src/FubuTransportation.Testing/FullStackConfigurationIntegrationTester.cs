@@ -32,17 +32,6 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void has_the_batch_handling_chain()
-        {
-            var container = new Container();
-            FubuTransport.For<MyFirstTransport>().StructureMap(container).Bootstrap();
-
-            var graph = container.GetInstance<BehaviorGraph>();
-
-            graph.Behaviors.Count(x => typeof(object[]) == x.InputType()).ShouldEqual(1);
-        }
-
-        [Test]
         public void has_all_the_chains_we_expect_through_FubuApplication()
         {
             var container = new Container();

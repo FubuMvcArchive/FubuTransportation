@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using FubuTestingSupport;
+using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Invocation.Batching;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 
@@ -12,12 +14,13 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void generic_handler_is_applied_at_end()
         {
             handler<OneHandler, TwoHandler, ThreeHandler, GenericHandler>();
+            handler<MyBatchHandler>();
 
             var message1 = new OneMessage();
             var message2 = new TwoMessage();
             var message3 = new ThreeMessage();
 
-            sendMessage(message1, message2, message3);
+            sendOneMessage(new MyBatch(message1, message2, message3));
 
             TestMessageRecorder.AllProcessed.Count().ShouldEqual(6);
             TestMessageRecorder.AllProcessed[0].ShouldMatch<OneHandler>(message1);
@@ -27,5 +30,25 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             TestMessageRecorder.AllProcessed[4].ShouldMatch<ThreeHandler>(message3);
             TestMessageRecorder.AllProcessed[5].ShouldMatch<GenericHandler>(message3);
         }
+    }
+
+    public class MyBatch : BatchMessage
+    {
+        public MyBatch()
+        {
+        }
+
+        public MyBatch(params object[] messages) : base(messages)
+        {
+        }
+    }
+
+    public class MyBatchHandler : BatchConsumer<MyBatch>
+    {
+        public MyBatchHandler(IMessageExecutor executor) : base(executor)
+        {
+        }
+
+
     }
 }

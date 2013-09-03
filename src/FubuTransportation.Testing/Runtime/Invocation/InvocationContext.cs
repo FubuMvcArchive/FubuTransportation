@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -65,9 +66,14 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
         protected Envelope sendMessage(params Message[] message)
         {
+            return message.Select(o => sendOneMessage(o)).FirstOrDefault();
+        }
+
+        protected Envelope sendOneMessage(object message)
+        {
             var envelope = new Envelope();
             envelope.Callback = theCallback;
-            envelope.Message = message.Length == 1 ? (object) message.Single() : message.Select(x => x as object).ToArray();
+            envelope.Message = message;
 
             sendEnvelope(envelope);
 

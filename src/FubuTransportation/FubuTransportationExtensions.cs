@@ -11,6 +11,7 @@ using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Invocation.Batching;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
 using FubuTransportation.TestSupport;
@@ -90,7 +91,6 @@ namespace FubuTransportation
         public void Configure(BehaviorGraph graph)
         {
             var handlers = graph.Settings.Get<HandlerGraph>();
-            handlers.Add(HandlerCall.For<BatchHandler>(x => x.Handle(null)));
 
             handlers.ApplyGeneralizedHandlers();
 
