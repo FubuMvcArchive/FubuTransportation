@@ -92,6 +92,7 @@
     <Compile Include="Configuration\UriExtensionsTester.cs" />
     <Compile Include="envelope_handlers_are_registered_in_the_right_order.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuationTester.cs" />
+    <Compile Include="ErrorHandling\ErrorHandlerBehavior_attachment_to_the_handler_chains.cs" />
     <Compile Include="ErrorHandling\ErrorHandlerTester.cs" />
     <Compile Include="ErrorHandling\ErrorReportTester.cs" />
     <Compile Include="ErrorHandling\ExceptionHandlerBehaviorTester.cs" />

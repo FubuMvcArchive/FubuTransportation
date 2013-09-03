@@ -13,6 +13,11 @@ namespace FubuTransportation.ErrorHandling
             _chain = chain;
         }
 
+        public HandlerChain Chain
+        {
+            get { return _chain; }
+        }
+
         protected override ObjectDef buildObjectDef()
         {
             var def = ObjectDef.ForType<ExceptionHandlerBehavior>();

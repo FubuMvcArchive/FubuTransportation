@@ -49,6 +49,11 @@ namespace FubuTransportation.ErrorHandling
                    ?? new MoveToErrorQueue(ex);
         }
 
+        public HandlerChain Chain
+        {
+            get { return _chain; }
+        }
+
         public void InvokePartial()
         {
             _behavior.InvokePartial();

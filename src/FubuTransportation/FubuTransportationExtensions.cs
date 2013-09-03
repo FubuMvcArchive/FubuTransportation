@@ -4,6 +4,7 @@ using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Polling;
@@ -96,6 +97,9 @@ namespace FubuTransportation
 
             foreach (var chain in handlers)
             {
+                // Apply the error handling node
+                chain.InsertFirst(new ExceptionHandlerNode(chain));
+
                 graph.AddChain(chain);
             }
         }

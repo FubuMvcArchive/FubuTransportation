@@ -57,6 +57,8 @@ namespace FubuTransportation.Configuration
             transportRegistry.As<IFubuRegistryExtension>()
                 .Configure(registry);
 
+            new FubuTransportationExtensions().Configure(registry);
+
             return BehaviorGraph.BuildFrom(registry);
         }
 
