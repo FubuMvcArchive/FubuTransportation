@@ -33,7 +33,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
         public void Act(IScenarioWriter writer)
         {
             MessageHistory.Record(MessageTrack.ForSent(_request));
-            _completion = _sender.ServiceBus.Request<TRequest, TReply>(_request);
+            _completion = _sender.ServiceBus.Request<TReply>(_request);
         }
 
         public void Assert(IScenarioWriter writer)

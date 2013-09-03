@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
@@ -8,6 +9,22 @@ using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.Runtime
 {
+    [TestFixture]
+    public class ReplayListener_expiration_logic_Tester
+    {
+        [Test]
+        public void uses_the_expiration_time()
+        {
+            var listener = new ReplyListener<Message1>(null, Guid.NewGuid().ToString(), 10.Minutes());
+
+            listener.IsExpired.ShouldBeFalse();
+
+            listener.ExpiresAt.ShouldNotBeNull();
+            (listener.ExpiresAt > DateTime.UtcNow.AddMinutes(9)).ShouldBeTrue();
+            (listener.ExpiresAt < DateTime.UtcNow.AddMinutes(11)).ShouldBeTrue();
+        }
+    }
+
     [TestFixture]
     public class when_receiving_the_matching_reply
     {
@@ -21,7 +38,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
 
-            theListener = new ReplyListener<Message1>(theEvents, correlationId);
+            theListener = new ReplyListener<Message1>(theEvents, correlationId, 10.Minutes());
 
             theMessage = new Message1();
             
@@ -63,7 +80,7 @@ namespace FubuTransportation.Testing.Runtime
         public void SetUp()
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
-            theListener = new ReplyListener<Message1>(theEvents, correlationId);
+            theListener = new ReplyListener<Message1>(theEvents, correlationId, 10.Minutes());
         }
 
         [Test]

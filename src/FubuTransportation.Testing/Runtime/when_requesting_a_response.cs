@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ namespace FubuTransportation.Testing.Runtime
             Services.Inject<IEnvelopeSender>(theSender);
 
             theRequest = new Message1();
-            theTask = ClassUnderTest.Request<Message1, Message2>(theRequest);
+            theTask = ClassUnderTest.Request<Message2>(theRequest);
 
             theEnvelope = theSender.Sent.Single();
         }
@@ -37,7 +38,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             var events = MockFor<IEventAggregator>();
             var expectedListener = new ReplyListener<Message2>(events,
-                                                               theEnvelope.CorrelationId);
+                                                               theEnvelope.CorrelationId, 10.Minutes());
 
 
             events.AssertWasCalled(x => x.AddListener(expectedListener));

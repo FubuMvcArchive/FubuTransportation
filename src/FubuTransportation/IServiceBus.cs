@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Dates;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -8,7 +9,15 @@ namespace FubuTransportation
 {
     public interface IServiceBus
     {
-        Task<TResponse> Request<TRequest, TResponse>(TRequest request);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="request"></param>
+        /// <param name="timeout">Timespan to wait for a response before timing out</param>
+        /// <returns></returns>
+        Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null);
 
         void Send<T>(T message);
 
@@ -39,15 +48,17 @@ namespace FubuTransportation
             _systemTime = systemTime;
         }
 
-        public Task<TResponse> Request<TRequest, TResponse>(TRequest request)
+        public Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null)
         {
+            timeout = timeout ?? 10.Minutes();
+
             var envelope = new Envelope
             {
                 Message = request,
                 ReplyRequested = true
             };
 
-            var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId);
+            var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId, timeout.Value);
             _events.AddListener(listener);
 
             _sender.Send(envelope);
