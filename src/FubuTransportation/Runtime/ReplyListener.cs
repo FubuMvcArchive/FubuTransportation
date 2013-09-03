@@ -11,13 +11,15 @@ namespace FubuTransportation.Runtime
         private readonly TaskCompletionSource<T> _completion;
         private readonly string _originalId;
         
-        // TODO -- do an expiration on this thing.
         public ReplyListener(IEventAggregator events, string originalId, TimeSpan timeout)
         {
             _events = events;
             _completion = new TaskCompletionSource<T>();
             ExpiresAt = DateTime.UtcNow.Add(timeout);
             _originalId = originalId;
+
+            var listener = this;
+            _completion.Task.ContinueWith(x => _events.RemoveListener(listener));
         }
 
         public Task<T> Task

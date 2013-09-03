@@ -36,10 +36,10 @@ namespace FubuTransportation.Testing.Polling
         [Test]
         public void there_are_polling_jobs_registered()
         {
-            // The polling job for delayed messages is registered by default.
+            // The polling job for delayed messages & one for the expired listeners are registered by default.
             var pollingJobs = container.GetInstance<IPollingJobs>();
             pollingJobs.Count()
-                     .ShouldEqual(4);
+                     .ShouldEqual(5);
         }
 
         [Test]

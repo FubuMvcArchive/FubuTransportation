@@ -17,9 +17,11 @@ namespace FubuTransportation
             SagaStorageProviders = new List<ISagaStorage>();
             DebugEnabled = false;
             DelayMessagePolling = 5000;
+            ListenerCleanupPolling = 60000;
         }
 
         public bool DebugEnabled { get; set; }
         public double DelayMessagePolling { get; set; }
+        public double ListenerCleanupPolling { get; set; }
     }
 }

@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Linq;
+using FubuMVC.StructureMap;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.Events;
+using FubuTransportation.Polling;
+using FubuTransportation.Runtime.Delayed;
 using NUnit.Framework;
 using NUnit.Mocks;
 using Rhino.Mocks;
+using StructureMap;
 
 namespace FubuTransportation.Testing.Events
 {
@@ -18,6 +24,28 @@ namespace FubuTransportation.Testing.Events
             ClassUnderTest.Execute();
 
             MockFor<IEventAggregator>().AssertWasCalled(x => x.PruneExpiredListeners(UtcSystemTime));
+        }
+    }
+
+    [TestFixture]
+    public class Expiring_listener_polling_job_is_registered
+    {
+        [Test]
+        public void the_cleanup_job_is_registered()
+        {
+            FubuTransport.SetupForInMemoryTesting();
+
+            var runtime = FubuTransport.For<InMemory.DelayedRegistry>().StructureMap(new Container())
+                           .Bootstrap();
+
+            runtime.Factory.Get<IPollingJobs>().Any(x => x is PollingJob<ExpiringListenerCleanup, TransportSettings>)
+                .ShouldBeTrue();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            FubuTransport.Reset();
         }
     }
 }
