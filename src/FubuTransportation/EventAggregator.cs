@@ -64,6 +64,11 @@ namespace FubuTransportation
             get { return _lock.Read(() => _listeners.ToArray()); }
         }
 
+        public void PruneExpiredListeners(DateTime currentTime)
+        {
+            _lock.Write(() => _listeners.RemoveAll(o => o.IsExpired(currentTime)));
+        }
+
         public void AddListeners(params object[] listeners)
         {
             _lock.Write(() => _listeners.Fill(listeners));

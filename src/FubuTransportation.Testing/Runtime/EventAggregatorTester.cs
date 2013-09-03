@@ -1,4 +1,5 @@
-﻿using FubuMVC.Core.Runtime.Logging;
+﻿using System;
+using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -134,6 +135,70 @@ namespace FubuTransportation.Testing.Runtime
 
             listener5.AssertWasNotCalled(x => x.Handle(message1));
         }
+
+        [Test]
+        public void prune_expired_listeners_based_on_the_expired_property()
+        {
+            var listener1 = new StubListener<Message1>();
+            var listener2 = new StubListener<Message1>();
+            var listener3 = new StubListener<Message1>();
+            var listener4 = new StubListener<Message2>();
+
+            var listener5 = new ExpiringListener {IsExpired = true};
+            var listener6 = new ExpiringListener {IsExpired = true};
+            var listener7 = new ExpiringListener {IsExpired = false};
+
+            events.AddListeners(listener1, listener2, listener3, listener4, listener5, listener6, listener7);
+
+            events.PruneExpiredListeners(DateTime.Now);
+
+            // non-expiring listeners should be untouched
+            events.Listeners.ShouldContain(listener1);
+            events.Listeners.ShouldContain(listener2);
+            events.Listeners.ShouldContain(listener3);
+            events.Listeners.ShouldContain(listener4);
+            
+            // expired expiring listeners should be removed
+            events.Listeners.ShouldNotContain(listener5);
+            events.Listeners.ShouldNotContain(listener6);
+
+            // not-expired expiring listener should not be removed
+            events.Listeners.ShouldContain(listener7);
+        }
+
+        [Test]
+        public void prune_expired_listeners_based_on_time()
+        {
+            var now = DateTime.Today.AddHours(5);
+
+            var listener1 = new StubListener<Message1>();
+            var listener2 = new StubListener<Message1>();
+            var listener3 = new StubListener<Message1>();
+            var listener4 = new StubListener<Message2>();
+
+            var listener5 = new ExpiringListener { ExpiresAt = now.AddMinutes(-1)};
+            var listener6 = new ExpiringListener { ExpiresAt = now.AddMinutes(-1) };
+            var listener7 = new ExpiringListener { ExpiresAt = now.AddMinutes(1)};
+
+            events.AddListeners(listener1, listener2, listener3, listener4, listener5, listener6, listener7);
+
+            events.PruneExpiredListeners(now);
+
+            // non-expiring listeners should be untouched
+            events.Listeners.ShouldContain(listener1);
+            events.Listeners.ShouldContain(listener2);
+            events.Listeners.ShouldContain(listener3);
+            events.Listeners.ShouldContain(listener4);
+
+            // expired expiring listeners should be removed
+            events.Listeners.ShouldNotContain(listener5);
+            events.Listeners.ShouldNotContain(listener6);
+
+            // not-expired expiring listener should not be removed
+            
+            listener7.IsExpired(now).ShouldBeFalse();
+            events.Listeners.ShouldContain(listener7);
+        }
     }
 
     public class StubListener<T> : IListener<T>
@@ -156,6 +221,12 @@ namespace FubuTransportation.Testing.Runtime
         {
             throw new System.NotImplementedException();
         }
+    }
+
+    public class ExpiringListener : IExpiringListener
+    {
+        public bool IsExpired { get; set; }
+        public DateTime? ExpiresAt { get; set; }
     }
 
     public class Message1

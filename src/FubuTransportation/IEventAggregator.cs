@@ -16,7 +16,9 @@ namespace FubuTransportation
         void AddListener(object listener);
         void RemoveListener(object listener);
 
-        IEnumerable<object> Listeners { get; } 
+        IEnumerable<object> Listeners { get; }
+
+        void PruneExpiredListeners(DateTime currentTime);
     }
 
 
