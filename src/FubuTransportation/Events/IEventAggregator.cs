@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
-using FubuTransportation.Logging;
-using FubuTransportation.Runtime;
 
-namespace FubuTransportation
+namespace FubuTransportation.Events
 {
     public interface IEventAggregator
     {

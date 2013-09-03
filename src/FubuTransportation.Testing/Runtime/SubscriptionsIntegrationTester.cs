@@ -35,7 +35,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             var envelope = new Envelope
             {
-                Message = new Message1(),
+                Message = new Events.Message1(),
                 Destination = settings.Service4
             };
 
@@ -47,7 +47,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             var envelope = new Envelope
             {
-                Message = new Message1(),
+                Message = new Events.Message1(),
                 Destination = "memory://dynamic".ToUri()
             };
 
@@ -60,7 +60,7 @@ namespace FubuTransportation.Testing.Runtime
             Exception<UnknownChannelException>.ShouldBeThrownBy(() => {
                 var envelope = new Envelope
                 {
-                    Message = new Message1(),
+                    Message = new Events.Message1(),
                     Destination = "unknown://uri".ToUri()
                 };
 
@@ -71,7 +71,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void use_type_rules_on_the_channel_graph_1()
         {
-            var envelope = new Envelope {Message = new Message1()};
+            var envelope = new Envelope {Message = new Events.Message1()};
             theRouter.FindChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service1");
         }
@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void use_type_rules_on_the_channel_graph_2()
         {
-            var envelope = new Envelope { Message = new Message2() };
+            var envelope = new Envelope { Message = new Events.Message2() };
             theRouter.FindChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service1", "Harness:Service3");
         }
@@ -87,7 +87,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void use_type_rules_on_the_channel_graph_3()
         {
-            var envelope = new Envelope { Message = new Message3() };
+            var envelope = new Envelope { Message = new Events.Message3() };
             theRouter.FindChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service2", "Harness:Service3");
         }
@@ -97,14 +97,14 @@ namespace FubuTransportation.Testing.Runtime
     {
         public RoutedRegistry()
         {
-            Channel(x => x.Service1).PublishesMessage<Message1>();
-            Channel(x => x.Service1).PublishesMessage<Message2>();
+            Channel(x => x.Service1).PublishesMessage<Events.Message1>();
+            Channel(x => x.Service1).PublishesMessage<Events.Message2>();
 
-            Channel(x => x.Service2).PublishesMessage<Message3>();
-            Channel(x => x.Service2).PublishesMessage<Message4>();
+            Channel(x => x.Service2).PublishesMessage<Events.Message3>();
+            Channel(x => x.Service2).PublishesMessage<Events.Message4>();
             
-            Channel(x => x.Service3).PublishesMessage<Message2>();
-            Channel(x => x.Service3).PublishesMessage<Message3>();
+            Channel(x => x.Service3).PublishesMessage<Events.Message2>();
+            Channel(x => x.Service3).PublishesMessage<Events.Message3>();
 
             Channel(x => x.Service4).ReadIncoming();
 

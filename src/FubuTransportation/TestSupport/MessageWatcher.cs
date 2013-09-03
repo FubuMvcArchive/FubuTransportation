@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
+using FubuTransportation.Events;
 using FubuTransportation.Logging;
 using FubuCore;
 using FubuTransportation.Runtime;

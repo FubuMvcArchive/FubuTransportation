@@ -5,6 +5,7 @@ using FubuTransportation.Sagas;
 using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
+using Message1 = FubuTransportation.Testing.Events.Message1;
 
 namespace FubuTransportation.Testing.InMemory
 {

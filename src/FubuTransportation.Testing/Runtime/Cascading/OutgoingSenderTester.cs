@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
         public void use_envelope_from_the_original_if_not_ISendMyself()
         {
             var original = MockRepository.GenerateMock<Envelope>();
-            var message = new Message1();
+            var message = new Events.Message1();
 
             var resulting = new Envelope();
 

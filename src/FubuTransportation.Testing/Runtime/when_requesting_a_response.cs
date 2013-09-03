@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FubuCore;
 using FubuTestingSupport;
+using FubuTransportation.Events;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace FubuTransportation.Testing.Runtime
     public class when_requesting_a_response : InteractionContext<ServiceBus>
     {
         private RecordingEnvelopeSender theSender;
-        private Message1 theRequest;
-        private Task<Message2> theTask;
+        private Events.Message1 theRequest;
+        private Task<Events.Message2> theTask;
         private Envelope theEnvelope;
 
         protected override void beforeEach()
@@ -21,8 +22,8 @@ namespace FubuTransportation.Testing.Runtime
             theSender = new RecordingEnvelopeSender();
             Services.Inject<IEnvelopeSender>(theSender);
 
-            theRequest = new Message1();
-            theTask = ClassUnderTest.Request<Message2>(theRequest);
+            theRequest = new Events.Message1();
+            theTask = ClassUnderTest.Request<Events.Message2>(theRequest);
 
             theEnvelope = theSender.Sent.Single();
         }
@@ -37,7 +38,7 @@ namespace FubuTransportation.Testing.Runtime
         public void should_register_a_reply_listener()
         {
             var events = MockFor<IEventAggregator>();
-            var expectedListener = new ReplyListener<Message2>(events,
+            var expectedListener = new ReplyListener<Events.Message2>(events,
                                                                theEnvelope.CorrelationId, 10.Minutes());
 
 

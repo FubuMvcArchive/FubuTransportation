@@ -78,7 +78,9 @@
     <Compile Include="ErrorHandling\IExceptionMatch.cs" />
     <Compile Include="ErrorHandling\MoveToErrorQueue.cs" />
     <Compile Include="ErrorHandling\RequeueContinuation.cs" />
+    <Compile Include="Events\ExpiringListenerExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
+    <Compile Include="Events\IExpiringListener.cs" />
     <Compile Include="InMemory\AllQueuesInMemoryPolicy.cs" />
     <Compile Include="InMemory\InMemorySagaStorage.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
@@ -152,8 +154,8 @@
     <Compile Include="Registration\HandlerSource.cs" />
     <Compile Include="Registration\IHandlerSource.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
-    <Compile Include="IEventAggregator.cs" />
-    <Compile Include="IListener.cs" />
+    <Compile Include="Events\IEventAggregator.cs" />
+    <Compile Include="Events\IListener.cs" />
     <Compile Include="InMemory\InMemoryQueueManager.cs" />
     <Compile Include="InMemory\InMemoryChannel.cs" />
     <Compile Include="InMemory\InMemoryQueue.cs" />
@@ -175,7 +177,7 @@
     <Compile Include="Sagas\SagaRepositoryUnresolvableException.cs" />
     <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
-    <Compile Include="SynchronousEventAggregator.cs" />
+    <Compile Include="Events\SynchronousEventAggregator.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializer.cs" />

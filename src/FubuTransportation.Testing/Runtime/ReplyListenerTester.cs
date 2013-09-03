@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuTransportation.Events;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
@@ -15,7 +16,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void uses_the_expiration_time()
         {
-            var listener = new ReplyListener<Message1>(null, Guid.NewGuid().ToString(), 10.Minutes());
+            var listener = new ReplyListener<Events.Message1>(null, Guid.NewGuid().ToString(), 10.Minutes());
 
             listener.IsExpired.ShouldBeFalse();
 
@@ -30,17 +31,17 @@ namespace FubuTransportation.Testing.Runtime
     {
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
-        private ReplyListener<Message1> theListener;
-        private Message1 theMessage;
+        private ReplyListener<Events.Message1> theListener;
+        private Events.Message1 theMessage;
 
         [SetUp]
         public void SetUp()
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
 
-            theListener = new ReplyListener<Message1>(theEvents, correlationId, 10.Minutes());
+            theListener = new ReplyListener<Events.Message1>(theEvents, correlationId, 10.Minutes());
 
-            theMessage = new Message1();
+            theMessage = new Events.Message1();
             
             var envelope = new EnvelopeToken
             {
@@ -73,14 +74,14 @@ namespace FubuTransportation.Testing.Runtime
     {
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
-        private ReplyListener<Message1> theListener;
-        private Message1 theMessage;
+        private ReplyListener<Events.Message1> theListener;
+        private Events.Message1 theMessage;
 
         [SetUp]
         public void SetUp()
         {
             theEvents = MockRepository.GenerateMock<IEventAggregator>();
-            theListener = new ReplyListener<Message1>(theEvents, correlationId, 10.Minutes());
+            theListener = new ReplyListener<Events.Message1>(theEvents, correlationId, 10.Minutes());
         }
 
         [Test]
@@ -89,7 +90,7 @@ namespace FubuTransportation.Testing.Runtime
             theListener.Matches(new EnvelopeToken
             {
                 ResponseId = correlationId,
-                Message = new Message1()
+                Message = new Events.Message1()
             }).ShouldBeTrue();
         }
 
@@ -99,7 +100,7 @@ namespace FubuTransportation.Testing.Runtime
             theListener.Matches(new EnvelopeToken
             {
                 ResponseId = Guid.NewGuid().ToString(),
-                Message = new Message1()
+                Message = new Events.Message1()
             }).ShouldBeFalse();
         }
 
@@ -109,7 +110,7 @@ namespace FubuTransportation.Testing.Runtime
             theListener.Matches(new EnvelopeToken
             {
                 ResponseId = correlationId,
-                Message = new Message2()
+                Message = new Events.Message2()
             }).ShouldBeFalse();
         }
     }

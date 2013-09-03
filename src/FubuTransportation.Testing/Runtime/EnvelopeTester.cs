@@ -61,7 +61,7 @@ namespace FubuTransportation.Testing.Runtime
                 CorrelationId = Guid.NewGuid().ToString()
             };
 
-            var childMessage = new Message1();
+            var childMessage = new Events.Message1();
 
             var child = parent.ForResponse(childMessage);
 
@@ -80,7 +80,7 @@ namespace FubuTransportation.Testing.Runtime
                 OriginalId = Guid.NewGuid().ToString()
             };
 
-            var childMessage = new Message1();
+            var childMessage = new Events.Message1();
 
             var child = parent.ForResponse(childMessage);
 
@@ -102,7 +102,7 @@ namespace FubuTransportation.Testing.Runtime
 
             parent.Headers[Envelope.ReplyRequestedKey] = true.ToString();
 
-            var childMessage = new Message1();
+            var childMessage = new Events.Message1();
 
             var child = parent.ForResponse(childMessage);
 
@@ -122,7 +122,7 @@ namespace FubuTransportation.Testing.Runtime
 
             parent.Headers.Has(Envelope.ReplyRequestedKey).ShouldBeFalse();
 
-            var childMessage = new Message1();
+            var childMessage = new Events.Message1();
 
             var child = parent.ForResponse(childMessage);
 
@@ -306,7 +306,7 @@ namespace FubuTransportation.Testing.Runtime
             var envelope = new Envelope
             {
                 Data = new byte[] {1, 3, 4, 4},
-                Message = new Message1()
+                Message = new Events.Message1()
             };
 
             var token = envelope.ToToken();

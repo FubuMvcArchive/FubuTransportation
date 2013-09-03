@@ -29,9 +29,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void should_throw_the_no_handler_exception()
         {
             Exception<NoHandlerException>.ShouldBeThrownBy(() => {
-                ClassUnderTest.InvokeNow(new Message1()); // we don't have a handler for this type
+                ClassUnderTest.InvokeNow(new Events.Message1()); // we don't have a handler for this type
             })
-                                         .Message.ShouldContain(typeof(Message1).FullName);
+                                         .Message.ShouldContain(typeof(Events.Message1).FullName);
         }
     }
 }

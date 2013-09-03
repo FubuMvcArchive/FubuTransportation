@@ -5,6 +5,7 @@ using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
+using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Polling;

@@ -1,4 +1,5 @@
 ﻿using FubuTestingSupport;
+using FubuTransportation.Events;
 using FubuTransportation.Logging;
 using NUnit.Framework;
 using Rhino.Mocks;

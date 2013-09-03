@@ -5,6 +5,7 @@ using Bottles.Services.Messaging.Tracking;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
+using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.Sagas;
 using FubuTransportation.TestSupport;

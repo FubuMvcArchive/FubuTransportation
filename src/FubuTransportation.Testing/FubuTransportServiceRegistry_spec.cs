@@ -5,6 +5,7 @@ using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;

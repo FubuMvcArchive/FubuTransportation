@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FubuCore;
 using System.Linq;
 using FubuCore.Logging;
+using FubuTransportation.Events;
 
 namespace FubuTransportation
 {

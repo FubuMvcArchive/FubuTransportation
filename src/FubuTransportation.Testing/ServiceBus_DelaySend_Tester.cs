@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using FubuCore;
 using System.Linq;
+using Message1 = FubuTransportation.Testing.Events.Message1;
 
 namespace FubuTransportation.Testing
 {

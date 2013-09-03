@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FubuCore.Logging;
 
-namespace FubuTransportation
+namespace FubuTransportation.Events
 {
     public class SynchronousEventAggregator : EventAggregator
     {

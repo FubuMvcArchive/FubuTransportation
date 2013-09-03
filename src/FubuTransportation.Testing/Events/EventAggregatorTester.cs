@@ -1,10 +1,11 @@
 ﻿using System;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
+using FubuTransportation.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace FubuTransportation.Testing.Runtime
+namespace FubuTransportation.Testing.Events
 {
     [TestFixture]
     public class EventAggregatorTester

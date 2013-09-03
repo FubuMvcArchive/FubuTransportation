@@ -154,7 +154,7 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializerIntegratedTester.cs" />
     <Compile Include="Runtime\Serializers\EnvelopeSerializerTester.cs" />
     <Compile Include="Runtime\EnvelopeTester.cs" />
-    <Compile Include="Runtime\EventAggregatorTester.cs" />
+    <Compile Include="Events\EventAggregatorTester.cs" />
     <Compile Include="Runtime\generic_handlers_are_called_for_messages_that_match.cs" />
     <Compile Include="Runtime\Invocation\handling_a_batch_of_messages.cs" />
     <Compile Include="Runtime\Headers\Headers_testing.cs" />

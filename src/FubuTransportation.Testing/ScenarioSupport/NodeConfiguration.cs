@@ -6,6 +6,7 @@ using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using FubuMVC.StructureMap;
+using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.TestSupport;
 using StructureMap;
