@@ -109,6 +109,7 @@
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Runtime\Cascading\DelayedResponse.cs" />
     <Compile Include="Runtime\Cascading\ISendMyself.cs" />
+    <Compile Include="Runtime\Cascading\RespondToSender.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeAddedBackToQueue.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessor.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
