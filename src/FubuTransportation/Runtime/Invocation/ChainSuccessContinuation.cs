@@ -1,5 +1,6 @@
 ﻿using FubuCore.Logging;
 using FubuTransportation.Logging;
+using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Runtime.Invocation
 {

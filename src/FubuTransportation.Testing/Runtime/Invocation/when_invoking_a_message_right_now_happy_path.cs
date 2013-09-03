@@ -4,6 +4,7 @@ using FubuMVC.Core.Runtime;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Cascading;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using FubuCore.Logging;
-using FubuTestingSupport;
+﻿using FubuTestingSupport;
 using FubuTransportation.Runtime;
-using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Runtime.Cascading;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace FubuTransportation.Testing.Runtime
+namespace FubuTransportation.Testing.Runtime.Cascading
 {
     [TestFixture]
     public class OutgoingSenderTester : InteractionContext<OutgoingSender>

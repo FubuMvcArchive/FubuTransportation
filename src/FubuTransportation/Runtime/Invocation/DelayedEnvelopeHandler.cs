@@ -6,7 +6,7 @@ using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    [Description("Delayed Message Handler")]
+    [Description("DelayedResponse Message Handler")]
     public class DelayedEnvelopeHandler : SimpleEnvelopeHandler
     {
         private readonly ISystemTime _systemTime;

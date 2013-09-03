@@ -2,6 +2,7 @@
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Runtime.Invocation
 {

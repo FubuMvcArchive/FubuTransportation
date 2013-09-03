@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FubuTransportation.Runtime
+namespace FubuTransportation.Runtime.Cascading
 {
     public interface IOutgoingSender
     {

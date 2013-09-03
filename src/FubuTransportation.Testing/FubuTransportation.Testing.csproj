@@ -131,7 +131,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordingChannel.cs" />
     <Compile Include="RecordingReceiver.cs" />
-    <Compile Include="Runtime\OutgoingSenderTester.cs" />
+    <Compile Include="Runtime\Cascading\DelayedResponseTester.cs" />
+    <Compile Include="Runtime\Cascading\OutgoingSenderTester.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\ChainFailureContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\ChainSuccessContinuationTester.cs" />

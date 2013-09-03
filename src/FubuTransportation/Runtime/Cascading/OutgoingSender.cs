@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FubuCore;
 
-namespace FubuTransportation.Runtime
+namespace FubuTransportation.Runtime.Cascading
 {
     public class OutgoingSender : IOutgoingSender
     {
@@ -25,10 +25,5 @@ namespace FubuTransportation.Runtime
 
             _sender.Send(cascadingEnvelope);
         }
-    }
-
-    public interface ISendMyself
-    {
-        Envelope CreateEnvelope(Envelope original);
     }
 }

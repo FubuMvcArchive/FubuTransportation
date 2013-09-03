@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Testing.Runtime
 {
