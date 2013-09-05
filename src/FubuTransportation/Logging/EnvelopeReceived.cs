@@ -27,7 +27,7 @@ namespace FubuTransportation.Logging
 
         public override string ToString()
         {
-            return string.Format("Envelope received: {0}", Envelope);
+            return string.Format("Envelope received for {0} from {1} at {2}", Envelope.Message, Envelope.ReplyUri, Envelope.ReceivedAt);
         }
     }
 }

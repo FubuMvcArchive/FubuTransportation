@@ -35,8 +35,6 @@ namespace FubuTransportation
                 try
                 {
                     x.Handle(message);
-                    _logger.Value.Debug(
-                        () => "Successfully processed event {0} with listener {1} in event aggregation".ToFormat(message, x));
                 }
                 catch (Exception e)
                 {

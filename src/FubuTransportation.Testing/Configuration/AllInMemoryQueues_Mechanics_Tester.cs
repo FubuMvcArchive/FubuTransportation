@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
+using FubuTransportation.Events;
 using NUnit.Framework;
 using StructureMap;
 using FubuMVC.StructureMap;
@@ -12,6 +16,7 @@ namespace FubuTransportation.Testing.Configuration
     public class AllInMemoryQueues_Mechanics_Tester
     {
         private Container container;
+        private FubuRuntime runtime;
 
         [SetUp]
         public void SetUp()
@@ -23,8 +28,34 @@ namespace FubuTransportation.Testing.Configuration
             registry.Import<AllInMemoryRegistry>();
             registry.Import<AnotherRegistry>();
 
-            FubuApplication.For(registry).StructureMap(container).Bootstrap();
+            runtime = FubuApplication.For(registry).StructureMap(container).Bootstrap();
 
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+
+            
+
+            var container = runtime.Factory.Get<IContainer>();
+            Debug.WriteLine(container.Model.PluginTypes.Count());
+
+            var types = container.Model.PluginTypes.ToArray();
+            for (int i = 0; i < 6; i++)
+            {
+                var configuration = types[i];
+                Debug.WriteLine("Flushing " + configuration.PluginType.FullName);
+                configuration.EjectAndRemoveAll();
+            }
+
+//            container.Model.PluginTypes.Where(x => x.Lifecycle == "Singleton")
+//                .Each(x => {
+//                    Debug.WriteLine(x.PluginType.FullName);
+//                    x.EjectAndRemoveAll();
+//                });
+
+            runtime.Dispose();
         }
 
         [Test]

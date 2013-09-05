@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuTestingSupport;
 
@@ -29,12 +30,13 @@ namespace FubuTransportation.Testing.ScenarioSupport
             return _processed.Any(x => message.Equals(x.Message));
         }
 
-        public static void Processed(string description, Message message)
+        public static void Processed(string description, Message message, Uri receivedAt = null)
         {
             _processed.Fill(new MessageProcessed
             {
                 Description = description,
-                Message = message
+                Message = message,
+                ReceivedAt = receivedAt
             });
         }
 

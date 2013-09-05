@@ -56,5 +56,10 @@ namespace FubuTransportation.Runtime
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} from {1}", Message, ReplyUri);
+        }
     }
 }

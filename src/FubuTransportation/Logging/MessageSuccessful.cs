@@ -27,7 +27,7 @@ namespace FubuTransportation.Logging
 
         public override string ToString()
         {
-            return string.Format("Message succeeded: {0}", Envelope);
+            return string.Format("Message {0} succeeded at {1}", Envelope, Envelope.ReceivedAt);
         }
     }
 }

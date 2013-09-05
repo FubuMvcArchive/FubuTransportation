@@ -12,7 +12,7 @@ using FubuTestingSupport;
 
 namespace FubuTransportation.Testing
 {
-    [TestFixture, Explicit]
+    [TestFixture]
     public class ScenarioRunner
     {
         [Test, Explicit]
@@ -68,18 +68,6 @@ namespace FubuTransportation.Testing
             writer.FailureCount.ShouldEqual(0);
         }
 
-        [Test, Explicit]
-        public void try_one()
-        {
-            var writer = new ScenarioWriter();
-
-            //new Send_a_single_message_to_the_correct_node().Execute(writer);
-            //new Send_a_single_message_to_multiple_listening_nodes().Execute(writer);
-            new Send_a_message_that_raises_events().Execute(writer);
-            //new Request_a_reply_for_a_single_message().Execute(writer);
-
-            writer.FailureCount.ShouldEqual(0);
-        }
 
         [Test, Explicit]
         public void run_all_scenarios()

@@ -1,9 +1,12 @@
-﻿namespace FubuTransportation.Testing.ScenarioSupport
+﻿using System;
+
+namespace FubuTransportation.Testing.ScenarioSupport
 {
     public class MessageProcessed
     {
         public string Description { get; set; }
         public Message Message { get; set; }
+        public Uri ReceivedAt { get; set; }
 
         public static MessageProcessed For<T>(Message message)
         {
@@ -16,14 +19,14 @@
 
         protected bool Equals(MessageProcessed other)
         {
-            return string.Equals(Description, other.Description) && Equals(Message, other.Message);
+            return string.Equals(Description, other.Description) && Equals(Message, other.Message) && Equals(ReceivedAt, other.ReceivedAt);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((MessageProcessed) obj);
         }
 
@@ -31,8 +34,10 @@
         {
             unchecked
             {
-                return ((Description != null ? Description.GetHashCode() : 0)*397) ^
-                       (Message != null ? Message.GetHashCode() : 0);
+                var hashCode = (Description != null ? Description.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (Message != null ? Message.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ReceivedAt != null ? ReceivedAt.GetHashCode() : 0);
+                return hashCode;
             }
         }
 

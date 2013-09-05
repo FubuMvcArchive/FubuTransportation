@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Bottles.Services.Messaging.Tracking;
 using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuMVC.Core;
@@ -218,7 +219,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
         {
             return TestMessageRecorder.AllProcessed.Any(processed => {
                 return processed.Message.GetType() == message.GetType() && processed.Message.Id == message.Id &&
-                       processed.Message.Source == _uri;
+                       processed.ReceivedAt == _uri;
             });
         }
     }

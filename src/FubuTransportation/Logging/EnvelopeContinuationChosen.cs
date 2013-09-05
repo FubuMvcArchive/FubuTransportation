@@ -1,5 +1,6 @@
 ﻿
 using System;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Runtime;
 
@@ -33,6 +34,11 @@ namespace FubuTransportation.Logging
                 hashCode = (hashCode*397) ^ (ContinuationType != null ? ContinuationType.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return "Chose continuation {0} for envelope {1}".ToFormat(ContinuationType, Envelope);
         }
     }
 }

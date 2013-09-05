@@ -80,9 +80,19 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
                 }
 
-                Wait.Until(() => {
+                var success = Wait.Until(() => {
                     return !MessageHistory.Outstanding().Any();
-                }, timeoutInMilliseconds:5000);
+                }, timeoutInMilliseconds:60000);
+
+                if (success)
+                {
+                    writer.WriteLine("Messages are all accounted for");
+                }
+                else
+                {
+                    writer.WriteLine("Messages are outstanding:");
+                    MessageHistory.Outstanding().Each(x => Debug.WriteLine(x));
+                }
 
                 writer.BlankLine();
 

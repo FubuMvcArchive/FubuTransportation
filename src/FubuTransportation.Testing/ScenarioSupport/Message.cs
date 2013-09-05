@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Testing.ScenarioSupport
@@ -36,7 +37,12 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         public override string ToString()
         {
-            return string.Format("{0} from {1}/{2}", GetType().Name,Source, Key);
+            if (Source == null || Key == null)
+            {
+                return "{0} ({1})".ToFormat(GetType().Name, Id);
+            }
+
+            return string.Format("{0} ({1}) from {2}/{3}", GetType().Name, Id, Source, Key);
         }
     }
 }

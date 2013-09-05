@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Testing.ScenarioSupport
 {
@@ -7,9 +8,16 @@ namespace FubuTransportation.Testing.ScenarioSupport
                                                        where TR2 : Message, new()
                                                        where TR3 : Message, new()
     {
+        private readonly Envelope _envelope;
+
+        public ManyResponseHandler(Envelope envelope)
+        {
+            _envelope = envelope;
+        }
+
         public IEnumerable<object> Handle(T message)
         {
-            TestMessageRecorder.Processed(GetType().Name, message);
+            TestMessageRecorder.Processed(GetType().Name, message, _envelope.ReplyUri);
 
             yield return new TR1 {Id = message.Id};
             yield return new TR2 {Id = message.Id};
