@@ -33,6 +33,8 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void EnqueueCascading(object message)
         {
+            if (message == null) return;
+
             var enumerable = message as IEnumerable<object>;
             if (enumerable == null)
             {

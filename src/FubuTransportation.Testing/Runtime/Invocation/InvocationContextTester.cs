@@ -1,4 +1,5 @@
-﻿using FubuMVC.Core.Runtime;
+﻿using System.Linq;
+using FubuMVC.Core.Runtime;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
@@ -20,6 +21,15 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             messages.EnqueueCascading(m2);
 
             messages.OutgoingMessages().ShouldHaveTheSameElementsAs(m1, m2);
+        }
+
+        [Test]
+        public void ignores_nulls_just_fine()
+        {
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope { Message = new Events.Message1() });
+            messages.EnqueueCascading(null);
+
+            messages.OutgoingMessages().Any().ShouldBeFalse();
         }
 
         [Test]
