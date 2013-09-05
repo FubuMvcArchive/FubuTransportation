@@ -117,6 +117,7 @@
     <Compile Include="Polling\PollingJobIntegrationTester.cs" />
     <Compile Include="Polling\PollingJobTester.cs" />
     <Compile Include="Polling\PollingServicesRegistry_spec.cs" />
+    <Compile Include="RecordingServiceBusTester.cs" />
     <Compile Include="Registration\FuncBuilderTester.cs" />
     <Compile Include="Registration\Nodes\HandlerCallTester.cs" />
     <Compile Include="Configuration\HandlerChainTester.cs" />

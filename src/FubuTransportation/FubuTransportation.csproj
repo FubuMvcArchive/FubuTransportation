@@ -110,6 +110,7 @@
     <Compile Include="Polling\PollingJobSuccess.cs" />
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
+    <Compile Include="RecordingServiceBus.cs" />
     <Compile Include="Runtime\Cascading\DelayedResponse.cs" />
     <Compile Include="Runtime\Cascading\ISendMyself.cs" />
     <Compile Include="Runtime\Cascading\RespondToSender.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Events\SynchronousEventAggregator.cs" />
+    <Compile Include="ServiceBus.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializer.cs" />
