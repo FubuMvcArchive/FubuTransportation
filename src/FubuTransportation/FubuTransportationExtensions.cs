@@ -85,6 +85,8 @@ namespace FubuTransportation
 
             SetServiceIfNone<IMessageExecutor, MessageExecutor>();
             SetServiceIfNone<IOutgoingSender, OutgoingSender>();
+
+            AddService<IDeactivator, ChannelShutdownDeactivator>();
         }
     }
 

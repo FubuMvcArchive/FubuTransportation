@@ -188,5 +188,15 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IOutgoingSender, OutgoingSender>();
         }
+
+        [Test]
+        public void ChannelShutdownDeactivator_is_registered()
+        {
+                        var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            BehaviorGraph.BuildFrom(registry)
+                .Services.ServicesFor<IDeactivator>().Any(x => x.Type == typeof(ChannelShutdownDeactivator))
+                .ShouldBeTrue();
+        }
     }
 }

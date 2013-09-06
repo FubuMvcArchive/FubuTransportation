@@ -83,8 +83,6 @@ namespace FubuTransportation.LightningQueues
 
         public void Send(byte[] data, IHeaders headers)
         {
-            //TODO delayed messages
-            // TODO -- pull out a factory method for our Envelope to LightningQueues Message & UT
             var messagePayload = new MessagePayload
             {
                 Data = data,
