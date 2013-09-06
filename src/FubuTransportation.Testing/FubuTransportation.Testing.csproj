@@ -136,6 +136,7 @@
     <Compile Include="Runtime\Cascading\DelayedResponseTester.cs" />
     <Compile Include="Runtime\Cascading\OutgoingSenderTester.cs" />
     <Compile Include="Runtime\Cascading\RespondToSenderTester.cs" />
+    <Compile Include="Runtime\EnvelopeModifierTester.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\ChainFailureContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\ChainSuccessContinuationTester.cs" />

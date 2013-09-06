@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
-using FubuCore.Logging;
 using FubuTransportation.Configuration;
-using FubuTransportation.Runtime;
 
-namespace FubuTransportation
+namespace FubuTransportation.Runtime
 {
     public class TransportActivator : IActivator
     {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace FubuTransportation
@@ -8,7 +6,7 @@ namespace FubuTransportation
     public interface IServiceBus
     {
         /// <summary>
-        /// 
+        /// Loosely-coupled Request/Reply pattern
         /// </summary>
         /// <typeparam name="TRequest"></typeparam>
         /// <typeparam name="TResponse"></typeparam>

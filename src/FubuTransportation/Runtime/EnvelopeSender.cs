@@ -12,18 +12,21 @@ namespace FubuTransportation.Runtime
         private readonly ISubscriptions _router;
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
+        private readonly IEnumerable<IEnvelopeModifier> _modifiers;
 
-        public EnvelopeSender(ISubscriptions router, IEnvelopeSerializer serializer, ILogger logger)
+        public EnvelopeSender(ISubscriptions router, IEnvelopeSerializer serializer, ILogger logger, IEnumerable<IEnvelopeModifier> modifiers)
         {
             _router = router;
             _serializer = serializer;
             _logger = logger;
+            _modifiers = modifiers;
         }
 
         // virtual for testing
         public string Send(Envelope envelope)
         {
             _serializer.Serialize(envelope);
+            _modifiers.Each(x => x.Modify(envelope));
 
             var channels = _router.FindChannels(envelope).ToArray();
 

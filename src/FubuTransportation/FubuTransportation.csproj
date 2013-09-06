@@ -119,9 +119,11 @@
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
     <Compile Include="Polling\PollingJobLogger.cs" />
     <Compile Include="Runtime\Delayed\DelayedMessageCache.cs" />
+    <Compile Include="Runtime\EnvelopeModifier.cs" />
     <Compile Include="Runtime\EnvelopeSender.cs" />
     <Compile Include="Runtime\EnvelopeToken.cs" />
     <Compile Include="Runtime\HeaderWrapper.cs" />
+    <Compile Include="Runtime\IEnvelopeModifier.cs" />
     <Compile Include="Runtime\Invocation\Batching\BatchMessage.cs" />
     <Compile Include="Runtime\Invocation\Batching\IBatchMessage.cs" />
     <Compile Include="Runtime\Invocation\ChainExecutionEnvelopeHandler.cs" />
@@ -216,7 +218,7 @@
     <Compile Include="Runtime\Serializers\UnknownContentTypeException.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
     <Compile Include="StringExtensions.cs" />
-    <Compile Include="TransportActivator.cs" />
+    <Compile Include="Runtime\TransportActivator.cs" />
     <Compile Include="TransportSettings.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>

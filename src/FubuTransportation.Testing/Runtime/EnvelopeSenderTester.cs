@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -23,6 +24,7 @@ namespace FubuTransportation.Testing.Runtime
         private Envelope theEnvelope;
         private string correlationId;
         private RecordingLogger theLogger;
+        private IEnvelopeModifier[] modifiers;
 
         protected override void beforeEach()
         {
@@ -36,11 +38,19 @@ namespace FubuTransportation.Testing.Runtime
             theLogger = new RecordingLogger();
             Services.Inject<ILogger>(theLogger);
 
+            modifiers = Services.CreateMockArrayFor<IEnvelopeModifier>(5);
+
             MockFor<ISubscriptions>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);
 
+        }
+
+        [Test]
+        public void calls_all_the_modifiers_to_optionally_enhance_the_envelope()
+        {
+            modifiers.Each(x => x.AssertWasCalled(o => o.Modify(theEnvelope)));
         }
 
         [Test]
