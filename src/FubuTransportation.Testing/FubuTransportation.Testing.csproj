@@ -182,6 +182,7 @@
     <Compile Include="Sagas\SagaTypesTester.cs" />
     <Compile Include="Sagas\StatefulSagaConventionTester.cs" />
     <Compile Include="ScenarioRunner.cs" />
+    <Compile Include="ScenarioSupport\SendAndAwaitStep.cs" />
     <Compile Include="ScenarioSupport\SourceRecordingHandler.cs" />
     <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs" />
     <Compile Include="Scenarios\Send_a_message_that_raises_events.cs" />

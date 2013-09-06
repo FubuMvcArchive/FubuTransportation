@@ -18,4 +18,17 @@ namespace FubuTransportation.Testing.Scenarios
 
 
     }
+
+    public class SendAndAwait_for_a_single_message : Scenario
+    {
+        public SendAndAwait_for_a_single_message()
+        {
+            Website1.Registry.Channel(x => x.Service1)
+                    .PublishesMessage<OneMessage>();
+
+            Service1.Handles<OneMessage>();
+
+            Website1.SendAndAwait<OneMessage>();
+        }
+    }
 }

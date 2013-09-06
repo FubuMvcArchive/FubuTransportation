@@ -71,6 +71,12 @@ namespace FubuTransportation.Testing.ScenarioSupport
             return new SendExpression<T>(Parent, this, description);
         }
 
+        public void SendAndAwait<T>() where T : Message, new()
+        {
+            var step = new SendAndAwaitStep<T>(this);
+            Parent.AddStep(step);
+        }
+
         public class SendExpression<T> where T : Message, new()
         {
             private readonly Scenario _parent;

@@ -27,5 +27,14 @@ namespace FubuTransportation
 
         void DelaySend<T>(T message, DateTime time);
         void DelaySend<T>(T message, TimeSpan delay);
+
+        /// <summary>
+        /// Send a message and await an acknowledgement that the 
+        /// message has been processed
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task SendAndWait<T>(T message);
     }
 }

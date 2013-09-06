@@ -64,5 +64,21 @@ namespace FubuTransportation
         {
             DelaySend(message, _systemTime.UtcNow().Add(delay));
         }
+
+        public Task SendAndWait<T>(T message)
+        {
+            var envelope = new Envelope
+            {
+                Message = message,
+                AckRequested = true
+            };
+
+            var listener = new ReplyListener<Acknowledgement>(_events, envelope.CorrelationId, 10.Minutes());
+            _events.AddListener(listener);
+
+            _sender.Send(envelope);
+
+            return listener.Task;
+        }
     }
 }

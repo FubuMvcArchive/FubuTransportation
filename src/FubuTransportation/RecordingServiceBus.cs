@@ -47,6 +47,11 @@ namespace FubuTransportation
             });
         }
 
+        public Task SendAndWait<T>(T message)
+        {
+            throw new NotImplementedException();
+        }
+
         public class DelayedMessage
         {
             public TimeSpan Delay;

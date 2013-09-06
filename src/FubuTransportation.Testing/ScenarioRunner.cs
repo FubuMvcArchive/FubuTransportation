@@ -68,6 +68,16 @@ namespace FubuTransportation.Testing
             writer.FailureCount.ShouldEqual(0);
         }
 
+        [Test]
+        public void send_and_await_for_a_single_message()
+        {
+            var writer = new ScenarioWriter();
+
+            new SendAndAwait_for_a_single_message().Execute(writer);
+
+            writer.FailureCount.ShouldEqual(0);
+        }
+
 
         [Test, Explicit]
         public void run_all_scenarios()
