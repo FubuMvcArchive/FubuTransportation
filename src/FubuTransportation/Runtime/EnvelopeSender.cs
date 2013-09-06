@@ -25,8 +25,11 @@ namespace FubuTransportation.Runtime
         // virtual for testing
         public string Send(Envelope envelope)
         {
-            _serializer.Serialize(envelope);
+            envelope.Headers[Envelope.MessageTypeKey] = envelope.Message.GetType().FullName;
+
             _modifiers.Each(x => x.Modify(envelope));
+            _serializer.Serialize(envelope);
+            
 
             var channels = _router.FindChannels(envelope).ToArray();
 

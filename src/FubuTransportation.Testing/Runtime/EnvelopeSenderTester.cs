@@ -48,6 +48,12 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void adds_the_message_type_header()
+        {
+            theEnvelope.Headers[Envelope.MessageTypeKey].ShouldEqual(theMessage.GetType().FullName);
+        }
+
+        [Test]
         public void calls_all_the_modifiers_to_optionally_enhance_the_envelope()
         {
             modifiers.Each(x => x.AssertWasCalled(o => o.Modify(theEnvelope)));

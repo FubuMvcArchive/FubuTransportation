@@ -27,6 +27,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ReceivedAtKey = "Received-At";
         public static readonly string AttemptsKey = "Attempts";
         public static readonly string AckRequestedKey = "Ack-Requested";
+        public static readonly string MessageTypeKey = "Message-Key";
 
         public byte[] Data;
 
