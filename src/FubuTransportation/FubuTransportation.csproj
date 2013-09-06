@@ -111,6 +111,7 @@
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="RecordingServiceBus.cs" />
+    <Compile Include="Runtime\Acknowledgement.cs" />
     <Compile Include="Runtime\Cascading\DelayedResponse.cs" />
     <Compile Include="Runtime\Cascading\ISendMyself.cs" />
     <Compile Include="Runtime\Cascading\RespondToSender.cs" />

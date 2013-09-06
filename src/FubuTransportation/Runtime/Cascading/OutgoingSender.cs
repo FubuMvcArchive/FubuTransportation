@@ -14,7 +14,24 @@ namespace FubuTransportation.Runtime.Cascading
 
         public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
         {
+            if (original.AckRequested)
+            {
+                sendAcknowledgement(original);
+            }
+
             cascadingMessages.Each(o => SendOutgoingMessage(original, o));
+        }
+
+        private void sendAcknowledgement(Envelope original)
+        {
+            var envelope = new Envelope
+            {
+                Destination = original.ReplyUri,
+                ResponseId = original.CorrelationId,
+                Message = new Acknowledgement {CorrelationId = original.CorrelationId}
+            };
+
+            _sender.Send(envelope);
         }
 
         public void SendOutgoingMessage(Envelope original, object o)

@@ -26,6 +26,7 @@ namespace FubuTransportation.Runtime
         public static readonly string ExecutionTimeKey = "Execution-Time";
         public static readonly string ReceivedAtKey = "Received-At";
         public static readonly string AttemptsKey = "Attempts";
+        public static readonly string AckRequestedKey = "Ack-Requested";
 
         public byte[] Data;
 
@@ -92,6 +93,8 @@ namespace FubuTransportation.Runtime
             get { return _callback; }
             set { _callback = value; }
         }
+
+        
 
         // TODO -- this is where the routing slip is going to come into place
         public virtual Envelope ForResponse(object message)

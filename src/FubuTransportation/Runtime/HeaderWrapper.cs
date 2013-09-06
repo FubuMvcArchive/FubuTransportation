@@ -84,6 +84,22 @@ namespace FubuTransportation.Runtime
             }
         }
 
+        public bool AckRequested
+        {
+            get { return Headers.Has(Envelope.AckRequestedKey) ? Headers[Envelope.AckRequestedKey].EqualsIgnoreCase("true") : false; }
+            set
+            {
+                if (value)
+                {
+                    Headers[Envelope.AckRequestedKey] = "true";
+                }
+                else
+                {
+                    Headers.Remove(Envelope.AckRequestedKey);
+                }
+            }
+        }
+
         public DateTime? ExecutionTime
         {
             get { return Headers.Has(Envelope.ExecutionTimeKey) ? XmlConvert.ToDateTime(Headers[Envelope.ExecutionTimeKey], XmlDateTimeSerializationMode.Utc) : (DateTime?)null; }

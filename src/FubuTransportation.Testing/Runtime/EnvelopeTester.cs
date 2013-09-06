@@ -254,6 +254,21 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
+        public void ack_requested()
+        {
+            var envelope = new Envelope();
+            envelope.AckRequested.ShouldBeFalse();
+
+
+            envelope.AckRequested = true;
+            envelope.Headers[Envelope.AckRequestedKey].ShouldEqual("true");
+            envelope.AckRequested.ShouldBeTrue();
+
+            envelope.AckRequested = false;
+            envelope.Headers.Has(Envelope.AckRequestedKey).ShouldBeFalse();
+        }
+
+        [Test]
         public void execution_time_is_null_by_default()
         {
             new Envelope().ExecutionTime.ShouldBeNull();
