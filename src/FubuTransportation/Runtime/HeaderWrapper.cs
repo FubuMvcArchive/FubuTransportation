@@ -11,13 +11,13 @@ namespace FubuTransportation.Runtime
     {
         public Uri Source
         {
-            get { return StringExtensions.ToUri(Headers[Envelope.SourceKey]); }
+            get { return Headers[Envelope.SourceKey].ToUri(); }
             set { Headers[Envelope.SourceKey] = value == null ? null : value.ToString(); }
         }
 
         public Uri ReplyUri
         {
-            get { return StringExtensions.ToUri(Headers[Envelope.ReplyUriKey]); }
+            get { return Headers[Envelope.ReplyUriKey].ToUri(); }
             set { Headers[Envelope.ReplyUriKey] = value == null ? null : value.ToString(); }
         }
 
@@ -47,13 +47,13 @@ namespace FubuTransportation.Runtime
 
         public Uri Destination
         {
-            get { return StringExtensions.ToUri(Headers[Envelope.DestinationKey]); }
+            get { return Headers[Envelope.DestinationKey].ToUri(); }
             set { Headers[Envelope.DestinationKey] = value == null ? null : value.ToString(); }
         }
 
         public Uri ReceivedAt
         {
-            get { return StringExtensions.ToUri(Headers[Envelope.ReceivedAtKey]); }
+            get { return Headers[Envelope.ReceivedAtKey].ToUri(); }
             set { Headers[Envelope.ReceivedAtKey] = value == null ? null : value.ToString(); }
         }
 

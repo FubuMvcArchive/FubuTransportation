@@ -13,21 +13,21 @@ namespace FubuTransportation.Runtime
     {
         private static readonly BinaryFormatter formatter = new BinaryFormatter();
 
-        public static readonly string OriginalIdKey = "OriginalId";
-        public static readonly string IdKey = "Id";
-        public static readonly string ParentIdKey = "ParentId";
+        public static readonly string OriginalIdKey = "original-id";
+        public static readonly string IdKey = "id";
+        public static readonly string ParentIdKey = "parent-id";
         public static readonly string ContentTypeKey = HttpResponseHeaders.ContentType;
-        public static readonly string SourceKey = "Source";
-        public static readonly string ChannelKey = "Channel";
-        public static readonly string ReplyRequestedKey = "Reply-Requested";
-        public static readonly string ResponseIdKey = "Response";
-        public static readonly string DestinationKey = "Destination";
-        public static readonly string ReplyUriKey = "Reply-Uri";
-        public static readonly string ExecutionTimeKey = "Execution-Time";
-        public static readonly string ReceivedAtKey = "Received-At";
-        public static readonly string AttemptsKey = "Attempts";
-        public static readonly string AckRequestedKey = "Ack-Requested";
-        public static readonly string MessageTypeKey = "Message-Key";
+        public static readonly string SourceKey = "source";
+        public static readonly string ChannelKey = "channel";
+        public static readonly string ReplyRequestedKey = "reply-requested";
+        public static readonly string ResponseIdKey = "response";
+        public static readonly string DestinationKey = "destination";
+        public static readonly string ReplyUriKey = "reply-uri";
+        public static readonly string ExecutionTimeKey = "time-to-send";
+        public static readonly string ReceivedAtKey = "received-at";
+        public static readonly string AttemptsKey = "attempts";
+        public static readonly string AckRequestedKey = "ack-requested";
+        public static readonly string MessageTypeKey = "message-type";
 
         public byte[] Data;
 
