@@ -205,6 +205,14 @@ namespace FubuTransportation.Configuration
                 Include(typeof(T));
             }
 
+            public void FindBy(Action<HandlerSource> configuration)
+            {
+                var source = new HandlerSource();
+                configuration(source);
+
+                _parent._sources.Add(source);
+            }
+
             public void FindBy<T>() where T : IHandlerSource, new()
             {
                 _parent._sources.Add(new T());
