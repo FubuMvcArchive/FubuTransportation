@@ -111,7 +111,11 @@
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Publishing\EventPublisher.cs" />
-    <Compile Include="Publishing\PublishingClasses.cs" />
+    <Compile Include="Publishing\EventPublisherConvention.cs" />
+    <Compile Include="Publishing\EventPublishingActionSource.cs" />
+    <Compile Include="Publishing\IEventPublisher.cs" />
+    <Compile Include="Publishing\PublishEvent.cs" />
+    <Compile Include="Publishing\PublishingExtensions.cs" />
     <Compile Include="RecordingServiceBus.cs" />
     <Compile Include="Runtime\Acknowledgement.cs" />
     <Compile Include="Runtime\Cascading\DelayedResponse.cs" />
