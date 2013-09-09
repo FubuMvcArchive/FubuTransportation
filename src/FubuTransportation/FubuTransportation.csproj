@@ -110,6 +110,8 @@
     <Compile Include="Polling\PollingJobSuccess.cs" />
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
+    <Compile Include="Publishing\EventPublisher.cs" />
+    <Compile Include="Publishing\PublishingClasses.cs" />
     <Compile Include="RecordingServiceBus.cs" />
     <Compile Include="Runtime\Acknowledgement.cs" />
     <Compile Include="Runtime\Cascading\DelayedResponse.cs" />
