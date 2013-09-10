@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuCore;
 using FubuCore.Dates;
+using FubuCore.Logging;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Runtime.Invocation;
 using Rhino.Mocks;

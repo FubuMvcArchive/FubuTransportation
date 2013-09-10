@@ -81,7 +81,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             envelope.Callback.AssertWasCalled(x => x.MarkFailed());
 
-            var report = context.RecordedLogs.ErrorMessages.Single().ShouldBeOfType<ExceptionReport>();
+            var report = context.RecordedLogs.ErrorMessages.Single().ShouldBeOfType<FubuCore.Logging.ExceptionReport>();
             report.CorrelationId.ShouldEqual(envelope.CorrelationId);
             report.ExceptionText.ShouldEqual(exception.ToString());
 

@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void should_log_the_actual_exception()
         {
             var report = theContext.RecordedLogs.ErrorMessages.Single()
-                .ShouldBeOfType<ExceptionReport>();
+                .ShouldBeOfType<FubuCore.Logging.ExceptionReport>();
 
             report.ExceptionText.ShouldEqual(theException.ToString());
         }
