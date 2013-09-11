@@ -122,6 +122,7 @@ namespace FubuTransportation.Configuration
                 var source = new HandlerSource();
                 source.UseThisAssembly();
                 source.IncludeClassesSuffixedWithConsumer();
+                source.IncludeClassesSuffixedWithHandler();
                 source.IncludeClassesMatchingSagaConvention();
 
                 yield return source;

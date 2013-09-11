@@ -79,6 +79,15 @@ namespace FubuTransportation.Registration
         }
 
         /// <summary>
+        /// Find Handlers on classes whose name ends on 'Consumer'
+        /// </summary>
+        public void IncludeClassesSuffixedWithHandler()
+        {
+            _description.WriteLine("Public classes that are suffixed by 'Handler'");
+            IncludeTypesNamed(x => x.EndsWith("Handler"));
+        }
+
+        /// <summary>
         /// Find Handlers suffixed with 'Saga' that have public properties of 'State' and 'IsCompleted'
         /// </summary>
         public void IncludeClassesMatchingSagaConvention()
@@ -126,6 +135,8 @@ namespace FubuTransportation.Registration
             _description.WriteLine("Methods matching " + filter.ToString());
             _methodFilters.Includes += filter;
         }
+
+
 
         /// <summary>
         /// Exclude types that match on the provided filter for finding Handlers
