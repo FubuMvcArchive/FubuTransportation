@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Data;
 using FubuMVC.Core.Behaviors;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -30,6 +32,16 @@ namespace FubuTransportation.Testing.ErrorHandling
             var ex = new T();
 
             MockFor<IActionBehavior>().Expect(x => x.Invoke()).Throw(ex);
+        }
+
+        private void theInnerBehaviorThrowsAggregateExceptionWith<T1, T2, T3>()
+            where T1 : Exception, new()
+            where T2 : Exception, new()
+            where T3 : Exception, new()
+        {
+            var exception = new AggregateException(new T1(), new T2(), new T3());
+
+            MockFor<IActionBehavior>().Expect(x => x.Invoke()).Throw(exception);
         }
 
         private void theInnerBehaviorSucceeds()
@@ -198,6 +210,134 @@ namespace FubuTransportation.Testing.ErrorHandling
 
             continuation.Exception.ShouldBeOfType<Exception>();
         }
+
+        //==================Aggregate Exceptions================================
+        [Test]
+        public void if_attempts_are_under_the_threshold_try_the_exception_rules_with_aggregate()
+        {
+            theInnerBehaviorThrowsAggregateExceptionWith<NullReferenceException, NotImplementedException, NotSupportedException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            var rule = new FakeExceptionRule<NotImplementedException>();
+            theChain.ErrorHandlers.Add(rule);
+
+            ClassUnderTest.Invoke();
+
+            theContinuationSetByTheErrorHandler().ShouldBeTheSameAs(rule.Continuation);
+        }
+
+        [Test]
+        public void chooses_the_first_non_null_continuation_from_an_error_handler_for_the_first_matching_in_the_aggregate()
+        {
+            var rule1 = new FakeExceptionRule<NotImplementedException>();
+            var rule2 = new FakeExceptionRule<NotSupportedException>();
+            var rule3 = new FakeExceptionRule<NotFiniteNumberException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            theChain.ErrorHandlers.Add(rule1);
+            theChain.ErrorHandlers.Add(rule2);
+            theChain.ErrorHandlers.Add(rule3);
+
+            theInnerBehaviorThrowsAggregateExceptionWith<NullReferenceException, NotImplementedException, Exception>();
+
+
+            ClassUnderTest.Invoke();
+
+            theContinuationSetByTheErrorHandler().ShouldBeTheSameAs(rule1.Continuation);
+        }
+
+        [Test]
+        public void chooses_the_first_non_null_continuation_from_an_error_handler_for_the_first_matching_in_the_aggregate_2()
+        {
+            var rule1 = new FakeExceptionRule<NotImplementedException>();
+            var rule2 = new FakeExceptionRule<NotSupportedException>();
+            var rule3 = new FakeExceptionRule<NotFiniteNumberException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            theChain.ErrorHandlers.Add(rule1);
+            theChain.ErrorHandlers.Add(rule2);
+            theChain.ErrorHandlers.Add(rule3);
+
+            theInnerBehaviorThrowsAggregateExceptionWith<Exception, NullReferenceException, NotImplementedException>();
+
+
+            ClassUnderTest.Invoke();
+
+            theContinuationSetByTheErrorHandler().ShouldBeTheSameAs(rule1.Continuation);
+        }
+
+        [Test]
+        public void chooses_the_first_non_null_continuation_from_an_error_handler_2_for_aggregate()
+        {
+            var rule1 = new FakeExceptionRule<NotImplementedException>();
+            var rule2 = new FakeExceptionRule<NotSupportedException>();
+            var rule3 = new FakeExceptionRule<NotFiniteNumberException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            theChain.ErrorHandlers.Add(rule1);
+            theChain.ErrorHandlers.Add(rule2);
+            theChain.ErrorHandlers.Add(rule3);
+
+            theInnerBehaviorThrowsAggregateExceptionWith<Exception, ApplicationException, NotSupportedException>();
+
+            ClassUnderTest.Invoke();
+
+            theContinuationSetByTheErrorHandler().ShouldBeTheSameAs(rule2.Continuation);
+        }
+
+        [Test]
+        public void chooses_the_first_non_null_continuation_from_an_error_handler_3_with_aggregate()
+        {
+            var rule1 = new FakeExceptionRule<NotImplementedException>();
+            var rule2 = new FakeExceptionRule<NotSupportedException>();
+            var rule3 = new FakeExceptionRule<NotFiniteNumberException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            theChain.ErrorHandlers.Add(rule1);
+            theChain.ErrorHandlers.Add(rule2);
+            theChain.ErrorHandlers.Add(rule3);
+
+            theInnerBehaviorThrowsAggregateExceptionWith<Exception, NotFiniteNumberException, ApplicationException>();
+
+            ClassUnderTest.Invoke();
+
+            theContinuationSetByTheErrorHandler().ShouldBeTheSameAs(rule3.Continuation);
+        }
+
+        [Test]
+        public void none_of_the_rules_match_so_it_goes_to_the_error_queue_with_aggregate()
+        {
+            var rule1 = new FakeExceptionRule<NotImplementedException>();
+            var rule2 = new FakeExceptionRule<NotSupportedException>();
+            var rule3 = new FakeExceptionRule<NotFiniteNumberException>();
+
+            theEnvelope.Attempts = 1;
+            theChain.MaximumAttempts = 3;
+
+            theChain.ErrorHandlers.Add(rule1);
+            theChain.ErrorHandlers.Add(rule2);
+            theChain.ErrorHandlers.Add(rule3);
+
+            theInnerBehaviorThrowsAggregateExceptionWith<Exception, ApplicationException, DBConcurrencyException>();
+
+            ClassUnderTest.Invoke();
+
+            var continuation = theContinuationSetByTheErrorHandler()
+                .ShouldBeOfType<MoveToErrorQueue>();
+
+            continuation.Exception.ShouldBeOfType<Exception>();
+        }
+
     }
 
     public class FakeExceptionRule<T> : IErrorHandler where T : Exception
