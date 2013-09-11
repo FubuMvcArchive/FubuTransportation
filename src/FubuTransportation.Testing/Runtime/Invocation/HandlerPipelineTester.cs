@@ -27,6 +27,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theContinuation = MockFor<IContinuation>();
             theEnvelope = ObjectMother.Envelope();
+            theEnvelope.Attempts = 1;
+
             theEnvelope.Callback = MockFor<IMessageCallback>();
 
             Services.PartialMockTheClassUnderTest();
@@ -34,6 +36,18 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                           .Return(theContinuation);
 
             ClassUnderTest.Invoke(theEnvelope );
+        }
+
+        [Test]
+        public void should_have_incremented_the_attempt_count()
+        {
+            theEnvelope.Attempts.ShouldEqual(2);
+        }
+
+        [Test]
+        public void should_set_itself_on_the_continuation_context_for_later()
+        {
+            theContext.Pipeline.ShouldBeTheSameAs(ClassUnderTest);
         }
 
         [Test]

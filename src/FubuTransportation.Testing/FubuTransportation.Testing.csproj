@@ -120,6 +120,8 @@
     <Compile Include="ErrorHandling\MoveToErrorQueueHandlerTester.cs" />
     <Compile Include="ErrorHandling\MovetoErrorQueueTester.cs" />
     <Compile Include="ErrorHandling\RequeueContinuationTester.cs" />
+    <Compile Include="ErrorHandling\RetryNowContinuationTester.cs" />
+    <Compile Include="ErrorHandling\RetryNow_integration_testing.cs" />
     <Compile Include="Events\ExpiringListenerCleanupTester.cs" />
     <Compile Include="FubuTransportRegistry_application_of_policies_Tester.cs" />
     <Compile Include="FubuTransportRegistry_default_handler_source_policies_spec.cs" />

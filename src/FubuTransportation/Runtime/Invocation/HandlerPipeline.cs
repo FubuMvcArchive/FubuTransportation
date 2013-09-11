@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
@@ -17,18 +18,31 @@ namespace FubuTransportation.Runtime.Invocation
             _serializer = serializer;
             _context = context;
             _handlers.AddRange(handlers);
+
+            // needs to be available to continuations
+            _context.Pipeline = this;
         }
 
         public void Invoke(Envelope envelope)
         {
-            envelope.UseSerializer(_serializer);
+            envelope.Attempts++; // needs to be done here.
+            if (envelope.Message == null)
+            {
+                envelope.UseSerializer(_serializer);
+            }
 
             _context.Logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
 
             var continuation = FindContinuation(envelope);
 
-            // Harden this!!!!!  No exceptions get through, ever.
-            continuation.Execute(envelope, _context);
+            try
+            {
+                continuation.Execute(envelope, _context);
+            }
+            catch (Exception e)
+            {
+                _context.Logger.Error(envelope.CorrelationId, "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope, continuation), e);
+            }
         }
 
         // virtual for testing as usual

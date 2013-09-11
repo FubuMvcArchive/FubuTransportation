@@ -32,6 +32,11 @@ namespace FubuTransportation.Configuration
  
         }
 
+        public static IContainerFacilityExpression DefaultPolicies()
+        {
+            return For(x => { });
+        }
+
         static FubuTransport()
         {
             Reset();

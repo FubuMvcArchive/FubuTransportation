@@ -16,6 +16,9 @@ namespace FubuTransportation.Runtime.Invocation
             _invoker = invoker;
         }
 
+        // virtual for testing, setter to avoid bi-directional dependency problems
+        public virtual IHandlerPipeline Pipeline { get; set; }
+
         public ILogger Logger
         {
             get { return _logger; }

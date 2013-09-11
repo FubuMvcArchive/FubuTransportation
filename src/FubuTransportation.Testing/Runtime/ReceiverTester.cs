@@ -184,10 +184,5 @@ namespace FubuTransportation.Testing.Runtime
             MockFor<IHandlerPipeline>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
         }
 
-        [Test]
-        public void should_increment_the_attempts_count()
-        {
-            theHeaders[Envelope.AttemptsKey].ShouldEqual("3");
-        }
     }
 }
