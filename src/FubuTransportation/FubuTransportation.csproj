@@ -63,6 +63,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ChannelGraph.cs" />
+    <Compile Include="Configuration\HandlerChainPolicy.cs" />
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />

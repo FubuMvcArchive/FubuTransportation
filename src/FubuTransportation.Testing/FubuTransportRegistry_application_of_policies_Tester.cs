@@ -3,6 +3,7 @@ using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.Querying;
 using FubuTransportation.Configuration;
 using FubuTransportation.Testing.Runtime;
@@ -128,11 +129,11 @@ namespace FubuTransportation.Testing
         public void Handle(Message6 message) { }
     }
 
-    public class WrapPolicy<T> : Policy where T : IActionBehavior
+    public class WrapPolicy<T> : HandlerChainPolicy where T : IActionBehavior
     {
-        public WrapPolicy()
+        public override void Configure(HandlerChain handlerChain)
         {
-            Wrap.WithBehavior<T>();
+            handlerChain.InsertFirst(new Wrapper(typeof(T)));
         }
     }
 
