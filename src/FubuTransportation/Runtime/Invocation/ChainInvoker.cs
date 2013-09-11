@@ -1,5 +1,7 @@
 ﻿using System;
+using FubuCore;
 using FubuCore.Logging;
+using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Cascading;
@@ -37,10 +39,12 @@ namespace FubuTransportation.Runtime.Invocation
                 throw new NoHandlerException(typeof (T));
             }
 
+            IActionBehavior behavior = null;
+
             try
             {
                 var args = new InvocationContext(envelope);
-                var behavior = _factory.BuildBehavior(args, chain.UniqueId);
+                behavior = _factory.BuildBehavior(args, chain.UniqueId);
                 behavior.Invoke();
 
                 _sender.SendOutgoingMessages(envelope, args.OutgoingMessages());
@@ -49,6 +53,10 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 _logger.Error("Failed while invoking message " + message, e);
                 throw;
+            }
+            finally
+            {
+                (behavior as IDisposable).CallIfNotNull(x => x.SafeDispose());
             }
         }
 
@@ -66,7 +74,14 @@ namespace FubuTransportation.Runtime.Invocation
                 var context = new InvocationContext(envelope);
                 var behavior = _factory.BuildBehavior(context, chain.UniqueId);
 
-                behavior.Invoke();
+                try
+                {
+                    behavior.Invoke();
+                }
+                finally
+                {
+                    (behavior as IDisposable).CallIfNotNull(x => x.SafeDispose());
+                }
 
                 return context;
             }

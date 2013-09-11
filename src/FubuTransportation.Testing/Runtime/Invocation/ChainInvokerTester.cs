@@ -47,12 +47,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     [TestFixture]
     public class when_executing_the_chain_happy_path : MessageInvokerContext
     {
-        private IActionBehavior theBehavior;
+        private IDisposableBehavior theBehavior;
         private FubuTransportation.Runtime.Invocation.InvocationContext _invocationContext;
 
         protected override void theContextIs()
         {
-            theBehavior = MockFor<IActionBehavior>();
+            theBehavior = MockFor<IDisposableBehavior>();
             theChain = new HandlerChain();
 
             _invocationContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
@@ -71,8 +71,16 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theBehavior.AssertWasCalled(x => x.Invoke());
         }
 
+        [Test]
+        public void the_behavior_should_be_disposed_to_dispose_The_inner_nested_container()
+        {
+            theBehavior.AssertWasCalled(x => x.Dispose());
+        }
+
 
     }
+
+    public interface IDisposableBehavior : IActionBehavior, IDisposable{}
 
     
     public abstract class MessageInvokerContext : InteractionContext<ChainInvoker>

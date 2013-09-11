@@ -38,7 +38,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theExpectedChain = theGraph.ChainFor(typeof (OneMessage));
 
             cascadingMessages = new object[] { new object(), new object(), new object() };
-            theFactory = new StubServiceFactory(theExpectedChain, MockFor<IActionBehavior>(), cascadingMessages);
+            theFactory = new StubServiceFactory(theExpectedChain, MockFor<IDisposableBehavior>(), cascadingMessages);
             Services.Inject<IServiceFactory>(theFactory);
 
             ClassUnderTest.InvokeNow(theMessage);
@@ -48,7 +48,13 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void executed_the_proper_chain_for_the_input_type()
         {
-            MockFor<IActionBehavior>().AssertWasCalled(x => x.Invoke());
+            MockFor<IDisposableBehavior>().AssertWasCalled(x => x.Invoke());
+        }
+
+        [Test]
+        public void should_dispose_of_the_behavior_to_close_the_inner_nested_container()
+        {
+            MockFor<IDisposableBehavior>().AssertWasCalled(x => x.Dispose());
         }
 
         [Test]
