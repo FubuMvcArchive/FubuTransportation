@@ -17,5 +17,10 @@ namespace FubuTransportation.ErrorHandling
         {
             envelope.Callback.MoveToDelayedUntil(context.SystemTime.UtcNow().Add(_delay));
         }
+
+        public TimeSpan Delay
+        {
+            get { return _delay; }
+        }
     }
 }

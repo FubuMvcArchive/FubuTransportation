@@ -75,10 +75,13 @@
     <Compile Include="ErrorHandling\ExceptionHandlerNode.cs" />
     <Compile Include="ErrorHandling\ExceptionMatch.cs" />
     <Compile Include="ErrorHandling\ExceptionMatchExpression.cs" />
+    <Compile Include="ErrorHandling\ExceptionTypeMatch.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="ErrorHandling\IExceptionMatch.cs" />
     <Compile Include="ErrorHandling\MoveToErrorQueue.cs" />
+    <Compile Include="ErrorHandling\MoveToErrorQueueHandler.cs" />
     <Compile Include="ErrorHandling\RequeueContinuation.cs" />
+    <Compile Include="ErrorHandling\RetryNowContinuation.cs" />
     <Compile Include="Events\ExpiringListenerCleanup.cs" />
     <Compile Include="Events\ExpiringListenerExtensions.cs" />
     <Compile Include="HandlerExtensions.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Runtime\Invocation\ChainExecutionWatcher.cs" />
     <Compile Include="Runtime\Invocation\ChainFailureContinuation.cs" />
     <Compile Include="Runtime\Invocation\ChainSuccessContinuation.cs" />
+    <Compile Include="Runtime\Invocation\ContinuationContext.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipeline.cs" />
     <Compile Include="Runtime\Invocation\IContinuation.cs" />
