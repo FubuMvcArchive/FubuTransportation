@@ -16,7 +16,14 @@ namespace FubuTransportation.Runtime.Invocation
         {
             envelope.Callback.MarkFailed();
             context.Logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = _exception});
-            context.Logger.Error(envelope.CorrelationId, _exception);
+            if (envelope.Message == null)
+            {
+                context.Logger.Error(envelope.CorrelationId, "Error trying to execute a message of type " + envelope.Headers[Envelope.MessageTypeKey], _exception);
+            }
+            else
+            {
+                context.Logger.Error(envelope.CorrelationId, envelope.Message.ToString(), _exception);
+            }
         }
 
         public Exception Exception
