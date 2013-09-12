@@ -4,7 +4,7 @@ using FubuMVC.Core.Runtime;
 
 namespace FubuTransportation.Sagas
 {
-    public class SagaBehavior<TState, TMessage, THandler> : WrappingBehavior where THandler : IStatefulSaga<TState> 
+    public class SagaBehavior<TState, TMessage, THandler> : WrappingBehavior where THandler : IStatefulSaga<TState>
                                                                              where TMessage : class
                                                                              where TState : class
     {
@@ -30,11 +30,11 @@ namespace FubuTransportation.Sagas
 
             if (_handler.IsCompleted())
             {
-                _repository.Delete(_handler.State);
+                _repository.Delete(_handler.State, message);
             }
             else
             {
-                _repository.Save(_handler.State);
+                _repository.Save(_handler.State, message);
             }
         }
     }

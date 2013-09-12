@@ -2,8 +2,10 @@
 {
     public interface ISagaRepository<TState, TMessage>
     {
-        void Save(TState state);
+        // Want the message in the signature so the Id doesn't have
+        // to be duplicated
+        void Save(TState state, TMessage message);
         TState Find(TMessage message);
-        void Delete(TState state);
+        void Delete(TState state, TMessage message);
     }
 }

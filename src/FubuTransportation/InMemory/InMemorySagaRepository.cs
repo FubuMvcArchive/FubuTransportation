@@ -35,7 +35,7 @@ namespace FubuTransportation.InMemory
             get { return _cacheFactory.FindCache<TState>(); }
         } 
 
-        public void Save(TState state)
+        public void Save(TState state, TMessage message)
         {
             cache.Store(_stateGetter(state), state);
         }
@@ -46,7 +46,7 @@ namespace FubuTransportation.InMemory
             return cache.Find(correlationId);
         }
 
-        public void Delete(TState state)
+        public void Delete(TState state, TMessage message)
         {
             var id = _stateGetter(state);
             cache.Delete(id);

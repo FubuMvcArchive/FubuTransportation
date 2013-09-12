@@ -21,9 +21,10 @@ namespace FubuTransportation.Testing.InMemory
         {
             var repository = InMemorySagaRepository<FakeState, FakeMessage>.Create();
             var id = Guid.NewGuid();
-            
+
+            var message = new FakeMessage {CorrelationId = id};
             var state = new FakeState {Id = id};
-            repository.Save(state);
+            repository.Save(state, message);
 
             repository.Find(new FakeMessage {CorrelationId = id})
                       .ShouldBeTheSameAs(state);
@@ -38,8 +39,10 @@ namespace FubuTransportation.Testing.InMemory
             var id = Guid.NewGuid();
 
             var state = new FakeState { Id = id };
-            repository.Save(state);
-            repository.Delete(state);
+            
+
+            repository.Save(state, null);
+            repository.Delete(state, null);
 
             repository.Find(new FakeMessage {CorrelationId = id})
                       .ShouldBeNull();

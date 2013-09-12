@@ -35,7 +35,7 @@ namespace FubuTransportation.Testing.Sagas
         [Test]
         public void should_persist_the_state()
         {
-            theRepository.AssertWasCalled(x => x.Save(theResultingState));
+            theRepository.AssertWasCalled(x => x.Save(theResultingState, theMessage));
         }
     }
 
@@ -64,7 +64,7 @@ namespace FubuTransportation.Testing.Sagas
         [Test]
         public void should_delete_the_state()
         {
-            theRepository.AssertWasCalled(x => x.Delete(theResultingState));
+            theRepository.AssertWasCalled(x => x.Delete(theResultingState, theMessage));
         }
     }
 
@@ -90,8 +90,8 @@ namespace FubuTransportation.Testing.Sagas
         [Test]
         public void updates_and_deletes_nothing()
         {
-            theRepository.AssertWasNotCalled(x => x.Save(null), x => x.IgnoreArguments());
-            theRepository.AssertWasNotCalled(x => x.Delete(null), x => x.IgnoreArguments());
+            theRepository.AssertWasNotCalled(x => x.Save(null, theMessage), x => x.IgnoreArguments());
+            theRepository.AssertWasNotCalled(x => x.Delete(null, theMessage), x => x.IgnoreArguments());
         }
     }
 
