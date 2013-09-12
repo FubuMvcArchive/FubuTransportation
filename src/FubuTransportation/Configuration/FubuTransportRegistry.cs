@@ -62,7 +62,10 @@ namespace FubuTransportation.Configuration
             return BehaviorGraph.BuildFrom(registry);
         }
 
-        
+        public void SagaStorage<T>() where T : ISagaStorage, new()
+        {
+            AlterSettings<TransportSettings>(x => x.SagaStorageProviders.Add(new T()));
+        }
 
         public static FubuTransportRegistry Empty()
         {
@@ -78,11 +81,6 @@ namespace FubuTransportation.Configuration
                 {
                     x.Name = GetType().Name.Replace("TransportRegistry", "").Replace("Registry", "").ToLower();
                 }
-            });
-
-            Global.Policy<StatefulSagaConvention>();
-            AlterSettings<TransportSettings>(x => {
-                x.SagaStorageProviders.Add(new InMemorySagaStorage());
             });
         }
 
@@ -137,7 +135,7 @@ namespace FubuTransportation.Configuration
         void IFubuRegistryExtension.Configure(FubuRegistry registry)
         {
             var graph = new HandlerGraph();
-            var allCalls = allSources().SelectMany(x => x.FindCalls());
+            var allCalls = allSources().SelectMany(x => x.FindCalls()).Distinct();
             graph.Add(allCalls);
 
             graph.ApplyPolicies(_localPolicies);

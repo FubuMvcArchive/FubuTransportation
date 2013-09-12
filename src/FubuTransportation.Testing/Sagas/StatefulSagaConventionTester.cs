@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.ObjectGraph;
+using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Registration.Nodes;
@@ -9,6 +11,7 @@ using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using FubuTestingSupport;
 using Rhino.Mocks;
+using StructureMap;
 
 namespace FubuTransportation.Testing.Sagas
 {
@@ -180,6 +183,49 @@ namespace FubuTransportation.Testing.Sagas
                     StateType = GetType()
                 });
             });
+        }
+    }
+
+    [TestFixture]
+    public class when_using_a_custom_saga_storage
+    {
+        [Test]
+        public void use_the_special_storage_just_fine()
+        {
+            var graph = FubuTransportRegistry.HandlerGraphFor(x => {
+                x.SagaStorage<SpecialSagaStorage>();
+            });
+
+            var chain = graph.ChainFor(typeof (SagaMessageOne));
+            chain.OfType<StatefulSagaNode>()
+                .FirstOrDefault()  // there are two saga's using this message, just worry about the first one
+                .Repository.Type.ShouldEqual(typeof (SpecialSagaRepository<MySagaState, SagaMessageOne>));
+        }
+    }
+
+    public class SpecialSagaStorage : ISagaStorage
+    {
+        public ObjectDef RepositoryFor(SagaTypes sagaTypes)
+        {
+            return new ObjectDef(typeof(SpecialSagaRepository<,>), sagaTypes.StateType, sagaTypes.MessageType);
+        }
+    }
+
+    public class SpecialSagaRepository<TState, TMessage> : ISagaRepository<TState, TMessage>
+    {
+        public void Save(TState state, TMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TState Find(TMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(TState state, TMessage message)
+        {
+            throw new NotImplementedException();
         }
     }
 
