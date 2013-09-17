@@ -4,9 +4,11 @@ using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTestingSupport;
+using FubuTransportation.Async;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 
@@ -44,6 +46,29 @@ namespace FubuTransportation.Testing.Registration.Nodes
 
             objectDef.Type.ShouldEqual(typeof(SimpleHandlerInvoker<ITargetHandler, Input>));
         }
+
+        [Test]
+        public void choose_handler_type_for_call_that_returns_Task()
+        {
+            var handler = HandlerCall.For<TaskHandler>(x => x.Go(null));
+
+            var objectDef = handler.As<IContainerModel>().ToObjectDef();
+
+            objectDef.Type.ShouldEqual(typeof(AsyncHandlerInvoker<TaskHandler, Message>));
+        }
+
+        [Test]
+        public void choose_handler_type_for_call_that_returns_Task_of_T()
+        {
+            var handler = HandlerCall.For<TaskHandler>(x => x.Other(null));
+
+            var objectDef = handler.As<IContainerModel>().ToObjectDef();
+
+            objectDef.Type.ShouldEqual(typeof(CascadingAsyncHandlerInvoker<TaskHandler, Message, Message1>));
+        }
+
+
+
 
         [Test]
         public void throws_chunks_if_you_try_to_use_a_method_with_no_inputs()
@@ -106,18 +131,18 @@ namespace FubuTransportation.Testing.Registration.Nodes
         [Test]
         public void handler_is_async_positive()
         {
-            HandlerCall.For<FakeHandler>(x => x.Go(null)).IsAsync.ShouldBeTrue();
-            HandlerCall.For<FakeHandler>(x => x.Other(null)).IsAsync.ShouldBeTrue();
+            HandlerCall.For<TaskHandler>(x => x.Go(null)).IsAsync.ShouldBeTrue();
+            HandlerCall.For<TaskHandler>(x => x.Other(null)).IsAsync.ShouldBeTrue();
         }
 
-        public class FakeHandler
+        public class TaskHandler
         {
             public Task Go(Message message)
             {
                 return null;
             }
 
-            public Task<string> Other(Message message)
+            public Task<Message1> Other(Message message)
             {
                 return null;
             }

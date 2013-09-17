@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration.Nodes;
+using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -18,11 +20,11 @@ namespace FubuTransportation.Registration.Nodes
         {
             if (method.DeclaringType.Equals(typeof(object))) return false;
 
-            int parameterCount = method.GetParameters() == null ? 0 : method.GetParameters().Length;
+            var parameterCount = method.GetParameters() == null ? 0 : method.GetParameters().Length;
             if (parameterCount != 1) return false;
 
 
-            bool hasOutput = method.ReturnType != typeof(void);
+            var hasOutput = method.ReturnType != typeof(void);
             if (hasOutput && !method.ReturnType.IsClass) return false;
 
             if (method.IsSpecialName && (method.Name.StartsWith("get_") || method.Name.StartsWith("set_")))
@@ -59,12 +61,26 @@ namespace FubuTransportation.Registration.Nodes
 
         protected override Type determineHandlerType()
         {
+            Type messageType = Method.GetParameters().First().ParameterType;
+
+            if (HasOutput && Method.ReturnType == typeof (Task))
+            {
+                return typeof (AsyncHandlerInvoker<,>)
+                    .MakeGenericType(HandlerType, messageType);
+            }
+
+            if (HasOutput && Method.ReturnType.Closes(typeof(Task<>)))
+            {
+                return typeof (CascadingAsyncHandlerInvoker<,,>)
+                    .MakeGenericType(HandlerType, messageType, Method.ReturnType.GetGenericArguments().First());
+            }
+
             if (HasOutput && HasInput)
             {
                 return typeof (CascadingHandlerInvoker<,,>)
                     .MakeGenericType(
                         HandlerType,
-                        Method.GetParameters().First().ParameterType,
+                        messageType,
                         Method.ReturnType);
             }
 
@@ -73,7 +89,7 @@ namespace FubuTransportation.Registration.Nodes
                 return typeof (SimpleHandlerInvoker<,>)
                     .MakeGenericType(
                         HandlerType,
-                        Method.GetParameters().First().ParameterType);
+                        messageType);
             }
 
             throw new FubuException(1005,

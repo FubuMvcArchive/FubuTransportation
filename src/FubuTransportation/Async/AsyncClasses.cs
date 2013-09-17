@@ -11,8 +11,8 @@ namespace FubuTransportation.Async
 {
     /* TODO
      * DONE 1.) HandlerCall.IsAsync()
-     * 2.) HandlerCall builds AsyncHandlerInvoker appropriately
-     * 3.) HandlerCall builds CascadingAsynchHandlerInvoker appropriately
+     * DONE 2.) HandlerCall builds AsyncHandlerInvoker appropriately
+     * DONE 3.) HandlerCall builds CascadingAsynchHandlerInvoker appropriately
      * 4.) Register IAsyncHandling
      * 5.) AsyncHandlingNode & AsynchHandlingConvention
      * DONE 6.) HandlerChain.IsAsync() : bool
