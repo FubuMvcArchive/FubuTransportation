@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Registration.Nodes;
@@ -65,6 +66,14 @@ namespace FubuTransportation.Configuration
                 handler.Continuation = continuation;
 
                 _parent.ErrorHandlers.Add(handler);
+            }
+        }
+
+        public bool IsAsync
+        {
+            get
+            {
+                return this.OfType<HandlerCall>().Any(x => x.IsAsync);
             }
         }
     }

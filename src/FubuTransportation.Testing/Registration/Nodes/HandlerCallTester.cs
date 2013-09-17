@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuMVC.Core.Registration.Nodes;
@@ -6,6 +7,7 @@ using FubuTestingSupport;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Registration.Nodes
@@ -13,7 +15,6 @@ namespace FubuTransportation.Testing.Registration.Nodes
     [TestFixture]
     public class HandlerCallTester
     {
-        // TODO -- need to do some end to end testing with these against the container
 
         [Test]
         public void handler_call_should_not_match_property_setters()
@@ -95,7 +96,35 @@ namespace FubuTransportation.Testing.Registration.Nodes
             handler3.ShouldEqual(handler2);
             handler2.ShouldEqual(handler1);
         }
+
+        [Test]
+        public void handler_is_async_negative()
+        {
+            HandlerCall.For<SomeHandler>(x => x.Interface(null)).IsAsync.ShouldBeFalse();
+        }
+
+        [Test]
+        public void handler_is_async_positive()
+        {
+            HandlerCall.For<FakeHandler>(x => x.Go(null)).IsAsync.ShouldBeTrue();
+            HandlerCall.For<FakeHandler>(x => x.Other(null)).IsAsync.ShouldBeTrue();
+        }
+
+        public class FakeHandler
+        {
+            public Task Go(Message message)
+            {
+                return null;
+            }
+
+            public Task<string> Other(Message message)
+            {
+                return null;
+            }
+        }
     }
+
+    
 
 
 }

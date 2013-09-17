@@ -13,12 +13,12 @@ using FubuTransportation.Runtime.Invocation;
 namespace FubuTransportation.Async
 {
     /* TODO
-     * 1.) HandlerCall.IsAsync()
+     * DONE 1.) HandlerCall.IsAsync()
      * 2.) HandlerCall builds AsyncHandlerInvoker appropriately
      * 3.) HandlerCall builds CascadingAsynchHandlerInvoker appropriately
      * 4.) Register IAsyncHandling
      * 5.) AsyncHandlingNode & AsynchHandlingConvention
-     * 6.) HandlerChain.IsAsync() : bool
+     * DONE 6.) HandlerChain.IsAsync() : bool
      * 7.) ChainExecutionEnvelopeHandler needs to return the AsyncChainExecutionContinuation
      * 8.) some end to end tests!
      */
