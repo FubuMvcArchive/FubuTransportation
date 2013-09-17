@@ -7,6 +7,7 @@ using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Async
@@ -18,23 +19,29 @@ namespace FubuTransportation.Async
      * 4.) Register IAsyncHandling
      * 5.) AsyncHandlingNode & AsynchHandlingConvention
      * 6.) HandlerChain.IsAsync() : bool
+     * 7.) ChainExecutionEnvelopeHandler needs to return the AsyncChainExecutionContinuation
+     * 8.) some end to end tests!
      */
 
-    public class AsyncHandlingBehavior : BasicBehavior
+    public class AsyncChainExecutionContinuation : IContinuation
     {
-        private readonly IAsyncHandling _asyncHandling;
+        private readonly Func<IContinuation> _inner;
 
-        public AsyncHandlingBehavior(IAsyncHandling asyncHandling)
-            : base(PartialBehavior.Executes)
+        public AsyncChainExecutionContinuation(Func<IContinuation> inner)
         {
-            _asyncHandling = asyncHandling;
+            _inner = inner;
         }
 
-        protected override void afterInsideBehavior()
+        public void Execute(Envelope envelope, ContinuationContext context)
         {
-            _asyncHandling.WaitForAll();
+            Task.Factory.StartNew(() => {
+                var continuation = _inner();
+                continuation.Execute(envelope, context);
+            });
         }
     }
+
+
 
     public interface IAsyncHandling
     {

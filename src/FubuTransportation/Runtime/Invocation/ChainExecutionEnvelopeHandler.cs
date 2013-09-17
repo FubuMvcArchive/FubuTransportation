@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -22,11 +23,15 @@ namespace FubuTransportation.Runtime.Invocation
                 return null;
             }
 
+            return ExecuteChain(envelope, chain);
+        }
+
+        public IContinuation ExecuteChain(Envelope envelope, HandlerChain chain)
+        {
             try
             {
                 var context = _invoker.ExecuteChain(envelope, chain);
                 return context.Continuation ?? new ChainSuccessContinuation(_sender, context);
-
             }
             catch (Exception ex)
             {
