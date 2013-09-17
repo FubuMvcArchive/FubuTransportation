@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
-using FubuCore;
-using FubuTransportation.Runtime.Invocation;
+using FubuMVC.Core.Behaviors;
+using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
+using FubuTransportation.Configuration;
+using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.Async
 {
@@ -19,47 +19,42 @@ namespace FubuTransportation.Async
      * 8.) some end to end tests!
      */
 
-
-    public interface IAsyncHandling
+    // TODO -- need to register this
+    public class AsyncHandlingConvention : HandlerChainPolicy    
     {
-        void Push(Task task);
-        void Push<T>(Task<T> task);
+        public override bool Matches(HandlerChain chain)
+        {
+            return chain.IsAsync;
+        }
 
-        void WaitForAll(); // can throw aggregate exception
+        public override void Configure(HandlerChain handlerChain)
+        {
+            var firstCall = handlerChain.OfType<HandlerCall>().First();
+            firstCall.AddBefore(new AsyncHandlingNode());
+        }
     }
 
-    // TODO -- need to register this
-    public class AsyncHandling : IAsyncHandling, IDisposable
+    public class AsyncHandlingNode : Wrapper
     {
-        private readonly IInvocationContext _context;
-        private readonly IList<Task> _tasks = new List<Task>();
-
-        public AsyncHandling(IInvocationContext context)
+        public AsyncHandlingNode() : base(typeof(AsyncHandlingBehavior))
         {
-            _context = context;
+        }
+    }
+
+    // This will be inserted right before all the asynch calls
+    public class AsyncHandlingBehavior : BasicBehavior
+    {
+        private readonly IAsyncHandling _asyncHandling;
+
+        public AsyncHandlingBehavior(IAsyncHandling asyncHandling)
+            : base(PartialBehavior.Executes)
+        {
+            _asyncHandling = asyncHandling;
         }
 
-        public void Push(Task task)
+        protected override void afterInsideBehavior()
         {
-            _tasks.Add(task);
-        }
-
-        public void Push<T>(Task<T> task)
-        {
-            task.ContinueWith(x => _context.EnqueueCascading(x.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
-
-            _tasks.Add(task);
-        }
-
-        public void WaitForAll()
-        {
-            Task.WaitAll(_tasks.ToArray(), 5.Minutes());
-        }
-
-        // TODO -- need to watch this one.
-        public void Dispose()
-        {
-            _tasks.Each(x => x.SafeDispose());
+            _asyncHandling.WaitForAll();
         }
     }
 }
