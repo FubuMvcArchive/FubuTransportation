@@ -4,6 +4,7 @@ using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
+using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
@@ -197,6 +198,12 @@ namespace FubuTransportation.Testing
             BehaviorGraph.BuildFrom(registry)
                 .Services.ServicesFor<IDeactivator>().Any(x => x.Type == typeof(ChannelShutdownDeactivator))
                 .ShouldBeTrue();
+        }
+
+        [Test]
+        public void async_handling_is_registered()
+        {
+            registeredTypeIs<IAsyncHandling,AsyncHandling>();
         }
     }
 }

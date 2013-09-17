@@ -3,6 +3,7 @@ using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
+using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Events;
@@ -88,6 +89,8 @@ namespace FubuTransportation
             SetServiceIfNone<IOutgoingSender, OutgoingSender>();
 
             AddService<IDeactivator, ChannelShutdownDeactivator>();
+
+            SetServiceIfNone<IAsyncHandling, AsyncHandling>();
         }
     }
 
