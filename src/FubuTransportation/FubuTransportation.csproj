@@ -62,6 +62,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Async\AsyncChainExecutionContinuation.cs" />
     <Compile Include="Async\AsyncClasses.cs" />
     <Compile Include="Async\AsyncHandlerInvoker.cs" />
     <Compile Include="Async\CascadingAsyncHandlerInvoker.cs" />

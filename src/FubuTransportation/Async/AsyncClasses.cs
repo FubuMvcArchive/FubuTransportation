@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
-using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Async
@@ -13,31 +12,12 @@ namespace FubuTransportation.Async
      * DONE 1.) HandlerCall.IsAsync()
      * DONE 2.) HandlerCall builds AsyncHandlerInvoker appropriately
      * DONE 3.) HandlerCall builds CascadingAsynchHandlerInvoker appropriately
-     * 4.) Register IAsyncHandling
+     * DONE 4.) Register IAsyncHandling
      * 5.) AsyncHandlingNode & AsynchHandlingConvention
      * DONE 6.) HandlerChain.IsAsync() : bool
      * 7.) ChainExecutionEnvelopeHandler needs to return the AsyncChainExecutionContinuation
      * 8.) some end to end tests!
      */
-
-    public class AsyncChainExecutionContinuation : IContinuation
-    {
-        private readonly Func<IContinuation> _inner;
-
-        public AsyncChainExecutionContinuation(Func<IContinuation> inner)
-        {
-            _inner = inner;
-        }
-
-        public void Execute(Envelope envelope, ContinuationContext context)
-        {
-            Task.Factory.StartNew(() => {
-                var continuation = _inner();
-                continuation.Execute(envelope, context);
-            });
-        }
-    }
-
 
 
     public interface IAsyncHandling
