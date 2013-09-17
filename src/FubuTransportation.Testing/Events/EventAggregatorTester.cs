@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
@@ -229,6 +230,19 @@ namespace FubuTransportation.Testing.Events
     {
         public bool IsExpired { get; set; }
         public DateTime? ExpiresAt { get; set; }
+    }
+
+    public class TaskHandler
+    {
+        public Task AsyncHandle(Message1 message)
+        {
+            return null;
+        }
+
+        public Task<Message2> AsyncReturn(Message1 message)
+        {
+            return null;
+        }
     }
 
     public class Message1

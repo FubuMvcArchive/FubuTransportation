@@ -120,4 +120,5 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             log.HandlerType.ShouldEqual(theHandlers[3].GetType());
         }
     }
+
 }
