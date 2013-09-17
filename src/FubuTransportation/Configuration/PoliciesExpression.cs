@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
 
 namespace FubuTransportation.Configuration
 {
@@ -21,6 +24,18 @@ namespace FubuTransportation.Configuration
         {
             _registration(new T());
             return this;
+        }
+
+        /// <summary>
+        /// Wrap a behavior of type T around all HandlerChain's
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void WrapWith<T>() where T : IActionBehavior
+        {
+            var policy = new Policy();
+            policy.Wrap.WithBehavior<T>();
+
+            _registration(policy);
         }
     }
 }

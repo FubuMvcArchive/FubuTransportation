@@ -31,6 +31,7 @@ namespace FubuTransportation
             registry.Services<PollingServicesRegistry>();
             registry.Policies.Add<RegisterPollingJobs>();
             registry.Policies.Add<StatefulSagaConvention>();
+            registry.Policies.Add<AsyncHandlingConvention>();
 
             if (FubuTransport.AllQueuesInMemory)
             {

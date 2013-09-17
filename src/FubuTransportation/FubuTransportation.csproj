@@ -63,9 +63,11 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Async\AsyncChainExecutionContinuation.cs" />
-    <Compile Include="Async\AsyncClasses.cs" />
+    <Compile Include="Async\AsyncHandlingNode.cs" />
     <Compile Include="Async\AsyncHandlerInvoker.cs" />
     <Compile Include="Async\AsyncHandling.cs" />
+    <Compile Include="Async\AsyncHandlingBehavior.cs" />
+    <Compile Include="Async\AsyncHandlingConvention.cs" />
     <Compile Include="Async\CascadingAsyncHandlerInvoker.cs" />
     <Compile Include="Async\IAsyncHandling.cs" />
     <Compile Include="Configuration\ChannelGraph.cs" />

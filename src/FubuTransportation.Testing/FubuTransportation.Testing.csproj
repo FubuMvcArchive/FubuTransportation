@@ -105,7 +105,9 @@
     </Compile>
     <Compile Include="Async\AsyncChainExecutionContinuationTester.cs" />
     <Compile Include="Async\AsyncHandlerInvokerTester.cs" />
+    <Compile Include="Async\AsyncHandlingConventionTester.cs" />
     <Compile Include="Async\AsynchHandlingTester.cs" />
+    <Compile Include="Async\FullAsyncHandlingIntegrationTester.cs" />
     <Compile Include="Async\when_invoking_with_cascading_messages.cs" />
     <Compile Include="Configuration\AllInMemoryQueues_Mechanics_Tester.cs" />
     <Compile Include="Configuration\ChannelGraphTester.cs" />
