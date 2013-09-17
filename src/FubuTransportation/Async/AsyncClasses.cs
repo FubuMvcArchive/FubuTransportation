@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
-using FubuMVC.Core;
-using FubuMVC.Core.Behaviors;
-using FubuMVC.Core.Runtime;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
@@ -83,60 +80,6 @@ namespace FubuTransportation.Async
         public void Dispose()
         {
             _tasks.Each(x => x.SafeDispose());
-        }
-    }
-
-    public class AsyncHandlerInvoker<TController, TInput> : BasicBehavior where TInput : class
-    {
-        private readonly TController _controller;
-        private readonly Func<TController, TInput, Task> _func;
-        private readonly IFubuRequest _request;
-        private readonly IAsyncHandling _asyncHandling;
-
-        public AsyncHandlerInvoker(IFubuRequest request, IAsyncHandling asyncHandling, TController controller,
-                                    Func<TController, TInput, Task> func)
-            : base(PartialBehavior.Executes)
-        {
-            _request = request;
-            _asyncHandling = asyncHandling;
-            _controller = controller;
-            _func = func;
-        }
-
-        protected override DoNext performInvoke()
-        {
-            var input = _request.Find<TInput>().Single();
-            var task = _func(_controller, input);
-            _asyncHandling.Push(task);
-
-            return DoNext.Continue;
-        }
-    }
-
-    public class CascadingAsyncHandlerInvoker<THandler, TInput, TOutput> : BasicBehavior where TInput : class
-    {
-        private readonly IFubuRequest _request;
-        private readonly THandler _handler;
-        private readonly Func<THandler, TInput, Task<TOutput>> _func;
-        private readonly IAsyncHandling _asyncHandling;
-
-        public CascadingAsyncHandlerInvoker(IFubuRequest request, THandler handler, Func<THandler, TInput, Task<TOutput>> func, IAsyncHandling asyncHandling)
-            : base(PartialBehavior.Executes)
-        {
-            _request = request;
-            _handler = handler;
-            _func = func;
-            _asyncHandling = asyncHandling;
-        }
-
-        protected override DoNext performInvoke()
-        {
-            var input = _request.Find<TInput>().Single();
-            var output = _func(_handler, input);
-
-            _asyncHandling.Push(output);
-
-            return DoNext.Continue;
         }
     }
 }
