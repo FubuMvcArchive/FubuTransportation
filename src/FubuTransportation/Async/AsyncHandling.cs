@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Runtime.Invocation;
@@ -11,7 +12,7 @@ namespace FubuTransportation.Async
     {
         private readonly IInvocationContext _context;
         private readonly IList<Task> _tasks = new List<Task>();
-        private readonly IList<Task> _messages = new List<Task>();
+        private readonly IList<Action> _messages = new List<Action>();
 
         public AsyncHandling(IInvocationContext context)
         {
@@ -25,8 +26,7 @@ namespace FubuTransportation.Async
 
         public void Push<T>(Task<T> task)
         {
-            var messages = task.ContinueWith(x => _context.EnqueueCascading(x.Result), TaskContinuationOptions.OnlyOnRanToCompletion);
-            _messages.Add(messages);
+            _messages.Add(() => _context.EnqueueCascading(task.Result));
 
             _tasks.Add(task);
         }
@@ -34,7 +34,7 @@ namespace FubuTransportation.Async
         public void WaitForAll()
         {
             Task.WaitAll(_tasks.ToArray(), 5.Minutes());
-            Task.WaitAll(_messages.ToArray(), 1.Minutes());
+            _messages.Each(x => x());
         }
 
         // TODO -- need to watch this one.
