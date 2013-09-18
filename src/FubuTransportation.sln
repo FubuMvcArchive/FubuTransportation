@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuTransportation.Lightnin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMessages", "TestMessages\TestMessages.csproj", "{3735A25A-28B6-4DA3-A4CF-7606538E0155}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticsHarness", "DiagnosticsHarness\DiagnosticsHarness.csproj", "{5A9E17DD-A8E3-4ABD-AC6C-9A6A97F6CDA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{3735A25A-28B6-4DA3-A4CF-7606538E0155}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3735A25A-28B6-4DA3-A4CF-7606538E0155}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3735A25A-28B6-4DA3-A4CF-7606538E0155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A9E17DD-A8E3-4ABD-AC6C-9A6A97F6CDA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9E17DD-A8E3-4ABD-AC6C-9A6A97F6CDA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9E17DD-A8E3-4ABD-AC6C-9A6A97F6CDA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9E17DD-A8E3-4ABD-AC6C-9A6A97F6CDA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
