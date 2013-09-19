@@ -2,6 +2,8 @@
 using FubuMVC.Core.Registration;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Delayed;
+using LightningQueues.Model;
 using NUnit.Framework;
 
 namespace FubuTransportation.LightningQueues.Testing
@@ -28,6 +30,12 @@ namespace FubuTransportation.LightningQueues.Testing
         public void PersistentQueue_is_registered()
         {
             registeredTypeIs<IPersistentQueues, PersistentQueues>();
+        }
+
+        [Test]
+        public void IDelayedMessageCacheMessageId_is_registered()
+        {
+            registeredTypeIs<IDelayedMessageCache<MessageId>, DelayedMessageCache<MessageId>>();
         }
     }
 }

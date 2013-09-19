@@ -33,7 +33,8 @@ namespace FubuTransportation.LightningQueues
         public void MoveToDelayedUntil(DateTime time)
         {
             _delayedMessages.Add(_message.Id, time);
-            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.DelayedQueueName, _message.ToPayload());
+            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.DelayedQueueName, _message.ToPayload(), _message.Id);
+            MarkSuccessful();
         }
 
         public void MoveToErrors(ErrorReport report)

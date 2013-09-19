@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading;
 using FubuCore;
 using FubuCore.Dates;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -13,9 +15,10 @@ using StructureMap;
 
 namespace FubuTransportation.LightningQueues.Testing
 {
-    [TestFixture, Explicit]
+    [TestFixture]
     public class Full_end_to_end_delayed_message_processing_with_Lightning_Queues
     {
+        private FubuRuntime _runtime;
         private IServiceBus theServiceBus;
         private SettableClock theClock;
         private OneMessage message1;
@@ -27,6 +30,8 @@ namespace FubuTransportation.LightningQueues.Testing
         public void SetUp()
         {
             FubuTransport.Reset();
+            if(Directory.Exists("fubutransportation.esent"))
+                Directory.Delete("fubutransportation.esent", true);
 
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
@@ -38,12 +43,12 @@ namespace FubuTransportation.LightningQueues.Testing
             var container = new Container();
             container.Inject(settings);
 
-            var runtime = FubuTransport.For<DelayedRegistry>().StructureMap(container)
+            _runtime = FubuTransport.For<DelayedRegistry>().StructureMap(container)
                                        .Bootstrap();
 
-            theServiceBus = runtime.Factory.Get<IServiceBus>();
+            theServiceBus = _runtime.Factory.Get<IServiceBus>();
 
-            theClock = runtime.Factory.Get<ISystemTime>().As<SettableClock>();
+            theClock = _runtime.Factory.Get<ISystemTime>().As<SettableClock>();
 
             message1 = new OneMessage();
             message2 = new OneMessage();
@@ -86,8 +91,8 @@ namespace FubuTransportation.LightningQueues.Testing
         [TestFixtureTearDown]
         public void TearDown()
         {
-            // TODO - HAVE TO DISPOSE THE RUNTIME!!!!!!!
             FubuTransport.Reset();
+            _runtime.Dispose();
         }
     }
 }
