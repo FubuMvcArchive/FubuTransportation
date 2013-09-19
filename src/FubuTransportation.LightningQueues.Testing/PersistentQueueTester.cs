@@ -34,7 +34,7 @@ namespace FubuTransportation.LightningQueues.Testing
                 });
 
                 queues.ManagerFor(new IPEndPoint(IPAddress.Loopback, 2424))
-                    .Queues.OrderBy(x => x).ShouldHaveTheSameElementsAs(LightningQueuesTransport.DelayedQueueName,"other_queue", "some_queue", "third_queue");
+                    .Queues.OrderBy(x => x).ShouldHaveTheSameElementsAs(LightningQueuesTransport.DelayedQueueName, LightningQueuesTransport.ErrorQueueName, "other_queue", "some_queue", "third_queue");
             }
         }
     }

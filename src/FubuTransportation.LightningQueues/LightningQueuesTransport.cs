@@ -12,6 +12,7 @@ namespace FubuTransportation.LightningQueues
     public class LightningQueuesTransport : TransportBase, ITransport
     {
         public static readonly string DelayedQueueName = "delayed";
+        public static readonly string ErrorQueueName = "errors";
 
         private readonly IPersistentQueues _queues;
         private readonly LightningQueueSettings _settings;

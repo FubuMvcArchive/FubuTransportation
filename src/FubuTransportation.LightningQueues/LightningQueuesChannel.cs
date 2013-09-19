@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using FubuTransportation.Configuration;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Headers;
@@ -129,6 +130,15 @@ namespace FubuTransportation.LightningQueues
                 Data = message.Data,
                 Headers = message.Headers,
             };
+            return payload;
+        }
+
+        public static MessagePayload ToPayload(this Message message, ErrorReport report)
+        {
+            var payload = message.ToPayload();
+            payload.Headers.Add("ExceptionMessage", report.ExceptionMessage);
+            payload.Headers.Add("ExceptionText", report.ExceptionText);
+            payload.Headers.Add("ExceptionType", report.ExceptionType);
             return payload;
         }
 

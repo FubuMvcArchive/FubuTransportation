@@ -39,12 +39,14 @@ namespace FubuTransportation.LightningQueues
 
         public void MoveToErrors(ErrorReport report)
         {
-            throw new System.NotImplementedException();
+            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.ErrorQueueName, _message.ToPayload(report), _message.Id);
+            MarkSuccessful();
         }
 
         public void Requeue()
         {
-            throw new System.NotImplementedException();
+            _transaction.EnqueueDirectlyTo(_message.Queue, _message.SubQueue, _message.ToPayload(), _message.Id);
+            MarkSuccessful();
         }
     }
 }

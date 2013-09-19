@@ -46,6 +46,7 @@ namespace FubuTransportation.LightningQueues
                 var queueManager = _queueManagers[@group.Key];
                 queueManager.CreateQueues(queueNames);
                 queueManager.CreateQueues(LightningQueuesTransport.DelayedQueueName);
+                queueManager.CreateQueues(LightningQueuesTransport.ErrorQueueName);
 
                 queueManager.Start();
             });
