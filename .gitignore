@@ -23,7 +23,7 @@ src/packages
 src/*/repositories.config
 .bottle-alias
 results
-*.DotSettings.user
+*.DotSettings*
 Gemfile.lock
 logs
 pak*.zip
