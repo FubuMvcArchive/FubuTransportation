@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Runtime
 {
@@ -57,7 +58,11 @@ namespace FubuTransportation.Runtime
 
         public void Dispose()
         {
-            _graph.Each(x => x.Channel.Dispose());
+            _graph.Each(x =>
+            {
+                var shutdownVisitor = new ShutdownChannelNodeVisitor();
+                shutdownVisitor.Visit(x);
+            });
         }
 
         public void Start()

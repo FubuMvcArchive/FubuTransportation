@@ -9,6 +9,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using System.Linq;
 
@@ -65,10 +66,10 @@ namespace FubuTransportation.Testing
         [Test]
         public void set_channel_to_listening_override_thread_count()
         {
-            theRegistry.Channel(x => x.Upstream).ReadIncoming(5);
+            theRegistry.Channel(x => x.Upstream).ReadIncoming(new ThreadScheduler(5));
 
             channelFor(x => x.Upstream).Incoming.ShouldBeTrue();
-            channelFor(x => x.Upstream).ThreadCount.ShouldEqual(5);
+            channelFor(x => x.Upstream).Scheduler.As<ThreadScheduler>().ThreadCount.ShouldEqual(5);
 
             channelFor(x => x.Downstream).Incoming.ShouldBeFalse();
         }

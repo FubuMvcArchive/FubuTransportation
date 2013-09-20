@@ -20,6 +20,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
 {
@@ -350,22 +351,17 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
-            public ChannelExpression ReadIncoming(int threadCount = -1)
+            public ChannelExpression ReadIncoming(IScheduler scheduler = null)
             {
-                if (threadCount > 0)
-                {
-                    alter = node => {
+                    alter = node =>
+                    {
+                        var defaultScheduler = node.Scheduler;
                         node.Incoming = true;
-                        node.ThreadCount = threadCount;
+                        node.Scheduler = scheduler ?? defaultScheduler;
                     };
-                }
-                else
-                {
-                    alter = node => node.Incoming = true;
-                }
-
                 return this;
             }
+
 
             public ChannelExpression PublishesMessagesInNamespaceContainingType<TMessageType>()
             {

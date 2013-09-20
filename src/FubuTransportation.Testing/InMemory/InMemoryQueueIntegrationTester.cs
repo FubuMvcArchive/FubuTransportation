@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
+using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
+using TaskScheduler = FubuTransportation.Scheduling.TaskScheduler;
 
 namespace FubuTransportation.Testing.InMemory
 {
@@ -34,7 +37,7 @@ namespace FubuTransportation.Testing.InMemory
             var queue = InMemoryQueueManager.QueueFor(new Uri("memory://foo"));
 
             var receiver = new RecordingReceiver();
-            queue.AddListener(receiver);
+            Task.Factory.StartNew(() => queue.Receive(receiver));
 
             queue.Enqueue(envelope);
 
@@ -65,7 +68,8 @@ namespace FubuTransportation.Testing.InMemory
             envelope.Data = new byte[] { 1, 2, 3, 4, 5 };
 
             var receiver = new RecordingReceiver();
-            node.Channel.StartReceiving(receiver, node);
+            var startingVisitor = new StartingChannelNodeVisitor(receiver);
+            startingVisitor.Visit(node);
 
             node.Channel.Send(envelope.Data, envelope.Headers);
 

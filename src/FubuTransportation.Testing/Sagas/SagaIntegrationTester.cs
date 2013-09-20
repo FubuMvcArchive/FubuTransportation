@@ -8,6 +8,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.Sagas;
+using FubuTransportation.Scheduling;
 using FubuTransportation.TestSupport;
 using NUnit.Framework;
 using FubuCore;
@@ -46,6 +47,7 @@ namespace FubuTransportation.Testing.Sagas
         public void TearDown()
         {
             FubuTransport.Reset();
+            theRuntime.Dispose();
         }
 
 
@@ -119,7 +121,7 @@ namespace FubuTransportation.Testing.Sagas
         {
             Channel(x => x.Queue)
                 .PublishesMessagesInAssemblyContainingType<SagaTestRegistry>()
-                .ReadIncoming(2);
+                .ReadIncoming(new ThreadScheduler(2));
         }
     }
 

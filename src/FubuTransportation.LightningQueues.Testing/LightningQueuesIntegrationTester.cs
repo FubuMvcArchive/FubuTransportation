@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime.Logging;
@@ -9,6 +10,7 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
+using FubuTransportation.Scheduling;
 using FubuTransportation.Testing;
 using LightningQueues.Model;
 using NUnit.Framework;
@@ -58,13 +60,18 @@ namespace FubuTransportation.LightningQueues.Testing
             envelope.Headers["foo"] = "bar";
 
             var receiver = new RecordingReceiver();
-            node.Channel.StartReceiving(receiver, new ChannelNode());
+            var visitor = new StartingChannelNodeVisitor(receiver);
+            visitor.Visit(node);
 
             node.Channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());
 
 
-            graph.Each(x => x.Channel.Dispose());
+            graph.Each(x =>
+            {
+                var shutdownVisitor = new ShutdownChannelNodeVisitor();
+                shutdownVisitor.Visit(x);
+            });
             queues.Dispose();
 
             receiver.Received.Any().ShouldBeTrue();
@@ -85,12 +92,16 @@ namespace FubuTransportation.LightningQueues.Testing
             var receiver = new RecordingReceiver();
             var channel = transport.BuildChannel(new ChannelNode { Uri = new Uri("lq.tcp://localhost:2020/dynamic") });
 
-            channel.StartReceiving(receiver, new ChannelNode());
+            Task.Factory.StartNew(() => channel.Receive(receiver));
             channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());
 
 
-            graph.Each(x => x.Channel.Dispose());
+            graph.Each(x =>
+            {
+                var shutdownVisitor = new ShutdownChannelNodeVisitor();
+                shutdownVisitor.Visit(x);
+            });
             queues.Dispose();
 
             receiver.Received.Any().ShouldBeTrue();

@@ -19,7 +19,6 @@ namespace FubuTransportation.InMemory
         private readonly Uri _uri;
         private readonly BlockingCollection<byte[]> _queue = new BlockingCollection<byte[]>(new ConcurrentBag<byte[]>());
         private readonly BinaryFormatter _formatter;
-        private readonly IList<Listener> _listeners = new List<Listener>(); 
 
         public InMemoryQueue(Uri uri)
         {
@@ -53,58 +52,20 @@ namespace FubuTransportation.InMemory
         public void Dispose()
         {
             _queue.CompleteAdding();
-            _listeners.Each(x => x.SafeDispose());
         }
 
-        public void AddListener(IReceiver receiver)
+        public void Receive(IReceiver receiver)
         {
-            var listener = new Listener(this, receiver);
-            _listeners.Add(listener);
-
-            listener.Start();
-        }
-
-        public class Listener : IDisposable
-        {
-            private readonly InMemoryQueue _parent;
-            private readonly IReceiver _receiver;
-            private bool _disposed;
-            private Task _task;
-
-            public Listener(InMemoryQueue parent, IReceiver receiver)
+            foreach (var data in _queue.GetConsumingEnumerable())
             {
-                _parent = parent;
-                _receiver = receiver;
-            }
+                using (var stream = new MemoryStream(data))
+                {
+                    var token = _formatter.Deserialize(stream).As<EnvelopeToken>();
 
-            public void Start()
-            {
-                _task = Task.Factory.StartNew(() => {
-                    foreach (byte[] data in _parent._queue.GetConsumingEnumerable())
-                    {
-                        if (_disposed)
-                        {
-                            break;
-                        }
+                    var callback = new InMemoryCallback(this, token);
 
-                        using (var stream = new MemoryStream(data))
-                        {
-                            var token = _parent._formatter.Deserialize(stream).As<EnvelopeToken>();
-
-                            var callback = new InMemoryCallback(_parent, token);
-
-                            _receiver.Receive(token.Data, token.Headers, callback);
-                        }
-                    }
-                });
-
-
-            }
-
-            public void Dispose()
-            {
-                _disposed = true;
-                _task.SafeDispose();
+                    receiver.Receive(token.Data, token.Headers, callback);
+                }
             }
         }
     }

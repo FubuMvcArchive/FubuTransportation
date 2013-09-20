@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
@@ -36,50 +35,13 @@ namespace FubuTransportation.LightningQueues
 
         public Uri Address { get { return _address; } }
 
-        public void StartReceiving(IReceiver receiver, ChannelNode node)
+        public void Receive(IReceiver receiver)
         {
-            startListeningThreads(_queueName, node.ThreadCount, receiver);
-        }
+            var transactionalScope = _queueManager.BeginTransactionalScope();
+            var message = transactionalScope.Receive(_queueName);
 
-        private void startListeningThreads(string queueName, int threadCount, IReceiver receiver)
-        {
-            for (int i = 0; i < threadCount; ++i)
-            {
-                var thread = new Thread(() => startListeningOnQueue(queueName, receiver))
-                {
-                    IsBackground = true,
-                    Name = "FubuTransportation.LightningQueuesTransport Receiving Thread",
-                };
-                thread.Start();
-                _threads.Add(thread);
-            }
-        }
-
-        private void startListeningOnQueue(string queueName, IReceiver receiver)
-        {
-            while (!_disposed)
-            {
-                var transactionalScope = _queueManager.BeginTransactionalScope();
-                var message = transactionalScope.Receive(queueName);
-
-                receiver.Receive(message.Data, new NameValueHeaders(message.Headers), new TransactionCallback(transactionalScope, message, _delayedMessages));
-            }
-
-        }
-
-        public void Dispose()
-        {
-            _disposed = true;
-            //queues is already disposed by container
-
-            foreach (var thread in _threads)
-            {
-                
-                if (!thread.Join(2000))
-                {
-                    thread.Abort();
-                }
-            }
+            receiver.Receive(message.Data, new NameValueHeaders(message.Headers),
+                new TransactionCallback(transactionalScope, message, _delayedMessages));
         }
 
         public void Send(byte[] data, IHeaders headers)

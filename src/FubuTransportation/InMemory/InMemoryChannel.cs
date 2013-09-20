@@ -22,12 +22,9 @@ namespace FubuTransportation.InMemory
         }
 
         public Uri Address { get; private set; }
-        public void StartReceiving(IReceiver receiver, ChannelNode node)
+        public void Receive(IReceiver receiver)
         {
-            for (int i = 0; i < node.ThreadCount; i++)
-            {
-                _queue.AddListener(receiver);              
-            }
+            _queue.Receive(receiver);
         }
 
         public void Send(byte[] data, IHeaders headers)

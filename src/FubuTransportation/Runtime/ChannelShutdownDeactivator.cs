@@ -4,6 +4,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Runtime
 {
@@ -20,10 +21,12 @@ namespace FubuTransportation.Runtime
 
         public void Deactivate(IPackageLog log)
         {
-            _graph.Each(channel => {
+            _graph.Each(channel =>
+            {
                 try
                 {
-                    channel.Channel.Dispose();
+                    var shudownVisitor = new ShutdownChannelNodeVisitor();
+                    shudownVisitor.Visit(channel);
                 }
                 catch (Exception ex)
                 {

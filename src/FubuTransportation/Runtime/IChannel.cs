@@ -1,14 +1,12 @@
 ﻿using System;
-using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
 {
-    public interface IChannel : IDisposable
+    public interface IChannel
     {
         Uri Address { get; }
-        void StartReceiving(IReceiver receiver, ChannelNode node);
-
+        void Receive(IReceiver receiver);
         void Send(byte[] data, IHeaders headers);
     }
 }

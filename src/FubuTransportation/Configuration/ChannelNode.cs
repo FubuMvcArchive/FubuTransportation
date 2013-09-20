@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
-using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
-using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using System.Linq;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
 {
@@ -28,7 +27,7 @@ namespace FubuTransportation.Configuration
 
         public string Key { get; set; }
 
-        public int ThreadCount = 1;
+        public IScheduler Scheduler = TaskScheduler.Default();
         public bool Incoming = false;
 
         public IList<IRoutingRule> Rules = new List<IRoutingRule>();
@@ -58,14 +57,11 @@ namespace FubuTransportation.Configuration
             return Uri.Scheme;
         }
 
-        public void StartReceiving(ChannelGraph graph, IHandlerPipeline invoker)
+        public void Accept(IChannelNodeVisitor visitor)
         {
-            if (Incoming)
-            {
-                Channel.StartReceiving(new Receiver(invoker, graph, this), this);
-            }
+            visitor.Visit(this);
         }
-        
+
         public void Describe(IScenarioWriter writer)
         {
             writer.WriteLine(Key);
@@ -73,7 +69,7 @@ namespace FubuTransportation.Configuration
             {
                 if (Incoming)
                 {
-                    writer.WriteLine("Listens to {0} with {1} threads", Uri, ThreadCount);
+                    writer.WriteLine("Listens to {0} with {1}", Uri, Scheduler);
                 }
 
                 Rules.Each(x => x.Describe());

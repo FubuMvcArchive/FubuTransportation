@@ -5,6 +5,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using Rhino.Mocks;
 using TestMessages;
@@ -72,12 +73,11 @@ namespace FubuTransportation.Testing.Configuration
 
             var graph = new ChannelGraph();
 
-            node.StartReceiving(graph, invoker);
+            var startingVisitor = new StartingChannelNodeVisitor(new Receiver(invoker, graph, node));
+            startingVisitor.Visit(node);
             
-            node.Channel.AssertWasCalled(x => x.StartReceiving(new Receiver(invoker, graph, node), node));
+            node.Channel.AssertWasCalled(x => x.Receive(new Receiver(invoker, graph, node)));
         }
-
-        
     }
 
     [TestFixture]

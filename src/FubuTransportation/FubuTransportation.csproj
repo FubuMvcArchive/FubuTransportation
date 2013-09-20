@@ -203,6 +203,12 @@
     <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Events\SynchronousEventAggregator.cs" />
+    <Compile Include="Configuration\IChannelNodeVisitor.cs" />
+    <Compile Include="Scheduling\IScheduler.cs" />
+    <Compile Include="Scheduling\ShutdownChannelNodeVisitor.cs" />
+    <Compile Include="Scheduling\StartingChannelNodeVisitor.cs" />
+    <Compile Include="Scheduling\TaskScheduler.cs" />
+    <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

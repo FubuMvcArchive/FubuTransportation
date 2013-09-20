@@ -6,6 +6,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Collections.Generic;
@@ -99,10 +100,11 @@ namespace FubuTransportation.Testing.Configuration
 
             graph.StartReceiving(MockRepository.GenerateMock<IHandlerPipeline>());
 
-            node1.Channel.AssertWasCalled(x => x.StartReceiving(null, node1), x => x.IgnoreArguments());
-            node2.Channel.AssertWasNotCalled(x => x.StartReceiving(null, node2), x => x.IgnoreArguments());
-            node3.Channel.AssertWasCalled(x => x.StartReceiving(null, node3), x => x.IgnoreArguments());
-            node4.Channel.AssertWasNotCalled(x => x.StartReceiving(null, node4), x => x.IgnoreArguments());
+            node1.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
+            node2.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
+            node3.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
+            node4.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
+            graph.Each(x => new ShutdownChannelNodeVisitor().Visit(x));
         }
 
         [Test]

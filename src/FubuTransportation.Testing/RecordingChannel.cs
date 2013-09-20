@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
 
@@ -16,7 +15,7 @@ namespace FubuTransportation.Testing
         }
 
         public Uri Address { get; private set; }
-        public void StartReceiving(IReceiver receiver, ChannelNode node)
+        public void Receive(IReceiver receiver)
         {
             throw new NotImplementedException();
         }

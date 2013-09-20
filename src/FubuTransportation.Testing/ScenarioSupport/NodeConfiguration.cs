@@ -9,6 +9,7 @@ using FubuTransportation.Configuration;
 using FubuMVC.StructureMap;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
+using FubuTransportation.Scheduling;
 using FubuTransportation.TestSupport;
 using StructureMap;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
             var nodeName = ReflectionHelper.GetProperty(_expression).Name;
             registry.NodeName = nodeName;
 
-            registry.Channel(_expression).ReadIncoming(2);
+            registry.Channel(_expression).ReadIncoming(new ThreadScheduler(2));
 
             registry.Handlers.Include<SourceRecordingHandler>();
             registry.AlterSettings<TransportSettings>(x => x.DebugEnabled = true);
@@ -181,7 +182,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
             using (writer.Indent())
             {
                 channels.Where(x => x.Incoming)
-                        .Each(x => writer.WriteLine("Listens to {0} with {1} threads", x.Uri, x.ThreadCount));
+                        .Each(x => writer.WriteLine("Listens to {0} with ", x.Uri, x.Scheduler));
             
                 //writer.BlankLine();
 

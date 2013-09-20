@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore;
-using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;
-using FubuTransportation.Runtime;
 using System.Linq;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
 {
@@ -58,7 +58,11 @@ namespace FubuTransportation.Configuration
 
         public virtual void StartReceiving(IHandlerPipeline pipeline)
         {
-            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(this, pipeline));
+            _channels.Where(x => x.Incoming).Each(node =>
+            {
+                var scheduler = new StartingChannelNodeVisitor(new Receiver(pipeline, this, node));
+                node.Accept(scheduler);
+            });
         }
 
         public static string ToKey(Accessor accessor)

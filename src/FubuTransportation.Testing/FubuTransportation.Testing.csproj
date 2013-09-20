@@ -221,6 +221,10 @@
     <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs" />
     <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs" />
     <Compile Include="ScenarioWriterSmokeTester.cs" />
+    <Compile Include="Scheduling\ShutdownChannelNodeVisitorTester.cs" />
+    <Compile Include="Scheduling\StartingChannelNodeVisitorTester.cs" />
+    <Compile Include="Scheduling\TaskSchedulerTester.cs" />
+    <Compile Include="Scheduling\ThreadSchedulerTester.cs" />
     <Compile Include="ServiceBus_DelaySend_Tester.cs" />
     <Compile Include="ScenarioSupport\AnotherOneHandler.cs" />
     <Compile Include="ScenarioSupport\DifferentOneHandler.cs" />
