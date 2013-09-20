@@ -1,4 +1,5 @@
 ﻿using FubuMVC.Core;
+using FubuMVC.Katana;
 
 namespace DiagnosticsHarness
 {
@@ -7,6 +8,9 @@ namespace DiagnosticsHarness
         public FubuHarnessRegistry()
         {
             Import<HarnessRegistry>();
+            AlterSettings<KatanaSettings>(x => {
+                x.AutoHostingEnabled = true;
+            });
         }
     }
 }
