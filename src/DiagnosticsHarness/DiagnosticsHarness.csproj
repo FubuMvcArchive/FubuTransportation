@@ -84,6 +84,9 @@
     <Reference Include="FubuMVC.Spark">
       <HintPath>..\packages\FubuMVC.Spark\lib\net40\FubuMVC.Spark.dll</HintPath>
     </Reference>
+    <Reference Include="FubuMVC.StructureMap">
+      <HintPath>..\packages\FubuMVC.StructureMap\lib\net40\FubuMVC.StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="FubuMVC.TwitterBootstrap">
       <HintPath>..\packages\FubuMVC.TwitterBootstrap\lib\net40\FubuMVC.TwitterBootstrap.dll</HintPath>
     </Reference>
@@ -112,6 +115,9 @@
     <Reference Include="Spark">
       <HintPath>..\packages\Spark\lib\NET40\Spark.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap\lib\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -123,7 +129,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="HarnessApplication.cs" />
+    <Compile Include="FubuHarnessRegistry.cs" />
+    <Compile Include="HarnessRegistry.cs" />
+    <Compile Include="HarnessSettings.cs" />
+    <Compile Include="HomeEndpoint.cs" />
+    <Compile Include="HomeModel.cs" />
+    <Compile Include="INumberCache.cs" />
+    <Compile Include="NumberCache.cs" />
+    <Compile Include="NumberHandler.cs" />
+    <Compile Include="NumberMessage.cs" />
+    <Compile Include="NumberPost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +147,9 @@
       <Project>{23FDB1CE-1EC5-4D1B-B3E5-008A439CAA13}</Project>
       <Name>FubuTransportation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="home.spark" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

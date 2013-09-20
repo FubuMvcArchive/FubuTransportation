@@ -17,7 +17,6 @@ namespace FubuTransportation.Configuration
         public HandlerChain()
         {
             UrlCategory.Category = Category;
-            IsPartialOnly = true;
         }
 
         public HandlerChain(IEnumerable<HandlerCall> calls) : this()

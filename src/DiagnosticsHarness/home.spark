@@ -1,0 +1,17 @@
+﻿<viewdata model="DiagnosticsHarness.HomeModel" />
+<use master="" />
+
+
+<html>
+	<head>
+		<title>FubuTransportation Diagnostics Harness</title>
+	</head>
+	<body>
+		<p>Type in a list of comma delimited integers.  Any number over 100 will cause an exception in the message handling</p>
+		!{this.FormFor<DiagnosticsHarness.NumberPost>()}
+		<textarea name="Numbers" />
+		<br />
+		<input type="submit" value="Submit" />
+		!{this.EndForm()}
+	</body>
+</html>

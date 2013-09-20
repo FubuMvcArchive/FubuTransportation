@@ -19,16 +19,15 @@ namespace FubuTransportation.Testing.Configuration
         }
 
         [Test]
-        public void sets_itself_as_partial_only()
-        {
-            var chain = new HandlerChain();
-            chain.IsPartialOnly.ShouldBeTrue();
-        }
-
-        [Test]
         public void the_default_number_of_maximum_attempts_is_1()
         {
             new HandlerChain().MaximumAttempts.ShouldEqual(1);
+        }
+
+        [Test]
+        public void HandlerChain_cannot_be_marked_as_partial_only_because_it_knocks_out_diagnostic_tracing()
+        {
+            new HandlerChain().IsPartialOnly.ShouldBeFalse();
         }
 
 

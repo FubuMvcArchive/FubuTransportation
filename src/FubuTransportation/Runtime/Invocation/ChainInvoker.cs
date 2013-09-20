@@ -43,7 +43,7 @@ namespace FubuTransportation.Runtime.Invocation
 
             try
             {
-                var args = new InvocationContext(envelope);
+                var args = new InvocationContext(envelope, chain);
                 behavior = _factory.BuildBehavior(args, chain.UniqueId);
                 behavior.Invoke();
 
@@ -71,7 +71,7 @@ namespace FubuTransportation.Runtime.Invocation
         {
             using (new ChainExecutionWatcher(_logger, chain, envelope))
             {
-                var context = new InvocationContext(envelope);
+                var context = new InvocationContext(envelope, chain);
                 var behavior = _factory.BuildBehavior(context, chain.UniqueId);
 
                 try

@@ -1,4 +1,5 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Testing.Events;
@@ -18,12 +19,20 @@ namespace FubuTransportation.Testing
              };
          }
 
+        public static Envelope EnvelopeWithMessage()
+        {
+            var envelope = Envelope();
+            envelope.Message = new Message1();
+
+            return envelope;
+        }
+
         public static InvocationContext InvocationContext()
         {
             var envelope = Envelope();
             envelope.Message = new Message();
 
-            return new InvocationContext(envelope);
+            return new InvocationContext(envelope, new HandlerChain());
         }
     }
 }

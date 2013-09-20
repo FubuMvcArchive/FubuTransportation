@@ -1,6 +1,7 @@
 ﻿using FubuCore.Logging;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -29,7 +30,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theContinuationContext = new TestContinuationContext();
 
-            theContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
+            theContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope, new HandlerChain());
 
             theContext.EnqueueCascading(new object());
             theContext.EnqueueCascading(new object());

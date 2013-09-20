@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
+using FubuMVC.Core.Http;
 using FubuMVC.Core.Runtime;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
@@ -11,9 +14,19 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     public class InvocationContextTester
     {
         [Test]
+        public void registers_a_CurrentChain_service_for_diagnostic_purposes()
+        {
+            var chain = new HandlerChain();
+            var context = new FubuTransportation.Runtime.Invocation.InvocationContext(ObjectMother.EnvelopeWithMessage(), chain);
+
+            context.Get<ICurrentChain>().Current.ShouldBeTheSameAs(chain);
+
+        }
+
+        [Test]
         public void enqueue()
         {
-            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Events.Message1()});
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Events.Message1()}, new HandlerChain());
             var m1 = new Events.Message1();
             var m2 = new Events.Message2();
 
@@ -26,7 +39,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void ignores_nulls_just_fine()
         {
-            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope { Message = new Events.Message1() });
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope { Message = new Events.Message1() }, new HandlerChain());
             messages.EnqueueCascading(null);
 
             messages.OutgoingMessages().Any().ShouldBeFalse();
@@ -35,7 +48,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void enqueue_an_oject_array()
         {
-            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Events.Message1()});
+            var messages = new FubuTransportation.Runtime.Invocation.InvocationContext(new Envelope{Message = new Events.Message1()}, new HandlerChain());
             var m1 = new Events.Message1();
             var m2 = new Events.Message2();
 
@@ -56,7 +69,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theEnvelope = new Envelope{Message = new Events.Message2()};
 
-            theArgs = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
+            theArgs = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope, new HandlerChain());
         }
 
         [Test]

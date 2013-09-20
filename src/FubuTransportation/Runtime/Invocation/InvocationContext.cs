@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore.Binding;
+using FubuMVC.Core.Http;
 using FubuMVC.Core.Runtime;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime.Invocation
 {
     public class InvocationContext : ServiceArguments, IInvocationContext
     {
+        private static readonly IDictionary<string, object> _emptyDictionary = new Dictionary<string, object>(); 
+
         private readonly Envelope _envelope;
         private readonly IList<object> _messages = new List<object>();
 
-        public InvocationContext(Envelope envelope)
+        public InvocationContext(Envelope envelope, HandlerChain chain)
         {
             if (envelope == null) throw new ArgumentNullException("envelope");
+
+            var currentChain = new CurrentChain(chain, _emptyDictionary);
+            Set(typeof(ICurrentChain), currentChain);
             
             _envelope = envelope;
             var inputType = envelope.Message.GetType();

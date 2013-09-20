@@ -55,7 +55,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theBehavior = MockFor<IDisposableBehavior>();
             theChain = new HandlerChain();
 
-            _invocationContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope);
+            _invocationContext = new FubuTransportation.Runtime.Invocation.InvocationContext(theEnvelope, new HandlerChain());
 
             MockFor<IServiceFactory>().Stub(x => x.BuildBehavior(_invocationContext, theChain.UniqueId))
                 .Return(theBehavior);
