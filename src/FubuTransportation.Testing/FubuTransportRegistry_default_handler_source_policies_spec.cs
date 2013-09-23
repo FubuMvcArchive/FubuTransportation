@@ -43,6 +43,20 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void default_handler_sources_are_not_used_if_a_custom_one_is_registered_2()
+        {
+            var graph = FubuTransportRegistry.HandlerGraphFor(r =>
+            {
+                r.Handlers.FindBy(new MyFunkyHandlerSource());
+            });
+
+            graph.ChainFor(typeof(Message1)).OfType<HandlerCall>().Select(x => x.HandlerType)
+                .Single().ShouldEqual(typeof(MyFunkySpaceAgeProcessor));
+
+
+        }
+
+        [Test]
         public void can_override_the_default_handler_source_by_explicits()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(r =>
