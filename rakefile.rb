@@ -10,7 +10,7 @@ rescue LoadError
 end
 
 
-FubuRake::Solution.new do |sln|
+solution = FubuRake::Solution.new do |sln|
 	sln.compile = {
 		:solutionfile => 'src/FubuTransportation.sln'
 	}
@@ -23,3 +23,12 @@ FubuRake::Solution.new do |sln|
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
 end
+
+FubuRake::BottleServices.new({
+  :dir => "src/DiagnosticsHarness/bin/#{solution.compilemode}", 
+  :name => 'ft-harness', 
+  :local_service => true,
+  :manual => true
+})
+
+FubuRake::MvcApp.new({:directory => 'src/DiagnosticsHarness', :name => 'harness'})

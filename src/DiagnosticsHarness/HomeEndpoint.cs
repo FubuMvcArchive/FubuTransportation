@@ -2,7 +2,9 @@
 using System.Linq;
 using FubuCore;
 using FubuMVC.Core.Continuations;
+using FubuMVC.Core.UI;
 using FubuTransportation;
+using HtmlTags;
 
 namespace DiagnosticsHarness
 {
@@ -10,11 +12,13 @@ namespace DiagnosticsHarness
     {
         private readonly IServiceBus _serviceBus;
         private readonly INumberCache _cache;
+        private readonly FubuHtmlDocument _document;
 
-        public HomeEndpoint(IServiceBus serviceBus, INumberCache cache)
+        public HomeEndpoint(IServiceBus serviceBus, INumberCache cache, FubuHtmlDocument document)
         {
             _serviceBus = serviceBus;
             _cache = cache;
+            _document = document;
         }
 
         public FubuContinuation post_numbers(NumberPost input)
@@ -34,9 +38,25 @@ namespace DiagnosticsHarness
             return _cache.Captured.Select(x => x.ToString()).Join("\n");
         }
 
-        public HomeModel Index()
+        public HtmlDocument Index()
         {
-            return new HomeModel();
+            _document.Title = "FubuTransportation Diagnostics Harness";
+
+            _document.Add("p")
+                .Text("Type in a list of comma delimited integers.  Any number over 100 will cause an exception in the message handling");
+
+            var formTag = _document.FormFor<NumberPost>();
+            _document.Push(formTag);
+
+            _document.Add("textarea").Name("Numbers");
+            _document.Add("br");
+            _document.Add("input").Attr("type", "submit").Attr("value", "Submit");
+
+            _document.Pop();
+            _document.Add(new LiteralTag("</form>")); // ugh.
+
+
+            return _document;
         }
     }
 }
