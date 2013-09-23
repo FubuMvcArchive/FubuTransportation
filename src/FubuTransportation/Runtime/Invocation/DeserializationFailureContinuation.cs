@@ -22,6 +22,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
+            context.Outgoing.SendFailureAcknowledgement(envelope, "Deserialization failed");
             context.Logger.Error(envelope.CorrelationId, _exception.Message, _exception);
             envelope.Callback.MoveToErrors(new ErrorReport(envelope, _exception));
         }

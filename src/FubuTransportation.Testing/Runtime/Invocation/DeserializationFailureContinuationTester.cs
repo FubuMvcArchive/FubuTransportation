@@ -45,5 +45,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             report.ExceptionText.ShouldEqual(theException.ToString());
         }
+
+        [Test]
+        public void should_send_a_failure_ack()
+        {
+            theContext.RecordedOutgoing.FailureAcknowledgementMessage.ShouldEqual("Deserialization failed");
+
+        }
     }
 }

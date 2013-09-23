@@ -13,6 +13,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         public override void Execute(Envelope envelope, ContinuationContext context)
         {
+            context.Outgoing.SendFailureAcknowledgement(envelope, "No subscriber");
             envelope.Callback.MarkSuccessful();
             // TODO -- do more here.  There's a GH issue for this.
         }
