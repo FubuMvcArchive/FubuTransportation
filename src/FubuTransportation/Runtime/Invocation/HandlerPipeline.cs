@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Logging;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
@@ -41,6 +42,7 @@ namespace FubuTransportation.Runtime.Invocation
             }
             catch (Exception e)
             {
+                envelope.Callback.MarkFailed(); // TODO -- watch this one.
                 _context.Logger.Error(envelope.CorrelationId, "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope, continuation), e);
             }
         }

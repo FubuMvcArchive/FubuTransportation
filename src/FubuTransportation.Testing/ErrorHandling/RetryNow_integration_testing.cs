@@ -5,6 +5,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StructureMap;
 
 namespace FubuTransportation.Testing.ErrorHandling
@@ -24,7 +25,7 @@ namespace FubuTransportation.Testing.ErrorHandling
                         .Bootstrap())
             {
                 var pipeline = runtime.Factory.Get<IHandlerPipeline>();
-                pipeline.Invoke(new Envelope {Message = new MessageThatBombs()});
+                pipeline.Invoke(new Envelope {Message = new MessageThatBombs(), Callback = MockRepository.GenerateMock<IMessageCallback>()});
             }
 
             MessageThatBombsHandler.Successful.ShouldNotBeNull();

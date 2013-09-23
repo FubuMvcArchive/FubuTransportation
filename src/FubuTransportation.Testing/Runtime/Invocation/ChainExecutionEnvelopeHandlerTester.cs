@@ -5,6 +5,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -92,6 +93,19 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                           .ShouldBeOfType<ChainFailureContinuation>()
                           .Exception.ShouldBeTheSameAs(exception);
 
+        }
+
+        [Test]
+        public void if_the_chain_throws_a_deserialization_continuation()
+        {
+            var exception = new EnvelopeDeserializationException("I blew up!");
+
+            theInvoker.Expect(x => x.ExecuteChain(theEnvelope, theChain))
+                .Throw(exception);
+
+            ClassUnderTest.Handle(theEnvelope)
+                .ShouldBeOfType<DeserializationFailureContinuation>()
+                .Exception.ShouldBeTheSameAs(exception);
         }
     }
 

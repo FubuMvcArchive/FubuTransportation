@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using FubuCore;
 using FubuTransportation.Configuration;
 
@@ -26,7 +27,7 @@ namespace FubuTransportation.Runtime.Serializers
 
         public object Deserialize(Envelope envelope)
         {
-            if (envelope.Data == null) throw new InvalidOperationException("No data on this envelope to deserialize");
+            if (envelope.Data == null) throw new EnvelopeDeserializationException("No data on this envelope to deserialize");
 
 
             var serializer = selectSerializer(envelope);
@@ -43,7 +44,7 @@ namespace FubuTransportation.Runtime.Serializers
         
             if (serializer == null)
             {
-                throw new UnknownContentTypeException(envelope.ContentType);
+                throw new EnvelopeDeserializationException("Unknown content-type '{0}'".ToFormat(envelope.ContentType));
             }
 
             return serializer;
@@ -66,6 +67,18 @@ namespace FubuTransportation.Runtime.Serializers
 
                 envelope.Data = stream.ReadAllBytes();
             }
+        }
+    }
+
+    [Serializable]
+    public class EnvelopeDeserializationException : Exception
+    {
+        public EnvelopeDeserializationException(string message) : base(message)
+        {
+        }
+
+        public EnvelopeDeserializationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

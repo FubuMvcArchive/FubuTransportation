@@ -2,6 +2,7 @@
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Cascading;
+using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation
 {
@@ -35,6 +36,10 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 var context = _invoker.ExecuteChain(envelope, chain);
                 return context.Continuation ?? new ChainSuccessContinuation(_sender, context);
+            }
+            catch (EnvelopeDeserializationException ex)
+            {
+                return new DeserializationFailureContinuation(ex);
             }
             catch (Exception ex)
             {

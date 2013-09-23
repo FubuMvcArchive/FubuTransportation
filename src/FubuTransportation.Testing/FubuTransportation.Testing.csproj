@@ -177,6 +177,7 @@
     <Compile Include="Runtime\Invocation\ChainFailureContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\ChainSuccessContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs" />
+    <Compile Include="Runtime\Invocation\DeserializationFailureContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipelineTester.cs" />
     <Compile Include="Runtime\Invocation\ResponseEnvelopeHandlerTester.cs" />
     <Compile Include="Runtime\Invocation\StubServiceFactory.cs" />

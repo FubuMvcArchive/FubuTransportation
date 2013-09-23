@@ -152,6 +152,7 @@
     <Compile Include="Runtime\Invocation\ChainSuccessContinuation.cs" />
     <Compile Include="Runtime\Invocation\ContinuationContext.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
+    <Compile Include="Runtime\Invocation\DeserializationFailureContinuation.cs" />
     <Compile Include="Runtime\Invocation\HandlerPipeline.cs" />
     <Compile Include="Runtime\Invocation\IContinuation.cs" />
     <Compile Include="Runtime\Invocation\IEnvelopeHandler.cs" />
@@ -242,7 +243,6 @@
     <Compile Include="Runtime\Routing\SingleTypeRoutingRule.cs" />
     <Compile Include="Runtime\Invocation\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\UnknownChannelException.cs" />
-    <Compile Include="Runtime\Serializers\UnknownContentTypeException.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Runtime\TransportActivator.cs" />

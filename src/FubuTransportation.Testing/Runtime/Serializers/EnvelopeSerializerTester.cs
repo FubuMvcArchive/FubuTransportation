@@ -43,7 +43,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
             theEnvelope.ContentType = "random/nonexistent";
             theEnvelope.Message = new object();
 
-            Exception<UnknownContentTypeException>.ShouldBeThrownBy(() => {
+            Exception<EnvelopeDeserializationException>.ShouldBeThrownBy(() => {
                 ClassUnderTest.Serialize(theEnvelope);
             }).Message.ShouldContain("random/nonexistent");
         }
@@ -59,7 +59,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         [Test]
         public void throws_on_deserialize_with_no_data()
         {
-            Exception<InvalidOperationException>.ShouldBeThrownBy(() =>
+            Exception<EnvelopeDeserializationException>.ShouldBeThrownBy(() =>
             {
                 ClassUnderTest.Deserialize(new Envelope());
             }).Message.ShouldEqual("No data on this envelope to deserialize");
