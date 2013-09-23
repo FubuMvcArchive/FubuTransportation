@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.ErrorHandling
 {
+    [Description("Moves the message envelope to the error queue for the current transport")]
     public class MoveToErrorQueue : IContinuation
     {
         private readonly Exception _exception;

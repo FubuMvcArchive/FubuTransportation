@@ -1,9 +1,10 @@
 ﻿using System;
+using FubuCore.Descriptions;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.ErrorHandling
 {
-    public class ExceptionMatch : IExceptionMatch
+    public class ExceptionMatch : IExceptionMatch, DescribesItself
     {
         private readonly Func<Exception, bool> _filter;
         private readonly string _description;
@@ -22,6 +23,12 @@ namespace FubuTransportation.ErrorHandling
         public string Description
         {
             get { return _description; }
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = _description;
+            description.ShortDescription = string.Empty;
         }
     }
 }

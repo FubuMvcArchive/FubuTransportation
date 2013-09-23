@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Async
 {
+    [Description("Executes the chain asynchronously in a different thread than the original dequeue-ing thread")]
     public class AsyncChainExecutionContinuation : IContinuation
     {
         private readonly Func<IContinuation> _inner;

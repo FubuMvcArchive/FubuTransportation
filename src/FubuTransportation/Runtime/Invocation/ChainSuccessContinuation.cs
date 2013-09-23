@@ -1,9 +1,11 @@
-﻿using FubuCore.Logging;
+﻿using System.ComponentModel;
+using FubuCore.Logging;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Runtime.Invocation
 {
+    [Description("The handler chain was successful, dequeues the envelope")]
     public class ChainSuccessContinuation : IContinuation
     {
         private readonly IOutgoingSender _sender;

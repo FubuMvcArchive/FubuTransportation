@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Security.Cryptography;
+using FubuCore.Descriptions;
 using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    public class ChainFailureContinuation : IContinuation
+    public class ChainFailureContinuation : IContinuation, DescribesItself
     {
         private readonly Exception _exception;
 
@@ -29,6 +31,13 @@ namespace FubuTransportation.Runtime.Invocation
         public Exception Exception
         {
             get { return _exception; }
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "The chain execution failed for this message";
+            description.ShortDescription = _exception.GetType().Name;
+            description.LongDescription = Exception.ToString();
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using FubuCore.Logging;
+﻿using System.ComponentModel;
+using FubuCore.Descriptions;
 
 namespace FubuTransportation.Runtime.Invocation
 {
+    [Description("Policies for handling messages that have no registered handlers")]
     public class NoSubscriberHandler : SimpleEnvelopeHandler
     {
         public override bool Matches(Envelope envelope)
