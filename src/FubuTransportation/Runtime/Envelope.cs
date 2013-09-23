@@ -98,6 +98,7 @@ namespace FubuTransportation.Runtime
         
 
         // TODO -- this is where the routing slip is going to come into place
+        
         public virtual Envelope ForResponse(object message)
         {
             var child = new Envelope
@@ -107,6 +108,8 @@ namespace FubuTransportation.Runtime
                 ParentId = CorrelationId
             };
 
+            // TODO -- still goofy, think we need to care about exactly what type
+            // the response should be
             if (ReplyRequested)
             {
                 child.Headers[ResponseIdKey] = CorrelationId;

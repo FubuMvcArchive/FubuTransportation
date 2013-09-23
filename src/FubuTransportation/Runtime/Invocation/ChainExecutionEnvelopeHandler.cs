@@ -9,12 +9,10 @@ namespace FubuTransportation.Runtime.Invocation
     public class ChainExecutionEnvelopeHandler : IEnvelopeHandler
     {
         private readonly IChainInvoker _invoker;
-        private readonly IOutgoingSender _sender;
 
-        public ChainExecutionEnvelopeHandler(IChainInvoker invoker, IOutgoingSender sender)
+        public ChainExecutionEnvelopeHandler(IChainInvoker invoker)
         {
             _invoker = invoker;
-            _sender = sender;
         }
 
         public IContinuation Handle(Envelope envelope)
@@ -35,7 +33,7 @@ namespace FubuTransportation.Runtime.Invocation
             try
             {
                 var context = _invoker.ExecuteChain(envelope, chain);
-                return context.Continuation ?? new ChainSuccessContinuation(_sender, context);
+                return context.Continuation ?? new ChainSuccessContinuation(context);
             }
             catch (EnvelopeDeserializationException ex)
             {

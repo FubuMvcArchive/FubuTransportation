@@ -38,7 +38,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theSender = new RecordingEnvelopeSender();
 
-            theContinuation = new ChainSuccessContinuation(theSender, theContext);
+            theContinuation = new ChainSuccessContinuation(theContext);
 
             theLogger = new RecordingLogger();
 

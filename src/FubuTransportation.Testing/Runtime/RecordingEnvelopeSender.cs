@@ -20,5 +20,12 @@ namespace FubuTransportation.Testing.Runtime
         {
             Outgoing.AddRange(cascadingMessages);
         }
+
+        public void SendFailureAcknowledgement(string message)
+        {
+            FailureAcknowledgementMessage = message;
+        }
+
+        public string FailureAcknowledgementMessage { get; set; }
     }
 }
