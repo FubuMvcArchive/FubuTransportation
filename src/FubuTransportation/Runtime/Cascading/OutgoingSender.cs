@@ -22,9 +22,23 @@ namespace FubuTransportation.Runtime.Cascading
             cascadingMessages.Each(o => SendOutgoingMessage(original, o));
         }
 
-        public void SendFailureAcknowledgement(string message)
+        public void SendFailureAcknowledgement(Envelope original, string message)
         {
-            throw new System.NotImplementedException();
+            if (original.AckRequested || original.ReplyRequested)
+            {
+                var envelope = new Envelope
+                {
+                    Destination = original.ReplyUri,
+                    ResponseId = original.CorrelationId,
+                    Message = new FailureAcknowledgement()
+                    {
+                        CorrelationId = original.CorrelationId, 
+                        Message = message
+                    }
+                };
+
+                _sender.Send(envelope);
+            }
         }
 
         private void sendAcknowledgement(Envelope original)

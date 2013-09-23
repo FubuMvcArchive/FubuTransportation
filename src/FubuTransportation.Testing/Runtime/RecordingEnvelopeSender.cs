@@ -21,7 +21,7 @@ namespace FubuTransportation.Testing.Runtime
             Outgoing.AddRange(cascadingMessages);
         }
 
-        public void SendFailureAcknowledgement(string message)
+        public void SendFailureAcknowledgement(Envelope original, string message)
         {
             FailureAcknowledgementMessage = message;
         }

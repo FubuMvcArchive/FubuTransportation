@@ -5,6 +5,6 @@ namespace FubuTransportation.Runtime.Cascading
     public interface IOutgoingSender
     {
         void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages);
-        void SendFailureAcknowledgement(string message);
+        void SendFailureAcknowledgement(Envelope original, string message);
     }
 }
