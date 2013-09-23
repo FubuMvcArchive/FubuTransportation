@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTransportation.Events;
 using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime
 {
-    public class ReplyListener<T> : IListener<EnvelopeReceived>, IExpiringListener
+    public class ReplyListener<T> : IListener<EnvelopeReceived>,IExpiringListener
     {
         private readonly IEventAggregator _events;
         private readonly TaskCompletionSource<T> _completion;
@@ -32,6 +34,15 @@ namespace FubuTransportation.Runtime
             if (Matches(message.Envelope))
             {
                 _completion.SetResult((T) message.Envelope.Message);
+                _events.RemoveListener(this);
+
+                IsExpired = true;
+            }
+
+            var ack = message.Envelope.Message as FailureAcknowledgement;
+            if (ack != null && ack.CorrelationId == _originalId)
+            {
+                _completion.SetException(new ReplyFailureException(ack.Message));
                 _events.RemoveListener(this);
 
                 IsExpired = true;
@@ -68,5 +79,17 @@ namespace FubuTransportation.Runtime
 
         public bool IsExpired { get; private set; }
         public DateTime? ExpiresAt { get; private set; }
+    }
+
+    [Serializable]
+    public class ReplyFailureException : Exception
+    {
+        public ReplyFailureException(string message) : base(message)
+        {
+        }
+
+        protected ReplyFailureException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

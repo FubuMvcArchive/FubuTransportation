@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Events;
@@ -25,6 +26,114 @@ namespace FubuTransportation.Testing.Runtime
             (listener.ExpiresAt < DateTime.UtcNow.AddMinutes(11)).ShouldBeTrue();
         }
     }
+
+    [TestFixture]
+    public class when_receiving_a_matching_failure_ack
+    {
+        private IEventAggregator theEvents;
+        public readonly string correlationId = Guid.NewGuid().ToString();
+        private ReplyListener<Events.Message1> theListener;
+        private Events.Message1 theMessage;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theEvents = MockRepository.GenerateMock<IEventAggregator>();
+
+            theListener = new ReplyListener<Events.Message1>(theEvents, correlationId, 10.Minutes());
+
+            var envelope = new EnvelopeToken
+            {
+                Message = new FailureAcknowledgement
+                {
+                    CorrelationId = correlationId,
+                    Message = "No soup for you!"
+                }
+            };
+
+            envelope.Headers[Envelope.ResponseIdKey] = correlationId;
+
+            theListener.Handle(new EnvelopeReceived
+            {
+                Envelope = envelope
+            });
+        }
+
+        [Test]
+        public void the_listener_should_set_a_failure_on_the_task()
+        {
+            theListener.Task.Exception
+                .Flatten()
+                .InnerExceptions.Single()
+                .ShouldBeOfType<ReplyFailureException>()
+                .Message.ShouldEqual("No soup for you!");
+        }
+
+        [Test]
+        public void should_remove_itself_from_the_event_aggregator()
+        {
+            theEvents.AssertWasCalled(x => x.RemoveListener(theListener));
+        }
+
+        [Test]
+        public void should_be_expired()
+        {
+            theListener.IsExpired.ShouldBeTrue();
+        }
+    }
+
+    [TestFixture]
+    public class when_receiving_a_failure_ack_that_does_not_match
+    {
+        private IEventAggregator theEvents;
+        public readonly string correlationId = Guid.NewGuid().ToString();
+        private ReplyListener<Events.Message1> theListener;
+        private Events.Message1 theMessage;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theEvents = MockRepository.GenerateMock<IEventAggregator>();
+
+            theListener = new ReplyListener<Events.Message1>(theEvents, correlationId, 10.Minutes());
+
+            var envelope = new EnvelopeToken
+            {
+                Message = new FailureAcknowledgement
+                {
+                    CorrelationId = Guid.NewGuid().ToString(),
+                    Message = "No soup for you!"
+                }
+            };
+
+            envelope.Headers[Envelope.ResponseIdKey] = correlationId;
+
+            theListener.Handle(new EnvelopeReceived
+            {
+                Envelope = envelope
+            });
+        }
+
+        [Test]
+        public void the_listener_should_not_be_expired()
+        {
+            theListener.IsExpired.ShouldBeFalse();
+        }
+
+        [Test]
+        public void the_listener_should_not_complete_the_task_in_any_way()
+        {
+            theListener.Task.IsCompleted.ShouldBeFalse();
+            theListener.Task.IsFaulted.ShouldBeFalse();
+        }
+
+        [Test]
+        public void should_NOT_remove_itself_from_the_event_aggregator()
+        {
+            theEvents.AssertWasNotCalled(x => x.RemoveListener(theListener));
+        }
+    }
+
 
     [TestFixture]
     public class when_receiving_the_matching_reply
