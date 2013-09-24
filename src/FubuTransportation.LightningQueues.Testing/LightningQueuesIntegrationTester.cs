@@ -92,11 +92,12 @@ namespace FubuTransportation.LightningQueues.Testing
             var receiver = new RecordingReceiver();
             var channel = transport.BuildChannel(new ChannelNode { Uri = new Uri("lq.tcp://localhost:2020/dynamic") });
 
-            Task.Factory.StartNew(() => channel.Receive(receiver));
+            var task = Task.Factory.StartNew(() => channel.Receive(receiver));
             channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());
 
 
+            task.SafeDispose();
             graph.Each(x =>
             {
                 var shutdownVisitor = new ShutdownChannelNodeVisitor();

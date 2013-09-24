@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
@@ -37,7 +38,7 @@ namespace FubuTransportation.Testing.InMemory
             var queue = InMemoryQueueManager.QueueFor(new Uri("memory://foo"));
 
             var receiver = new RecordingReceiver();
-            Task.Factory.StartNew(() => queue.Receive(receiver));
+            var task = Task.Factory.StartNew(() => queue.Receive(receiver));
 
             queue.Enqueue(envelope);
 
@@ -48,6 +49,7 @@ namespace FubuTransportation.Testing.InMemory
             received.CorrelationId.ShouldEqual(envelope.CorrelationId);
             received.ContentType.ShouldEqual(envelope.ContentType);
             received.Data.ShouldEqual(envelope.Data);
+            task.SafeDispose();
         }
 
         [Test]
@@ -80,6 +82,7 @@ namespace FubuTransportation.Testing.InMemory
             received.CorrelationId.ShouldEqual(envelope.CorrelationId);
             received.ContentType.ShouldEqual(envelope.ContentType);
             received.Data.ShouldEqual(envelope.Data);
+            node.Scheduler.Dispose();
         }
     }
 

@@ -77,6 +77,7 @@ namespace FubuTransportation.Testing.Configuration
             startingVisitor.Visit(node);
             
             node.Channel.AssertWasCalled(x => x.Receive(new Receiver(invoker, graph, node)));
+            node.Scheduler.Dispose();
         }
     }
 
