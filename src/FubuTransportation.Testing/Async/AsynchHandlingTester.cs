@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace FubuTransportation.Testing.Async
         public void finish_successfully()
         {
             var handling = new AsyncHandling(ObjectMother.InvocationContext());
-            var list = new List<string>();
+            var list = new ConcurrentBag<string>();
 
             var task1 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
@@ -44,15 +45,14 @@ namespace FubuTransportation.Testing.Async
 
             handling.WaitForAll();
 
-            list.Sort();
-            list.ShouldHaveTheSameElementsAs("A", "B", "C");
+            list.OrderBy(x => x).ShouldHaveTheSameElementsAs("A", "B", "C");
         }
 
         [Test]
         public void sad_path_wait_for_blows_up_with_the_aggregate_exception()
         {
             var handling = new AsyncHandling(ObjectMother.InvocationContext());
-            var list = new List<string>();
+            var list = new ConcurrentBag<string>();
 
             var task1 = Task.Factory.StartNew(() =>
             {
