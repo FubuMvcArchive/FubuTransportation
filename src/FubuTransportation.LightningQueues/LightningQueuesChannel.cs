@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
@@ -17,7 +15,6 @@ namespace FubuTransportation.LightningQueues
         private readonly IQueueManager _queueManager;
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
         private bool _disposed;
-        private readonly List<Thread> _threads = new List<Thread>();
 
         public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues, IDelayedMessageCache<MessageId> delayedMessages)
         {
