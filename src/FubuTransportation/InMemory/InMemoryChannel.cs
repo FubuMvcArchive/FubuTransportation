@@ -5,7 +5,7 @@ using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.InMemory
 {
-    public class InMemoryChannel : IChannel
+    public class InMemoryChannel : IChannel, IDisposable
     {
         public static readonly string Protocol = "memory";
         private readonly InMemoryQueue _queue;

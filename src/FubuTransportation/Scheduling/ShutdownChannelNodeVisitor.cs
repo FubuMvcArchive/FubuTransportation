@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Configuration;
+﻿using System;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Scheduling
 {
@@ -7,6 +8,11 @@ namespace FubuTransportation.Scheduling
         public void Visit(ChannelNode node)
         {
             node.Scheduler.Dispose();
+            var disposable = node.Channel as IDisposable;
+            if (disposable != null)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }
