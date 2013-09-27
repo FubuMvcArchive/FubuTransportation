@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Configuration;
@@ -82,7 +83,11 @@ namespace FubuTransportation.Testing.InMemory
             received.CorrelationId.ShouldEqual(envelope.CorrelationId);
             received.ContentType.ShouldEqual(envelope.ContentType);
             received.Data.ShouldEqual(envelope.Data);
-            node.Scheduler.Dispose();
+            graph.Each(x =>
+            {
+                var shutdownVisitor = new ShutdownChannelNodeVisitor();
+                shutdownVisitor.Visit(x);
+            });
         }
     }
 

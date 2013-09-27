@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Configuration;
+﻿using FubuMVC.Core;
+using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using NUnit.Framework;
 using FubuMVC.StructureMap;
@@ -13,14 +14,21 @@ namespace FubuTransportation.Testing.InMemory
     {
         private ChannelGraph graph;
         private ChannelNode theReplyNode;
+        private FubuRuntime theRuntime;
 
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            graph = FubuTransport.For(x => { }).StructureMap(new Container())
-                                 .Bootstrap().Factory.Get<ChannelGraph>();
+            theRuntime = FubuTransport.For(x => { }).StructureMap(new Container()).Bootstrap();
+            graph = theRuntime.Factory.Get<ChannelGraph>();
 
             theReplyNode = graph.FirstOrDefault(x => x.ForReplies && x.Protocol() == InMemoryChannel.Protocol);
+        }
+
+        [TestFixtureTearDown]
+        public void Teardown()
+        {
+            theRuntime.Dispose();
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -20,6 +21,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         private Lazy<IChainInvoker> _invoker;
 
         protected IMessageCallback theCallback;
+
+        private FubuRuntime theRuntime;
             
             
             
@@ -31,7 +34,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             _invoker = new Lazy<IChainInvoker>(() => {
                 var container = new Container();
-                FubuTransport.For(theTransportRegistry).StructureMap(container).Bootstrap();
+                theRuntime = FubuTransport.For(theTransportRegistry).StructureMap(container).Bootstrap();
 
                 return container.GetInstance<IChainInvoker>();
             });
@@ -40,6 +43,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             theContextIs();
 
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            theRuntime.Dispose();
         }
 
         protected virtual void theContextIs()

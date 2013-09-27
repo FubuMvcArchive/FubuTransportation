@@ -39,6 +39,12 @@ namespace FubuTransportation.Testing.Publishing
         
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            theRuntime.Dispose();
+        }
+
         [Test]
         public void end_to_end_test()
         {

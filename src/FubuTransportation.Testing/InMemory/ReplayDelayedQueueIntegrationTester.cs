@@ -2,6 +2,7 @@
 using System.Threading;
 using Bottles.Services.Messaging.Tracking;
 using FubuCore.Dates;
+using FubuMVC.Core;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
@@ -22,6 +23,7 @@ namespace FubuTransportation.Testing.InMemory
     [TestFixture]
     public class ReplayDelayedQueueIntegrationTester
     {
+        private FubuRuntime theRuntime;
         private IServiceBus theServiceBus;
         private SettableClock theClock;
         private OneMessage message1;
@@ -39,15 +41,15 @@ namespace FubuTransportation.Testing.InMemory
             MessageHistory.ClearAll();
             InMemoryQueueManager.ClearAll();
 
-            var runtime = FubuTransport.For<DelayedRegistry>().StructureMap(new Container())
+            theRuntime = FubuTransport.For<DelayedRegistry>().StructureMap(new Container())
                                        .Bootstrap();
 
             // Disable polling!
-            runtime.Factory.Get<IPollingJobs>().Each(x => x.Stop());
+            theRuntime.Factory.Get<IPollingJobs>().Each(x => x.Stop());
 
-            theServiceBus = runtime.Factory.Get<IServiceBus>();
+            theServiceBus = theRuntime.Factory.Get<IServiceBus>();
 
-            theClock = runtime.Factory.Get<ISystemTime>().As<SettableClock>();
+            theClock = theRuntime.Factory.Get<ISystemTime>().As<SettableClock>();
 
             message1 = new OneMessage();
             message2 = new OneMessage();
@@ -59,7 +61,7 @@ namespace FubuTransportation.Testing.InMemory
             theServiceBus.DelaySend(message3, theClock.UtcNow().AddHours(2));
             theServiceBus.DelaySend(message4, theClock.UtcNow().AddHours(2));
 
-            theProcessor = runtime.Factory.Get<DelayedEnvelopeProcessor>();
+            theProcessor = theRuntime.Factory.Get<DelayedEnvelopeProcessor>();
         }
 
         [Test]
@@ -94,6 +96,7 @@ namespace FubuTransportation.Testing.InMemory
         [TestFixtureTearDown]
         public void TearDown()
         {
+            theRuntime.Dispose();
             FubuTransport.Reset();
         }
     }

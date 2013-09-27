@@ -14,7 +14,6 @@ namespace FubuTransportation.LightningQueues
         private readonly string _queueName;
         private readonly IQueueManager _queueManager;
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
-        private bool _disposed;
 
         public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues, IDelayedMessageCache<MessageId> delayedMessages)
         {

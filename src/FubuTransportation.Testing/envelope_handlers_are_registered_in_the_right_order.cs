@@ -20,6 +20,7 @@ namespace FubuTransportation.Testing
 
             var handlers = container.GetInstance<IHandlerPipeline>().ShouldBeOfType<HandlerPipeline>().Handlers;
 
+            container.Dispose();
             handlers[0].ShouldBeOfType<DelayedEnvelopeHandler>();
             handlers[1].ShouldBeOfType<ResponseEnvelopeHandler>();
             handlers[2].ShouldBeOfType<ChainExecutionEnvelopeHandler>();

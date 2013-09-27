@@ -30,6 +30,12 @@ namespace FubuTransportation.Testing.Runtime
             theRouter = runtime.Factory.Get<ISubscriptions>();
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            runtime.Dispose();
+        }
+
         [Test]
         public void if_destination_is_set_on_the_envelope_that_is_the_only_channel_returned()
         {

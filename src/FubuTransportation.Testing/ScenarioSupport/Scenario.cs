@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -95,6 +96,8 @@ namespace FubuTransportation.Testing.ScenarioSupport
                 }
 
                 writer.BlankLine();
+
+                _configurations.Each(x => x.SafeDispose());
 
                 writer.WriteLine("Assertions");
 

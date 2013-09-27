@@ -1,4 +1,5 @@
 ﻿using FubuCore.Dates;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
@@ -14,12 +15,14 @@ namespace FubuTransportation.Testing.Runtime.Delayed
     [TestFixture]
     public class Delayed_Processing_Job_Registration_Tester
     {
+        private FubuRuntime runtime;
+
         [Test]
         public void the_delayed_processing_polling_job_is_registered()
         {
             FubuTransport.SetupForInMemoryTesting();
 
-            var runtime = FubuTransport.For<InMemory.DelayedRegistry>().StructureMap(new Container())
+            runtime = FubuTransport.For<InMemory.DelayedRegistry>().StructureMap(new Container())
                            .Bootstrap();
 
             runtime.Factory.Get<IPollingJobs>().Any(x => x is PollingJob<DelayedEnvelopeProcessor, TransportSettings>)
@@ -29,6 +32,7 @@ namespace FubuTransportation.Testing.Runtime.Delayed
         [TearDown]
         public void TearDown()
         {
+            runtime.Dispose();
             FubuTransport.Reset();
         }
     }

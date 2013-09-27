@@ -95,6 +95,12 @@ namespace FubuTransportation.Testing.Sagas
             MessageHistory.ClearAll();
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            theRuntime.Dispose();
+        }
+
         [Test]
         public void got_the_handler_chains_for_the_saga()
         {

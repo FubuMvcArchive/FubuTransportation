@@ -17,6 +17,7 @@ namespace FubuTransportation.Testing.Polling
     public class PollingJobIntegrationTester
     {
         private Container container;
+        private FubuRuntime theRuntime;
 
         [TestFixtureSetUp]
         public void SetUp()
@@ -26,11 +27,17 @@ namespace FubuTransportation.Testing.Polling
             
             container = new Container();
                 
-            FubuTransport.For<PollingRegistry>().StructureMap(container)
+            theRuntime = FubuTransport.For<PollingRegistry>().StructureMap(container)
                                        .Bootstrap();
 
 
             Wait.Until(() => ThreeJob.Executed > 10, timeoutInMilliseconds:60000);
+        }
+
+        [TestFixtureTearDown]
+        public void Teardown()
+        {
+            theRuntime.Dispose();
         }
 
         [Test]
