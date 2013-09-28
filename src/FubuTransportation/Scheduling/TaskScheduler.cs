@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
 
@@ -29,6 +30,7 @@ namespace FubuTransportation.Scheduling
                     while (!_stopped)
                     {
                         action();
+                        Thread.Sleep(1);
                     }
                 }, TaskCreationOptions.LongRunning);
                 _tasks[i] = task;

@@ -40,6 +40,7 @@ namespace FubuTransportation.Scheduling
             while (!_stopped)
             {
                 action();
+                Thread.Sleep(1);
             }
         }
 
