@@ -33,11 +33,18 @@ namespace FubuTransportation.LightningQueues
 
         public void Receive(IReceiver receiver)
         {
-            var transactionalScope = _queueManager.BeginTransactionalScope();
-            var message = transactionalScope.Receive(_queueName);
+            try
+            {
+                var transactionalScope = _queueManager.BeginTransactionalScope();
+                var message = transactionalScope.Receive(_queueName, TimeSpan.FromSeconds(1));
 
-            receiver.Receive(message.Data, new NameValueHeaders(message.Headers),
-                new TransactionCallback(transactionalScope, message, _delayedMessages));
+                receiver.Receive(message.Data, new NameValueHeaders(message.Headers),
+                    new TransactionCallback(transactionalScope, message, _delayedMessages));
+            }
+            catch (TimeoutException)
+            {
+                //Nothing to do, but allows the thread scheduling to loop to happen
+            }
         }
 
         public void Send(byte[] data, IHeaders headers)
