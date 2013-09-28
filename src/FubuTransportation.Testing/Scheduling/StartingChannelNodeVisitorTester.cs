@@ -20,7 +20,7 @@ namespace FubuTransportation.Testing.Scheduling
             channelNode.Scheduler = scheduler;
             channelNode.Channel = channel;
             visitor.Visit(channelNode);
-            scheduler.AssertWasCalled(x => x.Start(() => { }), x => x.IgnoreArguments());
+            scheduler.AssertWasCalled(x => x.Start(() => { }, false), x => x.IgnoreArguments());
         }
     }
 }

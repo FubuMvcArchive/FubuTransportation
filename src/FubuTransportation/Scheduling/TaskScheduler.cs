@@ -20,18 +20,17 @@ namespace FubuTransportation.Scheduling
         public int TaskCount {get { return _tasks.Length; }}
         public IEnumerable<Task> Tasks { get { return _tasks.Where(x => x != null).ToArray(); } } 
 
-        public void Start(Action action)
+        public void Start(Action action, bool shouldLoop)
         {
             _stopped = false;
             for (int i = 0; i < TaskCount; i++)
             {
                 var task = Task.Factory.StartNew(() =>
                 {
-                    while (!_stopped)
+                    do
                     {
                         action();
-                        Thread.Sleep(1);
-                    }
+                    } while (!_stopped && shouldLoop);
                 }, TaskCreationOptions.LongRunning);
                 _tasks[i] = task;
             }

@@ -29,6 +29,7 @@ namespace FubuTransportation.LightningQueues
             _delayedMessages = delayedMessages;
         }
 
+        public bool RequiresPolling {get { return true; }}
         public Uri Address { get { return _address; } }
 
         public void Receive(IReceiver receiver)

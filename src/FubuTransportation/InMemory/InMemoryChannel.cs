@@ -21,6 +21,7 @@ namespace FubuTransportation.InMemory
             _queue.Dispose();
         }
 
+        public bool RequiresPolling {get { return false; }}
         public Uri Address { get; private set; }
         public void Receive(IReceiver receiver)
         {

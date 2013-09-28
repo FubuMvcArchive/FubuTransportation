@@ -14,7 +14,7 @@ namespace FubuTransportation.Scheduling
 
         public void Visit(ChannelNode node)
         {
-            node.Scheduler.Start(() => node.Channel.Receive(_receiver));
+            node.Scheduler.Start(() => node.Channel.Receive(_receiver), node.Channel.RequiresPolling);
         }
     }
 }

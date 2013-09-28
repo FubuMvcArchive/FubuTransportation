@@ -14,6 +14,7 @@ namespace FubuTransportation.Testing
             throw new NotImplementedException();
         }
 
+        public bool RequiresPolling {get { return false; }}
         public Uri Address { get; private set; }
         public void Receive(IReceiver receiver)
         {
