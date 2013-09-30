@@ -60,7 +60,20 @@ namespace FubuTransportation.LightningQueues
 
         protected override ChannelNode buildReplyChannel(ChannelGraph graph)
         {
-            var uri = "{0}://localhost:{1}/{2}/replies".ToFormat(Protocol, _settings.DefaultPort,graph.Name ?? "node").ToUri().NormalizeLocalhost();
+            var port = _settings.DefaultPort;
+
+            var nodes = graph.Where(x => x.Protocol() == Protocol);
+            if (nodes.Any(x => x.Incoming))
+            {
+                port = nodes.Where(x => x.Incoming).Select(x => new LightningUri(x.Uri).Port).First();
+            }
+            else if (nodes.Any())
+            {
+                port = nodes.Select(x => new LightningUri(x.Uri).Port).First();
+            }
+
+
+            var uri = "{0}://localhost:{1}/{2}/replies".ToFormat(Protocol, port, graph.Name ?? "node").ToUri().NormalizeLocalhost();
             return new ChannelNode { Uri = uri };
         }
     }

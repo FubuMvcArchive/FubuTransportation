@@ -54,7 +54,7 @@ namespace FubuTransportation.Configuration
 
         public string Protocol()
         {
-            return Uri.Scheme;
+            return Uri != null ? Uri.Scheme : null;
         }
 
         public void Accept(IChannelNodeVisitor visitor)

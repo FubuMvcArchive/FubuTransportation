@@ -15,7 +15,6 @@ namespace FubuTransportation.LightningQueues
     {
         private readonly ILogger _logger;
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
-        // TODO -- Corey, does this need to be unique per endpoint??????
         public const string EsentPath = "fubutransportation.esent";
 
         private readonly Cache<IPEndPoint, QueueManager> _queueManagers;
@@ -24,7 +23,7 @@ namespace FubuTransportation.LightningQueues
         {
             _logger = logger;
             _delayedMessages = delayedMessages;
-            _queueManagers = new Cache<IPEndPoint, QueueManager>(ip => new QueueManager(ip, EsentPath, new QueueManagerConfiguration(), _logger));
+            _queueManagers = new Cache<IPEndPoint, QueueManager>(ip => new QueueManager(ip, EsentPath + "." + ip.Port, new QueueManagerConfiguration(), _logger));
         }
 
         public void Dispose()
