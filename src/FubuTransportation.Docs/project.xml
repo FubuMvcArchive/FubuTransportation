@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ProjectRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TagLine>A member of the Fubu family of projects</TagLine>
+  <Name>FubuTransportation</Name>
+  <GitHubPage>http://github.com/DarthFubuMVC/FubuTransportation</GitHubPage>
+  <UserGroupUrl>https://groups.google.com/forum/?fromgroups#!forum/fubumvc-devel</UserGroupUrl>
+  <BuildServerUrl>http://build.fubu-project.org/project.html?projectId=[CHANGEME]&amp;tab=projectOverview</BuildServerUrl>
+  <BottleName>FubuTransportation.Docs</BottleName>
+  <Nugets>
+    <PublishedNuget>
+      <Name>FubuTransportation.LightningQueues</Name>
+      <Description>LightningQueues integration for FubuTransporation projects</Description>
+    </PublishedNuget>
+    <PublishedNuget>
+      <Name>FubuTransportation</Name>
+      <Description>Low friction Service Bus using the best of the Fubu world</Description>
+    </PublishedNuget>
+  </Nugets>
+  <Url>fubutransportation</Url>
+</ProjectRoot>
