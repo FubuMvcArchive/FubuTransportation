@@ -14,6 +14,7 @@ namespace FubuTransportation.LightningQueues
         private readonly string _queueName;
         private readonly IQueueManager _queueManager;
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
+        private bool _disposed;
 
         public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues, IDelayedMessageCache<MessageId> delayedMessages)
         {
@@ -29,10 +30,9 @@ namespace FubuTransportation.LightningQueues
             _delayedMessages = delayedMessages;
         }
 
-        public bool RequiresPolling {get { return true; }}
         public Uri Address { get { return _address; } }
 
-        public void Receive(IReceiver receiver)
+        public ReceivingState Receive(IReceiver receiver)
         {
             try
             {
@@ -46,6 +46,7 @@ namespace FubuTransportation.LightningQueues
             {
                 //Nothing to do, but allows the thread scheduling to loop to happen
             }
+            return _disposed ? ReceivingState.StopReceiving : ReceivingState.CanContinueReceiving;
         }
 
         public void Send(byte[] data, IHeaders headers)
@@ -65,6 +66,11 @@ namespace FubuTransportation.LightningQueues
             //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
 
+        }
+
+        public void Dispose()
+        {
+            _disposed = true;
         }
     }
 

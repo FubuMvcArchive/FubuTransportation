@@ -2,10 +2,11 @@
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.InMemory
 {
-    public class InMemoryChannel : IChannel, IDisposable
+    public class InMemoryChannel : IChannel
     {
         public static readonly string Protocol = "memory";
         private readonly InMemoryQueue _queue;
@@ -21,11 +22,11 @@ namespace FubuTransportation.InMemory
             _queue.Dispose();
         }
 
-        public bool RequiresPolling {get { return false; }}
         public Uri Address { get; private set; }
-        public void Receive(IReceiver receiver)
+        public ReceivingState Receive(IReceiver receiver)
         {
             _queue.Receive(receiver);
+            return ReceivingState.StopReceiving;
         }
 
         public void Send(byte[] data, IHeaders headers)

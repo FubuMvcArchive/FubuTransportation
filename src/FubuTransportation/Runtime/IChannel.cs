@@ -3,11 +3,16 @@ using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
 {
-    public interface IChannel
+    public interface IChannel : IDisposable
     {
-        bool RequiresPolling { get; }
         Uri Address { get; }
-        void Receive(IReceiver receiver);
+        ReceivingState Receive(IReceiver receiver);
         void Send(byte[] data, IHeaders headers);
+    }
+
+    public enum ReceivingState
+    {
+        CanContinueReceiving,
+        StopReceiving
     }
 }

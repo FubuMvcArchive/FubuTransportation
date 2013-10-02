@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
 
@@ -20,18 +19,12 @@ namespace FubuTransportation.Scheduling
         public int TaskCount {get { return _tasks.Length; }}
         public IEnumerable<Task> Tasks { get { return _tasks.Where(x => x != null).ToArray(); } } 
 
-        public void Start(Action action, bool shouldLoop)
+        public void Start(Action action)
         {
             _stopped = false;
             for (int i = 0; i < TaskCount; i++)
             {
-                var task = Task.Factory.StartNew(() =>
-                {
-                    do
-                    {
-                        action();
-                    } while (!_stopped && shouldLoop);
-                }, TaskCreationOptions.LongRunning);
+                var task = Task.Factory.StartNew(action, TaskCreationOptions.LongRunning);
                 _tasks[i] = task;
             }
         }

@@ -20,12 +20,12 @@ namespace FubuTransportation.Scheduling
             _threads = new Thread[threadCount];
         }
 
-        public void Start(Action action, bool shouldLoop)
+        public void Start(Action action)
         {
             _stopped = false;
             for (int i = 0; i < ThreadCount; ++i)
             {
-                var thread = new Thread(() => listen(action, shouldLoop))
+                var thread = new Thread(() => action())
                 {
                     IsBackground = true,
                     Name = "FubuTransportation Receiving Thread",
@@ -33,14 +33,6 @@ namespace FubuTransportation.Scheduling
                 thread.Start();
                 _threads[i] = thread;
             }
-        }
-
-        private void listen(Action action, bool shouldLoop)
-        {
-            do
-            {
-                action();
-            } while (!_stopped && shouldLoop);
         }
 
         public static IScheduler Default()

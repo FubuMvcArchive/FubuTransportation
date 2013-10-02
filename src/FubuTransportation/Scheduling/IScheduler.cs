@@ -4,6 +4,6 @@ namespace FubuTransportation.Scheduling
 {
     public interface IScheduler : IDisposable
     {
-        void Start(Action action, bool shouldLoop);
+        void Start(Action action);
     }
 }
