@@ -2,6 +2,17 @@
 <!--Url: getting-started-->
 
 <markdown>
-TODO(Write some content!)
+* Start off by creating a class library.
+* Install the nuget package `ripple install FubuTransportation -p {YourProjectName}`
+* Add a FubuTransportSettings class. This class is essentially a bag of Uri's or endpoints that messages can be routed to.
+<Snippet name="GettingStartedSettings" />
+* Add a FubuTransportRegistry<TSettings> implementation.
+<Snippet name="GettingStartedTransportRegistry" />
+* Add a class implementing IApplicationSource (FubuMVC application entrypoint)
+<Snippet name="GettingStartedApplicationSource" />
+* Add the message handlers
+<Snippet name="GettingStartedHandlers" />
+* Put it together in a unit test starting the process.
+<Snippet name="GettingStartedTest" />
+* `fubu run` command will load the IApplicationSource in a console if you would prefer to structure the sample differently
 </markdown>
-
