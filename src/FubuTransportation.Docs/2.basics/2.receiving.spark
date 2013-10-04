@@ -2,6 +2,30 @@
 <!--Url: receiving-->
 
 <markdown>
-TODO(Write some content!)
+Handler Conventions
+-------------------
+
+By default handler conventions will find the following types of handlers. Takes message as a parameter to a public method, return value doesn't matter. The class name
+is suffixed with *Handler, or *Consumer.
+
+You can customize this behavior with your own convention defined in your TransportRegistry.
+<Snippet name="CustomHandlerNamingSample" />
+
+Handler Examples
+----------------
+
+Here are some samples of how to define a handler. There can be more than one handler for the same message. All handlers for a given message will be executed
+in the same behavior chain / transactional boundary.
+<Snippet name="ReceivingSampleHandler" />
+
+Message Polymorphism
+--------------------
+
+Here is a sample of handlers using polymorphism to handle version changes. Again, they will all execute within the same behavior chain.
+<Snippet name="ReceivingPolymorphismSample" />
+
+Message Handler Output
+----------------------
+Message handler output is a convenient way of sending messages. You can see examples of this in the section dealing with <TopicLink name="fubutransportation/basics/sending" /> messages.
 </markdown>
 

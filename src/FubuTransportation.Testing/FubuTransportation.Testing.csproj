@@ -118,6 +118,7 @@
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\HandlerChain_Exception_Handling_Rules_Registration_Tester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
+    <Compile Include="Docs\Basics\ReceivingSamples.cs" />
     <Compile Include="Docs\Basics\SendingSamples.cs" />
     <Compile Include="Docs\GettingStarted\GettingStartedApplicationSource.cs" />
     <Compile Include="Docs\GettingStarted\GettingStartedSettings.cs" />
