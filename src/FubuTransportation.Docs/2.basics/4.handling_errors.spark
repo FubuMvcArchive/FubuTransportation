@@ -2,6 +2,17 @@
 <!--Url: handling-errors-->
 
 <markdown>
-TODO(Write some content!)
+Other service bus frameworks allow you to retry when an error occurs in your handlers.
+FubuTransportation allows you to specify an error policy for specific exception types and allow you to define
+the behavior you want. Retry can be nice, but typically you only want to retry on errors that *can* succeed if you try again.
+Here are some samples that show you the different ways you customize error handling behavior.
+
+This will also unwrap AggregateExceptions and apply the policy to the inner exceptions for async chains.
+
+<Snippet name="ErrorHandlingPolicySample" />
+
+Then just register your error handling policy in the FubuTransportRegistry.
+
+<Snippet name="ErrorHandlingTransportSample" />
 </markdown>
 
