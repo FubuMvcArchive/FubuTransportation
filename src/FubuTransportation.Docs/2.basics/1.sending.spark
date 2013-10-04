@@ -2,6 +2,19 @@
 <!--Url: sending-->
 
 <markdown>
-TODO(Write some content!)
+Typical Send using IServiceBus
+------------------------------
+With FubuTransportation there are a few different ways of sending messages through the using the IServiceBus interface.
+<Snippet name="SendingSamples" />
+
+Sending messages from a Handler
+-------------------------------
+Handlers have their own way of indicating their intent when sending messaes, but in a fubu idiomatic way keeping things simple
+<Snippet name="SendingFromHandlerSamples" />
+
+Sending messages from a FubuMVC web application Endpoint / Controller
+---------------------------------------------------------------------
+Why create the added dependency of IServiceBus just for a simple send?
+<Snippet name="EndpointSendingSample" />
 </markdown>
 
