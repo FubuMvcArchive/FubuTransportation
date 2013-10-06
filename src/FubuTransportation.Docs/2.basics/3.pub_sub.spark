@@ -2,6 +2,18 @@
 <!--Url: pub-sub-->
 
 <markdown>
-TODO(Write some content!)
+It's Just Routing
+-----------------
+A publish and subscription are just simple IRoutingRule implementations. From the API perspective pub / sub is no different than a standard send. This
+is why you don't see any special methods on IServiceBus for doing pub / sub. A send may route to the logical owner of the message, or it may send the message
+to several interested endpoints, or it may be a reply to the original endpoint that sent the message being handled.
+
+Coming soon interested endpoints will be able to send their "subscriptions" at startup for more dynamic capabilities. However, this is to support more legacy
+behavior and we feel a better way would be to share these subscriptions in a shared transport registry rather than sending a bunch of messages across the wire
+for information we already have at our disposal.
+
+Here are some samples of how to configure the routing rules.
+
+<Snippet name="PubSubRoutingSample" />
 </markdown>
 
