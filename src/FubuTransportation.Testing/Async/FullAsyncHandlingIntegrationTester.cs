@@ -46,7 +46,22 @@ namespace FubuTransportation.Testing.Async
 
     public static class AsyncWatcher
     {
-        public static IList<string> Messages = new List<string>();
+        private readonly static object _locker = new object();
+
+        public static IList<string> Messages
+        {
+            get { return _messages; }
+        }
+
+        public static void Write(string message)
+        {
+            lock (_locker)
+            {
+                _messages.Add(message);
+            }
+        }
+
+        private static IList<string> _messages = new List<string>();
     }
 
     public class Foo

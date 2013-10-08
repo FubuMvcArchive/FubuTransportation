@@ -16,12 +16,14 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_chain_started()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
+
 
             var @event = new ChainExecutionStarted
             {
                 ChainId = Guid.NewGuid(), Envelope = new EnvelopeToken()
             };
+
             new MessageWatcher().Handle(@event);
 
             var sent = MessageHistory.Outstanding().Single();
@@ -33,13 +35,14 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_chain_finished()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
 
             var @event = new ChainExecutionStarted
             {
                 ChainId = Guid.NewGuid(),
                 Envelope = new EnvelopeToken()
             };
+
             var messageWatcher = new MessageWatcher();
             messageWatcher.Handle(@event);
 
@@ -62,7 +65,7 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_envelope_sent_then_message_successful_tracking_for_the_same_message_to_multiple_nodes()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
 
             var envelope1 = new EnvelopeToken();
             var node1 = new StubChannelNode();
@@ -95,7 +98,7 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_envelope_sent_then_message_successful_for_multiple_messages_to_the_same_node()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
 
             var envelope1 = new EnvelopeToken();
             var envelope2 = new EnvelopeToken();
@@ -130,7 +133,7 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_envelope_sent_then_message_failed_tracking_for_the_same_message_to_multiple_nodes()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
 
             var envelope1 = new EnvelopeToken();
             var node1 = new StubChannelNode();
@@ -163,7 +166,7 @@ namespace FubuTransportation.Testing.TestSupport
         [Test]
         public void handle_envelope_sent_then_message_failed_for_multiple_messages_to_the_same_node()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
 
             var envelope1 = new EnvelopeToken();
             var envelope2 = new EnvelopeToken();

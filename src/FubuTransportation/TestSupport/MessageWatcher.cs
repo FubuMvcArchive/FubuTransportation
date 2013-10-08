@@ -22,7 +22,7 @@ namespace FubuTransportation.TestSupport
             var track = MessageTrack.ForSent(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 
-            MessageHistory.Record(track);
+            Bottles.Services.Messaging.EventAggregator.SendMessage(track);
         }
 
         public void Handle(ChainExecutionFinished message)
@@ -30,7 +30,7 @@ namespace FubuTransportation.TestSupport
             var track = MessageTrack.ForReceived(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 
-            MessageHistory.Record(track);
+            Bottles.Services.Messaging.EventAggregator.SendMessage(track);
         }
 
         public void Handle(EnvelopeSent message)
@@ -40,13 +40,15 @@ namespace FubuTransportation.TestSupport
 
         private void handle(EnvelopeToken envelope, string status, Uri uri)
         {
-            MessageHistory.Record(new MessageTrack
+            var track = new MessageTrack
             {
                 Type = "OutstandingEnvelope",
                 Id = envelope.CorrelationId,
                 FullName = "{0}@{1}".ToFormat(envelope.CorrelationId, uri),
                 Status = status
-            });
+            };
+
+            Bottles.Services.Messaging.EventAggregator.SendMessage(track);
         }
 
         public void Handle(MessageSuccessful message)

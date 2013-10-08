@@ -40,7 +40,7 @@ namespace FubuTransportation.Testing.Sagas
 
             theRuntime = FubuTransport.For<SagaTestRegistry>().StructureMap(theContainer).Bootstrap();
 
-            MessageHistory.ClearAll();
+            MessageHistory.StartListening();
         }
 
         [TearDown]
