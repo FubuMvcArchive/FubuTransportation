@@ -116,6 +116,7 @@
     <Compile Include="Configuration\ChannelGraphTester.cs" />
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
+    <Compile Include="Configuration\FubuTransportTester.cs" />
     <Compile Include="Configuration\HandlerChain_Exception_Handling_Rules_Registration_Tester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
     <Compile Include="Docs\Basics\ErrorHandlingSamples.cs" />
