@@ -8,7 +8,7 @@ namespace FubuTransportation.LightningQueues
 {
     public interface IPersistentQueues : IDisposable
     {
-        IQueueManager ManagerFor(IPEndPoint endpoint);
+        IQueueManager ManagerFor(IPEndPoint endpoint, bool incoming);
         void Start(IEnumerable<LightningUri> uriList);
 
         void CreateQueue(LightningUri uri);

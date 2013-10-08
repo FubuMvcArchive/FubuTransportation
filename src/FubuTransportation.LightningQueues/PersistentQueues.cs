@@ -31,9 +31,13 @@ namespace FubuTransportation.LightningQueues
             _queueManagers.Each(x => x.Dispose());
         }
 
-        public IQueueManager ManagerFor(IPEndPoint endpoint)
+        public IQueueManager ManagerFor(IPEndPoint endpoint, bool incoming)
         {
-            return _queueManagers[endpoint];
+            if (incoming)
+            {
+                return _queueManagers[endpoint];
+            }
+            return _queueManagers.First();
         }
 
         public void Start(IEnumerable<LightningUri> uriList)

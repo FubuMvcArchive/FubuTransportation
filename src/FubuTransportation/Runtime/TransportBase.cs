@@ -22,7 +22,7 @@ namespace FubuTransportation.Runtime
             var nodes = graph.Where(x => x.Protocol() == Protocol).ToArray();
             seedQueues(nodes);
 
-            nodes.Each(x => x.Channel = buildChannel(x));
+            nodes.OrderByDescending(x => x.Incoming).Each(x => x.Channel = buildChannel(x));
         }
 
         protected abstract IChannel buildChannel(ChannelNode channelNode);

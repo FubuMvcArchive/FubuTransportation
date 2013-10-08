@@ -90,7 +90,7 @@ namespace FubuTransportation.LightningQueues.Testing
             envelope.Headers["foo"] = "bar";
 
             var receiver = new RecordingReceiver();
-            var channel = transport.BuildChannel(new ChannelNode { Uri = new Uri("lq.tcp://localhost:2020/dynamic") });
+            var channel = transport.BuildChannel(new ChannelNode { Uri = new Uri("lq.tcp://localhost:2020/dynamic"), Incoming = true});
 
             var task = Task.Factory.StartNew(() => channel.Receive(receiver));
             channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);

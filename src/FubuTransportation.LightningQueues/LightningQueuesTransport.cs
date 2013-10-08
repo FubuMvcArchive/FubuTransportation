@@ -37,6 +37,9 @@ namespace FubuTransportation.LightningQueues
 
         public IChannel BuildChannel(ChannelNode node)
         {
+            if(node.Incoming == false)
+                throw new InvalidOperationException("You can only build dynamic channels for 'Incoming' queues");
+
             var channel = buildChannel(node);
             _queues.CreateQueue(new LightningUri(node.Uri));
 
@@ -50,12 +53,12 @@ namespace FubuTransportation.LightningQueues
 
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
-            return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues, _delayedMessages);
+            return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues, _delayedMessages, channelNode.Incoming);
         }
 
         protected override void seedQueues(ChannelNode[] channels)
         {
-            _queues.Start(channels.Select(x => new LightningUri(x.Uri)));
+            _queues.Start(channels.Where(x => x.Incoming).Select(x => new LightningUri(x.Uri)));
         }
 
         protected override ChannelNode buildReplyChannel(ChannelGraph graph)
