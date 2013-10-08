@@ -22,6 +22,12 @@ namespace FubuTransportation.Testing
     [TestFixture]
     public class FubuTransportServiceRegistry_spec
     {
+        [SetUp]
+        public void SetUp()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+        }
+
         private void registeredTypeIs<TService, TImplementation>()
         {
             registeredTypeIs(typeof(TService), typeof(TImplementation));
@@ -128,6 +134,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_watcher_is_registered_as_listener_if_FubuTransport_messagewatching_is_applied()
         {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = true;
             
             var registry = new FubuRegistry();
@@ -139,6 +146,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_watcher_is_NOT_registered_as_listener_if_FubuTransport_messagewatching_is_NOT_applied()
         {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = "false";
             FubuTransport.ApplyMessageHistoryWatching = false;
 
             var registry = new FubuRegistry();

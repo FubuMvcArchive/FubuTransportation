@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Configuration;
+﻿using Bottles;
+using FubuTransportation.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
 
@@ -7,6 +8,12 @@ namespace FubuTransportation.Testing
     [TestFixture]
     public class FubuTransport_default_options_Tester
     {
+        [SetUp]
+        public void SetUp()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+        }
+
         [Test]
         public void synchronous_event_aggregation_is_defaulted_to_false()
         {

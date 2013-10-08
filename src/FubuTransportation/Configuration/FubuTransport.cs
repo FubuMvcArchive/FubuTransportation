@@ -60,7 +60,7 @@ namespace FubuTransportation.Configuration
                 bool returnValue = false;
                 if (bool.TryParse(PackageRegistry.Properties[FT_TESTING], out returnValue))
                 {
-                    return returnValue;
+                    return returnValue || _useSynchronousLogging;
                 }
 
                 return _useSynchronousLogging;
@@ -75,7 +75,7 @@ namespace FubuTransportation.Configuration
                 bool returnValue = false;
                 if (bool.TryParse(PackageRegistry.Properties[FT_TESTING], out returnValue))
                 {
-                    return returnValue;
+                    return returnValue || _applyMessageHistoryWatching;
                 }
                 
                 return _applyMessageHistoryWatching;

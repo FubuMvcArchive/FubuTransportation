@@ -8,6 +8,13 @@ namespace FubuTransportation.Testing.Configuration
     [TestFixture]
     public class FubuTransportTester
     {
+        [SetUp]
+        public void SetUp()
+        {
+            PackageRegistry.Properties.Remove(FubuTransport.FT_TESTING);
+            FubuTransport.Reset();
+        }
+
         [Test]
         public void if_package_registry_ft_testing_is_true()
         {

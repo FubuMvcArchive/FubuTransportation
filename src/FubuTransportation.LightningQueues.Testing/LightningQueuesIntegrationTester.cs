@@ -94,16 +94,20 @@ namespace FubuTransportation.LightningQueues.Testing
 
             var task = Task.Factory.StartNew(() => channel.Receive(receiver));
             channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
-            Wait.Until(() => receiver.Received.Any());
-
-
-            task.SafeDispose();
-            graph.Each(x =>
+            try
             {
-                var shutdownVisitor = new ShutdownChannelNodeVisitor();
-                shutdownVisitor.Visit(x);
-            });
-            queues.Dispose();
+                Wait.Until(() => receiver.Received.Any()).ShouldBeTrue();
+            }
+            finally
+            {
+                task.SafeDispose();
+                graph.Each(x =>
+                {
+                    var shutdownVisitor = new ShutdownChannelNodeVisitor();
+                    shutdownVisitor.Visit(x);
+                });
+                queues.Dispose();
+            }
 
             receiver.Received.Any().ShouldBeTrue();
 
