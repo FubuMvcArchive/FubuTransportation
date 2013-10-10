@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
@@ -34,19 +35,16 @@ namespace FubuTransportation.LightningQueues
 
         public ReceivingState Receive(IReceiver receiver)
         {
-            try
+            var stream = _queueManager.ReceiveStream(_queueName);
+            stream.Each(x =>
             {
-                var transactionalScope = _queueManager.BeginTransactionalScope();
-                var message = transactionalScope.Receive(_queueName, TimeSpan.FromSeconds(1));
+                if (_disposed)
+                    return;
+                receiver.Receive(x.Message.Data, new NameValueHeaders(x.Message.Headers),
+                    new TransactionCallback(x.TransactionalScope, x.Message, _delayedMessages));
 
-                receiver.Receive(message.Data, new NameValueHeaders(message.Headers),
-                    new TransactionCallback(transactionalScope, message, _delayedMessages));
-            }
-            catch (TimeoutException)
-            {
-                //Nothing to do, but allows the thread scheduling to loop to happen
-            }
-            return _disposed ? ReceivingState.StopReceiving : ReceivingState.CanContinueReceiving;
+            });
+            return ReceivingState.StopReceiving;
         }
 
         public void Send(byte[] data, IHeaders headers)
