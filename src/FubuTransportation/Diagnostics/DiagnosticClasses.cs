@@ -2,10 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuCore.Util;
 using HtmlTags;
 
 namespace FubuTransportation.Diagnostics
 {
+    public class MessagingSession
+    {
+        private readonly Cache<Guid, MessageHistory> _histories = new Cache<Guid, MessageHistory>(id => new MessageHistory{Id = id});
+
+        public void Record(MessageRecord record)
+        {
+            var history = _histories[record.Id];
+            history.Record(record);
+
+            if (record.ParentId != Guid.Empty)
+            {
+                var parent = _histories[record.ParentId];
+                parent.AddChild(history); // this is idempotent, so we're all good
+            }
+        }
+
+        public IEnumerable<MessageHistory> TopLevelMessages()
+        {
+            return _histories.Where(x => x.Parent == null);
+        }
+
+        public IEnumerable<MessageHistory> AllMessages()
+        {
+            return _histories;
+        } 
+    }
+
+
     public abstract class MessageRecordNode
     {
         public DateTime Timestamp = DateTime.Now; // Yes, use local time because it's meant to be read by humans
@@ -48,7 +77,10 @@ namespace FubuTransportation.Diagnostics
         public void AddChild(MessageHistory child)
         {
             _children.Fill(child);
+            child.Parent = this;
         }
+
+        public MessageHistory Parent { get; set; }
 
         protected bool Equals(MessageHistory other)
         {
@@ -97,6 +129,11 @@ namespace FubuTransportation.Diagnostics
         public HtmlTag ToNodeTag()
         {
             return new HtmlTag("ol", x => x.Append(ToLeafTag()));
+        }
+
+        public void Record(MessageRecord record)
+        {
+            _records.Add(record);
         }
     }
 
