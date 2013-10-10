@@ -119,6 +119,7 @@
     <Compile Include="Configuration\FubuTransportTester.cs" />
     <Compile Include="Configuration\HandlerChain_Exception_Handling_Rules_Registration_Tester.cs" />
     <Compile Include="Configuration\UriExtensionsTester.cs" />
+    <Compile Include="Diagnostics\MessageRecordTester.cs" />
     <Compile Include="Docs\Basics\ErrorHandlingSamples.cs" />
     <Compile Include="Docs\Basics\PubSubSamples.cs" />
     <Compile Include="Docs\Basics\ReceivingSamples.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
     <Compile Include="InMemory\ReplayDelayedQueueIntegrationTester.cs" />
     <Compile Include="InMemory\SagaStateCacheTester.cs" />
+    <Compile Include="Logging\All_log_records_should_be_MessageLogRecord_subtype.cs" />
     <Compile Include="ObjectMother.cs" />
     <Compile Include="Polling\DefaultTimerTester.cs" />
     <Compile Include="Polling\JobRunnerTester.cs" />

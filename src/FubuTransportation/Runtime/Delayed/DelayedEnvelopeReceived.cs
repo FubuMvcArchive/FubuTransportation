@@ -1,14 +1,24 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Delayed
 {
-    public class DelayedEnvelopeReceived : LogRecord
+    public class DelayedEnvelopeReceived : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
 
         protected bool Equals(DelayedEnvelopeReceived other)
         {
             return Equals(Envelope, other.Envelope);
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Delayed envelope received"
+            };
         }
 
         public override bool Equals(object obj)

@@ -1,8 +1,10 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Delayed
 {
-    public class DelayedEnvelopeAddedBackToQueue : LogRecord
+    public class DelayedEnvelopeAddedBackToQueue : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
 
@@ -22,6 +24,14 @@ namespace FubuTransportation.Runtime.Delayed
         public override int GetHashCode()
         {
             return (Envelope != null ? Envelope.GetHashCode() : 0);
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Envelope added back to the queue"
+            };
         }
     }
 }

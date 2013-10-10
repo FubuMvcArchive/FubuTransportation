@@ -1,9 +1,10 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class NoHandlerForMessage : LogRecord
+    public class NoHandlerForMessage : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
 
@@ -23,6 +24,14 @@ namespace FubuTransportation.Logging
         public override int GetHashCode()
         {
             return (Envelope != null ? Envelope.GetHashCode() : 0);
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "No Handler for Message"
+            };
         }
 
         public override string ToString()

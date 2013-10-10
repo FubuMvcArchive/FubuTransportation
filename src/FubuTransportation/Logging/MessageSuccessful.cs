@@ -1,9 +1,10 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class MessageSuccessful : LogRecord
+    public class MessageSuccessful : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
 
@@ -25,9 +26,19 @@ namespace FubuTransportation.Logging
             return (Envelope != null ? Envelope.GetHashCode() : 0);
         }
 
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Message succeeded"
+            };
+        }
+
         public override string ToString()
         {
             return string.Format("Message {0} succeeded at {1}", Envelope, Envelope.ReceivedAt);
         }
+
+
     }
 }

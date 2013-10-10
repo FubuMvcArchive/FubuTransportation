@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuCore.Util;
+using FubuTransportation.Runtime;
 using HtmlTags;
 
 namespace FubuTransportation.Diagnostics
 {
     public class MessagingSession
     {
-        private readonly Cache<Guid, MessageHistory> _histories = new Cache<Guid, MessageHistory>(id => new MessageHistory{Id = id});
+        private readonly Cache<string, MessageHistory> _histories = new Cache<string, MessageHistory>(id => new MessageHistory{Id = id});
 
         public void Record(MessageRecord record)
         {
             var history = _histories[record.Id];
             history.Record(record);
 
-            if (record.ParentId != Guid.Empty)
+            if (record.ParentId != Guid.Empty.ToString())
             {
                 var parent = _histories[record.ParentId];
                 parent.AddChild(history); // this is idempotent, so we're all good
@@ -44,11 +45,29 @@ namespace FubuTransportation.Diagnostics
 
     public class MessageRecord : MessageRecordNode
     {
-        public Guid Id;
+        public string Id;
         public string Message;
         public string Node;
-        public Guid ParentId;
+        public string ParentId;
         public string Type;
+        public string Headers;
+        public string ExceptionText;
+
+        public MessageRecord()
+        {
+        }
+
+        public MessageRecord(EnvelopeToken envelope)
+        {
+            Id = envelope.CorrelationId;
+            ParentId = envelope.ParentId;
+            if (envelope.Message != null)
+            {
+                Type = envelope.Message.GetType().FullName;
+            }
+
+            Headers = envelope.Headers.Keys().Select(x => "{0}={1}".ToFormat(x, envelope.Headers[x])).Join(";");
+        }
 
         public override HtmlTag ToLeafTag()
         {
@@ -61,8 +80,8 @@ namespace FubuTransportation.Diagnostics
         private readonly IList<MessageHistory> _children = new List<MessageHistory>();
         private readonly IList<MessageRecord> _records = new List<MessageRecord>(); 
 
-        public Guid Id { get; set; }
-        public Type Type { get; set; }
+        public string Id { get; set; }
+        public string Type { get; set; }
 
         public string Description
         {
@@ -133,6 +152,11 @@ namespace FubuTransportation.Diagnostics
 
         public void Record(MessageRecord record)
         {
+            if (Type.IsEmpty() && record.Type.IsNotEmpty())
+            {
+                Type = record.Type;
+            }
+
             _records.Add(record);
         }
     }
@@ -141,12 +165,13 @@ namespace FubuTransportation.Diagnostics
     {
         public MessageHistoryTableTag(MessageHistory history)
         {
-            AddHeaderRow(tr => { tr.Header().Attr("colspan", "3"); });
+            AddHeaderRow(tr => { tr.Header().Attr("colspan", "4"); });
 
             AddHeaderRow(tr => {
                 tr.Header("Node");
                 tr.Header("Timestamp");
                 tr.Header("Message");
+                tr.Header("Headers");
             });
 
             history.Records().Each(rec => {
@@ -154,7 +179,19 @@ namespace FubuTransportation.Diagnostics
                     tr.Cell(rec.Node);
                     tr.Cell(rec.Timestamp.ToLongTimeString());
                     tr.Cell(rec.Message);
+                    tr.Cell(rec.Headers);
                 });
+
+                if (rec.ExceptionText.IsNotEmpty())
+                {
+                    AddBodyRow(tr => {
+                        var cell = tr.Cell();
+                        cell.Attr("colspan", "4");
+
+
+                        cell.Add("pre").Text(rec.ExceptionText).Style("background-color", "#FFFFAA");
+                    });
+                }
             });
         }
     }

@@ -101,6 +101,7 @@
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />
     <Compile Include="Logging\EnvelopeContinuationChosen.cs" />
+    <Compile Include="Logging\MessageLogRecord.cs" />
     <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\IJob.cs" />

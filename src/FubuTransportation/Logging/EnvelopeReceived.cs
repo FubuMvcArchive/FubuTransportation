@@ -1,9 +1,10 @@
 ﻿using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class EnvelopeReceived : LogRecord
+    public class EnvelopeReceived : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
 
@@ -28,6 +29,14 @@ namespace FubuTransportation.Logging
         public override string ToString()
         {
             return string.Format("Envelope received for {0} from {1} at {2}", Envelope.Message, Envelope.ReplyUri, Envelope.ReceivedAt);
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Envelope Received"
+            };
         }
     }
 }

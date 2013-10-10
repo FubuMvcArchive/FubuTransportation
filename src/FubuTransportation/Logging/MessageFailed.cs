@@ -1,10 +1,11 @@
 ﻿using System;
 using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class MessageFailed : LogRecord
+    public class MessageFailed : MessageLogRecord
     {
         public EnvelopeToken Envelope { get; set; }
         public Exception Exception { get; set; }
@@ -28,6 +29,15 @@ namespace FubuTransportation.Logging
             {
                 return ((Envelope != null ? Envelope.GetHashCode() : 0)*397) ^ (Exception != null ? Exception.GetHashCode() : 0);
             }
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Message failed!",
+                ExceptionText = Exception.ToString()
+            };
         }
 
         public override string ToString()

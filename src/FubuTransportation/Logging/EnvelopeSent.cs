@@ -1,11 +1,12 @@
 ﻿using System;
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class EnvelopeSent : LogRecord
+    public class EnvelopeSent : MessageLogRecord
     {
         public EnvelopeSent()
         {
@@ -45,6 +46,14 @@ namespace FubuTransportation.Logging
                 hashCode = (hashCode*397) ^ (Key != null ? Key.GetHashCode() : 0);
                 return hashCode;
             }
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Envelope Sent"
+            };
         }
 
         public override string ToString()

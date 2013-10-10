@@ -1,11 +1,12 @@
 ﻿using System;
 using FubuCore;
 using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class ChainExecutionFinished : LogRecord
+    public class ChainExecutionFinished : MessageLogRecord
     {
         // TODO -- add a decent ToString()
 
@@ -16,6 +17,14 @@ namespace FubuTransportation.Logging
         public override string ToString()
         {
             return "Chain finished for {0} at {1}".ToFormat(Envelope.Message, Envelope.ReceivedAt);
+        }
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Finished Chain Execution"
+            };
         }
     }
 }

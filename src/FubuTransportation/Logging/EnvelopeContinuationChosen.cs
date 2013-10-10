@@ -2,15 +2,24 @@
 using System;
 using FubuCore;
 using FubuCore.Logging;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Logging
 {
-    public class EnvelopeContinuationChosen : LogRecord
+    public class EnvelopeContinuationChosen : MessageLogRecord
     {
         public EnvelopeToken Envelope;
         public Type HandlerType;
         public Type ContinuationType;
+
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord(Envelope)
+            {
+                Message = "Chose continuation {0} from handler {1}".ToFormat(ContinuationType.Name, HandlerType.Name)
+            };
+        }
 
         protected bool Equals(EnvelopeContinuationChosen other)
         {
@@ -35,6 +44,8 @@ namespace FubuTransportation.Logging
                 return hashCode;
             }
         }
+
+
 
         public override string ToString()
         {

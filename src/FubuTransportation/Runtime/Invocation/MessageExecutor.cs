@@ -1,6 +1,8 @@
 ﻿using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
+using FubuTransportation.Diagnostics;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Invocation
 {
@@ -45,9 +47,18 @@ namespace FubuTransportation.Runtime.Invocation
         }
     }
 
-    public class InlineMessageProcessed : LogRecord
+    public class InlineMessageProcessed : MessageLogRecord
     {
         public object Message { get; set; }
         public Envelope Envelope { get; set; }
+        public override MessageRecord ToRecord()
+        {
+            return new MessageRecord()
+            {
+                Message = "Inline message processed: " + Message,
+                Id = Envelope.CorrelationId,
+                ParentId = Envelope.ParentId
+            };
+        }
     }
 }
