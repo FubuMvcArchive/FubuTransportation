@@ -2,6 +2,7 @@
 using FubuCore.Logging;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuCore;
@@ -15,6 +16,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         private Envelope theEnvelope;
         private NotImplementedException theException;
         private ILogger theLogger;
+        private TestContinuationContext theContext;
 
         [SetUp]
         public void SetUp()
@@ -24,7 +26,16 @@ namespace FubuTransportation.Testing.ErrorHandling
 
             theLogger = MockRepository.GenerateMock<ILogger>();
 
-            new MoveToErrorQueue(theException).Execute(theEnvelope, null);
+            theContext = new TestContinuationContext();
+
+            new MoveToErrorQueue(theException).Execute(theEnvelope, theContext);
+        }
+
+        [Test]
+        public void should_send_a_failure_acknowledgement()
+        {
+            theContext.RecordedOutgoing.FailureAcknowledgementMessage
+                .ShouldEqual("Moved message {0} to the Error Queue.\n{1}".ToFormat(theEnvelope.CorrelationId, theException));
         }
 
         [Test]
