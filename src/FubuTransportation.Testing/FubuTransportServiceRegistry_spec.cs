@@ -6,6 +6,7 @@ using FubuMVC.Core.Registration;
 using FubuTestingSupport;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
 using FubuTransportation.Logging;
@@ -141,6 +142,53 @@ namespace FubuTransportation.Testing
             registry.Services<FubuTransportServiceRegistry>();
             var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
             serviceGraph.ServicesFor<IListener>().Any(x => x.Type == typeof (MessageWatcher)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void messaging_session_is_registered_if_FubuTransport_MessageWatching_is_on()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuTransport.ApplyMessageHistoryWatching = true;
+
+            registeredTypeIs<IMessagingSession, MessagingSession>();
+        }
+
+        [Test]
+        public void message_record_listener_is_registered_if_FubuTransport_MessageWatching_is_on()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuTransport.ApplyMessageHistoryWatching = true;
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<ILogListener>().Any(x => x.Type == typeof(MessageRecordListener)).ShouldBeTrue();
+        }
+
+        [Test]
+        public void messaging_session_is_NOT_registered_if_FubuTransport_MessageWatching_is_on()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuTransport.ApplyMessageHistoryWatching = false;
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<IMessagingSession>().Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void message_record_listener_is_NOT_registered_if_FubuTransport_MessageWatching_is_off()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuTransport.ApplyMessageHistoryWatching = false;
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<ILogListener>()
+                .Any(x => x.Type == typeof(MessageRecordListener))
+                .ShouldBeFalse();
         }
 
         [Test]

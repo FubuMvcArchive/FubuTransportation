@@ -5,6 +5,7 @@ using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
+using FubuTransportation.Diagnostics;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
@@ -78,6 +79,9 @@ namespace FubuTransportation
             if (FubuTransport.ApplyMessageHistoryWatching)
             {
                 AddService<IListener, MessageWatcher>();
+
+                SetServiceIfNone<IMessagingSession, MessagingSession>();
+                AddService<ILogListener, MessageRecordListener>();
             }
 
 
