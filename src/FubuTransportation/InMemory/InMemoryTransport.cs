@@ -21,7 +21,7 @@ namespace FubuTransportation.InMemory
             get { return InMemoryChannel.Protocol; }
         }
 
-        public IChannel BuildChannel(ChannelNode node)
+        public IChannel BuildDestinationChannel(ChannelNode node)
         {
             return new InMemoryChannel(node);
         }

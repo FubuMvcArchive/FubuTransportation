@@ -35,10 +35,12 @@ namespace FubuTransportation.LightningQueues
             get { return LightningUri.Protocol; }
         }
 
-        public IChannel BuildChannel(ChannelNode node)
+        public IChannel BuildDestinationChannel(ChannelNode node)
         {
-            if(node.Incoming == false)
-                throw new InvalidOperationException("You can only build dynamic channels for 'Incoming' queues");
+            // IF THIS METHOD IS CALLED, IT'LL ALWAYS BE THE REPLY QUEUE OF ANOTHER NODE
+            // node.Incoming will ALWAYS be false.  We need to change these mechanics.
+//            if(node.Incoming == false)
+//                throw new InvalidOperationException("You can only build dynamic channels for 'Incoming' queues");
 
             var channel = buildChannel(node);
             _queues.CreateQueue(new LightningUri(node.Uri));
