@@ -55,6 +55,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -75,6 +76,7 @@
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
+    <Compile Include="Diagnostics\DiagnosticClasses.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />
     <Compile Include="ErrorHandling\ErrorHandler.cs" />
