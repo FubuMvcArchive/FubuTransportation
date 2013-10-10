@@ -31,8 +31,6 @@ namespace FubuTransportation.LightningQueues.Testing
         {
             TestMessageRecorder.Clear();
             FubuTransport.Reset();
-            if (Directory.Exists("fubutransportation.esent"))
-                Directory.Delete("fubutransportation.esent", true);
 
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
@@ -46,6 +44,7 @@ namespace FubuTransportation.LightningQueues.Testing
 
             _runtime = FubuTransport.For<ErrorRegistry>().StructureMap(container)
                                        .Bootstrap();
+            _runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
 

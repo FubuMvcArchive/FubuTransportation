@@ -23,11 +23,6 @@ namespace FubuTransportation.LightningQueues.Testing
         [SetUp]
         public void Setup()
         {
-            if (Directory.Exists(PersistentQueues.EsentPath))
-                Directory.Delete(PersistentQueues.EsentPath, true);
-            if (Directory.Exists("test.esent"))
-                Directory.Delete("test.esent", true);
-
             graph = new ChannelGraph();
             node = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
             node.Uri = new Uri("lq.tcp://localhost:2020/upstream");
@@ -35,6 +30,7 @@ namespace FubuTransportation.LightningQueues.Testing
 
             var delayedCache = new DelayedMessageCache<MessageId>();
             queues = new PersistentQueues(new RecordingLogger(), delayedCache);
+            queues.ClearAll();
             transport = new LightningQueuesTransport(queues, new LightningQueueSettings(), delayedCache);
 
             transport.OpenChannels(graph);

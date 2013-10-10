@@ -31,6 +31,11 @@ namespace FubuTransportation.LightningQueues
             _queueManagers.Each(x => x.Dispose());
         }
 
+        public void ClearAll()
+        {
+            _queueManagers.Each(x => x.ClearAllMessages());
+        }
+
         public IQueueManager ManagerFor(IPEndPoint endpoint, bool incoming)
         {
             if (incoming)

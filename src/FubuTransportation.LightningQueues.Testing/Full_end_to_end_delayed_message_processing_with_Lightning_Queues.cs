@@ -30,8 +30,6 @@ namespace FubuTransportation.LightningQueues.Testing
         public void SetUp()
         {
             FubuTransport.Reset();
-            if(Directory.Exists("fubutransportation.esent"))
-                Directory.Delete("fubutransportation.esent", true);
 
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
@@ -47,6 +45,7 @@ namespace FubuTransportation.LightningQueues.Testing
                                        .Bootstrap();
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
+            _runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
             theClock = _runtime.Factory.Get<ISystemTime>().As<SettableClock>();
 
