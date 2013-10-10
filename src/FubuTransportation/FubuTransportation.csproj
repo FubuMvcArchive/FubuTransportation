@@ -76,7 +76,13 @@
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
-    <Compile Include="Diagnostics\DiagnosticClasses.cs" />
+    <Compile Include="Diagnostics\MessageRecordListener.cs" />
+    <Compile Include="Diagnostics\IMessagingSession.cs" />
+    <Compile Include="Diagnostics\MessageHistory.cs" />
+    <Compile Include="Diagnostics\MessageHistoryTableTag.cs" />
+    <Compile Include="Diagnostics\MessageRecord.cs" />
+    <Compile Include="Diagnostics\MessageRecordNode.cs" />
+    <Compile Include="Diagnostics\MessagingSession.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />
     <Compile Include="ErrorHandling\ErrorHandler.cs" />

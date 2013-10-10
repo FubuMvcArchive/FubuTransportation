@@ -1,0 +1,70 @@
+﻿using System;
+using FubuCore;
+using FubuCore.Logging;
+
+namespace FubuTransportation.Diagnostics
+{
+
+    public class MessageRecordListener : ILogListener
+    {
+        private readonly IMessagingSession _session;
+
+        public MessageRecordListener(IMessagingSession session)
+        {
+            _session = session;
+        }
+
+        public bool ListensFor(Type type)
+        {
+            return type.CanBeCastTo<MessageRecord>();
+        }
+
+        public void DebugMessage(object message)
+        {
+            _session.Record(message as MessageRecord);
+        }
+
+        public void InfoMessage(object message)
+        {
+            _session.Record(message as MessageRecord);
+        }
+
+        public void Debug(string message)
+        {
+        }
+
+        public void Info(string message)
+        {
+        }
+
+        public void Error(string message, Exception ex)
+        {
+        }
+
+        public void Error(object correlationId, string message, Exception ex)
+        {
+            _session.Record(new MessageRecord
+            {
+                Id = correlationId.ToString(),
+                Message = "Error logged",
+                ExceptionText = ex.ToString()
+            });
+        }
+
+        public bool IsDebugEnabled
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool IsInfoEnabled
+        {
+            get
+            {
+                return true;
+            }
+        }
+    }
+}
