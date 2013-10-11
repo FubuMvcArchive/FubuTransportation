@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using FubuCore;
+using FubuCore.DependencyAnalysis;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Scheduling;
@@ -67,12 +70,38 @@ namespace FubuTransportation.Runtime
         {
             _transports.Each(x => x.OpenChannels(_graph));
 
+            var missingChannels = _graph.Where(x => x.Channel == null);
+            if (missingChannels.Any())
+            {
+                throw new InvalidOrMissingTransportException(missingChannels);
+            }
+
             _graph.StartReceiving(_pipeline.Value);
         }
 
         public ChannelNode ReplyNodeFor(ChannelNode destination)
         {
             return _graph.FirstOrDefault(x => x.Protocol() == destination.Protocol() && x.ForReplies);
+        }
+    }
+
+    [Serializable]
+    public class InvalidOrMissingTransportException : Exception
+    {
+        public static string ToMessage(IEnumerable<ChannelNode> nodes)
+        {
+            return "Missing channel Uri configuration or unknown transport types" + nodes.Select(x => {
+                return "Node '{0}'@{1}; ".ToFormat(x.Key, x.Uri);
+            }).Join("\n");
+        }
+
+        public InvalidOrMissingTransportException(IEnumerable<ChannelNode> nodes) : base(ToMessage(nodes))
+        {
+            
+        }
+
+        protected InvalidOrMissingTransportException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FubuMVC.Core;
+using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using ServiceNode;
 
@@ -8,13 +9,13 @@ namespace WebsiteNode
     {
         public FubuApplication BuildApplication()
         {
-            throw new System.NotImplementedException();
+            return FubuTransport.For<WebsiteRegistry>().StructureMap();
         }
     }
 
     public class WebsiteRegistry : FubuTransportRegistry<TestBusSettings>
     {
-        protected WebsiteRegistry()
+        public WebsiteRegistry()
         {
             Channel(x => x.Website).ReadIncoming();
             Channel(x => x.Service).PublishesMessagesInAssemblyContainingType<ServiceApplication>();

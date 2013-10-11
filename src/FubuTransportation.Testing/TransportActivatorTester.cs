@@ -37,4 +37,5 @@ namespace FubuTransportation.Testing
             MockFor<ISubscriptions>().AssertWasCalled(x => x.Start());
         }
     }
+
 }

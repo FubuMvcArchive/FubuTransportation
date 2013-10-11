@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Configuration;
+﻿using System;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Scheduling
@@ -14,6 +15,8 @@ namespace FubuTransportation.Scheduling
 
         public void Visit(ChannelNode node)
         {
+            if (node.Channel == null) throw new ArgumentOutOfRangeException("node", "Node must have an IChannel");
+
             node.Scheduler.Start(() => StartReceive(ReceivingState.CanContinueReceiving, node.Channel));
         }
 
