@@ -126,7 +126,7 @@ namespace FubuTransportation.Testing.Sagas
         public SagaTestRegistry()
         {
             Channel(x => x.Queue)
-                .PublishesMessagesInAssemblyContainingType<SagaTestRegistry>()
+                .AcceptsMessagesInAssemblyContainingType<SagaTestRegistry>()
                 .ReadIncoming(new ThreadScheduler(2));
         }
     }

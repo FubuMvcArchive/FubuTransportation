@@ -3,8 +3,8 @@ using FubuMVC.Core.Ajax;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTestingSupport;
-using FubuTransportation.Publishing;
 using FubuTransportation.Testing.Events;
+using FubuTransportation.Web;
 using NUnit.Framework;
 using NUnit.Mocks;
 using Rhino.Mocks;
@@ -12,7 +12,7 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.Publishing
 {
     [TestFixture]
-    public class publishing_a_message_successfully : InteractionContext<EventPublisher<Message1>>
+    public class publishing_a_message_successfully : InteractionContext<SendMessageBehavior<Message1>>
     {
         private Message1 theMessage;
         private InMemoryFubuRequest theRequest;

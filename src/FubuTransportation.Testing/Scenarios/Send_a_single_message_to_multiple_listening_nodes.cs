@@ -7,10 +7,10 @@ namespace FubuTransportation.Testing.Scenarios
         public Send_a_single_message_to_multiple_listening_nodes()
         {
             Website1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
             Website1.Registry.Channel(x => x.Service3)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
 
             Service1.Handles<OneMessage>();

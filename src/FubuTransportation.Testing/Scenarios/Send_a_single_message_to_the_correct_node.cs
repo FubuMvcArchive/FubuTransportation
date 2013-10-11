@@ -7,7 +7,7 @@ namespace FubuTransportation.Testing.Scenarios
         public Send_a_single_message_to_the_correct_node()
         {
             Website1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
             Service1.Handles<OneMessage>();
 

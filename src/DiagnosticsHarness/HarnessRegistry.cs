@@ -10,7 +10,7 @@ namespace DiagnosticsHarness
         public HarnessRegistry()
         {
             // TODO -- publish everything option in the FI?
-            Channel(x => x.Channel).ReadIncoming().PublishesMessages(x => true);
+            Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true);
 
             Global.Policy<ErrorHandlingPolicy>();
         }

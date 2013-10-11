@@ -8,8 +8,8 @@ using FubuMVC.Core.Resources.Conneg;
 using FubuMVC.Katana;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
-using FubuTransportation.Publishing;
 using FubuTransportation.Testing.Events;
+using FubuTransportation.Web;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap;
@@ -84,7 +84,7 @@ namespace FubuTransportation.Testing.Publishing
         [Test]
         public void should_be_a_PublishEvent_node_directly_after_the_publishing_action()
         {
-            chain.FirstCall().Next.ShouldBeOfType<PublishEvent>()
+            chain.FirstCall().Next.ShouldBeOfType<SendsMessage>()
                 .EventType.ShouldEqual(typeof(Message1));
         }
 
@@ -97,7 +97,7 @@ namespace FubuTransportation.Testing.Publishing
         }
     }
 
-    public class MessageOnePublisher : IEventPublisher
+    public class MessageOnePublisher : ISendMessages
     {
         public Message1 post_message1(Message1Input input)
         {
@@ -107,7 +107,7 @@ namespace FubuTransportation.Testing.Publishing
         
     }
 
-    public class MessageTwoPublisher : IEventPublisher
+    public class MessageTwoPublisher : ISendMessages
     {
         public Message2 post_message2(Message2Input input)
         {

@@ -80,7 +80,7 @@ namespace FubuTransportation.LightningQueues.Testing
         public ErrorRegistry()
         {
             Handlers.Include<ThrowingHandler<OneMessage>>();
-            Channel(x => x.Downstream).ReadIncoming().PublishesMessagesInAssemblyContainingType<OneMessage>();
+            Channel(x => x.Downstream).ReadIncoming().AcceptsMessagesInAssemblyContainingType<OneMessage>();
             Global.Policy<ErrorPolicy>();
         }
     }

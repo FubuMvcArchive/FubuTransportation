@@ -111,7 +111,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_namespace_publishing_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessagesInNamespaceContainingType<BusSettings>();
+            theRegistry.Channel(x => x.Outbound).AcceptsMessagesInNamespaceContainingType<BusSettings>();
 
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldEqual(NamespaceRule.For<BusSettings>());
@@ -122,7 +122,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_namespace_publishing_rule_2()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessagesInNamespace(typeof(BusSettings).Namespace);
+            theRegistry.Channel(x => x.Outbound).AcceptsMessagesInNamespace(typeof(BusSettings).Namespace);
 
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldEqual(NamespaceRule.For<BusSettings>());
@@ -133,7 +133,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_assembly_publishing_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessagesInAssemblyContainingType<BusSettings>();
+            theRegistry.Channel(x => x.Outbound).AcceptsMessagesInAssemblyContainingType<BusSettings>();
 
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldEqual(AssemblyRule.For<BusSettings>());
@@ -144,7 +144,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_assembly_publishing_rule_2()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessagesInAssembly(typeof(BusSettings).Assembly.GetName().Name);
+            theRegistry.Channel(x => x.Outbound).AcceptsMessagesInAssembly(typeof(BusSettings).Assembly.GetName().Name);
 
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldEqual(AssemblyRule.For<BusSettings>());
@@ -155,7 +155,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_single_type_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessage<BusSettings>();
+            theRegistry.Channel(x => x.Outbound).AcceptsMessage<BusSettings>();
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldBeOfType<SingleTypeRoutingRule<BusSettings>>();
 
@@ -165,7 +165,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_single_type_rule_2()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessage(typeof(BusSettings));
+            theRegistry.Channel(x => x.Outbound).AcceptsMessage(typeof(BusSettings));
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldBeOfType<SingleTypeRoutingRule<BusSettings>>();
 
@@ -175,7 +175,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_adhoc_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessages(type => type == typeof(BusSettings));
+            theRegistry.Channel(x => x.Outbound).AcceptsMessages(type => type == typeof(BusSettings));
 
             var rule = channelFor(x => x.Outbound).Rules.Single();
 
@@ -187,7 +187,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void add_custom_rule()
         {
-            theRegistry.Channel(x => x.Outbound).PublishesMessagesMatchingRule<CustomRule>();
+            theRegistry.Channel(x => x.Outbound).AcceptsMessagesMatchingRule<CustomRule>();
 
             channelFor(x => x.Outbound).Rules.Single()
                                        .ShouldBeOfType<CustomRule>();

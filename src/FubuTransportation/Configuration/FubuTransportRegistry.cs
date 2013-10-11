@@ -363,25 +363,25 @@ namespace FubuTransportation.Configuration
             }
 
 
-            public ChannelExpression PublishesMessagesInNamespaceContainingType<TMessageType>()
+            public ChannelExpression AcceptsMessagesInNamespaceContainingType<TMessageType>()
             {
                 alter = node => node.Rules.Add(NamespaceRule.For<TMessageType>());
                 return this;
             }
 
-            public ChannelExpression PublishesMessagesInNamespace(string @namespace)
+            public ChannelExpression AcceptsMessagesInNamespace(string @namespace)
             {
                 alter = node => node.Rules.Add(new NamespaceRule(@namespace));
                 return this;
             }
 
-            public ChannelExpression PublishesMessagesInAssemblyContainingType<TMessageType>()
+            public ChannelExpression AcceptsMessagesInAssemblyContainingType<TMessageType>()
             {
                 alter = node => node.Rules.Add(AssemblyRule.For<TMessageType>());
                 return this;
             }
 
-            public ChannelExpression PublishesMessagesInAssembly(string assemblyName)
+            public ChannelExpression AcceptsMessagesInAssembly(string assemblyName)
             {
                 var assembly = Assembly.Load(assemblyName);
 
@@ -389,26 +389,26 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
-            public ChannelExpression PublishesMessage<TMessage>()
+            public ChannelExpression AcceptsMessage<TMessage>()
             {
                 alter = node => node.Rules.Add(new SingleTypeRoutingRule<TMessage>());
                 return this;
             }
 
-            public ChannelExpression PublishesMessage(Type messageType)
+            public ChannelExpression AcceptsMessage(Type messageType)
             {
                 alter =
                     node => node.Rules.Add(typeof (SingleTypeRoutingRule<>).CloseAndBuildAs<IRoutingRule>(messageType));
                 return this;
             }
 
-            public ChannelExpression PublishesMessages(Expression<Func<Type, bool>> filter)
+            public ChannelExpression AcceptsMessages(Expression<Func<Type, bool>> filter)
             {
                 alter = node => node.Rules.Add(new LambdaRoutingRule(filter));
                 return this;
             }
 
-            public ChannelExpression PublishesMessagesMatchingRule<TRule>() where TRule : IRoutingRule, new()
+            public ChannelExpression AcceptsMessagesMatchingRule<TRule>() where TRule : IRoutingRule, new()
             {
                 alter = node => node.Rules.Add(new TRule());
                 return this;

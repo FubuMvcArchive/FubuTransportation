@@ -7,7 +7,7 @@ namespace FubuTransportation.Testing.Scenarios
         public Request_a_reply_for_a_single_message()
         {
             Website1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
             Service1.Handles<OneMessage>()
                 .Raises<TwoMessage>();
@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.Scenarios
         public SendAndAwait_for_a_single_message()
         {
             Website1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
             Service1.Handles<OneMessage>();
 

@@ -17,15 +17,15 @@ namespace FubuTransportation.Testing.Docs.Basics
         {
             //route to remote endpoint all messages in this assembly
             Channel(x => x.RemoteEndpoint)
-                .PublishesMessagesInAssemblyContainingType<SampleMessage>();
+                .AcceptsMessagesInAssemblyContainingType<SampleMessage>();
 
             //route all messages suffixed with Event to AnotherRemoteEndpoint
             Channel(x => x.AnotherRemoteEndpoint)
-                .PublishesMessages(x => x.Name.EndsWith("Event"));
+                .AcceptsMessages(x => x.Name.EndsWith("Event"));
 
             //Route messages suffixed with Command to ThisEndpoint
             Channel(x => x.ThisEndpoint)
-                .PublishesMessages(x => x.Name.EndsWith("Command"))
+                .AcceptsMessages(x => x.Name.EndsWith("Command"))
                 //read messages from this 'Incoming' channel
                 .ReadIncoming();
         }

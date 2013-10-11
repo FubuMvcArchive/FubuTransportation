@@ -18,7 +18,7 @@ namespace WebsiteNode
         public WebsiteRegistry()
         {
             Channel(x => x.Website).ReadIncoming();
-            Channel(x => x.Service).PublishesMessagesInAssemblyContainingType<ServiceApplication>();
+            Channel(x => x.Service).AcceptsMessagesInAssemblyContainingType<ServiceApplication>();
         }
     }
 }

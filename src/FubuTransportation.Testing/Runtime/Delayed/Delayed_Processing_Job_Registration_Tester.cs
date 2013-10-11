@@ -43,7 +43,7 @@ namespace FubuTransportation.Testing.Runtime.Delayed
         {
             Services(x => x.ReplaceService<ISystemTime>(new SettableClock()));
             Handlers.Include<SimpleHandler<OneMessage>>();
-            Channel(x => x.Downstream).ReadIncoming().PublishesMessagesInAssemblyContainingType<OneMessage>();
+            Channel(x => x.Downstream).ReadIncoming().AcceptsMessagesInAssemblyContainingType<OneMessage>();
         }
     }
 }

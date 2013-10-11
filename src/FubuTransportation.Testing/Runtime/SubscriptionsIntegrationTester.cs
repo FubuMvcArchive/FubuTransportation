@@ -103,14 +103,14 @@ namespace FubuTransportation.Testing.Runtime
     {
         public RoutedRegistry()
         {
-            Channel(x => x.Service1).PublishesMessage<Events.Message1>();
-            Channel(x => x.Service1).PublishesMessage<Events.Message2>();
+            Channel(x => x.Service1).AcceptsMessage<Events.Message1>();
+            Channel(x => x.Service1).AcceptsMessage<Events.Message2>();
 
-            Channel(x => x.Service2).PublishesMessage<Events.Message3>();
-            Channel(x => x.Service2).PublishesMessage<Events.Message4>();
+            Channel(x => x.Service2).AcceptsMessage<Events.Message3>();
+            Channel(x => x.Service2).AcceptsMessage<Events.Message4>();
             
-            Channel(x => x.Service3).PublishesMessage<Events.Message2>();
-            Channel(x => x.Service3).PublishesMessage<Events.Message3>();
+            Channel(x => x.Service3).AcceptsMessage<Events.Message2>();
+            Channel(x => x.Service3).AcceptsMessage<Events.Message3>();
 
             Channel(x => x.Service4).ReadIncoming();
 

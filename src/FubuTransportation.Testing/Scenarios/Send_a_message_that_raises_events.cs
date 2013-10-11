@@ -7,7 +7,7 @@ namespace FubuTransportation.Testing.Scenarios
         public Send_a_message_that_raises_events()
         {
             Website1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<OneMessage>();
+                    .AcceptsMessage<OneMessage>();
 
             Service1.Handles<OneMessage>()
                 .Raises<TwoMessage>()
@@ -18,7 +18,7 @@ namespace FubuTransportation.Testing.Scenarios
 
             // TODO -- super hokey
             Service1.Registry.Channel(x => x.Service1)
-                    .PublishesMessage<TwoMessage>().PublishesMessage<ThreeMessage>();
+                    .AcceptsMessage<TwoMessage>().AcceptsMessage<ThreeMessage>();
 
             // Assuming that if the events raised can be handled locally, they are
             // handled here. Corey/Ryan to review

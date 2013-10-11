@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FubuTransportation.Publishing;
 using FubuTransportation.Runtime.Cascading;
+using FubuTransportation.Web;
 
 namespace FubuTransportation.Testing.Docs.Basics
 {
@@ -94,7 +94,7 @@ namespace FubuTransportation.Testing.Docs.Basics
     }
 
     // SAMPLE: EndpointSendingSample
-    public class LoginEndpoint : IEventPublisher
+    public class LoginEndpoint : ISendMessages
     {
         public MessageToSend post_my_route(LoginInputModel input)
         {

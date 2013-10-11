@@ -9,7 +9,7 @@ namespace FubuTransportation.Testing.Docs.GettingStarted
         {
             Channel(x => x.Uri)
                 //Routes messages in the in the getting started namespace to this channel
-                .PublishesMessages(x => typeof(GettingStartedSettings).Namespace.Equals(x.Namespace))
+                .AcceptsMessages(x => typeof(GettingStartedSettings).Namespace.Equals(x.Namespace))
                 .ReadIncoming();
         }
     }
