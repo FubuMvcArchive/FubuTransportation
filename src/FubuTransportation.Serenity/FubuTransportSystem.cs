@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Binding;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
-using HtmlTags;
+using FubuTransportation.TestSupport;
 using Serenity;
+using StoryTeller.Engine;
 
 namespace FubuTransportation.Serenity
 {
@@ -22,35 +24,16 @@ namespace FubuTransportation.Serenity
             var session = application.Services.GetInstance<IMessagingSession>();
             Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(session);
         }
-    }
 
-    public class MessageContextualInfoProvider : IContextualInfoProvider
-    {
-        private readonly IMessagingSession _session;
-
-        public MessageContextualInfoProvider(IMessagingSession session)
+        public override IExecutionContext CreateContext()
         {
-            _session = session;
-        }
+            IExecutionContext context = base.CreateContext();
 
-        public void Reset()
-        {
-            _session.ClearAll();
-        }
+            Application.Services.GetInstance<TransportCleanup>().ClearAll();
 
-        public IEnumerable<HtmlTag> GenerateReports()
-        {
-            yield return new HtmlTag("h3").Text("Message History");
+            SubSystems.OfType<RemoteSubSystem>().Each(x => x.Runner.SendRemotely(new ClearAllTransports()));
 
-            foreach (MessageHistory topLevelMessage in _session.TopLevelMessages())
-            {
-                yield return topLevelMessage.ToNodeTag();
-            }
-
-            foreach (MessageHistory history in _session.AllMessages())
-            {
-                yield return new MessageHistoryTableTag(history);
-            }
+            return context;
         }
     }
 }

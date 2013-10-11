@@ -31,7 +31,7 @@ namespace FubuTransportation.InMemory
             return InMemoryQueueManager.DequeueDelayedEnvelopes(currentTime);
         }
 
-        public void CleanAll()
+        public void ClearAll()
         {
             InMemoryQueueManager.ClearAll();
         }

@@ -19,6 +19,6 @@ namespace FubuTransportation.Runtime
 
         IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime);
 
-        void CleanAll();
+        void ClearAll();
     }
 }

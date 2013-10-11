@@ -14,9 +14,6 @@ namespace FubuTransportation.Configuration
     {
         public static readonly string FT_TESTING = "FubuTransportTesting";
 
-        private static bool _useSynchronousLogging;
-        private static bool _applyMessageHistoryWatching;
-
         public static IContainerFacilityExpression For<T>() where T : FubuTransportRegistry, new()
         {
             var extension = new T();
@@ -53,35 +50,17 @@ namespace FubuTransportation.Configuration
             UseSynchronousLogging = ApplyMessageHistoryWatching = AllQueuesInMemory = false;
         }
 
-        public static bool UseSynchronousLogging
-        {
-            get
-            {
-                bool returnValue = false;
-                if (bool.TryParse(PackageRegistry.Properties[FT_TESTING], out returnValue))
-                {
-                    return returnValue || _useSynchronousLogging;
-                }
+        public static bool UseSynchronousLogging { get; set; }
 
-                return _useSynchronousLogging;
-            }
-            set { _useSynchronousLogging = value; }
+        public static bool InTestingMode()
+        {
+            var returnValue = false;
+            bool.TryParse(PackageRegistry.Properties[FT_TESTING], out returnValue);
+
+            return returnValue;
         }
 
-        public static bool ApplyMessageHistoryWatching
-        {
-            get
-            {
-                bool returnValue = false;
-                if (bool.TryParse(PackageRegistry.Properties[FT_TESTING], out returnValue))
-                {
-                    return returnValue || _applyMessageHistoryWatching;
-                }
-                
-                return _applyMessageHistoryWatching;
-            }
-            set { _applyMessageHistoryWatching = value; }
-        }
+        public static bool ApplyMessageHistoryWatching { get; set; }
 
         public static bool AllQueuesInMemory { get; set; }
 

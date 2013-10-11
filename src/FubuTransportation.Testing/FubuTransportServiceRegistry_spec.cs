@@ -204,6 +204,32 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
+        public void TransportCleanupActivator_is_NOT_registered_if_FubuTransport_testing_mode_is_off()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<IActivator>()
+                .Any(x => x.Type == typeof(TransportCleanupActivator))
+                .ShouldBeFalse();
+        }
+
+        [Test]
+        public void TransportCleanupActivator_is_registered_if_FubuTransport_testing_mode_is_on()
+        {
+            PackageRegistry.Properties[FubuTransport.FT_TESTING] = true.ToString();
+
+            var registry = new FubuRegistry();
+            registry.Services<FubuTransportServiceRegistry>();
+            var serviceGraph = BehaviorGraph.BuildFrom(registry).Services;
+            serviceGraph.ServicesFor<IActivator>()
+                .Any(x => x.Type == typeof(TransportCleanupActivator))
+                .ShouldBeTrue();
+        }
+
+        [Test]
         public void EnvelopeSerializer_is_registered()
         {
             registeredTypeIs<IEnvelopeSerializer, EnvelopeSerializer>();

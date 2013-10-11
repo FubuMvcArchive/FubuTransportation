@@ -22,9 +22,7 @@ namespace FubuTransportation.Testing.Configuration
             
             PackageRegistry.Properties[FubuTransport.FT_TESTING] = "true";
 
-            FubuTransport.ApplyMessageHistoryWatching.ShouldBeTrue();
-            FubuTransport.AllQueuesInMemory.ShouldBeFalse(); // Don't want this at all
-            FubuTransport.UseSynchronousLogging.ShouldBeTrue();
+            FubuTransport.InTestingMode().ShouldBeTrue();
         }
 
         [Test]
@@ -34,21 +32,8 @@ namespace FubuTransportation.Testing.Configuration
 
             PackageRegistry.Properties.Remove(FubuTransport.FT_TESTING);
 
-            FubuTransport.ApplyMessageHistoryWatching.ShouldBeFalse();
-            FubuTransport.AllQueuesInMemory.ShouldBeFalse(); // Don't want this at all
-            FubuTransport.UseSynchronousLogging.ShouldBeFalse();
+            FubuTransport.InTestingMode().ShouldBeFalse();
         }
 
-        [Test]
-        public void if_package_registry_ft_testing_is_false()
-        {
-            FubuTransport.Reset();
-
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = "false";
-
-            FubuTransport.ApplyMessageHistoryWatching.ShouldBeFalse();
-            FubuTransport.AllQueuesInMemory.ShouldBeFalse(); // Don't want this at all
-            FubuTransport.UseSynchronousLogging.ShouldBeFalse();
-        }
     }
 }
