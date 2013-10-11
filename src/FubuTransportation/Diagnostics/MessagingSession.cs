@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FubuCore;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
 
@@ -41,7 +42,7 @@ namespace FubuTransportation.Diagnostics
             var history = _histories[record.Id];
             history.Record(record);
 
-            if (record.ParentId != Guid.Empty.ToString())
+            if (record.ParentId.IsNotEmpty() && record.ParentId != Guid.Empty.ToString())
             {
                 var parent = _histories[record.ParentId];
                 parent.AddChild(history); // this is idempotent, so we're all good
