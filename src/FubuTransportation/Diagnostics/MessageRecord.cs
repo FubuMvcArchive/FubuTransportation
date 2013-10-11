@@ -36,5 +36,10 @@ namespace FubuTransportation.Diagnostics
         {
             return new HtmlTag("li").Text("{0}: {1}".ToFormat(Node, Message));
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} from {2}, Message: {1}, Headers: {3}", Id, Message, Node, Headers);
+        }
     }
 }

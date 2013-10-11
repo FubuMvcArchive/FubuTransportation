@@ -17,6 +17,8 @@ namespace FubuTransportation.Serenity
             FubuTransport.SetupForTesting();
 
             AddContextualProvider<MessageContextualInfoProvider>();
+
+            OnStartup<IMessagingSession>(x => Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(x));
         }
 
         protected override void configureApplication(IApplicationUnderTest application, BindingRegistry binding)

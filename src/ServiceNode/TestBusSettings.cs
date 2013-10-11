@@ -8,7 +8,7 @@ namespace ServiceNode
         public TestBusSettings()
         {
             Service = "lq.tcp://localhost:2215/service".ToUri();
-            Website = "lq.tcp://localhost:2215/website".ToUri();
+            Website = "lq.tcp://localhost:2216/website".ToUri();
         }
 
         public Uri Service { get; set; }

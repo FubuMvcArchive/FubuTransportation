@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Runtime;
@@ -49,14 +50,21 @@ namespace FubuTransportation.LightningQueues
         {
             uriList.GroupBy(x => x.Endpoint).Each(group =>
             {
-                string[] queueNames = group.Select(x => x.QueueName).ToArray();
+                try
+                {
+                    string[] queueNames = group.Select(x => x.QueueName).ToArray();
 
-                var queueManager = _queueManagers[@group.Key];
-                queueManager.CreateQueues(queueNames);
-                queueManager.CreateQueues(LightningQueuesTransport.DelayedQueueName);
-                queueManager.CreateQueues(LightningQueuesTransport.ErrorQueueName);
+                    var queueManager = _queueManagers[@group.Key];
+                    queueManager.CreateQueues(queueNames);
+                    queueManager.CreateQueues(LightningQueuesTransport.DelayedQueueName);
+                    queueManager.CreateQueues(LightningQueuesTransport.ErrorQueueName);
 
-                queueManager.Start();
+                    queueManager.Start();
+                }
+                catch (Exception e)
+                {
+                    throw new LightningQueueTransportException(group.Key, e);
+                }
             });
         }
 
@@ -95,6 +103,18 @@ namespace FubuTransportation.LightningQueues
             }
 
             return list;
+        }
+    }
+
+    [Serializable]
+    public class LightningQueueTransportException : Exception
+    {
+        public LightningQueueTransportException(IPEndPoint endpoint, Exception innerException) : base("Error trying to initialize LightningQueues queue manager at " + endpoint, innerException)
+        {
+        }
+
+        protected LightningQueueTransportException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

@@ -141,6 +141,10 @@
     <Folder Include="Tests\LightningQueues\SendAndAwait\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FubuTransportation.LightningQueues\FubuTransportation.LightningQueues.csproj">
+      <Project>{f151167c-4736-4c67-9697-7876574c05d0}</Project>
+      <Name>FubuTransportation.LightningQueues</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FubuTransportation.Serenity\FubuTransportation.Serenity.csproj">
       <Project>{7E7F5ADC-D27D-4BB9-BF03-E5909330A53C}</Project>
       <Name>FubuTransportation.Serenity</Name>

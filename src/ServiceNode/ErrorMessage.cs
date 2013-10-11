@@ -1,7 +1,7 @@
 ﻿namespace ServiceNode
 {
-    public class SimpleMessage
+    public class ErrorMessage
     {
-         
+        
     }
 }

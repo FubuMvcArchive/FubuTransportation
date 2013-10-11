@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuCore;
 using FubuCore.Logging;
+using FubuTransportation.Logging;
 
 namespace FubuTransportation.Diagnostics
 {
@@ -16,17 +17,17 @@ namespace FubuTransportation.Diagnostics
 
         public bool ListensFor(Type type)
         {
-            return type.CanBeCastTo<MessageRecord>();
+            return type.CanBeCastTo<MessageLogRecord>();
         }
 
         public void DebugMessage(object message)
         {
-            _session.Record(message as MessageRecord);
+            _session.Record(message.As<MessageLogRecord>().ToRecord());
         }
 
         public void InfoMessage(object message)
         {
-            _session.Record(message as MessageRecord);
+            DebugMessage(message); // same difference here
         }
 
         public void Debug(string message)

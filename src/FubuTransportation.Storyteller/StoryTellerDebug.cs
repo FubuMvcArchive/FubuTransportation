@@ -11,8 +11,10 @@ namespace StoryTellerTestHarness
         {
             var project = new Project
             {
-                ProjectFolder = ".".ToFullPath().ParentDirectory().ParentDirectory()
+                ProjectFolder = ".".ToFullPath().ParentDirectory().ParentDirectory(),
+                TimeoutInSeconds = 240
             };
+
             using (var runner = new ProjectTestRunner(project))
             {
                 runner.RunAndAssertTest("LightningQueues/SendAndAwait/SendAndAwait Happy Path");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
@@ -10,6 +11,7 @@ namespace FubuTransportation.Diagnostics
     {
         private readonly ChannelGraph _graph;
         private readonly Cache<string, MessageHistory> _histories = new Cache<string, MessageHistory>(id => new MessageHistory{Id = id});
+        private readonly IList<MessageRecord> _all = new List<MessageRecord>(); 
 
         public MessagingSession(ChannelGraph graph)
         {
@@ -19,11 +21,17 @@ namespace FubuTransportation.Diagnostics
         public void ClearAll()
         {
             _histories.ClearAll();
+            _all.Clear();
         }
 
         public void Record(MessageRecord record)
         {
             if (record == null) return;
+
+            if (_all.Contains(record)) return;
+            _all.Add(record);
+
+            Debug.WriteLine("Got MessageRecord: " + record);
 
             record.Node = _graph.Name;
 

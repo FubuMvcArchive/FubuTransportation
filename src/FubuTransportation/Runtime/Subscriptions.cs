@@ -73,7 +73,7 @@ namespace FubuTransportation.Runtime
             var missingChannels = _graph.Where(x => x.Channel == null);
             if (missingChannels.Any())
             {
-                throw new InvalidOrMissingTransportException(missingChannels);
+                throw new InvalidOrMissingTransportException(_transports, missingChannels);
             }
 
             _graph.StartReceiving(_pipeline.Value);
@@ -88,14 +88,15 @@ namespace FubuTransportation.Runtime
     [Serializable]
     public class InvalidOrMissingTransportException : Exception
     {
-        public static string ToMessage(IEnumerable<ChannelNode> nodes)
+        public static string ToMessage(IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
         {
-            return "Missing channel Uri configuration or unknown transport types" + nodes.Select(x => {
+            return "Missing channel Uri configuration or unknown transport types\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") + " and the invalid nodes are \n" + nodes.Select(x => {
                 return "Node '{0}'@{1}; ".ToFormat(x.Key, x.Uri);
             }).Join("\n");
         }
 
-        public InvalidOrMissingTransportException(IEnumerable<ChannelNode> nodes) : base(ToMessage(nodes))
+        public InvalidOrMissingTransportException(IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
+            : base(ToMessage(transports, nodes))
         {
             
         }
