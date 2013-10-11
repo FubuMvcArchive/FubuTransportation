@@ -80,7 +80,9 @@ namespace FubuTransportation
             {
                 AddService<IListener, MessageWatcher>();
 
-                SetServiceIfNone<IMessagingSession, MessagingSession>();
+                var def = ObjectDef.ForType<MessagingSession>();
+                def.IsSingleton = true;
+                SetServiceIfNone(typeof(IMessagingSession), def);
                 AddService<ILogListener, MessageRecordListener>();
             }
 

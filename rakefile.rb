@@ -32,3 +32,10 @@ FubuRake::BottleServices.new({
 })
 
 FubuRake::MvcApp.new({:directory => 'src/DiagnosticsHarness', :name => 'harness'})
+
+# You may have to change the value of :compilemode below to reflect
+# your rake file
+FubuRake::Storyteller.new({
+  :path => 'src/FubuTransport.Storyteller',
+  :compilemode => solution.compilemode
+})

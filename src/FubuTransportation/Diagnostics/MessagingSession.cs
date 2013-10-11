@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Diagnostics
 {
-    public class MessagingSession : IMessagingSession
+    public class MessagingSession : IMessagingSession, Bottles.Services.Messaging.IListener<MessageRecord>
     {
+        private readonly ChannelGraph _graph;
         private readonly Cache<string, MessageHistory> _histories = new Cache<string, MessageHistory>(id => new MessageHistory{Id = id});
+
+        public MessagingSession(ChannelGraph graph)
+        {
+            _graph = graph;
+        }
 
         public void ClearAll()
         {
@@ -17,6 +24,8 @@ namespace FubuTransportation.Diagnostics
         public void Record(MessageRecord record)
         {
             if (record == null) return;
+
+            record.Node = _graph.Name;
 
             // Letting the remote AppDomain's know about it.
             Bottles.Services.Messaging.EventAggregator.SendMessage(record);
@@ -39,6 +48,11 @@ namespace FubuTransportation.Diagnostics
         public IEnumerable<MessageHistory> AllMessages()
         {
             return _histories;
-        } 
+        }
+
+        public void Receive(MessageRecord message)
+        {
+            Record(message);
+        }
     }
 }

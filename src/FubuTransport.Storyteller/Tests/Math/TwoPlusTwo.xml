@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Test name="Two plus Two" lifecycle="Acceptance">
+  <Math>
+    <Comment>Storyteller can do more complicated things than this</Comment>
+    <Adding x="2" y="2" returnValue="4" />
+  </Math>
+</Test>

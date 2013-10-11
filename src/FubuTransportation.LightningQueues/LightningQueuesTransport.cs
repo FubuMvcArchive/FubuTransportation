@@ -53,6 +53,11 @@ namespace FubuTransportation.LightningQueues
             return _queues.ReplayDelayed(currentTime);
         }
 
+        public void CleanAll()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
             return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues, _delayedMessages, channelNode.Incoming);

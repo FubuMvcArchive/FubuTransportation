@@ -1,0 +1,26 @@
+Storyteller2 Integration
+
+* This template does not create a Storyteller ISystem.  If your system under test requires
+  custom bootstrapping and teardown, it's suggested that you add your own implementation of
+  Storyteller.Engine.ISystem to your testing assembly 
+
+* In your rakefile, you may want to change the Storyteller tasks according to the options at
+  http://fubuworld.com/fuburake/storyteller2-integration/
+
+* Fixture classes are generally kept in the Fixtures namespace, but this is only an idiom,
+  not a requirement.  There is a standin MathFixture there you will want to remove.
+
+* Storyteller2 tests are assumed to be in the /Tests folder, but each test at this time
+  will need to be under a suite folder.  There is a single standin test as part of this
+  template
+
+
+
+
+Serenity Integration
+
+* You will need to change the class StorytellerSystem to connect to
+  the real FubuMVC/FubuTransportation application
+
+
+

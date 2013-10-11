@@ -89,5 +89,12 @@ namespace FubuTransportation.Configuration
         {
             UseSynchronousLogging = ApplyMessageHistoryWatching = AllQueuesInMemory = true;
         }
+
+        public static void SetupForTesting()
+        {
+            PackageRegistry.Properties[FT_TESTING] = true.ToString();
+            UseSynchronousLogging = true;
+            ApplyMessageHistoryWatching = true;
+        }
     }
 }

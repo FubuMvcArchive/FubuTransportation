@@ -28,3 +28,7 @@ Gemfile.lock
 logs
 pak*.zip
 fubu-content
+history.xml
+results.htm
+storyteller.cmd
+run_st.cmd

@@ -18,5 +18,7 @@ namespace FubuTransportation.Runtime
         IChannel BuildDestinationChannel(ChannelNode node);
 
         IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime);
+
+        void CleanAll();
     }
 }

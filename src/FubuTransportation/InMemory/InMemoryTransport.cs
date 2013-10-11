@@ -31,6 +31,11 @@ namespace FubuTransportation.InMemory
             return InMemoryQueueManager.DequeueDelayedEnvelopes(currentTime);
         }
 
+        public void CleanAll()
+        {
+            InMemoryQueueManager.ClearAll();
+        }
+
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
             return new InMemoryChannel(channelNode);
