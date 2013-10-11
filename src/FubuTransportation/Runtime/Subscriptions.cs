@@ -49,7 +49,7 @@ namespace FubuTransportation.Runtime
                 }
 
                 var node = new ChannelNode {Uri = envelope.Destination, Key = envelope.Destination.ToString()};
-                node.Channel = transport.BuildDestinationChannel(node);
+                node.Channel = transport.BuildDestinationChannel(node.Uri);
 
                 return node;
             }

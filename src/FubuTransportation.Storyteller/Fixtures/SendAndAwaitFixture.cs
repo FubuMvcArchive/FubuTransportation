@@ -36,7 +36,7 @@ namespace FubuTransportation.Storyteller.Fixtures
         [FormatAs("The acknowledgement was successful")]
         public bool AckWasSuccessful()
         {
-            StoryTellerAssert.Fail(_task.Exception != null, _task.Exception.ToString());
+            StoryTellerAssert.Fail(_task.IsFaulted, () => _task.Exception.ToString());
 
             return true;
         }

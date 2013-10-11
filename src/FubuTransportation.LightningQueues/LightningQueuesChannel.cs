@@ -55,7 +55,6 @@ namespace FubuTransportation.LightningQueues
                 Headers = headers.ToNameValues()
             };
 
-            //TODO Should this scope be shared with the dequeue scope?
             var sendingScope = _queueManager.BeginTransactionalScope();
             var id = sendingScope.Send(_address, messagePayload);
             
@@ -63,7 +62,6 @@ namespace FubuTransportation.LightningQueues
             
             //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
-
         }
 
         public void Dispose()

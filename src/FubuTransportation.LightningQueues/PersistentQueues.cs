@@ -46,6 +46,11 @@ namespace FubuTransportation.LightningQueues
             return _queueManagers.First();
         }
 
+        public IQueueManager ManagerForReply()
+        {
+            return _queueManagers.First();
+        }
+
         public void Start(IEnumerable<LightningUri> uriList)
         {
             uriList.GroupBy(x => x.Endpoint).Each(group =>

@@ -81,6 +81,7 @@
     <Compile Include="LightningUri.cs" />
     <Compile Include="PersistentQueues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LightningQueuesReplyChannel.cs" />
     <Compile Include="TransactionCallback.cs" />
   </ItemGroup>
   <ItemGroup>

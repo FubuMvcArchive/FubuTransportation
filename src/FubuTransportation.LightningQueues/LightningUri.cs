@@ -73,5 +73,11 @@ namespace FubuTransportation.LightningQueues
         {
             return new LightningUri(uri);
         }
+
+        public static Uri ToMachineUri(this Uri uri)
+        {
+            var uriString = uri.ToString().Replace("localhost", Environment.MachineName);
+            return new Uri(uriString);
+        }
     }
 }

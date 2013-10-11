@@ -10,7 +10,7 @@ namespace FubuTransportation.Storyteller
         {
             AddRemoteSubSystem("ServiceNode", x => {
                 x.UseParallelServiceDirectory("ServiceNode");
-                x.Setup.ShadowCopyFiles = false.ToString();
+                x.Setup.ShadowCopyFiles = true.ToString();
                 x.Properties[FubuTransport.FT_TESTING] = true.ToString();  // Move this to a Serenity concern
             });
         }

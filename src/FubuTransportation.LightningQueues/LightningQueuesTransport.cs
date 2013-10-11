@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -35,17 +36,9 @@ namespace FubuTransportation.LightningQueues
             get { return LightningUri.Protocol; }
         }
 
-        public IChannel BuildDestinationChannel(ChannelNode node)
+        public IChannel BuildDestinationChannel(Uri destination)
         {
-            // IF THIS METHOD IS CALLED, IT'LL ALWAYS BE THE REPLY QUEUE OF ANOTHER NODE
-            // node.Incoming will ALWAYS be false.  We need to change these mechanics.
-//            if(node.Incoming == false)
-//                throw new InvalidOperationException("You can only build dynamic channels for 'Incoming' queues");
-
-            var channel = buildChannel(node);
-            _queues.CreateQueue(new LightningUri(node.Uri));
-
-            return channel;
+            return new LightningQueuesReplyChannel(destination, _queues.ManagerForReply());
         }
 
         public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)
@@ -70,21 +63,11 @@ namespace FubuTransportation.LightningQueues
 
         protected override ChannelNode buildReplyChannel(ChannelGraph graph)
         {
-            var port = _settings.DefaultPort;
+            var channelNode = graph.FirstOrDefault(x => x.Protocol() == LightningUri.Protocol && x.Incoming);
+            if(channelNode == null)
+                throw new InvalidOperationException("You must have an incoming channel for accepting replies");
 
-            var nodes = graph.Where(x => x.Protocol() == Protocol);
-            if (nodes.Any(x => x.Incoming))
-            {
-                port = nodes.Where(x => x.Incoming).Select(x => new LightningUri(x.Uri).Port).First();
-            }
-            else if (nodes.Any())
-            {
-                port = nodes.Select(x => new LightningUri(x.Uri).Port).First();
-            }
-
-
-            var uri = "{0}://localhost:{1}/{2}/replies".ToFormat(Protocol, port, graph.Name ?? "node").ToUri().NormalizeLocalhost();
-            return new ChannelNode { Uri = uri };
+            return channelNode;
         }
     }
 }

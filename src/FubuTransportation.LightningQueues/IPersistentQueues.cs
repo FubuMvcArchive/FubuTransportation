@@ -10,6 +10,7 @@ namespace FubuTransportation.LightningQueues
     {
         void ClearAll();
         IQueueManager ManagerFor(IPEndPoint endpoint, bool incoming);
+        IQueueManager ManagerForReply();
         void Start(IEnumerable<LightningUri> uriList);
 
         void CreateQueue(LightningUri uri);

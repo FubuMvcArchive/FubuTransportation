@@ -21,9 +21,9 @@ namespace FubuTransportation.InMemory
             get { return InMemoryChannel.Protocol; }
         }
 
-        public IChannel BuildDestinationChannel(ChannelNode node)
+        public IChannel BuildDestinationChannel(Uri destination)
         {
-            return new InMemoryChannel(node);
+            return new InMemoryChannel(destination);
         }
 
         public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)
@@ -38,7 +38,7 @@ namespace FubuTransportation.InMemory
 
         protected override IChannel buildChannel(ChannelNode channelNode)
         {
-            return new InMemoryChannel(channelNode);
+            return new InMemoryChannel(channelNode.Uri);
         }
 
         protected override void seedQueues(ChannelNode[] channels)
@@ -49,7 +49,9 @@ namespace FubuTransportation.InMemory
         protected override ChannelNode buildReplyChannel(ChannelGraph graph)
         {
             var uri = "{0}://localhost/{1}/replies".ToFormat(Protocol, graph.Name ?? "node").ToUri();
-            return new ChannelNode{Uri = uri};
+            var channelNode = new ChannelNode{Uri = uri};
+            channelNode.Channel = new InMemoryChannel(uri);
+            return channelNode;
         }
 
         public static T ToInMemory<T>() where T : new()

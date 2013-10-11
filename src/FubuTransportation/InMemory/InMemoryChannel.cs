@@ -11,9 +11,9 @@ namespace FubuTransportation.InMemory
         public static readonly string Protocol = "memory";
         private readonly InMemoryQueue _queue;
 
-        public InMemoryChannel(ChannelNode node)
+        public InMemoryChannel(Uri address)
         {
-            Address = node.Uri;
+            Address = address;
             _queue = InMemoryQueueManager.QueueFor(Address);
         }
 
