@@ -1,4 +1,5 @@
 ﻿using Bottles;
+using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -11,7 +12,7 @@ namespace FubuTransportation.Testing
         [SetUp]
         public void SetUp()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuMode.RemoveTestingMode();
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using Bottles;
 using FubuCore.Logging;
+using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Async;
@@ -50,7 +51,7 @@ namespace FubuTransportation
 
             AddService<ILogListener, EventAggregationListener>();
 
-            if (FubuTransport.ApplyMessageHistoryWatching || FubuTransport.InTestingMode())
+            if (FubuTransport.ApplyMessageHistoryWatching || FubuMode.InTestingMode())
             {
                 AddService<IListener, MessageWatcher>();
 
@@ -61,7 +62,7 @@ namespace FubuTransportation
             }
 
 
-            if (FubuTransport.InTestingMode())
+            if (FubuMode.InTestingMode())
             {
                 AddService<IActivator, TransportCleanupActivator>();
             }

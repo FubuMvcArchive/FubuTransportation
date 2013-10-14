@@ -26,7 +26,7 @@ namespace FubuTransportation.Testing
         [SetUp]
         public void SetUp()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
+            FubuMode.RemoveTestingMode();
         }
 
         private void registeredTypeIs<TService, TImplementation>()
@@ -135,7 +135,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_watcher_is_registered_as_listener_if_FubuTransport_messagewatching_is_applied()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = true;
             
             var registry = new FubuRegistry();
@@ -147,7 +146,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void messaging_session_is_registered_if_FubuTransport_MessageWatching_is_on()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = true;
 
             registeredTypeIs<IMessagingSession, MessagingSession>();
@@ -156,7 +154,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_record_listener_is_registered_if_FubuTransport_MessageWatching_is_on()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = true;
 
             var registry = new FubuRegistry();
@@ -168,7 +165,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void messaging_session_is_NOT_registered_if_FubuTransport_MessageWatching_is_on()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = false;
 
             var registry = new FubuRegistry();
@@ -180,7 +176,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_record_listener_is_NOT_registered_if_FubuTransport_MessageWatching_is_off()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
             FubuTransport.ApplyMessageHistoryWatching = false;
 
             var registry = new FubuRegistry();
@@ -194,7 +189,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void message_watcher_is_NOT_registered_as_listener_if_FubuTransport_messagewatching_is_NOT_applied()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = "false";
             FubuTransport.ApplyMessageHistoryWatching = false;
 
             var registry = new FubuRegistry();
@@ -206,7 +200,6 @@ namespace FubuTransportation.Testing
         [Test]
         public void TransportCleanupActivator_is_NOT_registered_if_FubuTransport_testing_mode_is_off()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = false.ToString();
 
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();
@@ -219,7 +212,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void TransportCleanupActivator_is_registered_if_FubuTransport_testing_mode_is_on()
         {
-            PackageRegistry.Properties[FubuTransport.FT_TESTING] = true.ToString();
+            FubuMode.SetupForTestingMode();
 
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();

@@ -28,6 +28,7 @@ namespace FubuTransportation.Runtime.Cascading
             {
                 var envelope = new Envelope
                 {
+                    ParentId = original.CorrelationId,
                     Destination = original.ReplyUri,
                     ResponseId = original.CorrelationId,
                     Message = new FailureAcknowledgement()
@@ -45,6 +46,7 @@ namespace FubuTransportation.Runtime.Cascading
         {
             var envelope = new Envelope
             {
+                ParentId = original.CorrelationId,
                 Destination = original.ReplyUri,
                 ResponseId = original.CorrelationId,
                 Message = new Acknowledgement {CorrelationId = original.CorrelationId}

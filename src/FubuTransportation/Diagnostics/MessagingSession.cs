@@ -34,7 +34,11 @@ namespace FubuTransportation.Diagnostics
 
             Debug.WriteLine("Got MessageRecord: " + record);
 
-            record.Node = _graph.Name;
+            // Important, don't override what's already there
+            if (record.Node.IsEmpty())
+            {
+                record.Node = _graph.Name;
+            }
 
             // Letting the remote AppDomain's know about it.
             Bottles.Services.Messaging.EventAggregator.SendMessage(record);

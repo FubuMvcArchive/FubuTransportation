@@ -14,33 +14,20 @@ namespace FubuTransportation.Serenity
     {
         public FubuTransportSystem()
         {
-            FubuTransport.SetupForTesting();
+            FubuTransport.SetupForTesting(); // Uses FubuMode.SetUpTestingMode();
 
             AddContextualProvider<MessageContextualInfoProvider>();
 
             OnStartup<IMessagingSession>(x => {
                 Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(x);
-
-
-                SubSystems.OfType<RemoteSubSystem>().Each(sys => sys.Runner.Messaging.AddListener(x));
+                RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x));
             });
-        }
 
-        protected override void configureApplication(IApplicationUnderTest application, BindingRegistry binding)
-        {
-            var session = application.Services.GetInstance<IMessagingSession>();
-            Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(session);
-        }
+            OnContextCreation<TransportCleanup>(cleanup => {
+                cleanup.ClearAll();
 
-        public override IExecutionContext CreateContext()
-        {
-            IExecutionContext context = base.CreateContext();
-
-            Application.Services.GetInstance<TransportCleanup>().ClearAll();
-
-            SubSystems.OfType<RemoteSubSystem>().Each(x => x.Runner.SendRemotely(new ClearAllTransports()));
-
-            return context;
+                RemoteSubSystems.Each(x => x.Runner.SendRemotely(new ClearAllTransports()));
+            });
         }
     }
 }

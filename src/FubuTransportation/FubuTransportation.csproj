@@ -161,6 +161,8 @@
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSupport\ClearAllTransports.cs" />
+    <Compile Include="TestSupport\TransportCleanupActivator.cs" />
     <Compile Include="Web\SendMessageBehavior.cs" />
     <Compile Include="Web\SendsMessageConvention.cs" />
     <Compile Include="Web\SendsMessageActionSource.cs" />

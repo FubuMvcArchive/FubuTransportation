@@ -12,7 +12,7 @@
     <description>Low friction Service Bus using the best of the Fubu world</description>
     <tags>fubumvc service bus</tags>
     <dependencies>
-      <dependency id="FubuMVC.Core" version="1.1.0.1543" />
+      <dependency id="FubuMVC.Core" version="1.2.0.1640" />
       <dependency id="FubuCore" version="1.1.0.257" />
     </dependencies>
   </metadata>

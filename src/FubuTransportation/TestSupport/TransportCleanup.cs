@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Bottles;
-using Bottles.Diagnostics;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.TestSupport
@@ -29,24 +27,6 @@ namespace FubuTransportation.TestSupport
                 Debug.WriteLine("Clearing up all messages on " + x);
                 x.ClearAll();
             });
-        }
-    }
-
-    public class ClearAllTransports { }
-
-    public class TransportCleanupActivator : IActivator
-    {
-        private readonly TransportCleanup _cleanup;
-
-        public TransportCleanupActivator(TransportCleanup cleanup)
-        {
-            _cleanup = cleanup;
-        }
-
-        public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
-        {
-            log.Trace("Adding TransportCleanup to the Bottles EventAggregator");
-            Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(_cleanup);
         }
     }
 }

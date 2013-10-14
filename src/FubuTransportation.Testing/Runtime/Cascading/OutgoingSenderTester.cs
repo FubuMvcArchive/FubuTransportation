@@ -61,6 +61,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             envelope.ResponseId.ShouldEqual(original.CorrelationId);
             envelope.Destination.ShouldEqual(original.ReplyUri);
             envelope.Message.ShouldEqual(new Acknowledgement {CorrelationId = original.CorrelationId});
+            envelope.ParentId.ShouldEqual(original.CorrelationId);
         }
 
         [Test]
@@ -135,6 +136,12 @@ namespace FubuTransportation.Testing.Runtime.Cascading
         public void the_message_should_be_what_was_requested()
         {
             theAck.Message.ShouldEqual("you stink");
+        }
+
+        [Test]
+        public void should_have_The_parent_id_set_to_the_original_id_for_tracking()
+        {
+            theSentEnvelope.ParentId.ShouldEqual(original.CorrelationId);
         }
 
         [Test]
