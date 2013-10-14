@@ -17,7 +17,7 @@ namespace StoryTellerTestHarness
 
             using (var runner = new ProjectTestRunner(project))
             {
-                runner.RunAndAssertTest("LightningQueues/SendAndAwait/SendAndAwait Happy Path");
+                runner.RunAndAssertTest("LightningQueues/SendAndAwait/SendAndAwait Sad Path Exception reporting");
             }
 
             

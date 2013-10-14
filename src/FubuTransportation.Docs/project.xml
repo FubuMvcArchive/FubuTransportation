@@ -15,6 +15,10 @@
       <Name>FubuTransportation</Name>
       <Description>Low friction Service Bus using the best of the Fubu world</Description>
     </PublishedNuget>
+    <PublishedNuget>
+      <Name>FubuTransportation.Serenity</Name>
+      <Description>Serenity testing helpers for FubuTransporation projects</Description>
+    </PublishedNuget>
   </Nugets>
   <Url>fubutransportation</Url>
 </ProjectRoot>
