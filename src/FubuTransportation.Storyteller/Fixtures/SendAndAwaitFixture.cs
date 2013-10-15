@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Serenity.Fixtures;
 using ServiceNode;
 using StoryTeller.Assertions;
@@ -30,7 +33,16 @@ namespace FubuTransportation.Storyteller.Fixtures
         [FormatAs("The acknowledgement was received within {seconds} seconds")]
         public bool AckIsReceived(int seconds)
         {
-            return _task.Wait(seconds.Seconds());
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                _task.Wait(seconds.Seconds());
+            }
+            catch (Exception)
+            {
+            }
+            sw.Stop();
+            return sw.Elapsed.Seconds < seconds;
         }
 
         [FormatAs("The acknowledgement was successful")]
@@ -46,7 +58,7 @@ namespace FubuTransportation.Storyteller.Fixtures
         {
             StoryTellerAssert.Fail(_task.Exception == null, "The task exception is null");
 
-            StoryTellerAssert.Fail(!_task.Exception.ToString().Contains(message), "The actual exception text was:\n" + _task.Exception.ToString());
+            StoryTellerAssert.Fail(!_task.Exception.InnerExceptions.First().ToString().Contains(message), "The actual exception text was:\n" + _task.Exception.ToString());
 
             return true;
         }
