@@ -18,13 +18,13 @@ namespace FubuTransportation.LightningQueues
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
         public const string EsentPath = "fubutransportation.esent";
 
-        private readonly Cache<IPEndPoint, QueueManager> _queueManagers;
+        private readonly Cache<int, QueueManager> _queueManagers;
 
         public PersistentQueues(ILogger logger, IDelayedMessageCache<MessageId> delayedMessages)
         {
             _logger = logger;
             _delayedMessages = delayedMessages;
-            _queueManagers = new Cache<IPEndPoint, QueueManager>(ip => new QueueManager(ip, EsentPath + "." + ip.Port, new QueueManagerConfiguration(), _logger));
+            _queueManagers = new Cache<int, QueueManager>(port => new QueueManager(new IPEndPoint(IPAddress.Any, port), EsentPath + "." + port, new QueueManagerConfiguration(), _logger));
         }
 
         public void Dispose()
@@ -37,11 +37,11 @@ namespace FubuTransportation.LightningQueues
             _queueManagers.Each(x => x.ClearAllMessages());
         }
 
-        public IQueueManager ManagerFor(IPEndPoint endpoint, bool incoming)
+        public IQueueManager ManagerFor(int port, bool incoming)
         {
             if (incoming)
             {
-                return _queueManagers[endpoint];
+                return _queueManagers[port];
             }
             return _queueManagers.First();
         }
@@ -53,7 +53,7 @@ namespace FubuTransportation.LightningQueues
 
         public void Start(IEnumerable<LightningUri> uriList)
         {
-            uriList.GroupBy(x => x.Endpoint).Each(group =>
+            uriList.GroupBy(x => x.Port).Each(group =>
             {
                 try
                 {
@@ -68,14 +68,14 @@ namespace FubuTransportation.LightningQueues
                 }
                 catch (Exception e)
                 {
-                    throw new LightningQueueTransportException(group.Key, e);
+                    throw new LightningQueueTransportException(new IPEndPoint(IPAddress.Any, group.Key), e);
                 }
             });
         }
 
         public void CreateQueue(LightningUri uri)
         {
-            _queueManagers[uri.Endpoint].CreateQueues(uri.QueueName);
+            _queueManagers[uri.Port].CreateQueues(uri.QueueName);
         }
 
         public IEnumerable<EnvelopeToken> ReplayDelayed(DateTime currentTime)

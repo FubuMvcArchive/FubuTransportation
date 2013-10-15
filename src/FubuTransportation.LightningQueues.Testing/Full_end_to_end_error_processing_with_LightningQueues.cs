@@ -48,7 +48,7 @@ namespace FubuTransportation.LightningQueues.Testing
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
 
-            _queueManager = _runtime.Factory.Get<IPersistentQueues>().ManagerFor(lightningUri.Endpoint, true);
+            _queueManager = _runtime.Factory.Get<IPersistentQueues>().ManagerFor(lightningUri.Port, true);
 
             message1 = new OneMessage();
 

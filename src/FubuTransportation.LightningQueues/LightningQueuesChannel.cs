@@ -19,7 +19,7 @@ namespace FubuTransportation.LightningQueues
 
         public static LightningQueuesChannel Build(LightningUri uri, IPersistentQueues queues, IDelayedMessageCache<MessageId> delayedMessages, bool incoming)
         {
-            var queueManager = queues.ManagerFor(uri.Endpoint, incoming);
+            var queueManager = queues.ManagerFor(uri.Port, incoming);
             return new LightningQueuesChannel(uri.Address, uri.QueueName, queueManager, delayedMessages);
         }
 

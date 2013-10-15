@@ -12,7 +12,7 @@ namespace FubuTransportation.LightningQueues
         public LightningQueuesReplyChannel(Uri destination, IQueueManager queueManager)
         {
             _queueManager = queueManager;
-            Address = destination.ToMachineUri();
+            Address = destination;
         }
 
         public void Dispose()

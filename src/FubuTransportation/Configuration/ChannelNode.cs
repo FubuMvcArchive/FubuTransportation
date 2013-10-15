@@ -92,7 +92,7 @@ namespace FubuTransportation.Configuration
 
             if (replyNode != null)
             {
-                clone[Envelope.ReplyUriKey] = replyNode.Uri.ToString();
+                clone[Envelope.ReplyUriKey] = replyNode.Channel.Address.ToString();
             }
 
             Channel.Send(envelope.Data, clone);

@@ -17,7 +17,7 @@ namespace FubuTransportation.Runtime
             _pipeline = pipeline;
             _graph = graph;
             _node = node;
-            _address = node.Uri;
+            _address = node.Channel.Address;
         }
 
         public void Receive(byte[] data, IHeaders headers, IMessageCallback callback)

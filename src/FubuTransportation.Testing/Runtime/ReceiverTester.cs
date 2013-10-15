@@ -30,6 +30,7 @@ namespace FubuTransportation.Testing.Runtime
         {
             theGraph = new ChannelGraph();
             theNode = new ChannelNode();
+            theNode.Channel = new InMemoryChannel(new Uri("memory://foo"));
 
             theInvoker = new RecordingHandlerPipeline();
 

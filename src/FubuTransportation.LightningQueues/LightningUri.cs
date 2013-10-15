@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using FubuCore;
 
 namespace FubuTransportation.LightningQueues
 {
@@ -11,7 +10,6 @@ namespace FubuTransportation.LightningQueues
 
         private readonly Uri _address;
         private readonly int _port;
-        private readonly IPEndPoint _endpoint;
         private readonly string _queueName;
 
         public LightningUri(string uriString) : this(new Uri(uriString))
@@ -26,17 +24,8 @@ namespace FubuTransportation.LightningQueues
                 throw new ArgumentOutOfRangeException("{0} is the wrong protocol for a LightningQueue Uri.  Only {1} is accepted", address.Scheme, Protocol);
             }
 
-            _address = address;
+            _address = address.ToMachineUri();
             _port = address.Port;
-
-            if (address.Host.EqualsIgnoreCase("localhost") || address.Host.EqualsIgnoreCase(Environment.MachineName))
-            {
-                _endpoint = new IPEndPoint(IPAddress.Loopback, _port);
-            }
-            else
-            {
-                _endpoint = new IPEndPoint(IPAddress.Parse(address.Host), _port);
-            }
 
             _queueName = _address.Segments.Last();
         }
@@ -51,11 +40,6 @@ namespace FubuTransportation.LightningQueues
             get { return _port; }
         }
 
-        public IPEndPoint Endpoint
-        {
-            get { return _endpoint; }
-        }
-
         public string QueueName
         {
             get { return _queueName; }
@@ -64,6 +48,8 @@ namespace FubuTransportation.LightningQueues
 
     public static class UriExtensions
     {
+        private static HashSet<string> _locals = new HashSet<string>(new[]{"localhost", "127.0.0.1"}, StringComparer.OrdinalIgnoreCase);
+
         public static LightningUri ToLightningUri(this Uri uri)
         {
             return new LightningUri(uri);
@@ -76,8 +62,11 @@ namespace FubuTransportation.LightningQueues
 
         public static Uri ToMachineUri(this Uri uri)
         {
-            var uriString = uri.ToString().Replace("localhost", Environment.MachineName);
-            return new Uri(uriString);
+            if (_locals.Contains(uri.Host))
+            {
+                return new UriBuilder(uri) {Host = Environment.MachineName}.Uri;
+            }
+            return uri;
         }
     }
 }
