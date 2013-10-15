@@ -1,0 +1,11 @@
+<!--Title: Serialization-->
+<!--Url: serialization-->
+
+<markdown>
+The serialization uses a message header to indicate the serialization being used for a particular message. The header used is the standard
+Http Content-Type header. The currently supported list of content types is `application/json`, `application/xml`, and `binary/octet-stream`.
+As with everything else in fubu you can register your own implementation to either override default behavior, or to add your own new content types.
+
+Also as a way to provide a backwards compatibility strategy when interacting with legacy systems. The handler graph can indicate a default serializer
+if a header cannot be provided.
+</markdown>

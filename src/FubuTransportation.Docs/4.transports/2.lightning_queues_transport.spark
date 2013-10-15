@@ -1,0 +1,27 @@
+<!--Title: LightningQueuesTransport-->
+<!--Url: lightning-queues-transport-->
+
+<markdown>
+LightningQueuesTransport provides a similar transport as you would expect when using MSMQ. It is a store and forward style
+queue that doesn't rely on network connectivity to send messages while ensuring guaranteed delivery. Currently the queue storage
+uses Esent, but there are plans to move that to LMDB in the future. The network communication techniques make this transport
+compatible with hardware-based load balancers.
+
+The uri format for LightningQueues is `lq.tcp://{localhost|dns name}:{port}/queueName`
+
+With LightningQueues you can have more than one channel uri pointing the same instance of the running queues (provided it's in the same process).
+However each /queueName can be unique and have it's own thread scheduling implementation to provide an easy way for one queue to have several threads
+reading from it, while another queue can have a single thread.
+
+Examples
+
+`lq.tcp://localhost:2200/bulk_file_processing` 1 thread
+
+`lq.tcp://localhost:2200/real_time_message_processing` 6 threads
+
+The registry example to go along with what that would look like
+
+<Snippet name="LQMultipleChannelsSample" />
+
+</markdown>
+

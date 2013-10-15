@@ -1,0 +1,27 @@
+<!--Title: Hosting-->
+<!--Url: hosting-->
+
+<markdown>
+Running the application
+-----------------------
+
+Run with `fubu run {directory}`
+
+Additional info `fubu help run`
+
+TODO(Add links to fubu cli docs)
+
+Installing as a Windows Service w/TopShelf
+-------------------------------
+
+Install nuget for bottle service runner
+
+`ripple install BottleServiceRunner -p {ProjectName}`
+
+From the directory containing all of your assemblies, including BottleServiceRunner.exe
+
+`BottleServiceRunner.exe install`
+
+TODO(Add more details on the bridge between topshelf)
+</markdown>
+

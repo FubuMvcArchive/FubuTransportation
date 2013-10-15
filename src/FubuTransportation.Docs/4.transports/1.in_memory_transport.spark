@@ -1,0 +1,15 @@
+<!--Title: InMemoryTransport-->
+<!--Url: in-memory-transport-->
+
+<markdown>
+The InMemoryTransport is intended for use with lightweight integration testing. It uses the scheme and uri format of `memory://foo/bar`.
+
+Regardless of configuration there is a convenient way of collapsing all of your endpoints to use the in memory transport.
+
+<Snippet name="FubuTransportInMemory" />
+
+Followed by an easy way to reset everything back to the configured settings
+
+<Snippet name="FubuTransportClearInMemory" />
+</markdown>
+

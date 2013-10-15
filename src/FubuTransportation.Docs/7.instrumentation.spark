@@ -1,0 +1,33 @@
+<!--Title: Instrumentation-->
+<!--Url: instrumentation-->
+
+<markdown>
+The FubuMVC.Instrumentation bottle that extends the diagnostics project comes in very handy for your messaging system. It provides
+a good amount of detail for every message handler in your system. Average time, hit count, exception count, exception percentage, etc.
+This gives you a simple way to see how your system is operating without installing any crazy additional tools or even worse, performance
+counters.
+
+In order to run the instrumentation your setup will change slightly, because you will need to boot the 'web' portion of FubuMVC with Katana
+running in process.
+
+In addition make sure to install the instrumentation nuget.
+
+`ripple install FubuMVC.Instrumentation -p {ProjectName}`
+
+Following from the getting started examples, we'll change a couple items.
+First we'll create a new FubuRegistry and import the transport registry.
+
+<Snippet name="FubuEmbeddedRegistrySample" />
+
+Next will be to change our application source to use this new registry instead.
+
+<Snippet name="FubuEmbeddedApplicationSourceSample" />
+
+Run the application with `fubu run {directory`}
+
+Browse to `http://localhost:5500/_fubu`
+
+Click on the tab for Instrumentation. This is where you'll see all the performance related information. Feel free to look around at the 
+other information available in the diagnostics too.
+</markdown>
+
