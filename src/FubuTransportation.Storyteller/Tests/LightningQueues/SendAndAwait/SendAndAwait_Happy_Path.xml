@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Test name="SendAndAwait Happy Path" lifecycle="Acceptance">
+<Test name="SendAndAwait Happy Path" lifecycle="Regression">
   <SendAndAwait>
     <SendMessageSuccessfully isStep="True" />
     <AckIsReceived isStep="True" seconds="10" />
