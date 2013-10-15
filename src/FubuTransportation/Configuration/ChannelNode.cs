@@ -82,7 +82,7 @@ namespace FubuTransportation.Configuration
         }
 
         // virtual for testing of course
-        public virtual void Send(Envelope envelope, ChannelNode replyNode = null)
+        public virtual IHeaders Send(Envelope envelope, ChannelNode replyNode = null)
         {
             var clone = new NameValueHeaders();
             envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
@@ -96,6 +96,8 @@ namespace FubuTransportation.Configuration
             }
 
             Channel.Send(envelope.Data, clone);
+
+            return clone;
         }
     }
 

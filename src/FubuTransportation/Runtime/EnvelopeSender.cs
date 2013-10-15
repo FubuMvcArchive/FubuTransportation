@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Logging;
+using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
@@ -41,9 +42,16 @@ namespace FubuTransportation.Runtime
 
             // TODO -- harden this and log any exceptions
             channels.Each(x => {
-                _logger.InfoMessage(() => new EnvelopeSent(envelope.ToToken(), x));
-
-                x.Send(envelope, _router.ReplyNodeFor(x));
+                // TODO -- I say we change this to returning a Reply Uri and not worrying
+                // about having a full node
+                var replyNode = _router.ReplyNodeFor(x);
+                
+                var headers = x.Send(envelope, replyNode: replyNode);
+                _logger.InfoMessage(() => new EnvelopeSent(new EnvelopeToken
+                {
+                    Headers = headers,
+                    Message = envelope.Message
+                }, x));
             });
 
             return envelope.CorrelationId;

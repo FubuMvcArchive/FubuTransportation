@@ -5,6 +5,7 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
@@ -101,7 +102,7 @@ namespace FubuTransportation.Testing.Runtime
             Uri = ("{0}://{1}".ToFormat(protocol ?? "fake", Key)).ToUri();
         }
 
-        public override void Send(Envelope envelope, ChannelNode replyNode = null)
+        public override IHeaders Send(Envelope envelope, ChannelNode replyNode = null)
         {
             if (replyNode != null)
             {
@@ -110,6 +111,7 @@ namespace FubuTransportation.Testing.Runtime
 
             LastEnvelope = envelope;
 
+            return envelope.Headers;
         }
     }
 }

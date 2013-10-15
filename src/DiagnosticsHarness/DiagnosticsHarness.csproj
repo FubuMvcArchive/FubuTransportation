@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bottles">
-      <HintPath>..\packages\BottleServiceRunner\lib\Bottles.dll</HintPath>
+      <HintPath>..\packages\Bottles\lib\Bottles.dll</HintPath>
     </Reference>
     <Reference Include="BottleServiceRunner">
       <HintPath>..\packages\BottleServiceRunner\lib\BottleServiceRunner.exe</HintPath>
