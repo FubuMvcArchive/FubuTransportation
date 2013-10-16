@@ -1,0 +1,11 @@
+<!--Title: Understanding the Message Handling Pipeline-->
+<!--Url: understanding-the-message-handling-pipeline-->
+
+<markdown>
+There are two basic parts to the FubuTransportation message
+handling pipline. The handler pipeline responsible for what to do with the message after a message is received.
+The second part is the invocation of a behavior chain, the same chain used in fubumvc.
+</markdown>
+
+<TableOfContents />
+

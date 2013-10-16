@@ -131,6 +131,10 @@
     <Compile Include="Docs\GettingStarted\GettingStartedTester.cs" />
     <Compile Include="Docs\GettingStarted\GettingStartedTransportRegistry.cs" />
     <Compile Include="Docs\GettingStarted\Handlers.cs" />
+    <Compile Include="Docs\Instrumentation\FubuEmbeddedApplicationSource.cs" />
+    <Compile Include="Docs\Instrumentation\FubuEmbeddedRegistry.cs" />
+    <Compile Include="Docs\Transports\InMemorySamples.cs" />
+    <Compile Include="Docs\Transports\LightningQueuesSamples.cs" />
     <Compile Include="envelope_handlers_are_registered_in_the_right_order.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuationTester.cs" />
     <Compile Include="ErrorHandling\ErrorHandlerBehavior_attachment_to_the_handler_chains.cs" />

@@ -1,0 +1,25 @@
+<!--Title: Handler Pipeline-->
+<!--Url: handler-pipeline-->
+
+<markdown>
+The handler pipeline starts by invoking the serialization. After serialization is finished a strategy of envelope handlers is invoked.
+Strategy pattern comes to play for things like delayed messages, handling a correlated response, invoking the chain, or indicating that
+no handler is found. This is accomplished by returning a continuation from the envelope handler. The continuation is responsible for the actual
+processing of a message. Although you may never have to interact directly with the handler pipeline, it's good to understand what it's doing under the covers.
+Listed below are all the responsibilities that the handler pipeline currently deals with.
+
+
+* Handling the execution and result of async handlers
+* Handling errors that occurred while invoking the handler's behavior chain
+* Indicating the success of message handling
+* Delayed retry of a message after an error has occurred
+* Moving serialization errors immediately to the error queue
+* Moving errors to the error queue
+* Requeueing a message after an error has occurred (putting at the end of the line)
+* Retrying the handler's behavior chain immediately
+* Moving a delayed message to a temporary holding queue until it's time to be received again
+* Sending a reply that no handler's were found
+* Bypassing the handler chain for a correlated response invoked via the event aggregator
+* Invoking the handler's behavior chain
+
+</markdown>
