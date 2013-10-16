@@ -191,6 +191,7 @@
     <Compile Include="Runtime\EnvelopeModifierTester.cs" />
     <Compile Include="Runtime\EnvelopeSenderTester.cs" />
     <Compile Include="Runtime\EnvelopeTester.cs" />
+    <Compile Include="Runtime\EnvelopeTokenTester.cs" />
     <Compile Include="Runtime\generic_handlers_are_called_for_messages_that_match.cs" />
     <Compile Include="Runtime\Headers\Headers_testing.cs" />
     <Compile Include="Runtime\Invocation\CascadingHandlerInvokerTester.cs" />

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using Bottles.Services.Messaging.Tracking;
+using FubuCore;
 using FubuTransportation.Events;
 using FubuTransportation.Logging;
-using FubuCore;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.TestSupport
@@ -17,17 +16,21 @@ namespace FubuTransportation.TestSupport
     {
         public static readonly string MessageTrackType = "Handler Chain Execution";
 
-        public void Handle(ChainExecutionStarted message)
+        public void Handle(ChainExecutionFinished message)
         {
-            var track = MessageTrack.ForSent(message, message.Envelope.CorrelationId);
+            if (message.Envelope.IsPollingJobRelated()) return;
+
+            MessageTrack track = MessageTrack.ForReceived(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 
             Bottles.Services.Messaging.EventAggregator.SendMessage(track);
         }
 
-        public void Handle(ChainExecutionFinished message)
+        public void Handle(ChainExecutionStarted message)
         {
-            var track = MessageTrack.ForReceived(message, message.Envelope.CorrelationId);
+            if (message.Envelope.IsPollingJobRelated()) return;
+
+            MessageTrack track = MessageTrack.ForSent(message, message.Envelope.CorrelationId);
             track.Type = track.FullName = MessageTrackType;
 
             Bottles.Services.Messaging.EventAggregator.SendMessage(track);
@@ -38,8 +41,20 @@ namespace FubuTransportation.TestSupport
             handle(message.Envelope, MessageTrack.Sent, message.Uri);
         }
 
+        public void Handle(MessageFailed message)
+        {
+            handle(message.Envelope, MessageTrack.Received, message.Envelope.Destination);
+        }
+
+        public void Handle(MessageSuccessful message)
+        {
+            handle(message.Envelope, MessageTrack.Received, message.Envelope.Destination);
+        }
+
         private void handle(EnvelopeToken envelope, string status, Uri uri)
         {
+            if (envelope.IsPollingJobRelated()) return;
+
             var track = new MessageTrack
             {
                 Type = "OutstandingEnvelope",
@@ -50,17 +65,5 @@ namespace FubuTransportation.TestSupport
 
             Bottles.Services.Messaging.EventAggregator.SendMessage(track);
         }
-
-        public void Handle(MessageSuccessful message)
-        {
-            handle(message.Envelope, MessageTrack.Received, message.Envelope.Destination);
-        }
-
-        public void Handle(MessageFailed message)
-        {
-            handle(message.Envelope, MessageTrack.Received, message.Envelope.Destination);
-        }
     }
-
-
 }

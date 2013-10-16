@@ -94,6 +94,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="FubuTransportFixture.cs" />
     <Compile Include="FubuTransportSystem.cs" />
     <Compile Include="MessageContextualInfoProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

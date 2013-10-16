@@ -63,6 +63,11 @@ namespace FubuTransportation.Diagnostics
             return _histories;
         }
 
+        public IEnumerable<MessageRecord> All()
+        {
+            return _histories.SelectMany(x => x.Records());
+        }
+
         public void Receive(MessageRecord message)
         {
             Record(message);

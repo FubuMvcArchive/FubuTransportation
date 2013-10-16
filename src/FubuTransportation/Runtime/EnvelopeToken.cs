@@ -1,4 +1,6 @@
 ﻿using System;
+using FubuCore;
+using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
@@ -31,6 +33,11 @@ namespace FubuTransportation.Runtime
             {
                 _message = new Lazy<object>(() => value);
             }
+        }
+
+        public bool IsPollingJobRelated()
+        {
+            return Message == null ? false : Message.GetType().Closes(typeof (JobRequest<>));
         }
 
         protected bool Equals(EnvelopeToken other)

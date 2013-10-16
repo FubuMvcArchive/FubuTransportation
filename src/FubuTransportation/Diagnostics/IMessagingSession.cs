@@ -8,5 +8,7 @@ namespace FubuTransportation.Diagnostics
         void Record(MessageRecord record);
         IEnumerable<MessageHistory> TopLevelMessages();
         IEnumerable<MessageHistory> AllMessages();
+
+        IEnumerable<MessageRecord> All();
     }
 }
