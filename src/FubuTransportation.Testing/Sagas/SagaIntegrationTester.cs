@@ -59,8 +59,6 @@ namespace FubuTransportation.Testing.Sagas
 
             Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds:60000);
 
-            MessageHistory.Outstanding().Any().ShouldBeFalse();
-
             var messages = theLogger.Traces.Select(x => x.Message);
             messages.Each(x => Console.WriteLine(x));
 
