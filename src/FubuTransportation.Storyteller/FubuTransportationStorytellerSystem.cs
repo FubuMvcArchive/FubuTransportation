@@ -1,5 +1,6 @@
 ﻿using FubuTransportation.Configuration;
 using FubuTransportation.Serenity;
+using ServiceNode;
 using WebsiteNode;
 
 namespace FubuTransportation.Storyteller
@@ -12,6 +13,10 @@ namespace FubuTransportation.Storyteller
                 x.UseParallelServiceDirectory("ServiceNode");
                 x.Setup.ShadowCopyFiles = false.ToString();
             });
+
+            OnContextCreation(TextFileWriter.Clear);
         }
+
+
     }
 }

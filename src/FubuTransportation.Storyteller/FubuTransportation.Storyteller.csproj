@@ -132,6 +132,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fixtures\BatchMessageFixture.cs" />
     <Compile Include="Fixtures\SendAndAwaitFixture.cs" />
     <Compile Include="FubuTransportationStorytellerSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

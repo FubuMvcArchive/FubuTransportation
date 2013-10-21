@@ -23,8 +23,8 @@ namespace FubuTransportation.Serenity
 
         public sealed override void TearDown()
         {
-            Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds: TimeoutInMilliseconds);
             teardown();
+            Wait.Until(() => !MessageHistory.Outstanding().Any() && MessageHistory.All().Any(), timeoutInMilliseconds: TimeoutInMilliseconds);
         }
 
         protected virtual void teardown()
