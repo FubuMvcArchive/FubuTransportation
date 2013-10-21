@@ -18,6 +18,11 @@ namespace FubuTransportation.Runtime
 
         public Subscriptions(ChannelGraph graph, Func<IHandlerPipeline> invoker, IEnumerable<ITransport> transports)
         {
+            if (!transports.Any())
+            {
+                throw new Exception("No transports are registered.  FubuTransportation cannot function without at least one ITransport");
+            }
+
             _graph = graph;
             _transports = transports;
             _pipeline = new Lazy<IHandlerPipeline>(invoker);
