@@ -51,7 +51,7 @@ namespace FubuTransportation.Diagnostics
                     AddBodyRow(tr => writeHeaderValue(headers[i], tr));
                 }
 
-                if (FubuCore.StringExtensions.IsNotEmpty(rec.ExceptionText))
+                if (rec.ExceptionText.IsNotEmpty())
                 {
                     AddBodyRow(tr => {
                         var cell = tr.Cell();
@@ -67,8 +67,8 @@ namespace FubuTransportation.Diagnostics
         private static void writeHeaderValue(string headerValue, TableRowTag tr)
         {
             var parts = headerValue.Split('=');
-            tr.Cell(parts.First() + " = ").Style("text-align", "right");
-            tr.Cell(parts.Last());
+            tr.Cell(parts.First() + " = ").Attr("valign", "top").Style("text-align", "right").Attr("nowrap", "true");
+            tr.Cell(parts.Last()).Attr("valign", "top").Attr("nowrap", "true");
         }
     }
 }

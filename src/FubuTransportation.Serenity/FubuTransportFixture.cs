@@ -12,8 +12,13 @@ namespace FubuTransportation.Serenity
 
         public sealed override void SetUp(ITestContext context)
         {
-            MessageHistory.ClearAll();
+            startListening();
             setup();
+        }
+
+        protected static void startListening()
+        {
+            MessageHistory.ClearAll();
         }
 
         protected virtual void setup()
@@ -24,7 +29,13 @@ namespace FubuTransportation.Serenity
         public sealed override void TearDown()
         {
             teardown();
-            Wait.Until(() => !MessageHistory.Outstanding().Any() && MessageHistory.All().Any(), timeoutInMilliseconds: TimeoutInMilliseconds);
+            waitForTheMessageProcessingToFinish();
+        }
+
+        protected void waitForTheMessageProcessingToFinish()
+        {
+            Wait.Until(() => !MessageHistory.Outstanding().Any() && MessageHistory.All().Any(),
+                timeoutInMilliseconds: TimeoutInMilliseconds);
         }
 
         protected virtual void teardown()

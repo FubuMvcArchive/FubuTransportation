@@ -1,4 +1,5 @@
-﻿using FubuCore.Logging;
+﻿using FubuCore;
+using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
@@ -57,7 +58,8 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 Message = "Inline message processed: " + Message,
                 Id = Envelope.CorrelationId,
-                ParentId = Envelope.ParentId
+                ParentId = Envelope.ParentId,
+                Headers = "{0}={1}".ToFormat(Envelope.MessageTypeKey, Message.GetType().FullName)
             };
         }
     }
