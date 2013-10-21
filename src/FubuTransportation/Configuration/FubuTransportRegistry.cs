@@ -63,6 +63,37 @@ namespace FubuTransportation.Configuration
             return BehaviorGraph.BuildFrom(registry);
         }
 
+        /// <summary>
+        /// Import configuration from an extension
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void Import<T>() where T : IFubuTransportRegistryExtension, new()
+        {
+            new T().Configure(this);
+        }
+
+        /// <summary>
+        /// Import configuration from an extentension with configured options
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configuration"></param>
+        public void Import<T>(Action<T> configuration) where T : IFubuTransportRegistryExtension, new()
+        {
+            var extension = new T();
+            configuration(extension);
+
+            extension.Configure(this);
+        }
+
+        /// <summary>
+        /// Import configuration from an extension
+        /// </summary>
+        /// <param name="extension"></param>
+        public void Import(IFubuTransportRegistryExtension extension)
+        {
+            extension.Configure(this);
+        }
+
         public void SagaStorage<T>() where T : ISagaStorage, new()
         {
             AlterSettings<TransportSettings>(x => x.SagaStorageProviders.Add(new T()));

@@ -151,6 +151,7 @@
     <Compile Include="ErrorHandling\RetryNowContinuationTester.cs" />
     <Compile Include="Events\EventAggregatorTester.cs" />
     <Compile Include="Events\ExpiringListenerCleanupTester.cs" />
+    <Compile Include="Extension_importing_tester.cs" />
     <Compile Include="FakeHandlers.cs" />
     <Compile Include="FubuTransport_default_options_Tester.cs" />
     <Compile Include="FubuTransportRegistry_application_of_policies_Tester.cs" />

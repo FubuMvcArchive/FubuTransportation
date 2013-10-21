@@ -80,6 +80,7 @@
     <Compile Include="Configuration\HandlerGraph.cs" />
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\IChannelNodeVisitor.cs" />
+    <Compile Include="Configuration\IFubuTransportRegistryExtension.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="Diagnostics\IMessagingSession.cs" />
