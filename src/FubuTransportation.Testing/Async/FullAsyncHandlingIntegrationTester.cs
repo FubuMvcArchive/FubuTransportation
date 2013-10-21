@@ -40,6 +40,8 @@ namespace FubuTransportation.Testing.Async
     {
         public AsyncRegistry()
         {
+            EnableInMemoryTransport();
+
             Global.WrapWith<FooWrapper>();
         }
     }

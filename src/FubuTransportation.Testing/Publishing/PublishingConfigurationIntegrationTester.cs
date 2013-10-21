@@ -8,6 +8,7 @@ using FubuMVC.Core.Resources.Conneg;
 using FubuMVC.Katana;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.Testing.Events;
 using FubuTransportation.Web;
 using NUnit.Framework;
@@ -28,6 +29,8 @@ namespace FubuTransportation.Testing.Publishing
         [SetUp]
         public void SetUp()
         {
+            FubuTransport.AllQueuesInMemory = true;
+
             container = new Container();
             theServiceBus = MockRepository.GenerateMock<IServiceBus>();
 

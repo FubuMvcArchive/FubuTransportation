@@ -30,6 +30,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void SetUp()
         {
             theTransportRegistry = FubuTransportRegistry.Empty();
+            theTransportRegistry.EnableInMemoryTransport();
+
             TestMessageRecorder.Clear();
 
             _invoker = new Lazy<IChainInvoker>(() => {

@@ -71,6 +71,8 @@ namespace FubuTransportation.Testing.Polling
     {
         public PollingRegistry()
         {
+            EnableInMemoryTransport();
+
             Polling.RunJob<OneJob>().ScheduledAtInterval<PollingSettings>(x => x.OneInterval);
             Polling.RunJob<TwoJob>().ScheduledAtInterval<PollingSettings>(x => x.TwoInterval);
             Polling.RunJob<ThreeJob>().ScheduledAtInterval<PollingSettings>(x => x.ThreeInterval);

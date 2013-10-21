@@ -54,7 +54,10 @@ namespace FubuTransportation.Testing
 
     public class MyFirstTransport : FubuTransportRegistry
     {
-        
+        public MyFirstTransport()
+        {
+            EnableInMemoryTransport();
+        }
     }
 
 
