@@ -126,7 +126,7 @@ namespace FubuTransportation.Runtime
 
             if (Message != null)
             {
-                return string.Format("Envelope for type {0} w/ Id {1}", Message.GetType().Name, id);
+                return string.Format("Envelope for message {0} ({1}) w/ Id {2}", Message, Message.GetType().Name, id);
             }
             else
             {

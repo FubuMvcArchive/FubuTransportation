@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
@@ -34,29 +35,37 @@ namespace FubuTransportation.Runtime
 
             var channels = _router.FindChannels(envelope).ToArray();
 
-            // TODO -- needs more work and thought here about what to do.
             if (!channels.Any())
             {
-                throw new Exception("No channels match this message");
+                throw new Exception("No channels match this message ({0})".ToFormat(envelope));
             }
 
-            // TODO -- harden this and log any exceptions
             channels.Each(x => {
-                // TODO -- I say we change this to returning a Reply Uri and not worrying
-                // about having a full node
-                var replyNode = _router.ReplyNodeFor(x);
-                
-                var headers = x.Send(envelope, replyNode: replyNode);
-                _logger.InfoMessage(() => new EnvelopeSent(new EnvelopeToken
+                try
                 {
-                    Headers = headers,
-                    Message = envelope.Message
-                }, x));
+                    sendToChannel(envelope, x);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(envelope.CorrelationId, "Failed trying to send message {0} to channel {1}".ToFormat(envelope, x.Uri), e);
+                }
             });
 
             return envelope.CorrelationId;
         }
 
+        private void sendToChannel(Envelope envelope, ChannelNode node)
+        {
+            // TODO -- I say we change this to returning a Reply Uri and not worrying
+            // about having a full node
+            var replyNode = _router.ReplyNodeFor(node);
 
+            var headers = node.Send(envelope, replyNode: replyNode);
+            _logger.InfoMessage(() => new EnvelopeSent(new EnvelopeToken
+            {
+                Headers = headers,
+                Message = envelope.Message
+            }, node));
+        }
     }
 }
