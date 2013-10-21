@@ -74,17 +74,25 @@ namespace FubuTransportation.Registration
         /// </summary>
         public void IncludeClassesSuffixedWithConsumer()
         {
-            _description.WriteLine("Public classes that are suffixed by 'Consumer'");
-            IncludeTypesNamed(x => x.EndsWith("Consumer"));
+            IncludeClassesSuffixedWith("Consumer");
         }
 
         /// <summary>
-        /// Find Handlers on classes whose name ends on 'Consumer'
+        /// Find Handlers from classes whose name ends with 'Consumer'
         /// </summary>
         public void IncludeClassesSuffixedWithHandler()
         {
-            _description.WriteLine("Public classes that are suffixed by 'Handler'");
-            IncludeTypesNamed(x => x.EndsWith("Handler"));
+            IncludeClassesSuffixedWith("Handler");
+        }
+
+        /// <summary>
+        /// Find Handlers from concrete classes whose names ends with the suffix
+        /// </summary>
+        /// <param name="suffix"></param>
+        public void IncludeClassesSuffixedWith(string suffix)
+        {
+            _description.WriteLine("Public classes that are suffixed by '{0}'".ToFormat(suffix));
+            IncludeTypesNamed(x => x.EndsWith(suffix));
         }
 
         /// <summary>
