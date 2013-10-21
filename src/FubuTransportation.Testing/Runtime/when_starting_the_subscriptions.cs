@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
@@ -55,7 +56,7 @@ namespace FubuTransportation.Testing.Runtime
                 Uri = "foo://2".ToUri()
             });
 
-            var subscriptions = new Subscriptions(graph, () => null, new ITransport[0]);
+            var subscriptions = new Subscriptions(graph, () => null, new ITransport[]{new InMemoryTransport()});
 
 
             Exception<InvalidOrMissingTransportException>.ShouldBeThrownBy(() => {
