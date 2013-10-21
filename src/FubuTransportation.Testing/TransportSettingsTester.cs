@@ -18,5 +18,10 @@ namespace FubuTransportation.Testing
             new TransportSettings().DelayMessagePolling.ShouldEqual(5000);
         }
 
+        [Test]
+        public void in_memory_transport_is_disabled_by_default()
+        {
+            new TransportSettings().EnableInMemoryTransport = false;
+        }
     }
 }

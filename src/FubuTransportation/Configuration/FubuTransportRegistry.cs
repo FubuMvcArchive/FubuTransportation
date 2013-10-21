@@ -327,6 +327,14 @@ namespace FubuTransportation.Configuration
         {
             _alterations.Add(r => r.Services<T>());
         }
+
+        /// <summary>
+        /// Enable the in memory transport
+        /// </summary>
+        public void EnableInMemoryTransport()
+        {
+            AlterSettings<TransportSettings>(x => x.EnableInMemoryTransport = true);
+        }
     }
 
     public class FubuTransportRegistry<T> : FubuTransportRegistry

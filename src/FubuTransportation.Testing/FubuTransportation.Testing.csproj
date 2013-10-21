@@ -167,6 +167,7 @@
     <Compile Include="InMemory\InMemorySagaRepositoryTester.cs" />
     <Compile Include="InMemory\InMemorySagaStorageTester.cs" />
     <Compile Include="InMemory\InMemoryTransportTester.cs" />
+    <Compile Include="InMemory\InMemoryTransport_opt_in_registration_tester.cs" />
     <Compile Include="InMemory\ReplayDelayedQueueIntegrationTester.cs" />
     <Compile Include="InMemory\SagaStateCacheTester.cs" />
     <Compile Include="IntegratedFubuTransportRegistryTester.cs" />

@@ -80,6 +80,8 @@ namespace FubuTransportation.Testing.Sagas
         [SetUp]
         public void SetUp()
         {
+            
+
             theLogger = new SagaLogger();
             theContainer = new Container(x =>
             {
@@ -123,6 +125,8 @@ namespace FubuTransportation.Testing.Sagas
     {
         public SagaTestRegistry()
         {
+            AlterSettings<TransportSettings>(x => x.EnableInMemoryTransport = true);
+
             Channel(x => x.Queue)
                 .AcceptsMessagesInAssemblyContainingType<SagaTestRegistry>()
                 .ReadIncoming(new ThreadScheduler(2));

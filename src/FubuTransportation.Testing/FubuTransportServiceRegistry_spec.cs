@@ -72,16 +72,6 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void in_memory_transport_is_registered()
-        {
-            var registry = new FubuRegistry();
-            registry.Services<FubuTransportServiceRegistry>();
-            BehaviorGraph.BuildFrom(registry).Services
-                         .ServicesFor<ITransport>().Single(x => x.Type == typeof (InMemoryTransport))
-                         .ShouldNotBeNull();
-        }
-
-        [Test]
         public void event_aggregation_listener_is_registered()
         {
             var registry = new FubuRegistry();

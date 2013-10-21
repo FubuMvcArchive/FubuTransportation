@@ -103,6 +103,8 @@ namespace FubuTransportation.Testing.Runtime
     {
         public RoutedRegistry()
         {
+            EnableInMemoryTransport();
+
             Channel(x => x.Service1).AcceptsMessage<Events.Message1>();
             Channel(x => x.Service1).AcceptsMessage<Events.Message2>();
 

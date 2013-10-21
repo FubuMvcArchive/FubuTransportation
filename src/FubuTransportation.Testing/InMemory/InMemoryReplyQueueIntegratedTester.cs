@@ -19,6 +19,8 @@ namespace FubuTransportation.Testing.InMemory
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
+            FubuTransport.AllQueuesInMemory = true;
+
             theRuntime = FubuTransport.For(x => { }).StructureMap(new Container()).Bootstrap();
             graph = theRuntime.Factory.Get<ChannelGraph>();
 
