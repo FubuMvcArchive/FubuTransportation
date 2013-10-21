@@ -65,7 +65,7 @@ namespace FubuTransportation.LightningQueues
         {
             var channelNode = graph.FirstOrDefault(x => x.Protocol() == LightningUri.Protocol && x.Incoming);
             if(channelNode == null)
-                throw new InvalidOperationException("You must have an incoming channel for accepting replies");
+                throw new InvalidOperationException("You must have at least one incoming Lightning Queue channel for accepting replies");
 
             return channelNode;
         }

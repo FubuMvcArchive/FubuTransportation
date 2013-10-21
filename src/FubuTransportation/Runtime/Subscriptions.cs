@@ -68,12 +68,23 @@ namespace FubuTransportation.Runtime
 
         public void Start()
         {
-            _transports.Each(x => x.OpenChannels(_graph));
-
-            var missingChannels = _graph.Where(x => x.Channel == null);
-            if (missingChannels.Any())
+            try
             {
-                throw new InvalidOrMissingTransportException(_transports, missingChannels);
+                _transports.Each(x => x.OpenChannels(_graph));
+
+                var missingChannels = _graph.Where(x => x.Channel == null);
+                if (missingChannels.Any())
+                {
+                    throw new InvalidOrMissingTransportException(_transports, missingChannels);
+                }
+            }
+            catch (InvalidOrMissingTransportException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOrMissingTransportException(e, _transports, _graph);
             }
 
             _graph.StartReceiving(_pipeline.Value);
@@ -93,6 +104,21 @@ namespace FubuTransportation.Runtime
             return "Missing channel Uri configuration or unknown transport types\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") + " and the invalid nodes are \n" + nodes.Select(x => {
                 return "Node '{0}'@{1}; ".ToFormat(x.Key, x.Uri);
             }).Join("\n");
+        }
+
+        public static string ToMessage(Exception ex, IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
+        {
+            return ex.Message + "\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") + " and the nodes are \n" + nodes.Select(x =>
+            {
+                return "Node '{0}'@{1}, Incoming={2}; ".ToFormat(x.Key, x.Uri, x.Incoming);
+            }).Join("\n");
+        }
+
+        public InvalidOrMissingTransportException(Exception ex, IEnumerable<ITransport> transports,
+            IEnumerable<ChannelNode> nodes)
+            : base(ToMessage(ex, transports, nodes), ex)
+        {
+            
         }
 
         public InvalidOrMissingTransportException(IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
