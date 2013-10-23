@@ -116,6 +116,7 @@
     <Compile Include="FubuTransportServiceRegistry.cs" />
     <Compile Include="HandlerExtensions.cs" />
     <Compile Include="ImportHandlers.cs" />
+    <Compile Include="InMemoryQueueRegistration.cs" />
     <Compile Include="InMemory\AllQueuesInMemoryPolicy.cs" />
     <Compile Include="InMemory\InMemoryChannel.cs" />
     <Compile Include="InMemory\InMemoryQueue.cs" />

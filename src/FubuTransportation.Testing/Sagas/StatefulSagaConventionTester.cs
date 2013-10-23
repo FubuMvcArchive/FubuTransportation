@@ -201,6 +201,21 @@ namespace FubuTransportation.Testing.Sagas
                 .FirstOrDefault()  // there are two saga's using this message, just worry about the first one
                 .Repository.Type.ShouldEqual(typeof (SpecialSagaRepository<MySagaState, SagaMessageOne>));
         }
+
+        [Test]
+        public void the_saga_node_is_before_the_handler_calls()
+        {
+            var graph = FubuTransportRegistry.HandlerGraphFor(x => {
+                x.SagaStorage<SpecialSagaStorage>();
+            });
+
+            var chain = graph.ChainFor(typeof (SagaMessageOne));
+            var sagaNode = chain.OfType<StatefulSagaNode>()
+                .FirstOrDefault();
+
+            sagaNode.PreviousNodes.Any(x => x is HandlerCall).ShouldBeFalse();
+            sagaNode.Any(x => x is HandlerCall).ShouldBeTrue();
+        }
     }
 
     public class SpecialSagaStorage : ISagaStorage

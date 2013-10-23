@@ -1,11 +1,11 @@
 ﻿using FubuCore.Descriptions;
 using FubuMVC.Core;
-using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Conventions;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
-using FubuTransportation.Runtime;
+using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
 
 namespace FubuTransportation
@@ -27,21 +27,12 @@ namespace FubuTransportation
             }
 
             registry.Policies.Add<InMemoryQueueRegistration>();
+
+            registry.Policies.Add<ReorderBehaviorsPolicy>(x => {
+                x.ThisNodeMustBeBefore<StatefulSagaNode>();
+                x.ThisNodeMustBeAfter<HandlerCall>();
+            });
         }
     }
 
-    [System.ComponentModel.Description("Register the InMemoryTransport if enabled")]
-    public class InMemoryQueueRegistration : IConfigurationAction
-    {
-        public void Configure(BehaviorGraph graph)
-        {
-            var enabled = FubuTransport.AllQueuesInMemory ||
-                          graph.Settings.Get<TransportSettings>().EnableInMemoryTransport;
-
-            if (enabled)
-            {
-                graph.Services.AddService<ITransport, InMemoryTransport>();
-            }
-        }
-    }
 }
