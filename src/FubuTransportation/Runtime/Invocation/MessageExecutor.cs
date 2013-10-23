@@ -1,4 +1,5 @@
-﻿using FubuCore;
+﻿using System;
+using FubuCore;
 using FubuCore.Logging;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
@@ -37,12 +38,20 @@ namespace FubuTransportation.Runtime.Invocation
                 throw new NoHandlerException(inputType);
             }
 
-            _factory.BuildPartial(chain).InvokePartial();
-            _logger.DebugMessage(() => new InlineMessageProcessed
+            try
             {
-                Envelope = _envelope,
-                Message = message
-            });
+                _factory.BuildPartial(chain).InvokePartial();
+                _logger.DebugMessage(() => new InlineMessageProcessed
+                {
+                    Envelope = _envelope,
+                    Message = message
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.Error(_envelope.CorrelationId, "Failed processing inline message " + message, e);
+                throw;
+            }
 
             _request.Clear(inputType);
         }
