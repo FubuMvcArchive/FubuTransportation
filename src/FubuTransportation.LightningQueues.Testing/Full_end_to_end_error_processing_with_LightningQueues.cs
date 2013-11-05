@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,6 +10,7 @@ using FubuMVC.Core.Registration;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Testing;
 using FubuTransportation.Testing.InMemory;
 using FubuTransportation.Testing.ScenarioSupport;
@@ -64,6 +66,12 @@ namespace FubuTransportation.LightningQueues.Testing
             var scope = _queueManager.BeginTransactionalScope();
             var message = scope.Receive(LightningQueuesTransport.ErrorQueueName, 5.Seconds());
             message.ShouldNotBeNull();
+
+
+            var report = ErrorReport.Deserialize(message.Data);
+            message.Headers.Get("ExceptionType").ShouldEqual("System.InvalidOperationException");
+            report.RawData.ShouldNotBeNull();
+
         }
 
 

@@ -101,15 +101,6 @@ namespace FubuTransportation.LightningQueues
             return payload;
         }
 
-        public static MessagePayload ToPayload(this Message message, ErrorReport report)
-        {
-            var payload = message.ToPayload();
-            payload.Headers.Add("ExceptionMessage", report.ExceptionMessage);
-            payload.Headers.Add("ExceptionText", report.ExceptionText);
-            payload.Headers.Add("ExceptionType", report.ExceptionType);
-            return payload;
-        }
-
         public static DateTime ExecutionTime(this Message message)
         {
             return message.ToEnvelope().ExecutionTime.Value;

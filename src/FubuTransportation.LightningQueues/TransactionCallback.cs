@@ -39,7 +39,15 @@ namespace FubuTransportation.LightningQueues
 
         public void MoveToErrors(ErrorReport report)
         {
-            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.ErrorQueueName, _message.ToPayload(report), _message.Id);
+            var messagePayload = new MessagePayload
+            {
+                Data = report.Serialize(),
+                Headers = report.Headers
+            };
+
+            messagePayload.Headers.Add("ExceptionType", report.ExceptionType);
+
+            _transaction.EnqueueDirectlyTo(LightningQueuesTransport.ErrorQueueName, messagePayload, _message.Id);
             MarkSuccessful();
         }
 
