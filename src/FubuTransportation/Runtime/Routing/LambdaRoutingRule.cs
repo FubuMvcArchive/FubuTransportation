@@ -22,7 +22,7 @@ namespace FubuTransportation.Runtime.Routing
 
         public string Describe()
         {
-            return "Messages of matching " + _expression.ToString();
+            return "Messages matching " + _expression.ToString();
         }
     }
 }

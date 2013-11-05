@@ -30,5 +30,10 @@ namespace FubuTransportation.ErrorHandling
             description.Title = _description;
             description.ShortDescription = string.Empty;
         }
+
+        public override string ToString()
+        {
+            return _description;
+        }
     }
 }

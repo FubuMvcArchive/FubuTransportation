@@ -29,7 +29,7 @@ namespace DiagnosticsHarness
             numbers.Each(x => _serviceBus.Send<NumberMessage>(x));
 
             return
-                FubuContinuation.RedirectTo<FubuMVC.Instrumentation.Features.Instrumentation.InstrumentationEndpoint>(
+                FubuContinuation.RedirectTo<FubuMVC.Instrumentation.Features.Instrumentation.InstrumentationFubuDiagnostics>(
                     x => x.get_instrumentation(null));
         }
 
@@ -41,6 +41,8 @@ namespace DiagnosticsHarness
         public HtmlDocument Index()
         {
             _document.Title = "FubuTransportation Diagnostics Harness";
+
+            _document.Add("a").Attr("href", "/_fubu").Text("Diagnostics");
 
             _document.Add("p")
                 .Text("Type in a list of comma delimited integers.  Any number over 100 will cause an exception in the message handling");

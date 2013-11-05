@@ -38,17 +38,11 @@ namespace FubuTransportation.ErrorHandling
 
         public void Describe(Description description)
         {
-            description.Title = "Error Handler";
-            if (_conditions.Count == 1)
-            {
-                description.AddChild("Condition", _conditions.Single());
-            }
-            else if (_conditions.Count > 1)
-            {
-                description.AddList("Conditions", _conditions);
-            }
+            description.Title = _conditions.Any() 
+                ? _conditions.Select(x => Description.For(x).Title).Join(" and ") 
+                : "Always";
 
-            description.AddChild("Continuation", Continuation);
+            description.ShortDescription = Description.For(Continuation).ShortDescription;
         }
     }
 }

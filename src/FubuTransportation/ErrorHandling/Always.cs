@@ -11,5 +11,10 @@ namespace FubuTransportation.ErrorHandling
         {
             return true;
         }
+
+        public override string ToString()
+        {
+            return "Always";
+        }
     }
 }

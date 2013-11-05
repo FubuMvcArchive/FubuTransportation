@@ -90,6 +90,17 @@
     <Compile Include="Diagnostics\MessageRecordListener.cs" />
     <Compile Include="Diagnostics\MessageRecordNode.cs" />
     <Compile Include="Diagnostics\MessagingSession.cs" />
+    <Compile Include="Diagnostics\Visualization\ChannelGraphFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\Visualization\ChannelsTableTag.cs" />
+    <Compile Include="Diagnostics\Visualization\ChannelVisualization.cs" />
+    <Compile Include="Diagnostics\Visualization\ChildDescriptionTag.cs" />
+    <Compile Include="Diagnostics\Visualization\DescriptionBodyTag.cs" />
+    <Compile Include="Diagnostics\Visualization\DescriptionPropertyTag.cs" />
+    <Compile Include="Diagnostics\Visualization\FubuDiagnosticsConfiguration.cs" />
+    <Compile Include="Diagnostics\Visualization\HandlersTableTag.cs" />
+    <Compile Include="Diagnostics\Visualization\HtmlTagExtensions.cs" />
+    <Compile Include="Diagnostics\Visualization\MessagesFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\Visualization\TransportsTag.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />
     <Compile Include="ErrorHandling\ErrorHandler.cs" />
@@ -116,7 +127,6 @@
     <Compile Include="FubuTransportServiceRegistry.cs" />
     <Compile Include="HandlerExtensions.cs" />
     <Compile Include="ImportHandlers.cs" />
-    <Compile Include="InMemoryQueueRegistration.cs" />
     <Compile Include="InMemory\AllQueuesInMemoryPolicy.cs" />
     <Compile Include="InMemory\InMemoryChannel.cs" />
     <Compile Include="InMemory\InMemoryQueue.cs" />
@@ -126,6 +136,7 @@
     <Compile Include="InMemory\InMemoryTransport.cs" />
     <Compile Include="InMemory\ISagaStateCache.cs" />
     <Compile Include="InMemory\SagaStateCache.cs" />
+    <Compile Include="InMemoryQueueRegistration.cs" />
     <Compile Include="IScenarioWriter.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="Logging\ChainExecutionFinished.cs" />
@@ -163,14 +174,6 @@
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSupport\ClearAllTransports.cs" />
-    <Compile Include="TestSupport\TransportCleanupActivator.cs" />
-    <Compile Include="Web\SendMessageBehavior.cs" />
-    <Compile Include="Web\SendsMessageConvention.cs" />
-    <Compile Include="Web\SendsMessageActionSource.cs" />
-    <Compile Include="Web\ISendMessages.cs" />
-    <Compile Include="Web\SendsMessage.cs" />
-    <Compile Include="Web\SendsMessageExtensions.cs" />
     <Compile Include="RecordingServiceBus.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
     <Compile Include="Registration\FuncBuilder.cs" />
@@ -261,12 +264,22 @@
     <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="TestSupport\ClearAllTransports.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="TestSupport\TransportCleanup.cs" />
+    <Compile Include="TestSupport\TransportCleanupActivator.cs" />
     <Compile Include="TransportSettings.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="Web\ISendMessages.cs" />
+    <Compile Include="Web\SendMessageBehavior.cs" />
+    <Compile Include="Web\SendsMessage.cs" />
+    <Compile Include="Web\SendsMessageActionSource.cs" />
+    <Compile Include="Web\SendsMessageConvention.cs" />
+    <Compile Include="Web\SendsMessageExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Diagnostics\Visualization\ChannelVisualization.spark" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -275,4 +288,13 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <EmbeddedResource Include="pak-WebContent.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="pak-Data.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="pak-Config.zip" />
+  </ItemGroup>
 </Project>

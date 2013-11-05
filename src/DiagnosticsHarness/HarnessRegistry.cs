@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using FubuTransportation;
 using FubuTransportation.Configuration;
 using StructureMap.Diagnostics;
 
@@ -9,6 +10,8 @@ namespace DiagnosticsHarness
     {
         public HarnessRegistry()
         {
+            EnableInMemoryTransport();
+
             // TODO -- publish everything option in the FI?
             Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true);
 

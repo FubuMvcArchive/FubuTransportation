@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using FubuCore.Descriptions;
 using FubuCore.Reflection;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -9,6 +11,8 @@ using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.InMemory
 {
+    [Description("A simple in memory transport suitable for automated testing or development")]
+    [Title("In Memory Transport")]
     public class InMemoryTransport : TransportBase, ITransport
     {
         public void Dispose()

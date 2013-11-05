@@ -13,8 +13,13 @@ namespace FubuTransportation.ErrorHandling
 
         public void Describe(Description description)
         {
-            description.Title = "If the exception is " + typeof (T).Name;
+            description.Title = ToString();
             description.ShortDescription = string.Empty;
+        }
+
+        public override string ToString()
+        {
+            return "If the exception is " + typeof(T).Name;
         }
     }
 }
