@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Testing.Runtime;
@@ -32,7 +33,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         [Test]
         public void capture_the_headers()
         {
-            report.Headers.ShouldEqual(envelope.Headers);
+            report.Headers.ShouldEqual(envelope.Headers.ToNameValues());
         }
 
         [Test]
@@ -53,6 +54,21 @@ namespace FubuTransportation.Testing.ErrorHandling
             report.ExceptionType.ShouldEqual(exception.GetType().FullName);
         }
 
+        [Test]
+        public void can_dehydrate_and_rehydrate_itself()
+        {
+            var data = report.Serialize();
+            var report2 = ErrorReport.Deserialize(data);
 
+            report2.Explanation.ShouldEqual(report.Explanation);
+            report2.ExceptionMessage.ShouldEqual(report.ExceptionMessage);
+            report2.ExceptionType.ShouldEqual(report.ExceptionType);
+            report2.RawData.ShouldEqual(report.RawData);
+
+            foreach (string key in report.Headers.Keys)
+            {
+                report2.Headers.Get(key).ShouldEqual(report.Headers.Get(key));
+            }
+        }
     }
 }

@@ -1,25 +1,35 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.IO;
+using FubuCore;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.ErrorHandling
 {
+    [Serializable]
     public class ErrorReport
     {
         public const string ExceptionDetected = "Exception Detected";
-        public object Message { get; set; }
 
         public ErrorReport(Envelope envelope, Exception ex)
         {
-            Message = envelope.Message;
-            Headers = envelope.Headers;
+            Headers = envelope.Headers.ToNameValues();
             ExceptionText = ex.ToString();
             ExceptionMessage = ex.Message;
             ExceptionType = ex.GetType().FullName;
             Explanation = ExceptionDetected;
+            RawData = envelope.Data;
+            Message = envelope.Message;
         }
 
-        public IHeaders Headers { get; set; }
+        [NonSerialized] public object Message; // leave it like this please
+
+        public byte[] RawData { get; set; }
+
+        public NameValueCollection Headers { get; set; }
 
         public string Explanation { get; set; }
 
@@ -30,6 +40,25 @@ namespace FubuTransportation.ErrorHandling
         protected bool Equals(ErrorReport other)
         {
             return Equals(Message, other.Message) && string.Equals(ExceptionText, other.ExceptionText);
+        }
+
+        public byte[] Serialize()
+        {
+            using (var stream = new MemoryStream())
+            {
+                new BinarySerializer().Serialize(this, stream);
+                stream.Position = 0;
+                return stream.ReadAllBytes();
+            }
+
+            
+        }
+
+        public static ErrorReport Deserialize(byte[] data)
+        {
+            var stream = new MemoryStream(data);
+
+            return (ErrorReport) new BinarySerializer().Deserialize(stream);
         }
 
         public override bool Equals(object obj)
