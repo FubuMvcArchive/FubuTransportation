@@ -164,6 +164,44 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         }
 
         [Test]
+        public void can_serialize_and_deserialize_dictionary()
+        {
+            var serializer = new XmlMessageSerializer();
+            var stream = new MemoryStream();
+            serializer.Serialize(new object[]
+            {
+                new ClassWithDictionary
+                {
+                    DictionaryItems = new Dictionary<string, object[]>
+                    {
+                        {"products", new object[] {new OrderLine {Product = "ayende"}}}
+                    }
+                }
+            }, stream);
+            stream.Position = 0;
+            var actual = serializer.Deserialize(stream).As<ClassWithDictionary>();
+            "ayende".ShouldEqual(actual.DictionaryItems["products"][0].As<OrderLine>().Product);
+        }
+
+        [Test]
+        public void can_serialize_and_deserialize_when_dictionary_property_null()
+        {
+            var serializer = new XmlMessageSerializer();
+            var stream = new MemoryStream();
+            serializer.Serialize(new object[]
+            {
+                new ClassWithDictionary
+                {
+                    DictionaryItems = null
+                }
+            }, stream);
+
+            stream.Position = 0;
+            var actual = serializer.Deserialize(stream).As<ClassWithDictionary>();
+            actual.DictionaryItems.ShouldBeNull();
+        }
+
+        [Test]
         public void Can_deserialize_complex_object_graph()
         {
             var serializer = new XmlMessageSerializer();
@@ -182,6 +220,11 @@ namespace FubuTransportation.Testing.Runtime.Serializers
 
             sample.OrderLines[0].Product.ShouldEqual(order.OrderLines[0].Product);
             sample.OrderLines[1].Product.ShouldEqual(order.OrderLines[1].Product);
+        }
+
+        public class ClassWithDictionary
+        {
+            public Dictionary<string, object[]> DictionaryItems { get; set; }
         }
 
         #region Nested type: ClassWithObjectArray

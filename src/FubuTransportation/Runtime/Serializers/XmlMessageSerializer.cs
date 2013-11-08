@@ -82,17 +82,15 @@ namespace FubuTransportation.Runtime.Serializers
             {
                 XElement list = GetContentWithNamespace(value, namespaces, name);
                 parent.Add(list);
-                foreach (dynamic item in ((IEnumerable)value))
+                foreach (dynamic keyValuePair in ((IEnumerable)value))
                 {
-                    if (item == null)
-                        continue;
-
                     var entry = new XElement("entry");
-                    object keyProp = item.Key;
+                    object keyProp = keyValuePair.Key;
                     if (keyProp == null)
                         continue;
                     WriteObject("Key", keyProp, entry, namespaces);
-                    object propVal = item.Value;
+
+                    object propVal = keyValuePair.Value;
                     if (propVal != null)
                     {
                         WriteObject("Value", propVal, entry, namespaces);
