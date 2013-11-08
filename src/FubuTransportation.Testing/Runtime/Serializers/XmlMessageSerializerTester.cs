@@ -184,6 +184,24 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         }
 
         [Test]
+        public void can_serialize_and_deserialize_when_dictionary_property_null()
+        {
+            var serializer = new XmlMessageSerializer();
+            var stream = new MemoryStream();
+            serializer.Serialize(new object[]
+            {
+                new ClassWithDictionary
+                {
+                    DictionaryItems = null
+                }
+            }, stream);
+
+            stream.Position = 0;
+            var actual = serializer.Deserialize(stream).As<ClassWithDictionary>();
+            actual.DictionaryItems.ShouldBeNull();
+        }
+
+        [Test]
         public void Can_deserialize_complex_object_graph()
         {
             var serializer = new XmlMessageSerializer();
