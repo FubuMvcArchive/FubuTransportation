@@ -16,6 +16,7 @@ using StructureMap;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using System.Linq;
+using StructureMap.Graph;
 
 namespace FubuTransportation.Testing.Sagas
 {
@@ -32,7 +33,8 @@ namespace FubuTransportation.Testing.Sagas
             FubuTransport.SetupForInMemoryTesting();
 
             theLogger = new SagaLogger();
-            theContainer = new Container(x => {
+            theContainer = new Container(x =>
+            {
                 x.For<SagaSettings>().Use(InMemoryTransport.ToInMemory<SagaSettings>());
                 x.For<SagaLogger>().Use(theLogger);
                 x.For<IListener>().Add<MessageWatcher>();
@@ -55,9 +57,27 @@ namespace FubuTransportation.Testing.Sagas
         public void try_to_run_the_saga_from_beginning_to_end()
         {
             var serviceBus = theContainer.GetInstance<IServiceBus>();
-            serviceBus.Send(new TestSagaStart{Name = "Jeremy"});
+            serviceBus.Send(new TestSagaStart { Name = "Jeremy" });
 
-            Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds:60000);
+            Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds: 60000);
+
+            var messages = theLogger.Traces.Select(x => x.Message);
+            messages.Each(x => Console.WriteLine(x));
+
+            theLogger.Traces.Select(x => x.Id).Distinct()
+                     .Count().ShouldEqual(1); // should be the same correlation id all the way through
+
+            messages
+                .ShouldHaveTheSameElementsAs("Started Jeremy", "Updated Jeremy", "Finished with Updated Jeremy!");
+        }
+
+        [Test]
+        public void try_to_run_the_saga_from_beginning_to_end_with_implementing_class()
+        {
+            var serviceBus = theContainer.GetInstance<IServiceBus>();
+            serviceBus.Send(new ImplementingClass { Name = "Jeremy" });
+
+            Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds: 60000);
 
             var messages = theLogger.Traces.Select(x => x.Message);
             messages.Each(x => Console.WriteLine(x));
@@ -80,7 +100,7 @@ namespace FubuTransportation.Testing.Sagas
         [SetUp]
         public void SetUp()
         {
-            
+
 
             theLogger = new SagaLogger();
             theContainer = new Container(x =>
@@ -183,12 +203,17 @@ namespace FubuTransportation.Testing.Sagas
             return _isCompleted;
         }
 
+        public void Handle(ImplementingClass message)
+        {
+            
+        }
+
         public TestSagaUpdate Handle(TestSagaStart start)
         {
-            State = new TestSagaState{Id = Guid.NewGuid(), Name = start.Name};
+            State = new TestSagaState { Id = Guid.NewGuid(), Name = start.Name };
             _logger.Trace(State.Id, "Started " + start.Name);
 
-            return new TestSagaUpdate{CorrelationId = State.Id};
+            return new TestSagaUpdate { CorrelationId = State.Id };
         }
 
         public TestSagaFinish Handle(TestSagaUpdate update)
@@ -197,7 +222,7 @@ namespace FubuTransportation.Testing.Sagas
 
             State.Name = "Updated " + State.Name;
 
-            return new TestSagaFinish {CorrelationId = State.Id};
+            return new TestSagaFinish { CorrelationId = State.Id };
         }
 
         public void Handle(TestSagaFinish finish)
@@ -210,6 +235,11 @@ namespace FubuTransportation.Testing.Sagas
     public class TestSagaStart
     {
         public string Name { get; set; }
+    }
+
+    public class ImplementingClass : TestSagaStart
+    {
+        
     }
 
     public class TestSagaUpdate
