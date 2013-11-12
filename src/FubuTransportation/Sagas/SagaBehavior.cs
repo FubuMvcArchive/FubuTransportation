@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 
@@ -21,7 +22,12 @@ namespace FubuTransportation.Sagas
 
         protected override void invoke(Action action)
         {
-            var message = _request.Get<TMessage>();
+            var message = _request.Find<TMessage>().FirstOrDefault();
+            if (message == null)
+            {
+                throw new Exception(String.Format("Message of type {0} is required.", typeof(TMessage)));
+            }
+
             _handler.State = _repository.Find(message);
 
             action();
