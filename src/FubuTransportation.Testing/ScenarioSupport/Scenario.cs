@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Bottles.Services.Messaging.Tracking;
 using FubuCore;
 using FubuCore.Logging;
@@ -49,6 +50,11 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         internal void Execute(IScenarioWriter writer)
         {
+            TraceListener[] listeners = new TraceListener[Debug.Listeners.Count];
+
+            Debug.Listeners.CopyTo(listeners, 0);
+            Debug.Listeners.Clear();            
+
             FubuTransport.SetupForInMemoryTesting();
 
             InMemoryQueueManager.ClearAll();
@@ -84,6 +90,8 @@ namespace FubuTransportation.Testing.ScenarioSupport
                 var success = Wait.Until(() => {
                     return !MessageHistory.Outstanding().Any();
                 }, timeoutInMilliseconds:60000);
+
+                Debug.Listeners.AddRange(listeners);
 
                 if (success)
                 {
@@ -197,7 +205,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
 
         private void write(object message)
         {
-            System.Diagnostics.Debug.WriteLine("{0}: {1}", _nodeName, message);
+            //System.Diagnostics.Debug.WriteLine("{0}: {1}", _nodeName, message);
         }
 
         public void DebugMessage(object message)

@@ -32,8 +32,6 @@ namespace FubuTransportation.Diagnostics
             if (_all.Contains(record)) return;
             _all.Add(record);
 
-            Debug.WriteLine("Got MessageRecord: " + record);
-
             // Important, don't override what's already there
             if (record.Node.IsEmpty())
             {
