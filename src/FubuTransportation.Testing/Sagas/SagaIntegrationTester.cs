@@ -48,6 +48,7 @@ namespace FubuTransportation.Testing.Sagas
         [TearDown]
         public void TearDown()
         {
+            InMemoryQueueManager.ClearAll();
             FubuTransport.Reset();
             theRuntime.Dispose();
         }

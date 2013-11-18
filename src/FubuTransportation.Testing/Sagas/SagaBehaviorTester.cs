@@ -108,8 +108,10 @@ namespace FubuTransportation.Testing.Sagas
         protected override void beforeEach()
         {
             theMessage = new Message1();
-            MockFor<IFubuRequest>().Stub(x => x.Get<Message1>())
-                                   .Return(theMessage);
+
+            var request = new InMemoryFubuRequest();
+            request.Set(theMessage);
+            Services.Inject<IFubuRequest>(request);
 
             theInitialState = new SagaState();
 
