@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -71,6 +71,8 @@
     <Compile Include="Async\AsyncHandlingNode.cs" />
     <Compile Include="Async\CascadingAsyncHandlerInvoker.cs" />
     <Compile Include="Async\IAsyncHandling.cs" />
+    <Compile Include="Configuration\ByTaskScheduleMaker.cs" />
+    <Compile Include="Configuration\ByThreadScheduleMaker.cs" />
     <Compile Include="Configuration\ChannelGraph.cs" />
     <Compile Include="Configuration\ChannelNode.cs" />
     <Compile Include="Configuration\FubuTransport.cs" />
@@ -81,7 +83,9 @@
     <Compile Include="Configuration\HandlerPolicies.cs" />
     <Compile Include="Configuration\IChannelNodeVisitor.cs" />
     <Compile Include="Configuration\IFubuTransportRegistryExtension.cs" />
+    <Compile Include="Configuration\ISettingsAware.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
+    <Compile Include="Configuration\SchedulerMaker.cs" />
     <Compile Include="Configuration\UriExtensions.cs" />
     <Compile Include="Diagnostics\IMessagingSession.cs" />
     <Compile Include="Diagnostics\MessageHistory.cs" />
