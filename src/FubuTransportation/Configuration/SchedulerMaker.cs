@@ -8,18 +8,16 @@ namespace FubuTransportation.Configuration
     public abstract class SchedulerMaker<T> : ISettingsAware
     {
         private readonly Expression<Func<T, int>> _expression;
-        private readonly ChannelNode _node;
 
-        public SchedulerMaker(Expression<Func<T, int>> expression, ChannelNode node)
+        public SchedulerMaker(Expression<Func<T, int>> expression)
         {
             _expression = expression;
-            _node = node;
         }
 
-        void ISettingsAware.ApplySettings(object settings)
+        void ISettingsAware.ApplySettings(object settings, ChannelNode node)
         {
             int threadCount = (int) ReflectionHelper.GetAccessor(_expression).GetValue(settings);
-            _node.Scheduler = buildScheduler(threadCount);
+            node.Scheduler = buildScheduler(threadCount);
         }
 
         protected abstract IScheduler buildScheduler(int threadCount);

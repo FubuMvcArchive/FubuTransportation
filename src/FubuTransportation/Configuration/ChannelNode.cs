@@ -25,6 +25,8 @@ namespace FubuTransportation.Configuration
             }
         }
 
+        public readonly IList<ISettingsAware> SettingsRules = new List<ISettingsAware>(); 
+
         public string Key { get; set; }
 
         public IScheduler Scheduler = TaskScheduler.Default();
@@ -50,6 +52,8 @@ namespace FubuTransportation.Configuration
         {
             var settings = services.GetInstance(SettingAddress.OwnerType);
             Uri = (Uri) SettingAddress.GetValue(settings);
+
+            SettingsRules.Each(x => x.ApplySettings(settings, this));
         }
 
         public string Protocol()

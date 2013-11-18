@@ -1,4 +1,5 @@
 ﻿using FubuMVC.Core;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Invocation;
 using NUnit.Framework;
 using StructureMap;
@@ -16,7 +17,7 @@ namespace FubuTransportation.Testing
             var container = new Container();
 
 
-            FubuApplication.DefaultPolicies().StructureMap(container).Bootstrap();
+            FubuTransport.For<Defaults>().StructureMap(container).Bootstrap();
 
             var handlers = container.GetInstance<IHandlerPipeline>().ShouldBeOfType<HandlerPipeline>().Handlers;
 
@@ -25,6 +26,14 @@ namespace FubuTransportation.Testing
             handlers[1].ShouldBeOfType<ResponseEnvelopeHandler>();
             handlers[2].ShouldBeOfType<ChainExecutionEnvelopeHandler>();
             handlers[3].ShouldBeOfType<NoSubscriberHandler>();
+        }
+
+        public class Defaults : FubuTransportRegistry
+        {
+            public Defaults()
+            {
+                EnableInMemoryTransport();
+            }
         }
     }
 }

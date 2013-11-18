@@ -18,9 +18,9 @@ namespace FubuTransportation.Testing.Configuration
             };
 
             var channelNode = new ChannelNode();
-            new ByTaskScheduleMaker<ThreadSettings>(x => x.Count, channelNode)
+            new ByTaskScheduleMaker<ThreadSettings>(x => x.Count)
                 .As<ISettingsAware>()
-                .ApplySettings(settings);
+                .ApplySettings(settings, channelNode);
 
             channelNode.Scheduler.ShouldBeOfType<TaskScheduler>()
                 .TaskCount.ShouldEqual(5);
@@ -36,9 +36,9 @@ namespace FubuTransportation.Testing.Configuration
             };
 
             var channelNode = new ChannelNode();
-            new ByThreadScheduleMaker<ThreadSettings>(x => x.Count, channelNode)
+            new ByThreadScheduleMaker<ThreadSettings>(x => x.Count)
                 .As<ISettingsAware>()
-                .ApplySettings(settings);
+                .ApplySettings(settings, channelNode);
 
             channelNode.Scheduler.ShouldBeOfType<ThreadScheduler>()
                 .ThreadCount.ShouldEqual(7);

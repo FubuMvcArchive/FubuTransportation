@@ -6,7 +6,7 @@ namespace FubuTransportation.Configuration
 {
     public class ByThreadScheduleMaker<T> : SchedulerMaker<T>
     {
-        public ByThreadScheduleMaker(Expression<Func<T, int>> expression, ChannelNode node) : base(expression, node)
+        public ByThreadScheduleMaker(Expression<Func<T, int>> expression) : base(expression)
         {
         }
 

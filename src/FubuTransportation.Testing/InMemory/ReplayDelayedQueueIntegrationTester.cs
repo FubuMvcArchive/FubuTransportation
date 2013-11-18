@@ -105,6 +105,8 @@ namespace FubuTransportation.Testing.InMemory
     {
         public DelayedRegistry()
         {
+            EnableInMemoryTransport();
+
             // Need this to be fast for the tests
             AlterSettings<TransportSettings>(x => x.DelayMessagePolling = 100);
 

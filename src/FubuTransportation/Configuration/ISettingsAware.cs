@@ -2,6 +2,6 @@
 {
     public interface ISettingsAware
     {
-        void ApplySettings(object settings);
+        void ApplySettings(object settings, ChannelNode node);
     }
 }

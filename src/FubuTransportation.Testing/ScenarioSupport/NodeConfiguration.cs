@@ -58,7 +58,7 @@ namespace FubuTransportation.Testing.ScenarioSupport
             container.Configure(x => {
                 x.For<HarnessSettings>().Use(harnessSettings);
                 x.For<IListener>().Add<MessageWatcher>();
-                x.For<ILogListener>().Add(new ScenarioLogListener(nodeName));
+                //x.For<ILogListener>().Add(new ScenarioLogListener(nodeName));
             });
 
             _uri = (Uri) ReflectionHelper.GetAccessor(_expression).GetValue(harnessSettings);

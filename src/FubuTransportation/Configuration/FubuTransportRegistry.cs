@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Bottles;
 using FubuCore;
+using FubuCore.DependencyAnalysis;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
@@ -401,6 +402,12 @@ namespace FubuTransportation.Configuration
                 return this;
             }
 
+            public ChannelExpression ReadIncoming(SchedulerMaker<T> schedulerMaker)
+            {
+                alter = node => node.SettingsRules.Add(schedulerMaker);
+                return this;
+            }
+
 
             public ChannelExpression AcceptsMessagesInNamespaceContainingType<TMessageType>()
             {
@@ -452,6 +459,19 @@ namespace FubuTransportation.Configuration
                 alter = node => node.Rules.Add(new TRule());
                 return this;
             }
+
+
+
+        }
+
+        public ByThreadScheduleMaker<T> ByThreads(Expression<Func<T, int>> property)
+        {
+            return new ByThreadScheduleMaker<T>(property);
+        }
+
+        public ByTaskScheduleMaker<T> ByTasks(Expression<Func<T, int>> property)
+        {
+            return new ByTaskScheduleMaker<T>(property);
         }
     }
 

@@ -115,6 +115,7 @@
     <Compile Include="Configuration\AllInMemoryQueues_Mechanics_Tester.cs" />
     <Compile Include="Configuration\ByTaskSchedulerMakerTester.cs" />
     <Compile Include="Configuration\ChannelGraphTester.cs" />
+    <Compile Include="Configuration\ChannelGraph_can_read_thread_and_task_counts_from_config.cs" />
     <Compile Include="Configuration\ChannelNodeTester.cs" />
     <Compile Include="Configuration\FubuTransportRegistryTester.cs" />
     <Compile Include="Configuration\HandlerChain_Exception_Handling_Rules_Registration_Tester.cs" />

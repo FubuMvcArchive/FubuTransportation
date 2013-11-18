@@ -37,6 +37,7 @@ namespace FubuTransportation.Testing.ErrorHandling
     {
         public RetryNoOnDbConcurrencyRegistry()
         {
+            EnableInMemoryTransport();
             Local.Policy<RetryNowOnDbConcurrencyException>();
         }
     }

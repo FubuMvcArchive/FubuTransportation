@@ -31,7 +31,10 @@ namespace FubuTransportation.Testing.Configuration
         [Test]
         public void can_set_the_node_name_programmatically()
         {
-            FubuTransport.For(x => x.NodeName = "MyNode").StructureMap(new Container()).Bootstrap()
+            FubuTransport.For(x => {
+                x.NodeName = "MyNode";
+                x.EnableInMemoryTransport();
+            }).StructureMap(new Container()).Bootstrap()
                          .Factory.Get<ChannelGraph>().Name.ShouldEqual("MyNode");
         }
     }
@@ -40,7 +43,7 @@ namespace FubuTransportation.Testing.Configuration
     {
         public CustomTransportRegistry()
         {
-           
+           EnableInMemoryTransport();
         }
     }
 
@@ -48,6 +51,7 @@ namespace FubuTransportation.Testing.Configuration
     {
         public OtherRegistry()
         {
+            EnableInMemoryTransport();
         }
     }
 }

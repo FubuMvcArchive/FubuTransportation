@@ -119,6 +119,9 @@ namespace FubuTransportation.Testing.Configuration
         public Uri Outbound { get; set; }
         public Uri Downstream { get; set; }
         public Uri Upstream { get; set; }
+
+        public int UpstreamCount { get; set; }
+        public int OutboundCount { get; set; }
     }
 
     public class BusSettings
