@@ -105,6 +105,7 @@ namespace FubuTransportation.Testing.InMemory
     {
         public DelayedRegistry()
         {
+            Handlers.DisableDefaultHandlerSource();
             EnableInMemoryTransport();
 
             // Need this to be fast for the tests

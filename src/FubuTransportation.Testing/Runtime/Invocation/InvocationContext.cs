@@ -30,6 +30,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void SetUp()
         {
             theTransportRegistry = FubuTransportRegistry.Empty();
+            theTransportRegistry.Handlers.DisableDefaultHandlerSource();
             theTransportRegistry.EnableInMemoryTransport();
 
             TestMessageRecorder.Clear();

@@ -15,6 +15,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             theGraph = FubuTransportRegistry.HandlerGraphFor(x =>
             {
+                x.Handlers.DisableDefaultHandlerSource();
                 x.Handlers.Include<OneHandler>();
                 x.Handlers.Include<TwoHandler>();
                 x.Handlers.Include<ThreeHandler>();

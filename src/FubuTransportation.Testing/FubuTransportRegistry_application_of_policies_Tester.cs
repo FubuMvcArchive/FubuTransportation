@@ -101,6 +101,7 @@ namespace FubuTransportation.Testing
     {
         public GreenRegistry()
         {
+            Handlers.DisableDefaultHandlerSource();
             Handlers.Include<GreenHandler>();
             Local.Policy<WrapPolicy<GreenWrapper>>();
         }
@@ -110,6 +111,7 @@ namespace FubuTransportation.Testing
     {
         public BlueRegistry()
         {
+            Handlers.DisableDefaultHandlerSource();
             Handlers.Include<BlueHandler>();
             Local.Policy<WrapPolicy<BlueWrapper>>();
         }

@@ -14,6 +14,7 @@ namespace FubuTransportation.Testing
         public void can_register_a_handler_source_by_explicit_config()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(x => {
+                x.Handlers.DisableDefaultHandlerSource();
                 x.Handlers.FindBy(source => {
                     source.UseThisAssembly();
                     source.IncludeTypesNamed(name => name.Contains("FooHandler"));

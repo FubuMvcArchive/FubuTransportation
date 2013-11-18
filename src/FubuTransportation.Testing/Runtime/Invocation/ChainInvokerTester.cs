@@ -32,6 +32,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             var graph = FubuTransportRegistry.HandlerGraphFor(x => {
                 x.Handlers.Include<OneHandler>();
                 x.Handlers.Include<TwoHandler>();
+
+                x.Handlers.DisableDefaultHandlerSource();
             });
 
             var invoker = new ChainInvoker(null, graph, null, null);

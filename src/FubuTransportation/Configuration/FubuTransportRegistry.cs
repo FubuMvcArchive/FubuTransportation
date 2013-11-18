@@ -6,18 +6,14 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Bottles;
 using FubuCore;
-using FubuCore.DependencyAnalysis;
 using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
-using FubuMVC.Core.Registration.Conventions;
 using FubuMVC.Core.Registration.Diagnostics;
-using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
-using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
@@ -27,10 +23,10 @@ namespace FubuTransportation.Configuration
 {
     public class FubuTransportRegistry : IFubuRegistryExtension
     {
-        private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>(); 
+        private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>();
         internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
-        private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>(); 
-        private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>(); 
+        private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>();
+        private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
         private readonly ProvenanceChain _provenance;
 
@@ -109,6 +105,8 @@ namespace FubuTransportation.Configuration
         {
             _provenance = new ProvenanceChain(new Provenance[] {new FubuTransportRegistryProvenance(this)});
 
+            _sources.Add(new DefaultHandlerSource());
+
             AlterSettings<ChannelGraph>(x => {
                 if (x.Name.IsEmpty())
                 {
@@ -124,46 +122,28 @@ namespace FubuTransportation.Configuration
 
         public string NodeName
         {
-            set
-            {
-                AlterSettings<ChannelGraph>(x => x.Name = value);
-            }
+            set { AlterSettings<ChannelGraph>(x => x.Name = value); }
         }
 
         internal Action<ChannelGraph> channel
         {
-            set
-            {
-                _channelAlterations.Add(value);
-            }
+            set { _channelAlterations.Add(value); }
         }
+
+
 
         private IEnumerable<IHandlerSource> allSources()
         {
-
-            if (_sources.Any())
+            foreach (var handlerSource in _sources)
             {
-                foreach (var handlerSource in _sources)
-                {
-                    yield return handlerSource;
-                }
-            }
-            else
-            {
-                var source = new HandlerSource();
-                source.UseThisAssembly();
-                source.IncludeClassesSuffixedWithConsumer();
-                source.IncludeClassesSuffixedWithHandler();
-                source.IncludeClassesMatchingSagaConvention();
-
-                yield return source;
+                yield return handlerSource;
             }
 
             if (_pollingJobs.HasAny())
             {
                 yield return _pollingJobs;
             }
-        } 
+        }
 
         void IFubuRegistryExtension.Configure(FubuRegistry registry)
         {
@@ -175,9 +155,7 @@ namespace FubuTransportation.Configuration
 
             registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
 
-            registry.AlterSettings<ChannelGraph>(channels => {
-                _channelAlterations.Each(x => x(channels));
-            });
+            registry.AlterSettings<ChannelGraph>(channels => { _channelAlterations.Each(x => x(channels)); });
 
             _alterations.Each(x => x(registry));
         }
@@ -190,18 +168,19 @@ namespace FubuTransportation.Configuration
         {
             var trace = new StackTrace(false);
 
-            Assembly thisAssembly = Assembly.GetExecutingAssembly();
-            Assembly fubuCore = typeof(ITypeResolver).Assembly;
-            Assembly bottles = typeof(IPackageLoader).Assembly;
-            Assembly fubumvc = typeof (FubuRegistry).Assembly;
-            
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var fubuCore = typeof (ITypeResolver).Assembly;
+            var bottles = typeof (IPackageLoader).Assembly;
+            var fubumvc = typeof (FubuRegistry).Assembly;
+
 
             Assembly callingAssembly = null;
-            for (int i = 0; i < trace.FrameCount; i++)
+            for (var i = 0; i < trace.FrameCount; i++)
             {
-                StackFrame frame = trace.GetFrame(i);
-                Assembly assembly = frame.GetMethod().DeclaringType.Assembly;
-                if (assembly != thisAssembly && assembly != fubuCore && assembly != bottles && assembly != fubumvc && !assembly.GetName().Name.StartsWith("System."))
+                var frame = trace.GetFrame(i);
+                var assembly = frame.GetMethod().DeclaringType.Assembly;
+                if (assembly != thisAssembly && assembly != fubuCore && assembly != bottles && assembly != fubumvc &&
+                    !assembly.GetName().Name.StartsWith("System."))
                 {
                     callingAssembly = assembly;
                     break;
@@ -212,10 +191,7 @@ namespace FubuTransportation.Configuration
 
         public HandlersExpression Handlers
         {
-            get
-            {
-                return new HandlersExpression(this);
-            }
+            get { return new HandlersExpression(this); }
         }
 
         public class HandlersExpression
@@ -234,7 +210,7 @@ namespace FubuTransportation.Configuration
 
             public void Include<T>()
             {
-                Include(typeof(T));
+                Include(typeof (T));
             }
 
             public void FindBy(Action<HandlerSource> configuration)
@@ -256,20 +232,21 @@ namespace FubuTransportation.Configuration
             }
 
             /// <summary>
-            /// Just disables handler loading for this registry
+            /// Completely remove the default handler finding
+            /// logic.  This is probably only applicable to 
+            /// retrofitting FubuTransportation to existing 
+            /// systems with a very different nomenclature
+            /// than the defaults
             /// </summary>
             public void DisableDefaultHandlerSource()
             {
-                Include<NulloHandlerSource>();
+                _parent._sources.RemoveAll(x => x is DefaultHandlerSource);
             }
         }
 
         public PollingJobExpression Polling
         {
-            get
-            {
-                return new PollingJobExpression(this);
-            }
+            get { return new PollingJobExpression(this); }
         }
 
         public void DefaultSerializer<T>() where T : IMessageSerializer, new()
@@ -290,10 +267,7 @@ namespace FubuTransportation.Configuration
         /// <returns></returns>
         public PoliciesExpression Local
         {
-            get
-            {
-                return new PoliciesExpression(x => _localPolicies.Fill(_provenance, x));
-            }
+            get { return new PoliciesExpression(x => _localPolicies.Fill(_provenance, x)); }
         }
 
         /// <summary>
@@ -305,13 +279,10 @@ namespace FubuTransportation.Configuration
         {
             get
             {
-                return new PoliciesExpression(policy => {
-                    AlterSettings<HandlerPolicies>(x => x.AddGlobal(policy, this));
-                });
+                return
+                    new PoliciesExpression(policy => { AlterSettings<HandlerPolicies>(x => x.AddGlobal(policy, this)); });
             }
         }
-
-
 
 
         /// <summary>
@@ -393,12 +364,11 @@ namespace FubuTransportation.Configuration
 
             public ChannelExpression ReadIncoming(IScheduler scheduler = null)
             {
-                    alter = node =>
-                    {
-                        var defaultScheduler = node.Scheduler;
-                        node.Incoming = true;
-                        node.Scheduler = scheduler ?? defaultScheduler;
-                    };
+                alter = node => {
+                    var defaultScheduler = node.Scheduler;
+                    node.Incoming = true;
+                    node.Scheduler = scheduler ?? defaultScheduler;
+                };
                 return this;
             }
 
@@ -459,9 +429,6 @@ namespace FubuTransportation.Configuration
                 alter = node => node.Rules.Add(new TRule());
                 return this;
             }
-
-
-
         }
 
         public ByThreadScheduleMaker<T> ByThreads(Expression<Func<T, int>> property)

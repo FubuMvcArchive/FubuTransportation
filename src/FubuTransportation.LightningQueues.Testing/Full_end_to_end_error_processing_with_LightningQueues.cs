@@ -37,7 +37,7 @@ namespace FubuTransportation.LightningQueues.Testing
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
             {
-                Downstream = "lq.tcp://localhost:2020/downstream".ToUri()
+                Downstream = "lq.tcp://localhost:2026/downstream".ToUri()
             };
             var lightningUri = settings.Downstream.ToLightningUri();
 
@@ -87,6 +87,7 @@ namespace FubuTransportation.LightningQueues.Testing
     {
         public ErrorRegistry()
         {
+            Handlers.DisableDefaultHandlerSource();
             Handlers.Include<ThrowingHandler<OneMessage>>();
             Channel(x => x.Downstream).ReadIncoming().AcceptsMessagesInAssemblyContainingType<OneMessage>();
             Global.Policy<ErrorPolicy>();

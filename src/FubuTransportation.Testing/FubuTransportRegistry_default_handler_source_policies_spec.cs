@@ -33,6 +33,7 @@ namespace FubuTransportation.Testing
         public void default_handler_sources_are_not_used_if_a_custom_one_is_registered()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(r => {
+                r.Handlers.DisableDefaultHandlerSource();
                 r.Handlers.FindBy<MyFunkyHandlerSource>();
             });
 
@@ -48,6 +49,7 @@ namespace FubuTransportation.Testing
             var graph = FubuTransportRegistry.HandlerGraphFor(r =>
             {
                 r.Handlers.FindBy(new MyFunkyHandlerSource());
+                r.Handlers.DisableDefaultHandlerSource();
             });
 
             graph.ChainFor(typeof(Message1)).OfType<HandlerCall>().Select(x => x.HandlerType)
@@ -64,6 +66,8 @@ namespace FubuTransportation.Testing
                 r.Handlers.FindBy(x => {
                     x.IncludeClassesSuffixedWithConsumer();
                 });
+
+                r.Handlers.DisableDefaultHandlerSource();
             });
 
             graph.ChainFor(typeof(Message1)).OfType<HandlerCall>().Any(x => x.HandlerType == typeof(MyNewConsumer))

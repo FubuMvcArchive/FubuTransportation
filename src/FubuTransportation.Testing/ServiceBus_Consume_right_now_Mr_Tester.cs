@@ -18,6 +18,8 @@ namespace FubuTransportation.Testing
             using (var container = new Container())
             {
                 FubuTransport.For(x => {
+                    x.EnableInMemoryTransport();
+                    x.Handlers.DisableDefaultHandlerSource();
                                            x.Handlers.Include<SimpleHandler<OneMessage>>();
                 }).StructureMap(container).Bootstrap();
 
