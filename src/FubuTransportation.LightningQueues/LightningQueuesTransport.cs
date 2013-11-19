@@ -61,13 +61,13 @@ namespace FubuTransportation.LightningQueues
             _queues.Start(channels.Where(x => x.Incoming).Select(x => new LightningUri(x.Uri)));
         }
 
-        protected override ChannelNode buildReplyChannel(ChannelGraph graph)
+        protected override Uri getReplyUri(ChannelGraph graph)
         {
             var channelNode = graph.FirstOrDefault(x => x.Protocol() == LightningUri.Protocol && x.Incoming);
-            if(channelNode == null)
+            if (channelNode == null)
                 throw new InvalidOperationException("You must have at least one incoming Lightning Queue channel for accepting replies");
 
-            return channelNode;
+            return channelNode.Channel.Address.ToMachineUri();
         }
     }
 }

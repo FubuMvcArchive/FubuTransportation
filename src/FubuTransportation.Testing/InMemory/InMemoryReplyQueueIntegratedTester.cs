@@ -24,7 +24,8 @@ namespace FubuTransportation.Testing.InMemory
             theRuntime = FubuTransport.For(x => { }).StructureMap(new Container()).Bootstrap();
             graph = theRuntime.Factory.Get<ChannelGraph>();
 
-            theReplyNode = graph.ReplyChannelFor(InMemoryChannel.Protocol);
+            var uri = graph.ReplyChannelFor(InMemoryChannel.Protocol);
+            theReplyNode = graph.Single(x => x.Channel.Address == uri);
         }
 
         [TestFixtureTearDown]

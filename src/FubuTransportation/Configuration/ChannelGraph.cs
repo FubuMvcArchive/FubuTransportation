@@ -18,7 +18,7 @@ namespace FubuTransportation.Configuration
     public class ChannelGraph : IEnumerable<ChannelNode>, IDisposable
     {
         private readonly Cache<string, ChannelNode> _channels = new Cache<string, ChannelNode>(key => new ChannelNode{Key = key});
-        private readonly Cache<string, ChannelNode> _replyChannels = new Cache<string, ChannelNode>(); 
+        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>(); 
 
         public ChannelGraph()
         {
@@ -51,25 +51,31 @@ namespace FubuTransportation.Configuration
             return channel;
         }
 
-        public ChannelNode ReplyChannelFor(string protocol)
+        public Uri ReplyChannelFor(string protocol)
         {
             return _replyChannels[protocol];
         }
 
-        public IEnumerable<ChannelNode> ReplyChannels()
+        public void AddReplyChannel(string protocol, Uri uri)
         {
-            return _replyChannels;
+            _replyChannels[protocol] = uri;
         }
 
-        public void AddReplyChannel(ChannelNode node)
+        public IEnumerable<ReplyChannel> ReplyChannels()
         {
-            _replyChannels[node.Protocol()] = node;
-        }
+            foreach (var protocol in _replyChannels.GetAllKeys())
+            {
+                yield return new ReplyChannel
+                {
+                    Protocol = protocol,
+                    Uri = _replyChannels[protocol]
+                };
+            }
+        } 
 
         public IEnumerable<ChannelNode> NodesForProtocol(string protocol)
         {
-            return _channels.Where(x => x.Protocol().EqualsIgnoreCase(protocol))
-                .Union(_replyChannels.Where(x => x.Protocol().EqualsIgnoreCase(protocol)))
+            return _channels.Where(x => x.Protocol() != null && x.Protocol().EqualsIgnoreCase(protocol))
                 .Distinct()
                 .ToArray();
         } 
@@ -80,15 +86,9 @@ namespace FubuTransportation.Configuration
             _channels.Each(x => x.ReadSettings(services));
         }
 
-        private IEnumerable<ChannelNode> allChannels()
-        {
-            return _channels.Union(_replyChannels).Distinct();
-        } 
-
         public virtual void StartReceiving(IHandlerPipeline pipeline)
         {
-            var channelNodes = allChannels();
-            channelNodes.Where(x => x.Incoming).Each(node => node.StartReceiving(pipeline, this));
+            _channels.Where(x => x.Incoming).Each(node => node.StartReceiving(pipeline, this));
         }
 
         public static string ToKey(Accessor accessor)
@@ -121,10 +121,18 @@ namespace FubuTransportation.Configuration
         {
             if (_wasDisposed) return;
 
-            allChannels().Each(x => x.Dispose());
+            _channels.Each(x => x.Dispose());
 
             _wasDisposed = true;
         }
+
+
+    }
+
+    public class ReplyChannel
+    {
+        public Uri Uri { get; set; }
+        public string Protocol { get; set; }
     }
 
 }

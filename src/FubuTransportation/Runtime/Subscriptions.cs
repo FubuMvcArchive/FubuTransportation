@@ -93,7 +93,7 @@ namespace FubuTransportation.Runtime
 
         public Uri ReplyUriFor(ChannelNode destination)
         {
-            return _graph.ReplyChannelFor(destination.Protocol()).Channel.Address;
+            return _graph.ReplyChannelFor(destination.Protocol());
         }
     }
 

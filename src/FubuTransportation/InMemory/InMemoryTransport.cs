@@ -47,15 +47,26 @@ namespace FubuTransportation.InMemory
 
         protected override void seedQueues(IEnumerable<ChannelNode> channels)
         {
-            // no-op
+
         }
 
-        protected override ChannelNode buildReplyChannel(ChannelGraph graph)
+        protected override Uri getReplyUri(ChannelGraph graph)
         {
             var uri = "{0}://localhost/{1}/replies".ToFormat(Protocol, graph.Name ?? "node").ToUri();
-            var channelNode = new ChannelNode{Uri = uri};
-            channelNode.Channel = new InMemoryChannel(uri);
-            return channelNode;
+            var replyNode = new ChannelNode
+            {
+                Uri = uri,
+                Channel = new InMemoryChannel(uri),
+                Incoming = true
+            };
+
+            replyNode.Key = replyNode.Key ?? "{0}:{1}".ToFormat(Protocol, "replies");
+
+            graph.Add(replyNode);
+
+            replyNode.Channel = buildChannel(replyNode);
+
+            return uri;
         }
 
         public static T ToInMemory<T>() where T : new()
