@@ -248,6 +248,7 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
+    <Compile Include="Subscriptions\SubscriptionClasses.cs" />
     <Compile Include="Subscriptions\SubscriptionGateway.cs" />
     <Compile Include="Runtime\TransportActivator.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
