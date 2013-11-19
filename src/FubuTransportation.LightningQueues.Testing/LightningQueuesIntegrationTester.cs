@@ -47,6 +47,15 @@ namespace FubuTransportation.LightningQueues.Testing
         private ChannelGraph graph;
         private ChannelNode node;
 
+        [Test]
+        public void registers_a_reply_queue_corrected_to_the_machine_name()
+        {
+            var uri = graph.ReplyChannelFor(LightningUri.Protocol);
+            uri.ShouldNotBeNull();
+
+            uri.Host.ToUpperInvariant().ShouldEqual(Environment.MachineName.ToUpperInvariant());
+
+        }
 
         [Test]
         [Platform(Exclude = "Mono", Reason = "Esent won't work on linux / mono")]
