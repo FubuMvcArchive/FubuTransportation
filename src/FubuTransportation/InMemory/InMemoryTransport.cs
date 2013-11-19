@@ -45,7 +45,7 @@ namespace FubuTransportation.InMemory
             return new InMemoryChannel(channelNode.Uri);
         }
 
-        protected override void seedQueues(ChannelNode[] channels)
+        protected override void seedQueues(IEnumerable<ChannelNode> channels)
         {
             // no-op
         }

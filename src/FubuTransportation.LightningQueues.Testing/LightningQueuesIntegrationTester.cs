@@ -62,12 +62,7 @@ namespace FubuTransportation.LightningQueues.Testing
             node.Channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());
 
-
-            graph.Each(x =>
-            {
-                var shutdownVisitor = new ShutdownChannelNodeVisitor();
-                shutdownVisitor.Visit(x);
-            });
+            graph.Dispose();
             queues.Dispose();
 
             receiver.Received.Any().ShouldBeTrue();

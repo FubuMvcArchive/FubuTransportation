@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.InMemory
             theRuntime = FubuTransport.For(x => { }).StructureMap(new Container()).Bootstrap();
             graph = theRuntime.Factory.Get<ChannelGraph>();
 
-            theReplyNode = graph.FirstOrDefault(x => x.ForReplies && x.Protocol() == InMemoryChannel.Protocol);
+            theReplyNode = graph.ReplyChannelFor(InMemoryChannel.Protocol);
         }
 
         [TestFixtureTearDown]
@@ -43,12 +43,6 @@ namespace FubuTransportation.Testing.InMemory
         public void should_be_incoming()
         {
             theReplyNode.Incoming.ShouldBeTrue();
-        }
-
-        [Test]
-        public void should_be_reply_flag()
-        {
-            theReplyNode.ForReplies.ShouldBeTrue();
         }
 
         [Test]

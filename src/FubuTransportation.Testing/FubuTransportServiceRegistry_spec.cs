@@ -256,16 +256,6 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void ChannelShutdownDeactivator_is_registered()
-        {
-                        var registry = new FubuRegistry();
-            registry.Services<FubuTransportServiceRegistry>();
-            BehaviorGraph.BuildFrom(registry)
-                .Services.ServicesFor<IDeactivator>().Any(x => x.Type == typeof(ChannelShutdownDeactivator))
-                .ShouldBeTrue();
-        }
-
-        [Test]
         public void async_handling_is_registered()
         {
             registeredTypeIs<IAsyncHandling,AsyncHandling>();

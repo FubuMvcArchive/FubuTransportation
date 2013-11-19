@@ -10,7 +10,7 @@ using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
 {
-    public class ChannelNode
+    public class ChannelNode : IDisposable
     {
         public Accessor SettingAddress
         {
@@ -39,10 +39,6 @@ namespace FubuTransportation.Configuration
         public IChannel Channel { get; set; }
 
         public string DefaultContentType { get; set; }
-
-        // TODO -- don't like this.  Goofy.  
-        [Obsolete("This is a stupid way to do things")]
-        public bool ForReplies { get; set; }
 
         public bool Publishes(Type type)
         {
@@ -84,6 +80,13 @@ namespace FubuTransportation.Configuration
         public override string ToString()
         {
             return string.Format("Channel: {0}", Key);
+        }
+
+        public void Dispose()
+        {
+            // TODO -- going to come back and try to make the scheduler "drain"
+            Channel.Dispose();
+            Scheduler.Dispose();
         }
 
         // virtual for testing of course

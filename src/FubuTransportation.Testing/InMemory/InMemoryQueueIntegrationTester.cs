@@ -56,38 +56,36 @@ namespace FubuTransportation.Testing.InMemory
         [Test]
         public void create_from_graph_and_run_through_the_channel()
         {
-            var graph = new ChannelGraph();
-            var node = graph.ChannelFor<BusSettings>(x => x.Outbound);
-
-            node.Uri = new Uri("memory://foo");
-
-            var transport = new InMemoryTransport();
-            transport.OpenChannels(graph);
-            node.Channel.ShouldNotBeNull();
-
-            var envelope = new Envelope();
-            envelope.CorrelationId = Guid.NewGuid().ToString();
-            envelope.Headers["Foo"] = "Bar";
-            envelope.Data = new byte[] { 1, 2, 3, 4, 5 };
-
-            var receiver = new RecordingReceiver();
-            var startingVisitor = new StartingChannelNodeVisitor(receiver);
-            startingVisitor.Visit(node);
-
-            node.Channel.Send(envelope.Data, envelope.Headers);
-
-            Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds: 2000);
-
-            var received = receiver.Received.Single();
-
-            received.CorrelationId.ShouldEqual(envelope.CorrelationId);
-            received.ContentType.ShouldEqual(envelope.ContentType);
-            received.Data.ShouldEqual(envelope.Data);
-            graph.Each(x =>
+            using (var graph = new ChannelGraph())
             {
-                var shutdownVisitor = new ShutdownChannelNodeVisitor();
-                shutdownVisitor.Visit(x);
-            });
+                var node = graph.ChannelFor<BusSettings>(x => x.Outbound);
+
+                node.Uri = new Uri("memory://foo");
+
+                var transport = new InMemoryTransport();
+                transport.OpenChannels(graph);
+                node.Channel.ShouldNotBeNull();
+
+                var envelope = new Envelope();
+                envelope.CorrelationId = Guid.NewGuid().ToString();
+                envelope.Headers["Foo"] = "Bar";
+                envelope.Data = new byte[] {1, 2, 3, 4, 5};
+
+                var receiver = new RecordingReceiver();
+                var startingVisitor = new StartingChannelNodeVisitor(receiver);
+                startingVisitor.Visit(node);
+
+                node.Channel.Send(envelope.Data, envelope.Headers);
+
+                Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds: 2000);
+
+                var received = receiver.Received.Single();
+
+                received.CorrelationId.ShouldEqual(envelope.CorrelationId);
+                received.ContentType.ShouldEqual(envelope.ContentType);
+                received.Data.ShouldEqual(envelope.Data);
+
+            }
         }
     }
 

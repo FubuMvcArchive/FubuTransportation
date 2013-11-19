@@ -12,22 +12,26 @@ namespace FubuTransportation.Runtime
         public void OpenChannels(ChannelGraph graph)
         {
             // TODO -- change this to a "role"
-            var nodes = graph.Where(x => x.Protocol() == Protocol).ToArray();
+            addReplyNode(graph);
+            var nodes = graph.NodesForProtocol(Protocol);
             seedQueues(nodes);
 
             nodes.OrderByDescending(x => x.Incoming).Each(x => x.Channel = buildChannel(x));
-            ReplyNode = buildReplyChannel(graph);
-            ReplyNode.Incoming = true;
-            ReplyNode.ForReplies = true;
-            ReplyNode.Key = ReplyNode.Key ?? "{0}:{1}".ToFormat(Protocol, "replies");
-            graph.Add(ReplyNode);
+            
         }
 
-        public ChannelNode ReplyNode { get; protected set; }
+        private void addReplyNode(ChannelGraph graph)
+        {
+            var replyNode = buildReplyChannel(graph);
+            replyNode.Incoming = true;
+            replyNode.Key = replyNode.Key ?? "{0}:{1}".ToFormat(Protocol, "replies");
+
+            graph.AddReplyChannel(replyNode);
+        }
 
         protected abstract IChannel buildChannel(ChannelNode channelNode);
 
-        protected abstract void seedQueues(ChannelNode[] channels);
+        protected abstract void seedQueues(IEnumerable<ChannelNode> channels);
         protected abstract ChannelNode buildReplyChannel(ChannelGraph graph);
     }
 }

@@ -191,7 +191,6 @@
     <Compile Include="Runtime\Cascading\ISendMyself.cs" />
     <Compile Include="Runtime\Cascading\OutgoingSender.cs" />
     <Compile Include="Runtime\Cascading\RespondToSender.cs" />
-    <Compile Include="Runtime\ChannelShutdownDeactivator.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeAddedBackToQueue.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessor.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />
@@ -263,7 +262,6 @@
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Sagas\StatefulSagaNode.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />
-    <Compile Include="Scheduling\ShutdownChannelNodeVisitor.cs" />
     <Compile Include="Scheduling\StartingChannelNodeVisitor.cs" />
     <Compile Include="Scheduling\TaskScheduler.cs" />
     <Compile Include="Scheduling\ThreadScheduler.cs" />

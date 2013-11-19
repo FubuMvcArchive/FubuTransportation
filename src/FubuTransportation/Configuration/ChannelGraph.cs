@@ -15,9 +15,10 @@ using FubuTransportation.Scheduling;
 namespace FubuTransportation.Configuration
 {
     [ApplicationLevel]
-    public class ChannelGraph : IEnumerable<ChannelNode>
+    public class ChannelGraph : IEnumerable<ChannelNode>, IDisposable
     {
         private readonly Cache<string, ChannelNode> _channels = new Cache<string, ChannelNode>(key => new ChannelNode{Key = key});
+        private readonly Cache<string, ChannelNode> _replyChannels = new Cache<string, ChannelNode>(); 
 
         public ChannelGraph()
         {
@@ -50,15 +51,44 @@ namespace FubuTransportation.Configuration
             return channel;
         }
 
+        public ChannelNode ReplyChannelFor(string protocol)
+        {
+            return _replyChannels[protocol];
+        }
+
+        public IEnumerable<ChannelNode> ReplyChannels()
+        {
+            return _replyChannels;
+        }
+
+        public void AddReplyChannel(ChannelNode node)
+        {
+            _replyChannels[node.Protocol()] = node;
+        }
+
+        public IEnumerable<ChannelNode> NodesForProtocol(string protocol)
+        {
+            return _channels.Where(x => x.Protocol().EqualsIgnoreCase(protocol))
+                .Union(_replyChannels.Where(x => x.Protocol().EqualsIgnoreCase(protocol)))
+                .Distinct()
+                .ToArray();
+        } 
+
         // leave it virtual for testing
         public virtual void ReadSettings(IServiceLocator services)
         {
             _channels.Each(x => x.ReadSettings(services));
         }
 
+        private IEnumerable<ChannelNode> allChannels()
+        {
+            return _channels.Union(_replyChannels).Distinct();
+        } 
+
         public virtual void StartReceiving(IHandlerPipeline pipeline)
         {
-            _channels.Where(x => x.Incoming).Each(node =>
+            var channelNodes = allChannels();
+            channelNodes.Where(x => x.Incoming).Each(node =>
             {
                 var scheduler = new StartingChannelNodeVisitor(new Receiver(pipeline, this, node));
                 node.Accept(scheduler);
@@ -88,6 +118,16 @@ namespace FubuTransportation.Configuration
         public void Add(ChannelNode replyNode)
         {
             _channels[replyNode.Key] = replyNode;
+        }
+
+        private bool _wasDisposed;
+        public void Dispose()
+        {
+            if (_wasDisposed) return;
+
+            allChannels().Each(x => x.Dispose());
+
+            _wasDisposed = true;
         }
     }
 

@@ -64,11 +64,7 @@ namespace FubuTransportation.Runtime
 
         public void Dispose()
         {
-            _graph.Each(x =>
-            {
-                var shutdownVisitor = new ShutdownChannelNodeVisitor();
-                shutdownVisitor.Visit(x);
-            });
+            _graph.Dispose();
         }
 
         public void Start()
@@ -97,7 +93,7 @@ namespace FubuTransportation.Runtime
 
         public Uri ReplyUriFor(ChannelNode destination)
         {
-            return _graph.FirstOrDefault(x => x.Protocol() == destination.Protocol() && x.ForReplies).Channel.Address;
+            return _graph.ReplyChannelFor(destination.Protocol()).Channel.Address;
         }
     }
 

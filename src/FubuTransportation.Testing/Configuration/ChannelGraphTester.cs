@@ -85,26 +85,29 @@ namespace FubuTransportation.Testing.Configuration
         [Test]
         public void start_receiving()
         {
-            var graph = new ChannelGraph();
-            var node1 = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
-            var node2 = graph.ChannelFor<ChannelSettings>(x => x.Downstream);
-            var node3 = graph.ChannelFor<BusSettings>(x => x.Upstream);
-            var node4 = graph.ChannelFor<BusSettings>(x => x.Downstream);
+            using (var graph = new ChannelGraph())
+            {
+                var node1 = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
+                var node2 = graph.ChannelFor<ChannelSettings>(x => x.Downstream);
+                var node3 = graph.ChannelFor<BusSettings>(x => x.Upstream);
+                var node4 = graph.ChannelFor<BusSettings>(x => x.Downstream);
 
-            node1.Incoming = true;
-            node2.Incoming = false;
-            node3.Incoming = true;
-            node4.Incoming = false;
+                node1.Incoming = true;
+                node2.Incoming = false;
+                node3.Incoming = true;
+                node4.Incoming = false;
 
-            graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
+                graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
 
-            graph.StartReceiving(MockRepository.GenerateMock<IHandlerPipeline>());
+                graph.StartReceiving(MockRepository.GenerateMock<IHandlerPipeline>());
 
-            node1.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
-            node2.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
-            node3.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
-            node4.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
-            graph.Each(x => new ShutdownChannelNodeVisitor().Visit(x));
+                node1.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
+                node2.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
+                node3.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
+                node4.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
+
+                
+            }
         }
 
         [Test]

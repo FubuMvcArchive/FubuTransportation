@@ -56,7 +56,7 @@ namespace FubuTransportation.LightningQueues
             return LightningQueuesChannel.Build(new LightningUri(channelNode.Uri), _queues, _delayedMessages, channelNode.Incoming);
         }
 
-        protected override void seedQueues(ChannelNode[] channels)
+        protected override void seedQueues(IEnumerable<ChannelNode> channels)
         {
             _queues.Start(channels.Where(x => x.Incoming).Select(x => new LightningUri(x.Uri)));
         }
