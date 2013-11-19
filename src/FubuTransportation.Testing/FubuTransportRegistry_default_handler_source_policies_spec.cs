@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void default_handler_sources_are_not_used_if_a_custom_one_is_registered()
+        public void default_handler_sources_are_not_used_if_a_custom_one_is_registered_and_disabled()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(r => {
                 r.Handlers.DisableDefaultHandlerSource();
@@ -44,7 +44,7 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void default_handler_sources_are_not_used_if_a_custom_one_is_registered_2()
+        public void default_handler_sources_are_not_used_if_a_custom_one_is_registered_2_and_disabled()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(r =>
             {
@@ -59,7 +59,7 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void can_override_the_default_handler_source_by_explicits()
+        public void can_override_the_default_handler_source_by_explicits_and_disabled()
         {
             var graph = FubuTransportRegistry.HandlerGraphFor(r =>
             {

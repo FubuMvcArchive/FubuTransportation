@@ -25,6 +25,26 @@ namespace FubuTransportation.Testing
                 .ShouldHaveTheSameElementsAs(typeof(MyFooHandler), typeof(MyOtherFooHandler));
 
         }
+
+        [Test]
+        public void extra_handler_sources_are_additive()
+        {
+            var graph = FubuTransportRegistry.HandlerGraphFor(x =>
+            {
+                x.Handlers.Include<RandomThing>();
+            });
+
+            var handlerTypes = graph.SelectMany(x => x.OfType<HandlerCall>()).Select(x => x.HandlerType).ToArray();
+            handlerTypes.ShouldContain(typeof(MyOtherConsumer));
+            handlerTypes.ShouldContain(typeof(MyFooHandler));
+            handlerTypes.ShouldContain(typeof(RandomThing));
+
+        }
+    }
+
+    public class RandomThing
+    {
+        public void Consume(Message1 message1){}
     }
 
     public class MyFooHandler
