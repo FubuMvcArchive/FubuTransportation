@@ -60,24 +60,32 @@ namespace FubuTransportation.Testing.Configuration
             });
         }
 
-        [Test, Ignore("This needs to be rethought.  FakeScheduler doesn't work at all, and the real scheduler causes CI issues")]
         public void start_receiving()
         {
-            var invoker = MockRepository.GenerateMock<IHandlerPipeline>();
-
-            var node = new ChannelNode
+            if (DateTime.Today > new DateTime(2013, 11, 21))
             {
-                Incoming = true,
-                Channel = MockRepository.GenerateMock<IChannel>(),
-                Scheduler = new FakeScheduler()
-            };
+                Assert.Fail("Jeremy needs to fix the structure so that this is possible");
+            }
 
-            var graph = new ChannelGraph();
-
-            var startingVisitor = new StartingChannelNodeVisitor(new Receiver(invoker, graph, node));
-            startingVisitor.Visit(node);
             
-            node.Channel.AssertWasCalled(x => x.Receive(new Receiver(invoker, graph, node)));
+
+//            var invoker = MockRepository.GenerateMock<IHandlerPipeline>();
+//
+//            var node = new ChannelNode
+//            {
+//                Incoming = true,
+//                Channel = MockRepository.GenerateMock<IChannel>(),
+//                Scheduler = new FakeScheduler()
+//            };
+//
+//            var graph = new ChannelGraph();
+//
+//            var startingVisitor = new StartingChannelNodeVisitor(new Receiver(invoker, graph, node));
+//            startingVisitor.Visit(node);
+//            
+//
+//
+//            node.Channel.AssertWasCalled(x => x.Receive(new Receiver(invoker, graph, node)));
         }
     }
 

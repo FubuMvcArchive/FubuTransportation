@@ -4,6 +4,7 @@ using FubuCore;
 using FubuCore.Reflection;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using System.Linq;
 using FubuTransportation.Scheduling;
@@ -58,11 +59,6 @@ namespace FubuTransportation.Configuration
             return Uri != null ? Uri.Scheme : null;
         }
 
-        public void Accept(IChannelNodeVisitor visitor)
-        {
-            visitor.Visit(this);
-        }
-
         public void Describe(IScenarioWriter writer)
         {
             writer.WriteLine(Key);
@@ -87,6 +83,24 @@ namespace FubuTransportation.Configuration
             // TODO -- going to come back and try to make the scheduler "drain"
             Channel.Dispose();
             Scheduler.Dispose();
+        }
+
+        public void StartReceiving(IHandlerPipeline pipeline, ChannelGraph graph)
+        {
+            if (Channel == null) throw new InvalidOperationException("Cannot receive on node {0} without a matching channel".ToFormat(SettingAddress));
+            var receiver = new Receiver(pipeline, graph, this);
+            StartReceiving(receiver);
+        }
+
+        public void StartReceiving(IReceiver receiver)
+        {
+            Scheduler.Start(() => {
+                var receivingState = ReceivingState.CanContinueReceiving;
+                while (receivingState == ReceivingState.CanContinueReceiving)
+                {
+                    receivingState = Channel.Receive(receiver);
+                }
+            });
         }
 
         // virtual for testing of course

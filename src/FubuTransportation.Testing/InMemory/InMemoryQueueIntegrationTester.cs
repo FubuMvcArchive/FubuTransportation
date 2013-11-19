@@ -72,8 +72,8 @@ namespace FubuTransportation.Testing.InMemory
                 envelope.Data = new byte[] {1, 2, 3, 4, 5};
 
                 var receiver = new RecordingReceiver();
-                var startingVisitor = new StartingChannelNodeVisitor(receiver);
-                startingVisitor.Visit(node);
+
+                node.StartReceiving(receiver);
 
                 node.Channel.Send(envelope.Data, envelope.Headers);
 

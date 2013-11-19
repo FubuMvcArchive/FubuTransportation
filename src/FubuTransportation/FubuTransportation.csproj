@@ -81,7 +81,6 @@
     <Compile Include="Configuration\HandlerChainPolicy.cs" />
     <Compile Include="Configuration\HandlerGraph.cs" />
     <Compile Include="Configuration\HandlerPolicies.cs" />
-    <Compile Include="Configuration\IChannelNodeVisitor.cs" />
     <Compile Include="Configuration\IFubuTransportRegistryExtension.cs" />
     <Compile Include="Configuration\ISettingsAware.cs" />
     <Compile Include="Configuration\PoliciesExpression.cs" />
@@ -262,7 +261,6 @@
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Sagas\StatefulSagaNode.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />
-    <Compile Include="Scheduling\StartingChannelNodeVisitor.cs" />
     <Compile Include="Scheduling\TaskScheduler.cs" />
     <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />

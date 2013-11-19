@@ -88,11 +88,7 @@ namespace FubuTransportation.Configuration
         public virtual void StartReceiving(IHandlerPipeline pipeline)
         {
             var channelNodes = allChannels();
-            channelNodes.Where(x => x.Incoming).Each(node =>
-            {
-                var scheduler = new StartingChannelNodeVisitor(new Receiver(pipeline, this, node));
-                node.Accept(scheduler);
-            });
+            channelNodes.Where(x => x.Incoming).Each(node => node.StartReceiving(pipeline, this));
         }
 
         public static string ToKey(Accessor accessor)
