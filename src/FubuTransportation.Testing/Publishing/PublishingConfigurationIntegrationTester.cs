@@ -87,7 +87,7 @@ namespace FubuTransportation.Testing.Publishing
         [Test]
         public void should_be_a_PublishEvent_node_directly_after_the_publishing_action()
         {
-            chain.FirstCall().Next.ShouldBeOfType<SendsMessage>()
+            chain.FirstCall().Next.Next.ShouldBeOfType<SendsMessage>()
                 .EventType.ShouldEqual(typeof(Message1));
         }
 
