@@ -104,7 +104,7 @@ namespace FubuTransportation.Subscriptions
             _nodes.Add(node);
         }
 
-        public void Remote(TransportNode node)
+        public void Remove(TransportNode node)
         {
             _nodes.Remove(node);
         }
@@ -114,46 +114,4 @@ namespace FubuTransportation.Subscriptions
             throw new NotImplementedException();
         }
     }
-
-    public class TransportNode
-    {
-        private readonly IList<Uri> _addresses = new List<Uri>();
-
-        public Guid Id { get; set; }
-
-        public Uri[] Addresses
-        {
-            get
-            {
-                return _addresses.ToArray();
-            }
-            set
-            {
-                _addresses.Clear();
-                if (value != null) _addresses.AddRange(value);
-            }
-        }
-
-        protected bool Equals(TransportNode other)
-        {
-            // TODO: UT this little bad boy
-            throw new NotImplementedException();
-            //return _addresses.OrderBy(x => x.ToString()).SequenceEqual(other._addresses.OrderBy(x => x.ToString()));
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((TransportNode) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (_addresses != null ? _addresses.GetHashCode() : 0);
-        }
-    }
-
-
 }

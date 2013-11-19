@@ -266,6 +266,7 @@
     <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="TestSupport\TransportCleanup.cs" />

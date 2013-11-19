@@ -1,4 +1,7 @@
-﻿using FubuMVC.Core;
+﻿using System.Linq;
+using FubuMVC.Core;
+using FubuMVC.StructureMap;
+using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
@@ -6,11 +9,8 @@ using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using StructureMap;
-using FubuMVC.StructureMap;
-using System.Linq;
-using FubuTestingSupport;
 
-namespace FubuTransportation.Testing.Runtime
+namespace FubuTransportation.Testing.Subscriptions
 {
     [TestFixture]
     public class SubscriptionsIntegrationTester
