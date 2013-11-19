@@ -5,7 +5,7 @@ using System.Linq;
 namespace FubuTransportation.Subscriptions
 {
     /*
-     * ChannelGraph.ToTransportNode() : TransportNode
+     * new TransportNode(ChannelGraph)
      * ChannelGraph.ToSubscriptionRequirements() : SubscriptionRequirement*
      * 
      * 
@@ -39,6 +39,11 @@ namespace FubuTransportation.Subscriptions
         
     }
 
+
+    public interface ISubscriptionRepository
+    {
+
+    }
 
 
     public class SubscriptionRequirement
@@ -80,38 +85,39 @@ namespace FubuTransportation.Subscriptions
         public string MessageType { get; set; }
     }
 
-    public class NodeGroup
-    {
-        public string NodeName { get; set; }
-
-        private readonly IList<TransportNode> _nodes = new List<TransportNode>();
-
-        public TransportNode[] Nodes
-        {
-            get
-            {
-                return _nodes.ToArray();
-            }
-            set
-            {
-                _nodes.Clear();
-                if (value != null) _nodes.AddRange(value);
-            }
-        }
-
-        public void Add(TransportNode node)
-        {
-            _nodes.Add(node);
-        }
-
-        public void Remove(TransportNode node)
-        {
-            _nodes.Remove(node);
-        }
-
-        public TransportNode FindNode(Uri uri)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    // Not sure this thing gets to live.
+//    public class NodeGroup
+//    {
+//        public string NodeName { get; set; }
+//
+//        private readonly IList<TransportNode> _nodes = new List<TransportNode>();
+//
+//        public TransportNode[] Nodes
+//        {
+//            get
+//            {
+//                return _nodes.ToArray();
+//            }
+//            set
+//            {
+//                _nodes.Clear();
+//                if (value != null) _nodes.AddRange(value);
+//            }
+//        }
+//
+//        public void Add(TransportNode node)
+//        {
+//            _nodes.Add(node);
+//        }
+//
+//        public void Remove(TransportNode node)
+//        {
+//            _nodes.Remove(node);
+//        }
+//
+//        public TransportNode FindNode(Uri uri)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
 }

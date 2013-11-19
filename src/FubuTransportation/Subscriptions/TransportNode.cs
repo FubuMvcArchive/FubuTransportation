@@ -10,6 +10,8 @@ namespace FubuTransportation.Subscriptions
 
         public Guid Id { get; set; }
 
+        public string NodeName { get; set; }
+
         public Uri[] Addresses
         {
             get
