@@ -102,11 +102,11 @@ namespace FubuTransportation.Testing.Runtime
             Uri = ("{0}://{1}".ToFormat(protocol ?? "fake", Key)).ToUri();
         }
 
-        public override IHeaders Send(Envelope envelope, ChannelNode replyNode = null)
+        public override IHeaders Send(Envelope envelope, Uri replyUri = null)
         {
-            if (replyNode != null)
+            if (replyUri != null)
             {
-                envelope.ReplyUri = replyNode.Uri;
+                envelope.ReplyUri = replyUri;
             }
 
             LastEnvelope = envelope;

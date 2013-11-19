@@ -56,11 +56,9 @@ namespace FubuTransportation.Runtime
 
         private void sendToChannel(Envelope envelope, ChannelNode node)
         {
-            // TODO -- I say we change this to returning a Reply Uri and not worrying
-            // about having a full node
-            var replyNode = _router.ReplyNodeFor(node);
+            var replyUri = _router.ReplyUriFor(node);
 
-            var headers = node.Send(envelope, replyNode: replyNode);
+            var headers = node.Send(envelope, replyUri: replyUri);
             _logger.InfoMessage(() => new EnvelopeSent(new EnvelopeToken
             {
                 Headers = headers,

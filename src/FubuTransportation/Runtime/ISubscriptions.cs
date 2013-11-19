@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
@@ -8,6 +9,6 @@ namespace FubuTransportation.Runtime
         IEnumerable<ChannelNode> FindChannels(Envelope envelope);
         void Start();
 
-        ChannelNode ReplyNodeFor(ChannelNode destination);
+        Uri ReplyUriFor(ChannelNode destination);
     }
 }

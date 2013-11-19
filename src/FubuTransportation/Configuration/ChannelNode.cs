@@ -41,6 +41,7 @@ namespace FubuTransportation.Configuration
         public string DefaultContentType { get; set; }
 
         // TODO -- don't like this.  Goofy.  
+        [Obsolete("This is a stupid way to do things")]
         public bool ForReplies { get; set; }
 
         public bool Publishes(Type type)
@@ -86,7 +87,7 @@ namespace FubuTransportation.Configuration
         }
 
         // virtual for testing of course
-        public virtual IHeaders Send(Envelope envelope, ChannelNode replyNode = null)
+        public virtual IHeaders Send(Envelope envelope, Uri replyUri = null)
         {
             var clone = new NameValueHeaders();
             envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
@@ -94,9 +95,9 @@ namespace FubuTransportation.Configuration
             clone[Envelope.DestinationKey] = Uri.ToString();
             clone[Envelope.ChannelKey] = Key;
 
-            if (replyNode != null)
+            if (replyUri != null)
             {
-                clone[Envelope.ReplyUriKey] = replyNode.Channel.Address.ToString();
+                clone[Envelope.ReplyUriKey] = replyUri.ToString();
             }
 
             Channel.Send(envelope.Data, clone);

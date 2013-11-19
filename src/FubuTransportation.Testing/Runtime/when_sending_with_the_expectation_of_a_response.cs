@@ -1,4 +1,5 @@
-﻿using FubuCore.Logging;
+﻿using System;
+using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
@@ -12,15 +13,16 @@ namespace FubuTransportation.Testing.Runtime
     public class when_sending_with_the_expectation_of_a_response : InteractionContext<EnvelopeSender>
     {
         private StubChannelNode destinationNode;
-        private StubChannelNode replyNode;
         private Message theMessage;
         private Envelope theEnvelope;
         private RecordingLogger theLogger;
+        private Uri replyUri;
 
         protected override void beforeEach()
         {
             destinationNode = new StubChannelNode("fake");
-            replyNode = new StubChannelNode("fake"){ForReplies = true};
+
+            replyUri = "fake://foo".ToUri();
 
             theMessage = new Message();
             theEnvelope = new Envelope { Message = theMessage, ReplyRequested = true};
@@ -31,7 +33,7 @@ namespace FubuTransportation.Testing.Runtime
             MockFor<ISubscriptions>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { destinationNode });
 
-            MockFor<ISubscriptions>().Stub(x => x.ReplyNodeFor(destinationNode)).Return(replyNode);
+            MockFor<ISubscriptions>().Stub(x => x.ReplyUriFor(destinationNode)).Return(replyUri);
 
             ClassUnderTest.Send(theEnvelope);
         }
@@ -39,7 +41,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_have_associated_the_reply_channel_with_the_envelope()
         {
-            theEnvelope.ReplyUri.ShouldEqual(replyNode.Uri);
+            theEnvelope.ReplyUri.ShouldEqual(replyUri);
         }
     }
 }

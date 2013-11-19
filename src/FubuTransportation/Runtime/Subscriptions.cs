@@ -95,9 +95,9 @@ namespace FubuTransportation.Runtime
             _graph.StartReceiving(_pipeline.Value);
         }
 
-        public ChannelNode ReplyNodeFor(ChannelNode destination)
+        public Uri ReplyUriFor(ChannelNode destination)
         {
-            return _graph.FirstOrDefault(x => x.Protocol() == destination.Protocol() && x.ForReplies);
+            return _graph.FirstOrDefault(x => x.Protocol() == destination.Protocol() && x.ForReplies).Channel.Address;
         }
     }
 
