@@ -197,9 +197,15 @@ namespace FubuTransportation.Testing
 
     public class BusSettings
     {
+        public BusSettings()
+        {
+            DownstreamCount = 2;
+        }
+
         public Uri Outbound { get; set; }
         public Uri Downstream { get; set; }
         public Uri Upstream { get; set; }
+        public int DownstreamCount { get; private set; }
     }
 
     public class CustomRule : IRoutingRule

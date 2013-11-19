@@ -89,7 +89,7 @@ namespace FubuTransportation.LightningQueues.Testing
         {
             Handlers.DisableDefaultHandlerSource();
             Handlers.Include<ThrowingHandler<OneMessage>>();
-            Channel(x => x.Downstream).ReadIncoming().AcceptsMessagesInAssemblyContainingType<OneMessage>();
+            Channel(x => x.Downstream).ReadIncoming(ByTasks(x => x.DownstreamCount)).AcceptsMessagesInAssemblyContainingType<OneMessage>();
             Global.Policy<ErrorPolicy>();
         }
     }

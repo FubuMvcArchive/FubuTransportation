@@ -374,7 +374,10 @@ namespace FubuTransportation.Configuration
 
             public ChannelExpression ReadIncoming(SchedulerMaker<T> schedulerMaker)
             {
-                alter = node => node.SettingsRules.Add(schedulerMaker);
+                alter = node => {
+                    node.Incoming = true;
+                    node.SettingsRules.Add(schedulerMaker);
+                };
                 return this;
             }
 
