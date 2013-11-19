@@ -5,6 +5,7 @@ using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Subscriptions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void should_start_the_subscriptions()
         {
-            MockFor<ISubscriptions>().AssertWasCalled(x => x.Start());
+            MockFor<ISubscriptionGateway>().AssertWasCalled(x => x.Start());
         }
     }
 

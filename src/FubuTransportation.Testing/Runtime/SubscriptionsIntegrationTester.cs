@@ -2,6 +2,7 @@
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using StructureMap;
@@ -15,7 +16,7 @@ namespace FubuTransportation.Testing.Runtime
     public class SubscriptionsIntegrationTester
     {
         private FubuRuntime runtime;
-        private ISubscriptions theRouter;
+        private ISubscriptionGateway theRouter;
         private HarnessSettings settings;
 
         [SetUp]
@@ -27,7 +28,7 @@ namespace FubuTransportation.Testing.Runtime
 
             runtime = FubuTransport.For<RoutedRegistry>().StructureMap(container).Bootstrap();
 
-            theRouter = runtime.Factory.Get<ISubscriptions>();
+            theRouter = runtime.Factory.Get<ISubscriptionGateway>();
         }
 
         [TearDown]

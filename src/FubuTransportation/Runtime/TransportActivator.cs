@@ -3,6 +3,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
 using FubuTransportation.Configuration;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Runtime
 {
@@ -10,19 +11,19 @@ namespace FubuTransportation.Runtime
     {
         private readonly ChannelGraph _graph;
         private readonly IServiceLocator _services;
-        private readonly ISubscriptions _subscriptions;
+        private readonly ISubscriptionGateway _subscriptionGateway;
 
-        public TransportActivator(ChannelGraph graph, IServiceLocator services, ISubscriptions subscriptions)
+        public TransportActivator(ChannelGraph graph, IServiceLocator services, ISubscriptionGateway subscriptionGateway)
         {
             _graph = graph;
             _services = services;
-            _subscriptions = subscriptions;
+            _subscriptionGateway = subscriptionGateway;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
             _graph.ReadSettings(_services);
-            _subscriptions.Start();
+            _subscriptionGateway.Start();
         }
     }
 }

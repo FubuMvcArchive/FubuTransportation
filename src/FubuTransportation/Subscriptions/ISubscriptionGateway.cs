@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 
-namespace FubuTransportation.Runtime
+namespace FubuTransportation.Subscriptions
 {
-    public interface ISubscriptions
+    public interface ISubscriptionGateway
     {
         IEnumerable<ChannelNode> FindChannels(Envelope envelope);
         void Start();

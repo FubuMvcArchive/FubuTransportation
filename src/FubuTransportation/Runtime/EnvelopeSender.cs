@@ -6,17 +6,18 @@ using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Runtime
 {
     public class EnvelopeSender : IEnvelopeSender
     {
-        private readonly ISubscriptions _router;
+        private readonly ISubscriptionGateway _router;
         private readonly IEnvelopeSerializer _serializer;
         private readonly ILogger _logger;
         private readonly IEnumerable<IEnvelopeModifier> _modifiers;
 
-        public EnvelopeSender(ISubscriptions router, IEnvelopeSerializer serializer, ILogger logger, IEnumerable<IEnvelopeModifier> modifiers)
+        public EnvelopeSender(ISubscriptionGateway router, IEnvelopeSerializer serializer, ILogger logger, IEnumerable<IEnvelopeModifier> modifiers)
         {
             _router = router;
             _serializer = serializer;

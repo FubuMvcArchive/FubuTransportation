@@ -13,6 +13,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Cascading;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.TestSupport;
 
 namespace FubuTransportation
@@ -29,9 +30,9 @@ namespace FubuTransportation
             eventAggregatorDef.IsSingleton = true;
             SetServiceIfNone(typeof(IEventAggregator), eventAggregatorDef);
 
-            var subscriberDef = ObjectDef.ForType<Subscriptions>();
+            var subscriberDef = ObjectDef.ForType<SubscriptionGateway>();
             subscriberDef.IsSingleton = true;
-            SetServiceIfNone(typeof(ISubscriptions), subscriberDef);
+            SetServiceIfNone(typeof(ISubscriptionGateway), subscriberDef);
 
             var stateCacheDef = new ObjectDef(typeof(SagaStateCacheFactory));
             stateCacheDef.IsSingleton = true;

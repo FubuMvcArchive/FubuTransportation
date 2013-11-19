@@ -3,6 +3,7 @@ using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -30,10 +31,10 @@ namespace FubuTransportation.Testing.Runtime
             theLogger = new RecordingLogger();
             Services.Inject<ILogger>(theLogger);
 
-            MockFor<ISubscriptions>().Stub(x => x.FindChannels(theEnvelope))
+            MockFor<ISubscriptionGateway>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { destinationNode });
 
-            MockFor<ISubscriptions>().Stub(x => x.ReplyUriFor(destinationNode)).Return(replyUri);
+            MockFor<ISubscriptionGateway>().Stub(x => x.ReplyUriFor(destinationNode)).Return(replyUri);
 
             ClassUnderTest.Send(theEnvelope);
         }

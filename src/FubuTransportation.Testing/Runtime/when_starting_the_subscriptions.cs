@@ -4,13 +4,14 @@ using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Subscriptions;
 using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Runtime
 {
     [TestFixture]
-    public class when_starting_the_subscriptions : InteractionContext<Subscriptions>
+    public class when_starting_the_subscriptions : InteractionContext<SubscriptionGateway>
     {
         private ChannelGraph theGraph;
         private ITransport[] theTransports;
@@ -56,7 +57,7 @@ namespace FubuTransportation.Testing.Runtime
                 Uri = "foo://2".ToUri()
             });
 
-            var subscriptions = new Subscriptions(graph, () => null, new ITransport[]{new InMemoryTransport()});
+            var subscriptions = new SubscriptionGateway(graph, () => null, new ITransport[]{new InMemoryTransport()});
 
 
             Exception<InvalidOrMissingTransportException>.ShouldBeThrownBy(() => {

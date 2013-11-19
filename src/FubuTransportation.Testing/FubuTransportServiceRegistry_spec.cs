@@ -14,6 +14,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Cascading;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.TestSupport;
 using NUnit.Framework;
 using System.Linq;
@@ -55,10 +56,10 @@ namespace FubuTransportation.Testing
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();
             var @default = BehaviorGraph.BuildFrom(registry).Services
-                                        .DefaultServiceFor<ISubscriptions>();
+                                        .DefaultServiceFor<ISubscriptionGateway>();
 
             @default.ShouldNotBeNull();
-            @default.Type.ShouldEqual(typeof (Subscriptions));
+            @default.Type.ShouldEqual(typeof (SubscriptionGateway));
             @default.IsSingleton.ShouldBeTrue();
 
 

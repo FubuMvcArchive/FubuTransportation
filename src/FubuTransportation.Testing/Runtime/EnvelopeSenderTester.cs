@@ -7,6 +7,7 @@ using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -41,7 +42,7 @@ namespace FubuTransportation.Testing.Runtime
 
             modifiers = Services.CreateMockArrayFor<IEnvelopeModifier>(5);
 
-            MockFor<ISubscriptions>().Stub(x => x.FindChannels(theEnvelope))
+            MockFor<ISubscriptionGateway>().Stub(x => x.FindChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);

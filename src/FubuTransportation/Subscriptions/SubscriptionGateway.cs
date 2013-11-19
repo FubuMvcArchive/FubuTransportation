@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using FubuCore;
-using FubuCore.DependencyAnalysis;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
-using FubuTransportation.Scheduling;
 
-namespace FubuTransportation.Runtime
+namespace FubuTransportation.Subscriptions
 {
-    public class Subscriptions : ISubscriptions, IDisposable
+    public class SubscriptionGateway : ISubscriptionGateway, IDisposable
     {
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ITransport> _transports;
         private readonly Lazy<IHandlerPipeline> _pipeline;
 
-        public Subscriptions(ChannelGraph graph, Func<IHandlerPipeline> invoker, IEnumerable<ITransport> transports)
+        public SubscriptionGateway(ChannelGraph graph, Func<IHandlerPipeline> invoker, IEnumerable<ITransport> transports)
         {
             if (!transports.Any())
             {
-                throw new Exception("No transports are registered.  FubuTransportation cannot function without at least one ITransport");
+                throw new Exception(
+                    "No transports are registered.  FubuTransportation cannot function without at least one ITransport");
             }
 
             _graph = graph;
@@ -34,7 +34,7 @@ namespace FubuTransportation.Runtime
             {
                 var destination = findDestination(envelope);
 
-                return new ChannelNode[]{destination};
+                return new ChannelNode[] {destination};
             }
 
             // TODO -- gets a LOT more sophisticated later
@@ -102,33 +102,32 @@ namespace FubuTransportation.Runtime
     {
         public static string ToMessage(IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
         {
-            return "Missing channel Uri configuration or unknown transport types\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") + " and the invalid nodes are \n" + nodes.Select(x => {
-                return "Node '{0}'@{1}; ".ToFormat(x.Key, x.Uri);
-            }).Join("\n");
+            return "Missing channel Uri configuration or unknown transport types\nAvailable transports are " +
+                   transports.Select(x => x.ToString()).Join(", ") + " and the invalid nodes are \n" +
+                   nodes.Select(x => { return "Node '{0}'@{1}; ".ToFormat(x.Key, x.Uri); }).Join("\n");
         }
 
         public static string ToMessage(Exception ex, IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
         {
-            return ex.Message + "\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") + " and the nodes are \n" + nodes.Select(x =>
-            {
-                return "Node '{0}'@{1}, Incoming={2}; ".ToFormat(x.Key, x.Uri, x.Incoming);
-            }).Join("\n");
+            return ex.Message + "\nAvailable transports are " + transports.Select(x => x.ToString()).Join(", ") +
+                   " and the nodes are \n" +
+                   nodes.Select(x => { return "Node '{0}'@{1}, Incoming={2}; ".ToFormat(x.Key, x.Uri, x.Incoming); })
+                       .Join("\n");
         }
 
         public InvalidOrMissingTransportException(Exception ex, IEnumerable<ITransport> transports,
             IEnumerable<ChannelNode> nodes)
             : base(ToMessage(ex, transports, nodes), ex)
         {
-            
         }
 
         public InvalidOrMissingTransportException(IEnumerable<ITransport> transports, IEnumerable<ChannelNode> nodes)
             : base(ToMessage(transports, nodes))
         {
-            
         }
 
-        protected InvalidOrMissingTransportException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected InvalidOrMissingTransportException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }
