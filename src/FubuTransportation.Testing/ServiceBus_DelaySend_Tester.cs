@@ -1,14 +1,11 @@
 ﻿using System;
+using System.Linq;
+using FubuCore;
 using FubuTestingSupport;
-using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
-using FubuTransportation.Testing.Runtime;
-using FubuTransportation.Testing.ScenarioSupport;
+using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
-using FubuCore;
-using System.Linq;
-using Message1 = FubuTransportation.Testing.Events.Message1;
 
 namespace FubuTransportation.Testing
 {
@@ -18,8 +15,6 @@ namespace FubuTransportation.Testing
         protected override void beforeEach()
         {
             LocalSystemTime = DateTime.Today.AddHours(4);
-
-            
         }
 
         private Envelope theLastEnvelopeSent
@@ -27,7 +22,7 @@ namespace FubuTransportation.Testing
             get
             {
                 return MockFor<IEnvelopeSender>().GetArgumentsForCallsMadeOn(x => x.Send(null))
-                                                 .Last()[0].As<Envelope>();
+                    .Last()[0].As<Envelope>();
             }
         }
 

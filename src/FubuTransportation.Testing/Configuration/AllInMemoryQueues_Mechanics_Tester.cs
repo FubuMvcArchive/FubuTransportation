@@ -35,26 +35,6 @@ namespace FubuTransportation.Testing.Configuration
         [TearDown]
         public void TearDown()
         {
-
-            
-
-            var container = runtime.Factory.Get<IContainer>();
-            Debug.WriteLine(container.Model.PluginTypes.Count());
-
-            var types = container.Model.PluginTypes.ToArray();
-            for (int i = 0; i < 6; i++)
-            {
-                var configuration = types[i];
-                Debug.WriteLine("Flushing " + configuration.PluginType.FullName);
-                configuration.EjectAndRemoveAll();
-            }
-
-//            container.Model.PluginTypes.Where(x => x.Lifecycle == "Singleton")
-//                .Each(x => {
-//                    Debug.WriteLine(x.PluginType.FullName);
-//                    x.EjectAndRemoveAll();
-//                });
-
             runtime.Dispose();
         }
 

@@ -2,7 +2,7 @@
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Cascading;
 
-namespace FubuTransportation.Testing.Runtime
+namespace FubuTransportation.Testing
 {
     public class RecordingEnvelopeSender : IEnvelopeSender, IOutgoingSender
     {

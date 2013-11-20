@@ -35,11 +35,13 @@ namespace FubuTransportation.Testing.Events
         {
             FubuTransport.SetupForInMemoryTesting();
 
-            var runtime = FubuTransport.For<InMemory.DelayedRegistry>().StructureMap(new Container())
-                           .Bootstrap();
+            using (var runtime = FubuTransport.For<InMemory.DelayedRegistry>().StructureMap(new Container())
+                           .Bootstrap())
+            {
 
-            runtime.Factory.Get<IPollingJobs>().Any(x => x is PollingJob<ExpiringListenerCleanup, TransportSettings>)
-                .ShouldBeTrue();
+                runtime.Factory.Get<IPollingJobs>().Any(x => x is PollingJob<ExpiringListenerCleanup, TransportSettings>)
+                    .ShouldBeTrue();
+            }
         }
 
         [TearDown]

@@ -6,7 +6,6 @@ using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
-using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using Rhino.Mocks;
 

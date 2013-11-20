@@ -8,7 +8,6 @@ using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Delayed;
-using FubuTransportation.Testing.Runtime;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using FubuMVC.StructureMap;

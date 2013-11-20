@@ -17,15 +17,17 @@ namespace FubuTransportation.Testing
             var container = new Container();
 
 
-            FubuTransport.For<Defaults>().StructureMap(container).Bootstrap();
+            using (var runtime = FubuTransport.For<Defaults>().StructureMap(container).Bootstrap())
+            {
+                var handlers = container.GetInstance<IHandlerPipeline>().ShouldBeOfType<HandlerPipeline>().Handlers;
+            
 
-            var handlers = container.GetInstance<IHandlerPipeline>().ShouldBeOfType<HandlerPipeline>().Handlers;
-
-            container.Dispose();
-            handlers[0].ShouldBeOfType<DelayedEnvelopeHandler>();
-            handlers[1].ShouldBeOfType<ResponseEnvelopeHandler>();
-            handlers[2].ShouldBeOfType<ChainExecutionEnvelopeHandler>();
-            handlers[3].ShouldBeOfType<NoSubscriberHandler>();
+                container.Dispose();
+                handlers[0].ShouldBeOfType<DelayedEnvelopeHandler>();
+                handlers[1].ShouldBeOfType<ResponseEnvelopeHandler>();
+                handlers[2].ShouldBeOfType<ChainExecutionEnvelopeHandler>();
+                handlers[3].ShouldBeOfType<NoSubscriberHandler>();
+            }
         }
 
         public class Defaults : FubuTransportRegistry

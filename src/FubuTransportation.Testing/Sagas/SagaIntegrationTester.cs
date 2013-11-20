@@ -63,7 +63,6 @@ namespace FubuTransportation.Testing.Sagas
             Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds: 60000);
 
             var messages = theLogger.Traces.Select(x => x.Message);
-            messages.Each(x => Console.WriteLine(x));
 
             theLogger.Traces.Select(x => x.Id).Distinct()
                      .Count().ShouldEqual(1); // should be the same correlation id all the way through
@@ -81,7 +80,6 @@ namespace FubuTransportation.Testing.Sagas
             Wait.Until(() => !MessageHistory.Outstanding().Any(), timeoutInMilliseconds: 60000);
 
             var messages = theLogger.Traces.Select(x => x.Message);
-            messages.Each(x => Console.WriteLine(x));
 
             theLogger.Traces.Select(x => x.Id).Distinct()
                      .Count().ShouldEqual(1); // should be the same correlation id all the way through

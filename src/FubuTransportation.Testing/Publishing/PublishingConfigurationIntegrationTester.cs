@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using FubuMVC.Core;
 using FubuMVC.Core.Ajax;
@@ -32,6 +33,11 @@ namespace FubuTransportation.Testing.Publishing
             FubuTransport.AllQueuesInMemory = true;
 
             container = new Container();
+            container.Inject(new TransportSettings
+            {
+                DelayMessagePolling = Int32.MaxValue,
+                ListenerCleanupPolling = Int32.MaxValue
+            });
             theServiceBus = MockRepository.GenerateMock<IServiceBus>();
 
             theRuntime = FubuApplication.DefaultPolicies().StructureMap(container).Bootstrap();

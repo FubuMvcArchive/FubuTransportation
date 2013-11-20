@@ -2,13 +2,12 @@
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Testing.Events;
-using FubuTransportation.Testing.Polling;
 using NUnit.Framework;
 
-namespace FubuTransportation.Testing.Runtime
+namespace FubuTransportation.Testing.Polling
 {
     [TestFixture]
-    public class EnvelopeTokenTester
+    public class EnvelopeToken_is_polling_job_related_Tester
     {
         [Test]
         public void is_not_related_to_a_job_with_no_message_at_all()

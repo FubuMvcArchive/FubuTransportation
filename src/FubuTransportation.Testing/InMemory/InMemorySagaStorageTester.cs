@@ -2,7 +2,6 @@
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.InMemory;
 using FubuTransportation.Sagas;
-using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
 using Message1 = FubuTransportation.Testing.Events.Message1;

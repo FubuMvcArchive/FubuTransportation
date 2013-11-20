@@ -51,7 +51,10 @@ namespace FubuTransportation.Runtime.Invocation
             }
             catch (Exception e)
             {
-                _logger.Error("Failed while invoking message " + message, e);
+                if (!envelope.ToToken().IsPollingJobRelated())
+                {
+                    _logger.Error("Failed while invoking message " + message, e);
+                }
                 throw;
             }
             finally

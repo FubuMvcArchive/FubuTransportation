@@ -6,7 +6,6 @@ using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Registration.Querying;
 using FubuTransportation.Configuration;
-using FubuTransportation.Testing.Runtime;
 using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;

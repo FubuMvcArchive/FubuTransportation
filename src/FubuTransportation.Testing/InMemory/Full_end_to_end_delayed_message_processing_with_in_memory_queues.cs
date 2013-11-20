@@ -4,6 +4,7 @@ using System.Threading;
 using Bottles.Services.Messaging.Tracking;
 using FubuCore;
 using FubuCore.Dates;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -25,6 +26,7 @@ namespace FubuTransportation.Testing.InMemory
         private OneMessage message2;
         private OneMessage message3;
         private OneMessage message4;
+        private FubuRuntime runtime;
 
         [TestFixtureSetUp]
         public void SetUp()
@@ -35,7 +37,7 @@ namespace FubuTransportation.Testing.InMemory
             MessageHistory.ClearAll();
             InMemoryQueueManager.ClearAll();
 
-            var runtime = FubuTransport.For<DelayedRegistry>().StructureMap(new Container())
+            runtime = FubuTransport.For<DelayedRegistry>().StructureMap(new Container())
                                        .Bootstrap();
 
             theServiceBus = runtime.Factory.Get<IServiceBus>();
@@ -83,6 +85,8 @@ namespace FubuTransportation.Testing.InMemory
         [TestFixtureTearDown]
         public void TearDown()
         {
+            runtime.SafeDispose();
+
             // TODO - HAVE TO DISPOSE THE RUNTIME!!!!!!!
             FubuTransport.Reset();
         }

@@ -54,6 +54,10 @@ namespace FubuTransportation.Polling
             }
             catch (Exception e)
             {
+                // VERY unhappy with the code below, but I cannot determine
+                // why the latching doesn't work cleanly in the NUnit console runner
+                if (_latch.Latched || e.Message.Contains("Could not find an Instance named")) return;
+
                 if (!_latch.Latched)
                 {
                     _logger.FailedToSchedule(typeof (TJob), e);

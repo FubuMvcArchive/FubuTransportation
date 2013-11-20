@@ -94,15 +94,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Full_end_to_end_delayed_message_processing_with_Lightning_Queues.cs" />
-    <Compile Include="Full_end_to_end_error_processing_with_LightningQueues.cs" />
-    <Compile Include="LightningQueuesIntegrationTester.cs" />
-    <Compile Include="LightningQueuesServiceRegistry_spec.cs" />
-    <Compile Include="LightningUriTester.cs" />
-    <Compile Include="PersistentQueueTester.cs" />
+    <Compile Include="Full_end_to_end_delayed_message_processing_with_Lightning_Queues.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Full_end_to_end_error_processing_with_LightningQueues.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LightningQueuesIntegrationTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LightningQueuesServiceRegistry_spec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LightningUriTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PersistentQueueTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="throws_descriptive_exception_if_no_incoming_lq_channel.cs" />
-    <Compile Include="UriExtensionsTester.cs" />
+    <Compile Include="throws_descriptive_exception_if_no_incoming_lq_channel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UriExtensionsTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation.LightningQueues\FubuTransportation.LightningQueues.csproj">
@@ -117,6 +133,9 @@
       <Project>{23fdb1ce-1ec5-4d1b-b3e5-008a439caa13}</Project>
       <Name>FubuTransportation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ripple.dependencies.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

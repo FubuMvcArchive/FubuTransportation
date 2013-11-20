@@ -24,6 +24,7 @@ namespace FubuTransportation.Polling
 
         public void Stop()
         {
+            _timer.Stop();
             _timer.Enabled = false;
         }
 
