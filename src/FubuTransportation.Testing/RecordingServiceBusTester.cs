@@ -60,12 +60,12 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public async void send_and_wait()
+        public void send_and_wait()
         {
             var message = new Message1();
             var bus = new RecordingServiceBus();
 
-            await bus.SendAndWait(message);
+            bus.SendAndWait(message).Wait();
 
             // Checking for messages sent
             bus.Sent.Single().ShouldBeTheSameAs(message);
