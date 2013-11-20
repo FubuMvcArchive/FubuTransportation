@@ -9,6 +9,8 @@ using FubuCore.Util;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
+
 
 namespace FubuTransportation.Configuration
 {
@@ -18,7 +20,9 @@ namespace FubuTransportation.Configuration
         private readonly Cache<string, ChannelNode> _channels =
             new Cache<string, ChannelNode>(key => new ChannelNode {Key = key});
 
-        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>();
+        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>(name => {
+            throw new ArgumentOutOfRangeException("No known reply channel for protocol '{0}'".ToFormat(name));
+        });
 
         public ChannelGraph()
         {
@@ -61,24 +65,13 @@ namespace FubuTransportation.Configuration
             _replyChannels[protocol] = uri;
         }
 
-        public IEnumerable<ReplyChannel> ReplyChannels()
-        {
-            foreach (var protocol in _replyChannels.GetAllKeys())
-            {
-                yield return new ReplyChannel
-                {
-                    Protocol = protocol,
-                    Uri = _replyChannels[protocol]
-                };
-            }
-        }
-
         public IEnumerable<ChannelNode> NodesForProtocol(string protocol)
         {
             return _channels.Where(x => x.Protocol() != null && x.Protocol().EqualsIgnoreCase(protocol))
                 .Distinct()
                 .ToArray();
         }
+
 
         // leave it virtual for testing
         public virtual void ReadSettings(IServiceLocator services)
@@ -126,11 +119,5 @@ namespace FubuTransportation.Configuration
 
             _wasDisposed = true;
         }
-    }
-
-    public class ReplyChannel
-    {
-        public Uri Uri { get; set; }
-        public string Protocol { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace FubuTransportation.InMemory
 
         protected override Uri getReplyUri(ChannelGraph graph)
         {
-            var uri = "{0}://localhost/{1}/replies".ToFormat(Protocol, graph.Name ?? "node").ToUri();
+            var uri = ReplyUriForGraph(graph);
             var replyNode = new ChannelNode
             {
                 Uri = uri,
@@ -67,6 +67,11 @@ namespace FubuTransportation.InMemory
             replyNode.Channel = buildChannel(replyNode);
 
             return uri;
+        }
+
+        public static Uri ReplyUriForGraph(ChannelGraph graph)
+        {
+            return "{0}://localhost/{1}/replies".ToFormat(InMemoryChannel.Protocol, graph.Name ?? "node").ToUri();
         }
 
         public static T ToInMemory<T>() where T : new()

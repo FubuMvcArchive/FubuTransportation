@@ -234,6 +234,7 @@
     <Compile Include="Runtime\Invocation\SimpleEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\IReceiver.cs" />
+    <Compile Include="Subscriptions\GroupSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\ISubscriptionGateway.cs" />
     <Compile Include="Runtime\ITransport.cs" />
     <Compile Include="Runtime\Receiver.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
+    <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\SubscriptionClasses.cs" />
     <Compile Include="Subscriptions\SubscriptionGateway.cs" />
     <Compile Include="Runtime\TransportActivator.cs" />
