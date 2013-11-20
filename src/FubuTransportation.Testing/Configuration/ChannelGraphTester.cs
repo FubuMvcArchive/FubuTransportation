@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FubuCore;
 using FubuCore.Logging;
 using FubuMVC.Core.Registration;
@@ -7,6 +8,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Scheduling;
+using FubuTransportation.Subscriptions;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Collections.Generic;
@@ -114,6 +116,19 @@ namespace FubuTransportation.Testing.Configuration
         public void channel_graph_has_to_be_application_level()
         {
             typeof(ChannelGraph).HasAttribute<ApplicationLevelAttribute>().ShouldBeTrue();
+        }
+
+        [Test]
+        public void set_and_get_the_dyanmic_subscriptions()
+        {
+            var graph = new ChannelGraph();
+            graph.DynamicSubscriptions.Any().ShouldBeFalse();
+
+            var subscriptions = new Subscription[] {new Subscription(), new Subscription(), new Subscription()};
+
+            graph.DynamicSubscriptions = subscriptions;
+
+            graph.DynamicSubscriptions.ShouldHaveTheSameElementsAs(subscriptions);
         }
     }
 

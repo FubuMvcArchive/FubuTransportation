@@ -4,15 +4,6 @@ using System.Linq;
 
 namespace FubuTransportation.Subscriptions
 {
-    /*
-     * new TransportNode(ChannelGraph)
-     * ChannelGraph.ToSubscriptionRequirements() : SubscriptionRequirement*
-     * 
-     * 
-     * 
-     * 
-     */
-
     /// <summary>
     /// Sent to peer groups
     /// </summary>
@@ -42,7 +33,8 @@ namespace FubuTransportation.Subscriptions
 
     public interface ISubscriptionRepository
     {
-
+        IEnumerable<Subscription> PersistRequirements(string name, Subscription[] requirements);
+        IEnumerable<Subscription> LoadSubscriptions(string name);
     }
 
 

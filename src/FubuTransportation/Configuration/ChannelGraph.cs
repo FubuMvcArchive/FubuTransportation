@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
@@ -40,6 +41,25 @@ namespace FubuTransportation.Configuration
         /// either the message or channel level
         /// </summary>
         public string DefaultContentType { get; set; }
+
+
+        private readonly ReaderWriterLockSlim _subscriptionLock = new ReaderWriterLockSlim();
+        // Add some locking here!
+        public IEnumerable<Subscription> DynamicSubscriptions
+        {
+            get
+            {
+                return _subscriptionLock.Read(() => {
+                    return _dynamicSubscriptions ?? new Subscription[0];
+                });
+            }
+            set
+            {
+                _subscriptionLock.Write(() => {
+                    _dynamicSubscriptions = value;
+                });
+            }
+        }
 
         public ChannelNode ChannelFor<T>(Expression<Func<T, Uri>> property)
         {
@@ -110,6 +130,7 @@ namespace FubuTransportation.Configuration
         }
 
         private bool _wasDisposed;
+        private IEnumerable<Subscription> _dynamicSubscriptions;
 
         public void Dispose()
         {
