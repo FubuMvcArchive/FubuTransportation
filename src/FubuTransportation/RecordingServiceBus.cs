@@ -12,7 +12,8 @@ namespace FubuTransportation
     {
         public readonly IList<object> Sent = new List<object>();
         public readonly IList<object> Consumed = new List<object>();
-        public readonly IList<DelayedMessage> DelayedSent = new List<DelayedMessage>(); 
+        public readonly IList<object> Await = new List<object>();
+        public readonly IList<DelayedMessage> DelayedSent = new List<DelayedMessage>();
 
         public Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null)
         {
@@ -49,7 +50,8 @@ namespace FubuTransportation
 
         public Task SendAndWait<T>(T message)
         {
-            throw new NotImplementedException();
+            Sent.Add(message);
+            return Task.Factory.StartNew(() => Await.Add(message));
         }
 
         public class DelayedMessage
@@ -60,5 +62,5 @@ namespace FubuTransportation
         }
     }
 
-    
+
 }
