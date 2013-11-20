@@ -11,7 +11,6 @@ namespace FubuTransportation.Subscriptions
     {
         private readonly ISubscriptionRepository _repository;
         private readonly IEnvelopeSender _sender;
-        private readonly IServiceBus _serviceBus;
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
 

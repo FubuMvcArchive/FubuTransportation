@@ -45,8 +45,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
         {
             if (processed.GetType() == _request.GetType() && processed.Id == _request.Id) return true;
 
-            if (processed is Acknowledgement) return true;
-
             return false;
         }
     }

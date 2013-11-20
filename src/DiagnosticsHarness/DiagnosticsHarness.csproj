@@ -100,9 +100,6 @@
     <Reference Include="Microsoft.Owin.Hosting">
       <HintPath>..\packages\FubuMVC.Katana\lib\net40\Microsoft.Owin.Hosting.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\BottleServiceRunner\lib\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -119,9 +116,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Topshelf">
-      <HintPath>..\packages\BottleServiceRunner\lib\Topshelf.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FubuHarnessRegistry.cs" />

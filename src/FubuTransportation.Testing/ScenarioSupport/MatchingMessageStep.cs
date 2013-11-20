@@ -6,7 +6,6 @@ namespace FubuTransportation.Testing.ScenarioSupport
     {
         private readonly IOriginatingMessage _message;
         private readonly NodeConfiguration _receiver;
-        private readonly NodeConfiguration _node;
 
         public MatchingMessageStep(IOriginatingMessage message, NodeConfiguration receiver)
         {

@@ -20,7 +20,6 @@ namespace FubuTransportation.Testing.Runtime
         private StubChannelNode node2;
         private StubChannelNode node3;
         private Message theMessage;
-        private byte[] theData;
         private Envelope theEnvelope;
         private string correlationId;
         private RecordingLogger theLogger;

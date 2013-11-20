@@ -33,7 +33,6 @@ namespace FubuTransportation.Testing.Runtime
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
         private ReplyListener<Events.Message1> theListener;
-        private Events.Message1 theMessage;
 
         [SetUp]
         public void SetUp()
@@ -88,7 +87,6 @@ namespace FubuTransportation.Testing.Runtime
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
         private ReplyListener<Events.Message1> theListener;
-        private Events.Message1 theMessage;
 
         [SetUp]
         public void SetUp()
@@ -184,7 +182,6 @@ namespace FubuTransportation.Testing.Runtime
         private IEventAggregator theEvents;
         public readonly string correlationId = Guid.NewGuid().ToString();
         private ReplyListener<Events.Message1> theListener;
-        private Events.Message1 theMessage;
 
         [SetUp]
         public void SetUp()

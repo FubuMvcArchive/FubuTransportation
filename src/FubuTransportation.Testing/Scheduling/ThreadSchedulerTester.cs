@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.Scheduling
             using(var scheduler = ThreadScheduler.Default())
             {
                 scheduler.Start(() => ran = true);
-                Wait.Until(() => ran = true).ShouldBeTrue();
+                Wait.Until(() => ran).ShouldBeTrue();
             }
         }
 
