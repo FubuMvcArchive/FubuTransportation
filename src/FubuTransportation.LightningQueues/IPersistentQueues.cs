@@ -7,6 +7,7 @@ namespace FubuTransportation.LightningQueues
 {
     public interface IPersistentQueues : IDisposable
     {
+        IEnumerable<IQueueManager> AllQueueManagers { get; } 
         void ClearAll();
         IQueueManager ManagerFor(int port, bool incoming);
         IQueueManager ManagerForReply();

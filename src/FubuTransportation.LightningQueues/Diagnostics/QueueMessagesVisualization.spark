@@ -1,0 +1,7 @@
+<viewdata model="FubuTransportation.LightningQueues.Diagnostics.QueueMessagesVisualization" />
+
+<h1>Messages for Queue: ${Model.QueueName}</h1>
+
+<br></br>
+
+!{Model.Messages}

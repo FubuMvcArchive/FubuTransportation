@@ -32,6 +32,8 @@ namespace FubuTransportation.LightningQueues
             _queueManagers.Each(x => x.Dispose());
         }
 
+        public IEnumerable<IQueueManager> AllQueueManagers { get { return _queueManagers.GetAll(); } }
+
         public void ClearAll()
         {
             _queueManagers.Each(x => x.ClearAllMessages());

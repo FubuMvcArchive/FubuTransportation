@@ -63,6 +63,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Wintellect.Threading">
@@ -73,6 +74,8 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Diagnostics\LightningQueuesFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\MessagesFubuDiagnostics.cs" />
     <Compile Include="IPersistentQueues.cs" />
     <Compile Include="LightningQueuesChannel.cs" />
     <Compile Include="LightningQueueSettings.cs" />
@@ -89,6 +92,11 @@
       <Project>{23fdb1ce-1ec5-4d1b-b3e5-008a439caa13}</Project>
       <Name>FubuTransportation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagnostics\QueueMessagesVisualization.spark" />
+    <None Include="Diagnostics\QueueManagersVisualization.spark" />
+    <EmbeddedResource Include="pak-WebContent.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
