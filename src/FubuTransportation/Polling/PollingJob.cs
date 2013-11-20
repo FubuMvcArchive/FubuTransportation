@@ -12,14 +12,16 @@ namespace FubuTransportation.Polling
         private readonly IPollingJobLogger _logger;
         private readonly ITimer _timer;
         private readonly Expression<Func<TSettings, double>> _intervalSource;
+        private readonly PollingJobLatch _latch;
         private double _interval;
 
-        public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings, Expression<Func<TSettings, double>> intervalSource)
+        public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings, Expression<Func<TSettings, double>> intervalSource, PollingJobLatch latch)
         {
             _bus = bus;
             _logger = logger;
             _timer = new DefaultTimer();
             _intervalSource = intervalSource;
+            _latch = latch;
 
             _interval = _intervalSource.Compile()(settings);
         }
@@ -44,13 +46,18 @@ namespace FubuTransportation.Polling
 
         public void RunNow()
         {
+            if (_latch.Latched) return;
+
             try
             {
                 _bus.Consume(new JobRequest<TJob>());
             }
             catch (Exception e)
             {
-                _logger.FailedToSchedule(typeof (TJob), e);
+                if (!_latch.Latched)
+                {
+                    _logger.FailedToSchedule(typeof (TJob), e);
+                }
             }
         }
 

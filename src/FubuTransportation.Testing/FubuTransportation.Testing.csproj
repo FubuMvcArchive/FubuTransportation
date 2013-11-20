@@ -261,6 +261,7 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializerIntegratedTester.cs" />
     <Compile Include="Runtime\Serializers\EnvelopeSerializerTester.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializerTester.cs" />
+    <Compile Include="Subscriptions\Subscription_equality_tester.cs" />
     <Compile Include="Subscriptions\when_creating_grouped_subscriptions.cs" />
     <Compile Include="Subscriptions\when_creating_local_subscriptions.cs" />
     <Compile Include="Subscriptions\SubscriptionsIntegrationTester.cs" />

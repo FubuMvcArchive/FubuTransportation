@@ -249,6 +249,7 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
+    <Compile Include="Subscriptions\ISubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\SubscriptionClasses.cs" />
     <Compile Include="Subscriptions\SubscriptionGateway.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Subscriptions\SubscriptionRequirements.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />

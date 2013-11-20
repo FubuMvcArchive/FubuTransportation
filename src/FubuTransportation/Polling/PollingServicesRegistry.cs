@@ -17,6 +17,8 @@ namespace FubuTransportation.Polling
             var def = ObjectDef.ForType<PollingJobs>();
             def.IsSingleton = true;
             SetServiceIfNone(typeof (IPollingJobs), def);
+
+            SetServiceIfNone(typeof (PollingJobLatch), ObjectDef.ForValue(new PollingJobLatch()).AsSingleton());
         }
     }
 }

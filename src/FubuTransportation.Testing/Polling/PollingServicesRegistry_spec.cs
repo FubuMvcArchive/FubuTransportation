@@ -45,6 +45,13 @@ namespace FubuTransportation.Testing.Polling
         }
 
         [Test]
+        public void latch_is_registered()
+        {
+            services().DefaultServiceFor<PollingJobLatch>().IsSingleton
+                .ShouldBeTrue();
+        }
+
+        [Test]
         public void polling_job_deactivator_is_registered()
         {
             services().ServicesFor<IDeactivator>()

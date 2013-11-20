@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,6 +20,7 @@ using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
 using FubuTransportation.Scheduling;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Configuration
 {
@@ -451,6 +453,66 @@ namespace FubuTransportation.Configuration
         public ByTaskScheduleMaker<T> ByTasks(Expression<Func<T, int>> property)
         {
             return new ByTaskScheduleMaker<T>(property);
+        }
+
+        public SubscriptionExpression Subscribe(Expression<Func<T, Uri>> receiving)
+        {
+            return new SubscriptionExpression(this, receiving);
+        }
+
+        public SubscriptionExpression SubscribeLocally()
+        {
+            return new SubscriptionExpression(this, null);
+        }
+
+        public class SubscriptionExpression
+        {
+            private readonly FubuTransportRegistry<T> _parent;
+            private readonly Expression<Func<T, Uri>> _receiving;
+
+            public SubscriptionExpression(FubuTransportRegistry<T> parent, Expression<Func<T, Uri>> receiving)
+            {
+                _parent = parent;
+                _receiving = receiving;
+
+                parent.Services(r => {
+                    r.FillType(typeof(ISubscriptionRequirement), typeof(SubscriptionRequirements<T>));
+                });
+            }
+
+            public TypeSubscriptionExpression At(Expression<Func<T, Uri>> sourceProperty)
+            {
+                ISubscriptionRequirement<T> requirement = _receiving == null
+                    ? (ISubscriptionRequirement<T>) new LocalSubscriptionRequirement<T>(sourceProperty)
+                    : new GroupSubscriptionRequirement<T>(sourceProperty, _receiving);
+
+                _parent.Services(x => x.AddService(requirement));
+
+                return new TypeSubscriptionExpression(requirement);
+            }
+
+            public class TypeSubscriptionExpression
+            {
+                private readonly ISubscriptionRequirement<T> _requirement;
+
+                public TypeSubscriptionExpression(ISubscriptionRequirement<T> requirement)
+                {
+                    _requirement = requirement;
+                }
+
+                public TypeSubscriptionExpression ToMessage<TMessage>()
+                {
+                    _requirement.AddType(typeof(TMessage));
+
+                    return this;
+                }
+
+                public TypeSubscriptionExpression ToMessage(Type messageType)
+                {
+                    _requirement.AddType(messageType);
+                    return this;
+                }
+            }
         }
     }
 
