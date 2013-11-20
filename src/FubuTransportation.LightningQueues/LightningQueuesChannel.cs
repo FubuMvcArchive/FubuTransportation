@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
@@ -36,14 +37,11 @@ namespace FubuTransportation.LightningQueues
         public ReceivingState Receive(IReceiver receiver)
         {
             var stream = _queueManager.ReceiveStream(_queueName);
-            stream.Each(x =>
+            foreach (var message in stream.TakeWhile(message => !_disposed))
             {
-                if (_disposed)
-                    return;
-                receiver.Receive(x.Message.Data, new NameValueHeaders(x.Message.Headers),
-                    new TransactionCallback(x.TransactionalScope, x.Message, _delayedMessages));
-
-            });
+                receiver.Receive(message.Message.Data, new NameValueHeaders(message.Message.Headers),
+                    new TransactionCallback(message.TransactionalScope, message.Message, _delayedMessages));
+            }
             return ReceivingState.StopReceiving;
         }
 
