@@ -15,7 +15,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
             _queues = queues;
         }
 
-        public QueueMessagesVisualization get_messages_Port_QueueName(MessagesInputModel input)
+        public QueueMessagesVisualization get_messages_details_Port_QueueName(MessagesInputModel input)
         {
             var queueManager = _queues.AllQueueManagers.Single(x => x.Endpoint.Port == input.Port);
 

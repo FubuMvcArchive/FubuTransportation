@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using FubuCore;
+using FubuMVC.Core.Urls;
 using HtmlTags;
 using HtmlTags.Extended.TagBuilders;
 using LightningQueues;
@@ -14,27 +15,30 @@ namespace FubuTransportation.LightningQueues.Diagnostics
     public class LightningQueuesFubuDiagnostics
     {
         private readonly IPersistentQueues _queues;
+        private readonly IUrlRegistry _urls;
 
-        public LightningQueuesFubuDiagnostics(IPersistentQueues queues)
+        public LightningQueuesFubuDiagnostics(IPersistentQueues queues, IUrlRegistry urls)
         {
             _queues = queues;
+            _urls = urls;
         }
 
-        public QueueManagersVisualization get_Index()
+        public QueueManagersVisualization Index()
         {
             var visualization = new QueueManagersVisualization
             {
-                QueueManagers = _queues.AllQueueManagers.Select(x => new QueueManagerModel(x)).ToList()
+                QueueManagers = _queues.AllQueueManagers.Select(x => new QueueManagerModel(x, _urls)).ToList()
             };
+
             return visualization;
         }
     }
 
     public class QueueManagerModel
     {
-        public QueueManagerModel(IQueueManager queueManager)
+        public QueueManagerModel(IQueueManager queueManager, IUrlRegistry urls)
         {
-            Queues = new QueueManagerTableTag(queueManager);
+            Queues = new QueueManagerTableTag(queueManager, urls);
             EnableProcessedMessageHistory = queueManager.Configuration.EnableProcessedMessageHistory;
             EnableOutgoingMessageHistory = queueManager.Configuration.EnableOutgoingMessageHistory;
             Path = queueManager.Path;
@@ -65,7 +69,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
 
     public class QueueManagerTableTag : TableTag
     {
-        public QueueManagerTableTag(IQueueManager queueManager)
+        public QueueManagerTableTag(IQueueManager queueManager, IUrlRegistry urls)
         {
             AddClass("table");
 
@@ -77,18 +81,19 @@ namespace FubuTransportation.LightningQueues.Diagnostics
 
             queueManager.Queues.Each(queueName =>
             {
-                AddBodyRow(row => addQueueRow(row, queueManager, queueName));
-                AddBodyRow(row => addQueueRow(row, queueManager, "{0}_history".ToFormat(queueName), "N/A"));
+                AddBodyRow(row => addQueueRow(row, queueManager, queueName, urls));
+                AddBodyRow(row => addQueueRow(row, queueManager, "{0}_history".ToFormat(queueName), urls, "N/A"));
             });
-            AddBodyRow(row => addQueueRow(row, queueManager, "outgoing", "N/A"));
-            AddBodyRow(row => addQueueRow(row, queueManager, "outgoing_history", "N/A"));
+            AddBodyRow(row => addQueueRow(row, queueManager, "outgoing", urls, "N/A"));
+            AddBodyRow(row => addQueueRow(row, queueManager, "outgoing_history", urls, "N/A"));
         }
 
-        private void addQueueRow(TableRowTag row, IQueueManager queueManager, string queueName, string displayForCount = null)
+        private void addQueueRow(TableRowTag row, IQueueManager queueManager, string queueName, IUrlRegistry urls, string displayForCount = null)
         {
+            var url = urls.UrlFor(new MessagesInputModel {Port = queueManager.Endpoint.Port, QueueName = queueName});
+
             row.Cell().Add("a")
-                .Attr("href", "messages/{0}/{1}"
-                .ToFormat(queueManager.Endpoint.Port, queueName))
+                .Attr("href", url)
                 .Text(queueName);
             
             row.Cell(displayForCount ?? queueManager.GetNumberOfMessages(queueName).ToString(CultureInfo.InvariantCulture));
