@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;
-using System.Linq;
-using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
-using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
 {
     [ApplicationLevel]
     public class ChannelGraph : IEnumerable<ChannelNode>, IDisposable
     {
-        private readonly Cache<string, ChannelNode> _channels = new Cache<string, ChannelNode>(key => new ChannelNode{Key = key});
-        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>(); 
+        private readonly Cache<string, ChannelNode> _channels =
+            new Cache<string, ChannelNode>(key => new ChannelNode {Key = key});
+
+        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>();
 
         public ChannelGraph()
         {
@@ -71,14 +71,14 @@ namespace FubuTransportation.Configuration
                     Uri = _replyChannels[protocol]
                 };
             }
-        } 
+        }
 
         public IEnumerable<ChannelNode> NodesForProtocol(string protocol)
         {
             return _channels.Where(x => x.Protocol() != null && x.Protocol().EqualsIgnoreCase(protocol))
                 .Distinct()
                 .ToArray();
-        } 
+        }
 
         // leave it virtual for testing
         public virtual void ReadSettings(IServiceLocator services)
@@ -117,6 +117,7 @@ namespace FubuTransportation.Configuration
         }
 
         private bool _wasDisposed;
+
         public void Dispose()
         {
             if (_wasDisposed) return;
@@ -125,8 +126,6 @@ namespace FubuTransportation.Configuration
 
             _wasDisposed = true;
         }
-
-
     }
 
     public class ReplyChannel
@@ -134,5 +133,4 @@ namespace FubuTransportation.Configuration
         public Uri Uri { get; set; }
         public string Protocol { get; set; }
     }
-
 }

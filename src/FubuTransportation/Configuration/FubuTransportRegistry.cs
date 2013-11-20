@@ -11,6 +11,7 @@ using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Diagnostics;
+using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
@@ -155,7 +156,15 @@ namespace FubuTransportation.Configuration
 
             registry.AlterSettings<HandlerGraph>(x => x.Import(graph));
 
-            registry.AlterSettings<ChannelGraph>(channels => { _channelAlterations.Each(x => x(channels)); });
+            registry.AlterSettings<ChannelGraph>(channels => {
+                _channelAlterations.Each(x => x(channels));
+            });
+
+            registry.Configure(behaviorGraph => {
+                var channels = behaviorGraph.Settings.Get<ChannelGraph>();
+                behaviorGraph.Services.Clear(typeof(ChannelGraph));
+                behaviorGraph.Services.AddService(typeof(ChannelGraph), ObjectDef.ForValue(channels).AsSingleton());
+            });
 
             _alterations.Each(x => x(registry));
         }
