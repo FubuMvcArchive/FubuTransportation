@@ -648,12 +648,14 @@
     <Compile Include="StubChannelNode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subscriptions\SubscriptionCache_routing_with_subscription_Tester.cs" />
     <Compile Include="Subscriptions\SubscriptionsIntegrationTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Subscriptions\Subscription_equality_tester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subscriptions\Subscription_matches_tester.cs" />
     <Compile Include="Subscriptions\TransportNodeTester.cs">
       <SubType>Code</SubType>
     </Compile>

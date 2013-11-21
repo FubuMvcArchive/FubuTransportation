@@ -47,10 +47,10 @@ namespace FubuTransportation.Testing.Configuration
 
             var expected = new Subscription[]
             {
-                new Subscription{NodeName = "SubscribedService", MessageType = typeof(Message1).AssemblyQualifiedName, Receiver = InMemoryTransport.ReplyUriForGraph(graph), Source = theSettings.Outbound},
-                new Subscription{NodeName = "SubscribedService", MessageType = typeof(Message3).AssemblyQualifiedName, Receiver = InMemoryTransport.ReplyUriForGraph(graph), Source = theSettings.Outbound},
-                new Subscription{NodeName = "SubscribedService", MessageType = typeof(Message2).AssemblyQualifiedName, Receiver = theSettings.Inbound, Source = theSettings.Upstream},
-                new Subscription{NodeName = "SubscribedService", MessageType = typeof(Message4).AssemblyQualifiedName, Receiver = theSettings.Inbound, Source = theSettings.Upstream},
+                new Subscription(typeof(Message1)){NodeName = "SubscribedService", Receiver = InMemoryTransport.ReplyUriForGraph(graph), Source = theSettings.Outbound},
+                new Subscription(typeof(Message3)){NodeName = "SubscribedService", Receiver = InMemoryTransport.ReplyUriForGraph(graph), Source = theSettings.Outbound},
+                new Subscription(typeof(Message2)){NodeName = "SubscribedService", Receiver = theSettings.Inbound, Source = theSettings.Upstream},
+                new Subscription(typeof(Message4)){NodeName = "SubscribedService", Receiver = theSettings.Inbound, Source = theSettings.Upstream},
             };
 
             actual.ShouldHaveTheSameElementsAs(expected);

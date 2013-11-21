@@ -1,4 +1,5 @@
-﻿using FubuTestingSupport;
+﻿using System.Diagnostics;
+using FubuTestingSupport;
 using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.Events;
 using NUnit.Framework;
@@ -11,18 +12,16 @@ namespace FubuTransportation.Testing.Subscriptions
         [Test]
         public void equals_if_all_are_equal()
         {
-            var s1 = new Subscription
+            var s1 = new Subscription(typeof(Message1))
             {
                 NodeName = "Service1",
-                MessageType = typeof(Message1).AssemblyQualifiedName,
                 Receiver = "foo://1".ToUri(),
                 Source = "foo://2".ToUri()
             };
 
-            var s2 = new Subscription
+            var s2 = new Subscription(typeof(Message1))
             {
                 NodeName = s1.NodeName,
-                MessageType = s1.MessageType,
                 Receiver = s1.Receiver,
                 Source = s1.Source
             };

@@ -9,7 +9,7 @@ namespace FubuTransportation.Subscriptions
 {
     public class LocalSubscriptionRequirement<T> : ISubscriptionRequirement<T>
     {
-        private readonly IList<string> _messageTypes = new List<string>();
+        private readonly IList<Type> _messageTypes = new List<Type>();
         private readonly Accessor _accessor;
 
         public LocalSubscriptionRequirement(Expression<Func<T, Uri>> sourceProperty)
@@ -26,9 +26,8 @@ namespace FubuTransportation.Subscriptions
 
             foreach (var messageType in _messageTypes)
             {
-                yield return new Subscription
+                yield return new Subscription(messageType)
                 {
-                    MessageType = messageType,
                     NodeName = graph.Name,
                     Receiver = receiver,
                     Source = source
@@ -38,7 +37,7 @@ namespace FubuTransportation.Subscriptions
 
         public void AddType(Type type)
         {
-            _messageTypes.Add(type.AssemblyQualifiedName);
+            _messageTypes.Add(type);
         }
     }
 }

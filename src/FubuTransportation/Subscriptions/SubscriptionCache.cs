@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using FubuCore;
 using FubuCore.Util;
@@ -67,12 +66,24 @@ namespace FubuTransportation.Subscriptions
         /// <param name="subscriptions"></param>
         public void LoadSubscriptions(IEnumerable<Subscription> subscriptions)
         {
+            _lock.Write(() => {
+                _routes.Clear();
 
+                _subscriptions.Clear();
+                _subscriptions.AddRange(subscriptions);
+            });
         }
 
         public IEnumerable<ChannelNode> FindSubscribingChannelsFor(Type inputType)
         {
-            return _graph.Where(x => x.Publishes(inputType));
+            var staticNodes = _graph.Where(x => x.Publishes(inputType));
+
+            var subscriptions = _subscriptions.Where(x => x.Matches(inputType));
+            var dynamicNodes = subscriptions.Select(x => findDestination(x.Receiver));
+
+            return staticNodes.Union(dynamicNodes).Distinct();
+
+
         }
 
 

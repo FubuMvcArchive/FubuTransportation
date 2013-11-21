@@ -1,14 +1,37 @@
 ﻿using System;
+using FubuCore;
 
 namespace FubuTransportation.Subscriptions
 {
     public class Subscription
     {
+        public static Subscription For<T>()
+        {
+            return new Subscription(typeof (T));
+        }
+
+        public Subscription(Type messageType)
+        {
+            MessageType = messageType.GetFullName();
+        }
+
         public Guid Id { get; set; }
         public Uri Source { get; set; }
         public Uri Receiver { get; set; }
         public string MessageType { get; set; }
         public string NodeName { get; set; }
+
+        public Subscription SourcedFrom(Uri uri)
+        {
+            Source = uri;
+            return this;
+        }
+
+        public Subscription ReceivedBy(Uri uri)
+        {
+            Receiver = uri;
+            return this;
+        }
 
         protected bool Equals(Subscription other)
         {
@@ -38,6 +61,11 @@ namespace FubuTransportation.Subscriptions
         public override string ToString()
         {
             return string.Format("Source: {0}, Receiver: {1}, MessageType: {2}, NodeName: {3}", Source, Receiver, MessageType, NodeName);
+        }
+
+        public bool Matches(Type inputType)
+        {
+            return inputType.GetFullName() == MessageType;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FubuTransportation.Subscriptions
     {
         private readonly Accessor _source;
         private readonly Accessor _receiver;
-        private readonly IList<string> _messageTypes = new List<string>(); 
+        private readonly IList<Type> _messageTypes = new List<Type>(); 
 
         public GroupSubscriptionRequirement(Expression<Func<T, Uri>> sourceProperty, Expression<Func<T, Uri>> receiverProperty)
         {
@@ -29,9 +29,8 @@ namespace FubuTransportation.Subscriptions
 
             foreach (var messageType in _messageTypes)
             {
-                yield return new Subscription
+                yield return new Subscription(messageType)
                 {
-                    MessageType = messageType,
                     NodeName = graph.Name,
                     Receiver = receiver,
                     Source = source
@@ -43,7 +42,7 @@ namespace FubuTransportation.Subscriptions
 
         public void AddType(Type type)
         {
-            _messageTypes.Add(type.AssemblyQualifiedName);
+            _messageTypes.Add(type);
         }
     }
 }

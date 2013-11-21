@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
@@ -54,7 +55,7 @@ namespace FubuTransportation.Testing.Subscriptions
         public void should_add_a_subscription_for_each_type()
         {
             theSubscriptions.Select(x => x.MessageType)
-                .ShouldHaveTheSameElementsAs(typeof(FooMessage).AssemblyQualifiedName, typeof(BarMessage).AssemblyQualifiedName);
+                .ShouldHaveTheSameElementsAs(typeof(FooMessage).GetFullName(), typeof(BarMessage).GetFullName());
         }
 
         public class BusSettings
