@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using FubuCore;
+using FubuCore.Util;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 
@@ -15,7 +16,8 @@ namespace FubuTransportation.Subscriptions
         private readonly IEnumerable<ITransport> _transports;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         private readonly IDictionary<Type, IList<ChannelNode>> _routes = new Dictionary<Type, IList<ChannelNode>>();
-        private readonly IDictionary<Uri, ChannelNode> _volatileNodes = new Dictionary<Uri, ChannelNode>(); 
+        private readonly Cache<Uri, ChannelNode> _volatileNodes; 
+        private readonly IList<Subscription> _subscriptions = new List<Subscription>(); 
 
         public SubscriptionCache(ChannelGraph graph, IEnumerable<ITransport> transports)
         {
@@ -27,6 +29,19 @@ namespace FubuTransportation.Subscriptions
 
             _graph = graph;
             _transports = transports;
+
+            _volatileNodes = new Cache<Uri, ChannelNode>(uri => {
+                var transport = _transports.FirstOrDefault(x => x.Protocol == uri.Scheme);
+                if (transport == null)
+                {
+                    throw new UnknownChannelException(uri);
+                }
+
+                var node = new ChannelNode { Uri = uri, Key = uri.ToString() };
+                node.Channel = transport.BuildDestinationChannel(node.Uri);
+
+                return node;
+            });
         }
 
         public IEnumerable<ChannelNode> FindDestinationChannels(Envelope envelope)
@@ -46,6 +61,15 @@ namespace FubuTransportation.Subscriptions
             });
         }
 
+        /// <summary>
+        /// Called internally
+        /// </summary>
+        /// <param name="subscriptions"></param>
+        public void LoadSubscriptions(IEnumerable<Subscription> subscriptions)
+        {
+
+        }
+
         public IEnumerable<ChannelNode> FindSubscribingChannelsFor(Type inputType)
         {
             return _graph.Where(x => x.Publishes(inputType));
@@ -54,22 +78,7 @@ namespace FubuTransportation.Subscriptions
 
         private ChannelNode findDestination(Uri uri)
         {
-            var destination = _graph.FirstOrDefault(x => x.Uri == uri);
-            if (destination == null)
-            {
-                var transport = _transports.FirstOrDefault(x => x.Protocol == uri.Scheme);
-                if (transport == null)
-                {
-                    throw new UnknownChannelException(uri);
-                }
-
-                var node = new ChannelNode {Uri = uri, Key = uri.ToString()};
-                node.Channel = transport.BuildDestinationChannel(node.Uri);
-
-                return node;
-            }
-
-            return destination;
+            return _graph.FirstOrDefault(x => x.Uri == uri) ?? _volatileNodes[uri];
         }
 
         public void Dispose()
@@ -82,6 +91,8 @@ namespace FubuTransportation.Subscriptions
         {
             return _graph.ReplyChannelFor(destination.Protocol());
         }
+
+
 
         public void ReloadSubscriptions()
         {
