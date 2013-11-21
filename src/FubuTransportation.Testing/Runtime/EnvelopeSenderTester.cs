@@ -39,7 +39,7 @@ namespace FubuTransportation.Testing.Runtime
 
             modifiers = Services.CreateMockArrayFor<IEnvelopeModifier>(5);
 
-            MockFor<ISubscriptionGateway>().Stub(x => x.FindChannels(theEnvelope))
+            MockFor<ISubscriptionCache>().Stub(x => x.FindDestinationChannels(theEnvelope))
                                      .Return(new ChannelNode[] { node1, node2, node3 });
 
             correlationId = ClassUnderTest.Send(theEnvelope);

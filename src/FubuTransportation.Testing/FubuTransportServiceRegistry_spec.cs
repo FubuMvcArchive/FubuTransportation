@@ -56,10 +56,10 @@ namespace FubuTransportation.Testing
             var registry = new FubuRegistry();
             registry.Services<FubuTransportServiceRegistry>();
             var @default = BehaviorGraph.BuildFrom(registry).Services
-                                        .DefaultServiceFor<ISubscriptionGateway>();
+                                        .DefaultServiceFor<ISubscriptionCache>();
 
             @default.ShouldNotBeNull();
-            @default.Type.ShouldEqual(typeof (SubscriptionGateway));
+            @default.Type.ShouldEqual(typeof (SubscriptionCache));
             @default.IsSingleton.ShouldBeTrue();
 
 

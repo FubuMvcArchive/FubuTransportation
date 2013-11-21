@@ -519,9 +519,6 @@
     <Compile Include="Runtime\when_sending_with_the_expectation_of_a_response.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Runtime\when_starting_the_subscriptions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Sagas\SagaBehaviorTester.cs">
       <SubType>Code</SubType>
     </Compile>

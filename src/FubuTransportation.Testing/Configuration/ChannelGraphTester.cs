@@ -118,18 +118,6 @@ namespace FubuTransportation.Testing.Configuration
             typeof(ChannelGraph).HasAttribute<ApplicationLevelAttribute>().ShouldBeTrue();
         }
 
-        [Test]
-        public void set_and_get_the_dyanmic_subscriptions()
-        {
-            var graph = new ChannelGraph();
-            graph.DynamicSubscriptions.Any().ShouldBeFalse();
-
-            var subscriptions = new Subscription[] {new Subscription(), new Subscription(), new Subscription()};
-
-            graph.DynamicSubscriptions = subscriptions;
-
-            graph.DynamicSubscriptions.ShouldHaveTheSameElementsAs(subscriptions);
-        }
     }
 
     public class ChannelSettings

@@ -16,7 +16,7 @@ namespace FubuTransportation.Testing.Subscriptions
     public class SubscriptionsIntegrationTester
     {
         private FubuRuntime runtime;
-        private ISubscriptionGateway theRouter;
+        private ISubscriptionCache theRouter;
         private HarnessSettings settings;
 
         [SetUp]
@@ -28,7 +28,7 @@ namespace FubuTransportation.Testing.Subscriptions
 
             runtime = FubuTransport.For<RoutedRegistry>().StructureMap(container).Bootstrap();
 
-            theRouter = runtime.Factory.Get<ISubscriptionGateway>();
+            theRouter = runtime.Factory.Get<ISubscriptionCache>();
         }
 
         [TearDown]
@@ -46,7 +46,7 @@ namespace FubuTransportation.Testing.Subscriptions
                 Destination = settings.Service4
             };
 
-            theRouter.FindChannels(envelope).Single().Uri.ShouldEqual(settings.Service4);
+            theRouter.FindDestinationChannels(envelope).Single().Uri.ShouldEqual(settings.Service4);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace FubuTransportation.Testing.Subscriptions
                 Destination = "memory://dynamic".ToUri()
             };
 
-            theRouter.FindChannels(envelope).Single().Uri.ShouldEqual(envelope.Destination);
+            theRouter.FindDestinationChannels(envelope).Single().Uri.ShouldEqual(envelope.Destination);
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace FubuTransportation.Testing.Subscriptions
                     Destination = "unknown://uri".ToUri()
                 };
 
-                theRouter.FindChannels(envelope);
+                theRouter.FindDestinationChannels(envelope);
             });
         }
 
@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing.Subscriptions
         public void use_type_rules_on_the_channel_graph_1()
         {
             var envelope = new Envelope {Message = new Events.Message1()};
-            theRouter.FindChannels(envelope).Select(x => x.Key)
+            theRouter.FindDestinationChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service1");
         }
 
@@ -87,7 +87,7 @@ namespace FubuTransportation.Testing.Subscriptions
         public void use_type_rules_on_the_channel_graph_2()
         {
             var envelope = new Envelope { Message = new Events.Message2() };
-            theRouter.FindChannels(envelope).Select(x => x.Key)
+            theRouter.FindDestinationChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service1", "Harness:Service3");
         }
 
@@ -95,7 +95,7 @@ namespace FubuTransportation.Testing.Subscriptions
         public void use_type_rules_on_the_channel_graph_3()
         {
             var envelope = new Envelope { Message = new Events.Message3() };
-            theRouter.FindChannels(envelope).Select(x => x.Key)
+            theRouter.FindDestinationChannels(envelope).Select(x => x.Key)
                 .ShouldHaveTheSameElementsAs("Harness:Service2", "Harness:Service3");
         }
     }

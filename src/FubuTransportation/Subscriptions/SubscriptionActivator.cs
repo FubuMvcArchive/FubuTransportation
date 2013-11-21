@@ -11,14 +11,15 @@ namespace FubuTransportation.Subscriptions
     {
         private readonly ISubscriptionRepository _repository;
         private readonly IEnvelopeSender _sender;
+        private readonly ISubscriptionCache _cache;
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
 
-        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ChannelGraph graph, IEnumerable<ISubscriptionRequirement> requirements)
+        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
         {
             _repository = repository;
             _sender = sender;
-            _graph = graph;
+            _cache = cache;
             _requirements = requirements;
         }
 
@@ -45,7 +46,7 @@ namespace FubuTransportation.Subscriptions
                 _sender.Send(envelope);
             });
 
-            _graph.DynamicSubscriptions = _repository.LoadSubscriptions(_graph.Name);
+            _cache.ReloadSubscriptions();
         }
     }
 }

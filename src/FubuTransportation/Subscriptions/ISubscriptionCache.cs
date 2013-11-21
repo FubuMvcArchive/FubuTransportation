@@ -5,11 +5,11 @@ using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Subscriptions
 {
-    public interface ISubscriptionGateway
+    public interface ISubscriptionCache
     {
-        IEnumerable<ChannelNode> FindChannels(Envelope envelope);
-        void Start();
+        IEnumerable<ChannelNode> FindDestinationChannels(Envelope envelope);
 
         Uri ReplyUriFor(ChannelNode destination);
+        void ReloadSubscriptions();
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
-using FubuCore.Logging;
-using FubuTransportation.ErrorHandling;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
@@ -14,7 +12,8 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly ContinuationContext _context;
         private readonly IList<IEnvelopeHandler> _handlers = new List<IEnvelopeHandler>();
 
-        public HandlerPipeline(IEnvelopeSerializer serializer, ContinuationContext context, IEnumerable<IEnvelopeHandler> handlers)
+        public HandlerPipeline(IEnvelopeSerializer serializer, ContinuationContext context,
+            IEnumerable<IEnvelopeHandler> handlers)
         {
             _serializer = serializer;
             _context = context;
@@ -32,7 +31,7 @@ namespace FubuTransportation.Runtime.Invocation
                 envelope.UseSerializer(_serializer);
             }
 
-            _context.Logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
+            _context.Logger.InfoMessage(() => new EnvelopeReceived {Envelope = envelope.ToToken()});
 
             var continuation = FindContinuation(envelope);
 
@@ -43,7 +42,9 @@ namespace FubuTransportation.Runtime.Invocation
             catch (Exception e)
             {
                 envelope.Callback.MarkFailed(); // TODO -- watch this one.
-                _context.Logger.Error(envelope.CorrelationId, "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope, continuation), e);
+                _context.Logger.Error(envelope.CorrelationId,
+                    "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope,
+                        continuation), e);
             }
         }
 

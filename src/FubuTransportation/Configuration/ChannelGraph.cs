@@ -42,25 +42,6 @@ namespace FubuTransportation.Configuration
         /// </summary>
         public string DefaultContentType { get; set; }
 
-
-        private readonly ReaderWriterLockSlim _subscriptionLock = new ReaderWriterLockSlim();
-        // Add some locking here!
-        public IEnumerable<Subscription> DynamicSubscriptions
-        {
-            get
-            {
-                return _subscriptionLock.Read(() => {
-                    return _dynamicSubscriptions ?? new Subscription[0];
-                });
-            }
-            set
-            {
-                _subscriptionLock.Write(() => {
-                    _dynamicSubscriptions = value;
-                });
-            }
-        }
-
         public ChannelNode ChannelFor<T>(Expression<Func<T, Uri>> property)
         {
             return ChannelFor(ReflectionHelper.GetAccessor(property));
@@ -130,7 +111,6 @@ namespace FubuTransportation.Configuration
         }
 
         private bool _wasDisposed;
-        private IEnumerable<Subscription> _dynamicSubscriptions;
 
         public void Dispose()
         {

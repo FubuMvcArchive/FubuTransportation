@@ -30,9 +30,9 @@ namespace FubuTransportation
             eventAggregatorDef.IsSingleton = true;
             SetServiceIfNone(typeof(IEventAggregator), eventAggregatorDef);
 
-            var subscriberDef = ObjectDef.ForType<SubscriptionGateway>();
+            var subscriberDef = ObjectDef.ForType<SubscriptionCache>();
             subscriberDef.IsSingleton = true;
-            SetServiceIfNone(typeof(ISubscriptionGateway), subscriberDef);
+            SetServiceIfNone(typeof(ISubscriptionCache), subscriberDef);
 
             var stateCacheDef = new ObjectDef(typeof(SagaStateCacheFactory));
             stateCacheDef.IsSingleton = true;

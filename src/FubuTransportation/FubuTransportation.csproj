@@ -235,7 +235,8 @@
     <Compile Include="Runtime\Invocation\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\IReceiver.cs" />
     <Compile Include="Subscriptions\GroupSubscriptionRequirement.cs" />
-    <Compile Include="Subscriptions\ISubscriptionGateway.cs" />
+    <Compile Include="Subscriptions\InvalidOrMissingTransportException.cs" />
+    <Compile Include="Subscriptions\ISubscriptionCache.cs" />
     <Compile Include="Runtime\ITransport.cs" />
     <Compile Include="Runtime\Receiver.cs" />
     <Compile Include="Runtime\ReplyListener.cs" />
@@ -253,7 +254,7 @@
     <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\SubscriptionActivator.cs" />
     <Compile Include="Subscriptions\SubscriptionClasses.cs" />
-    <Compile Include="Subscriptions\SubscriptionGateway.cs" />
+    <Compile Include="Subscriptions\SubscriptionCache.cs" />
     <Compile Include="Runtime\TransportActivator.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
     <Compile Include="Runtime\UnknownChannelException.cs" />

@@ -31,10 +31,10 @@ namespace FubuTransportation.Testing.Runtime
             theLogger = new RecordingLogger();
             Services.Inject<ILogger>(theLogger);
 
-            MockFor<ISubscriptionGateway>().Stub(x => x.FindChannels(theEnvelope))
+            MockFor<ISubscriptionCache>().Stub(x => x.FindDestinationChannels(theEnvelope))
                                      .Return(new ChannelNode[] { destinationNode });
 
-            MockFor<ISubscriptionGateway>().Stub(x => x.ReplyUriFor(destinationNode)).Return(replyUri);
+            MockFor<ISubscriptionCache>().Stub(x => x.ReplyUriFor(destinationNode)).Return(replyUri);
 
             ClassUnderTest.Send(theEnvelope);
         }
