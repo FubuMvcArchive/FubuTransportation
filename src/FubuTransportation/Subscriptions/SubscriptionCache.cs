@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
-using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Subscriptions
 {
@@ -11,6 +13,9 @@ namespace FubuTransportation.Subscriptions
     {
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ITransport> _transports;
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private readonly IDictionary<Type, IList<ChannelNode>> _routes = new Dictionary<Type, IList<ChannelNode>>();
+        private readonly IDictionary<Uri, ChannelNode> _volatileNodes = new Dictionary<Uri, ChannelNode>(); 
 
         public SubscriptionCache(ChannelGraph graph, IEnumerable<ITransport> transports)
         {
@@ -28,22 +33,24 @@ namespace FubuTransportation.Subscriptions
         {
             if (envelope.Destination != null)
             {
-                var destination = findDestination(envelope);
+                var uri = envelope.Destination;
+                var destination = findDestination(uri);
 
                 return new ChannelNode[] {destination};
             }
 
-            // TODO -- gets a LOT more sophisticated later
             var inputType = envelope.Message.GetType();
-            return _graph.Where(c => c.Rules.Any(x => x.Matches(inputType)));
+            return _lock.MaybeWrite(() => _routes[inputType], () => !_routes.ContainsKey(inputType), () => {
+                var nodes = FindSubscribingChannelsFor(inputType);
+                _routes.Add(inputType, new List<ChannelNode>(nodes));
+            });
         }
 
-        private ChannelNode findDestination(Envelope envelope)
+        public IEnumerable<ChannelNode> FindSubscribingChannelsFor(Type inputType)
         {
-            var uri = envelope.Destination;
-
-            return findDestination(uri);
+            return _graph.Where(x => x.Publishes(inputType));
         }
+
 
         private ChannelNode findDestination(Uri uri)
         {

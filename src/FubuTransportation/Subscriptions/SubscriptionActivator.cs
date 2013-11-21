@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
@@ -25,28 +26,29 @@ namespace FubuTransportation.Subscriptions
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
-
-            log.Trace("Found subscription requirements:");
-            requirements.Each(x => log.Trace(x.ToString()));
-
-            var subscriptions = _repository.PersistRequirements(_graph.Name, requirements);
-            
-
-            subscriptions.GroupBy(x => x.Source).Each(group => {
-                var envelope = new Envelope
-                {
-                    Message = new SubscriptionRequested
-                    {
-                        Subscriptions = @group.ToArray()
-                    },
-                    Destination = @group.Key
-                };
-
-                _sender.Send(envelope);
-            });
-
-            _cache.ReloadSubscriptions();
+            throw new NotImplementedException("Just a spike below.  Nothing is tested yet");
+//            var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
+//
+//            log.Trace("Found subscription requirements:");
+//            requirements.Each(x => log.Trace(x.ToString()));
+//
+//            var subscriptions = _repository.PersistRequirements(_graph.Name, requirements);
+//            
+//
+//            subscriptions.GroupBy(x => x.Source).Each(group => {
+//                var envelope = new Envelope
+//                {
+//                    Message = new SubscriptionRequested
+//                    {
+//                        Subscriptions = @group.ToArray()
+//                    },
+//                    Destination = @group.Key
+//                };
+//
+//                _sender.Send(envelope);
+//            });
+//
+//            _cache.ReloadSubscriptions();
         }
     }
 }

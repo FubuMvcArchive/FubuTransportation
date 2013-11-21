@@ -252,6 +252,7 @@
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
     <Compile Include="Subscriptions\ISubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
+    <Compile Include="Subscriptions\Subscription.cs" />
     <Compile Include="Subscriptions\SubscriptionActivator.cs" />
     <Compile Include="Subscriptions\SubscriptionClasses.cs" />
     <Compile Include="Subscriptions\SubscriptionCache.cs" />
