@@ -1,0 +1,9 @@
+<!--Title: Message Workflows (Sagas)-->
+<!--Url: sagas-->
+
+<markdown>
+It's a common need to orchestrate a related set of messages in a shared workflow.
+In FubuTransportation this is accomplished via Sagas.
+</markdown>
+
+<TableOfContents />

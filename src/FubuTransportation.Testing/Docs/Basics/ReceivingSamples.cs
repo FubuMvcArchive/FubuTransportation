@@ -61,7 +61,7 @@ namespace FubuTransportation.Testing.Docs.Basics
         }
     }
 
-    public class LoginSuccededHandlerV2
+    public class LoginSuccededV2Handler
     {
         public void Handle(LoginSucceededV2 message)
         {

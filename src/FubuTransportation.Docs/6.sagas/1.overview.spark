@@ -1,0 +1,30 @@
+<!--Title: Overview-->
+<!--Url: overview-->
+
+<markdown>
+Sagas in FubuTransportation are simply a workflow of correlated messages that share a common state.
+Sagas are special handler classes that implement IStatefulSaga&lt;TState&gt;.
+The TState is the class that represents the shared state for a running instance of a saga. In addition
+messages are by default correlated by messages containing a property of type Guid named CorrelationId. This can
+be overridden by implementing your own ISagaRepository for the state type needing alternative behavior.
+
+How do you start a workflow? In FubuTransportation starting a saga happens when your handler
+instanciates and sets the State property while receiving a message. In some alternative frameworks this is done by declaring another interfaces 
+like Initiates&lt;TMessage&gt;. However we felt it more important for testability that a saga contains all of its state. By default after a saga
+has been started a SagaBehavior will load the state from the ISagaRepository for you. So from within your handlers if the State
+is already populated the saga has already been started previously by another message.
+
+Completing a saga occurs when the handler class returns true from the method IsCompleted(). When a saga is completed
+the SagaBehavior will automatically remove the state from the saga repository.
+
+One thing to consider when dealing with distributed and concurrent systems is multiple
+messages may come in for a given saga instance at the same time. The way FubuTransportation deals
+with this is by leveraging optimistic concurrency within the saga persistence layer. It is expected
+that the persistence layer will indicate or throw when trying to update a state that has already
+been modified since retrieving. This will get covered in more detail in the section on Saga Storage.
+
+Here is an example of a very simple saga.
+
+<Snippet name="OverviewSagaSample" />
+</markdown>
+
