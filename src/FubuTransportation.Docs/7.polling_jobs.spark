@@ -1,0 +1,14 @@
+<!--Title: Polling Jobs-->
+<!--Url: polling-jobs-->
+
+<markdown>
+In applications it's often useful to have tasks that run at scheduled times. Although not
+quite as robust with regard to persistence of scheduled jobs, you could compare Polling Jobs
+to Quartz.NET. With Polling Jobs in FubuTransportation however, your jobs run inside
+a behavior chain in the same way your message handlers do.
+
+Here is a sample of what a Polling Job might look like.
+
+<Snippet name="PollingJobSamples" />
+</markdown>
+

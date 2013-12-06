@@ -221,6 +221,7 @@
     <Compile Include="Docs\Instrumentation\FubuEmbeddedRegistry.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Docs\Polling\PollingJobSamples.cs" />
     <Compile Include="Docs\Sagas\SimpleSaga.cs" />
     <Compile Include="Docs\Transports\InMemorySamples.cs">
       <SubType>Code</SubType>
