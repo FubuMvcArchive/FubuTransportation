@@ -52,6 +52,7 @@ namespace FubuTransportation.Testing.Docs.Sagas
             Switch = SwitchState.Inactive;
         }
 
+        public Guid Id { get; set; }
         public SwitchState Switch { get; set; }
     }
 
