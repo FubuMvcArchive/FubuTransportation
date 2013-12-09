@@ -58,5 +58,20 @@ namespace FubuTransportation.Testing
             bus.DelayedSent.Single().Time.ShouldEqual(time);
 
         }
+
+        [Test]
+        public void send_and_wait()
+        {
+            var message = new Message1();
+            var bus = new RecordingServiceBus();
+
+            bus.SendAndWait(message).Wait();
+
+            // Checking for messages sent
+            bus.Sent.Single().ShouldBeTheSameAs(message);
+
+            // Checking for awaited calls
+            bus.Await.Single().ShouldBeTheSameAs(message);
+        }
     }
 }
