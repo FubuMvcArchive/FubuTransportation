@@ -2,6 +2,11 @@
 <!--Url: saga-storage-->
 
 <markdown>
-TODO(Write some content!)
+Saga state is by default stored and retrieved by the message CorrelationId:Guid.
+The state is expected to have a property named Id of type Guid. If this is the case,
+your saga storage and retrieval will happen automatically from the SagaBehavior. If you need
+to customize the lookup you can do so following the sample below as a guideline.
+
+<Snippet name="SagaRepositorySample" />
 </markdown>
 
