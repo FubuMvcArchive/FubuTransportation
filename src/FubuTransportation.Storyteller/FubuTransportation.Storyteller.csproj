@@ -133,8 +133,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixtures\BatchMessageFixture.cs" />
+    <Compile Include="Fixtures\ModelFixture.cs" />
     <Compile Include="Fixtures\SendAndAwaitFixture.cs" />
     <Compile Include="FubuTransportationStorytellerSystem.cs" />
+    <Compile Include="HarnessSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoryTellerDebug.cs" />
   </ItemGroup>
