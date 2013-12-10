@@ -1,7 +1,10 @@
-﻿using FubuMVC.Core;
+﻿using FubuCore;
+using FubuMVC.Core;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
+using FubuTransportation.Polling;
 
 namespace FubuTransportation
 {
@@ -23,6 +26,13 @@ namespace FubuTransportation
                 chain.InsertFirst(new ExceptionHandlerNode(chain));
 
                 graph.AddChain(chain);
+
+                // Hate how we're doing this, but disable tracing
+                // on the polling job requests here.
+                if (chain.InputType().Closes(typeof (JobRequest<>)))
+                {
+                    chain.Tags.Add(BehaviorChain.NoTracing);
+                }
             }
         }
     }

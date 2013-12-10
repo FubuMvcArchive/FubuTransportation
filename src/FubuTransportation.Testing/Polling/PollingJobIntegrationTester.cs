@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using FubuCore;
 using FubuCore.Logging;
 using FubuMVC.Core;
+using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 using NUnit.Framework;
@@ -38,6 +41,17 @@ namespace FubuTransportation.Testing.Polling
         public void Teardown()
         {
             theRuntime.Dispose();
+        }
+
+        [Test]
+        public void the_polling_job_chains_are_tagged_for_no_tracing()
+        {
+            var graph = theRuntime.Factory.Get<BehaviorGraph>();
+            var chains = graph.Behaviors.Where(x => x.InputType() != null && x.InputType().Closes(typeof (JobRequest<>)));
+
+            chains.Each(x => {
+                x.IsTagged(BehaviorChain.NoTracing).ShouldBeTrue();
+            });
         }
 
         [Test]
