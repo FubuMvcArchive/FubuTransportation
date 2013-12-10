@@ -16,8 +16,9 @@ namespace FubuTransportation.Subscriptions
         private readonly ChannelGraph _graph;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
 
-        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
+        public SubscriptionActivator(ChannelGraph graph, ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
         {
+            _graph = graph;
             _repository = repository;
             _sender = sender;
             _cache = cache;
@@ -26,7 +27,7 @@ namespace FubuTransportation.Subscriptions
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            throw new NotImplementedException("Just a spike below.  Nothing is tested yet");
+            throw new NotImplementedException();
 //            var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
 //
 //            log.Trace("Found subscription requirements:");

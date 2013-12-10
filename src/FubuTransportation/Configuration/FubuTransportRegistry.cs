@@ -13,6 +13,7 @@ using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Diagnostics;
 using FubuMVC.Core.Registration.ObjectGraph;
+using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
@@ -314,9 +315,14 @@ namespace FubuTransportation.Configuration
         /// <summary>
         /// Enable the in memory transport
         /// </summary>
-        public void EnableInMemoryTransport()
+        public void EnableInMemoryTransport(Uri replyUri = null)
         {
             AlterSettings<TransportSettings>(x => x.EnableInMemoryTransport = true);
+
+            if (replyUri != null)
+            {
+                AlterSettings<MemoryTransportSettings>(x => x.ReplyUri = replyUri);
+            }
         }
     }
 

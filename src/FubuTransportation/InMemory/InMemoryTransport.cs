@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using FubuCore.Descriptions;
 using FubuCore.Reflection;
+using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuCore;
@@ -11,10 +12,27 @@ using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.InMemory
 {
+    [ApplicationLevel]
+    public class MemoryTransportSettings
+    {
+        public Uri ReplyUri { get; set; }
+    }
+
     [Description("A simple in memory transport suitable for automated testing or development")]
     [Title("In Memory Transport")]
     public class InMemoryTransport : TransportBase, ITransport
     {
+        private MemoryTransportSettings _settings;
+
+        public InMemoryTransport(MemoryTransportSettings settings)
+        {
+            _settings = settings;
+        }
+
+        public InMemoryTransport() : this(new MemoryTransportSettings())
+        {
+        }
+
         public void Dispose()
         {
             // nothing
@@ -52,7 +70,7 @@ namespace FubuTransportation.InMemory
 
         protected override Uri getReplyUri(ChannelGraph graph)
         {
-            var uri = ReplyUriForGraph(graph);
+            var uri = _settings.ReplyUri ?? ReplyUriForGraph(graph);
             var replyNode = new ChannelNode
             {
                 Uri = uri,
