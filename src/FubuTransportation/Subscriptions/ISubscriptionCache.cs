@@ -10,6 +10,11 @@ namespace FubuTransportation.Subscriptions
         IEnumerable<ChannelNode> FindDestinationChannels(Envelope envelope);
 
         Uri ReplyUriFor(ChannelNode destination);
-        void ReloadSubscriptions();
+
+        /// <summary>
+        /// Called internally
+        /// </summary>
+        /// <param name="subscriptions"></param>
+        void LoadSubscriptions(IEnumerable<Subscription> subscriptions);
     }
 }

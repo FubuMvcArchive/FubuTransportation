@@ -30,6 +30,13 @@ namespace FubuTransportation.Subscriptions
         
     }
 
+    public class SubscriptionsHandler
+    {
+        public SubscriptionsHandler(ISubscriptionRepository repository)
+        {
+        }
+    }
+
 
     // Not sure this thing gets to live.
 //    public class NodeGroup

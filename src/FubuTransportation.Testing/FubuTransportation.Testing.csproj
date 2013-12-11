@@ -651,6 +651,7 @@
     <Compile Include="StubChannelNode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subscriptions\SubscriptionCache_replace_subscriptions_tester.cs" />
     <Compile Include="Subscriptions\SubscriptionCache_routing_with_subscription_Tester.cs" />
     <Compile Include="Subscriptions\SubscriptionRepositoryTester.cs" />
     <Compile Include="Subscriptions\SubscriptionsIntegrationTester.cs">

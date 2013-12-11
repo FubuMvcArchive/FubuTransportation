@@ -104,10 +104,9 @@ namespace FubuTransportation.Subscriptions
         }
 
 
-
-        public void ReloadSubscriptions()
+        public IList<Subscription> Subscriptions
         {
-            throw new NotImplementedException();
+            get { return _subscriptions; }
         }
     }
 }
