@@ -261,5 +261,11 @@ namespace FubuTransportation.Testing
         {
             registeredTypeIs<IAsyncHandling,AsyncHandling>();
         }
+
+        [Test]
+        public void subscription_repository_is_registered()
+        {
+            registeredTypeIs<ISubscriptionRepository, SubscriptionRepository>();
+        }
     }
 }
