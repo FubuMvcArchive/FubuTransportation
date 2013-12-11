@@ -6,5 +6,6 @@ namespace FubuTransportation.Subscriptions
     {
         IEnumerable<Subscription> PersistRequirements(params Subscription[] requirements);
         IEnumerable<Subscription> LoadSubscriptions();
+        IEnumerable<TransportNode> FindPeers();
     }
 }

@@ -257,7 +257,7 @@
     <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\Subscription.cs" />
     <Compile Include="Subscriptions\SubscriptionActivator.cs" />
-    <Compile Include="Subscriptions\SubscriptionClasses.cs" />
+    <Compile Include="Subscriptions\SubscriptionRequested.cs" />
     <Compile Include="Subscriptions\SubscriptionCache.cs" />
     <Compile Include="Runtime\TransportActivator.cs" />
     <Compile Include="Runtime\TransportBase.cs" />
@@ -277,6 +277,8 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Subscriptions\SubscriptionRepository.cs" />
     <Compile Include="Subscriptions\SubscriptionRequirements.cs" />
+    <Compile Include="Subscriptions\SubscriptionsChanged.cs" />
+    <Compile Include="Subscriptions\SubscriptionsHandler.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />
     <Compile Include="TestSupport\MessageWatcher.cs" />

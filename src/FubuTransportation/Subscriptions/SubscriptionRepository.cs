@@ -31,5 +31,10 @@ namespace FubuTransportation.Subscriptions
         {
             return _persistence.LoadSubscriptions(_graph.Name);
         }
+
+        public IEnumerable<TransportNode> FindPeers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
