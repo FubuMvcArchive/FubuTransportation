@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Caching;
 
 namespace FubuTransportation.Subscriptions
 {
@@ -27,13 +28,6 @@ namespace FubuTransportation.Subscriptions
     public class SubscriptionsChanged
     {
         
-    }
-
-
-    public interface ISubscriptionRepository
-    {
-        IEnumerable<Subscription> PersistRequirements(string name, Subscription[] requirements);
-        IEnumerable<Subscription> LoadSubscriptions(string name);
     }
 
 

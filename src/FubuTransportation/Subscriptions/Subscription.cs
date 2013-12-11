@@ -15,11 +15,23 @@ namespace FubuTransportation.Subscriptions
             MessageType = messageType.GetFullName();
         }
 
+        public Subscription()
+        {
+        }
+
         public Guid Id { get; set; }
         public Uri Source { get; set; }
         public Uri Receiver { get; set; }
         public string MessageType { get; set; }
         public string NodeName { get; set; }
+
+        public Subscription Clone()
+        {
+           var clone = (Subscription) this.MemberwiseClone();
+            clone.Id = Guid.Empty;
+
+            return clone;
+        }
 
         public Subscription SourcedFrom(Uri uri)
         {

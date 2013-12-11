@@ -235,6 +235,7 @@
     <Compile Include="Runtime\Invocation\SimpleHandlerInvoker.cs" />
     <Compile Include="Runtime\IReceiver.cs" />
     <Compile Include="Subscriptions\GroupSubscriptionRequirement.cs" />
+    <Compile Include="Subscriptions\InMemorySubscriptionPersistence.cs" />
     <Compile Include="Subscriptions\InvalidOrMissingTransportException.cs" />
     <Compile Include="Subscriptions\ISubscriptionCache.cs" />
     <Compile Include="Runtime\ITransport.cs" />
@@ -250,6 +251,8 @@
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />
+    <Compile Include="Subscriptions\ISubscriptionPersistence.cs" />
+    <Compile Include="Subscriptions\ISubscriptionRepository.cs" />
     <Compile Include="Subscriptions\ISubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\LocalSubscriptionRequirement.cs" />
     <Compile Include="Subscriptions\Subscription.cs" />
@@ -272,6 +275,7 @@
     <Compile Include="Scheduling\ThreadScheduler.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Subscriptions\SubscriptionRepository.cs" />
     <Compile Include="Subscriptions\SubscriptionRequirements.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />
