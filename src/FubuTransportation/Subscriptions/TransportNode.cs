@@ -17,10 +17,11 @@ namespace FubuTransportation.Subscriptions
         {
             NodeName = graph.Name;
             Addresses = graph.ReplyUriList().ToArray();
+            MachineName = Environment.MachineName;
         }
 
         public Guid Id { get; set; }
-
+        public string MachineName { get; set; }
         public string NodeName { get; set; }
 
         public Uri[] Addresses

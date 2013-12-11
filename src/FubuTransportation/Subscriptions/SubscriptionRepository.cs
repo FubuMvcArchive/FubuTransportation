@@ -34,7 +34,17 @@ namespace FubuTransportation.Subscriptions
 
         public IEnumerable<TransportNode> FindPeers()
         {
-            throw new NotImplementedException();
+            return _persistence.NodesForGroup(_graph.Name);
+        }
+
+        public void SaveTransportNode()
+        {
+            var node = new TransportNode(_graph);
+            if (!FindPeers().Contains(node))
+            {
+                node.Id = Guid.NewGuid();
+                _persistence.Persist(node);
+            }
         }
     }
 }

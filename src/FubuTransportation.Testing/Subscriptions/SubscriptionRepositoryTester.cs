@@ -13,12 +13,17 @@ namespace FubuTransportation.Testing.Subscriptions
         private InMemorySubscriptionPersistence persistence;
         private SubscriptionRepository theRepository;
         private string TheNodeName = "TheNode";
+        private ChannelGraph channelGraph;
 
         [SetUp]
         public void SetUp()
         {
             persistence = new InMemorySubscriptionPersistence();
-            theRepository = new SubscriptionRepository(new ChannelGraph{Name = TheNodeName}, persistence);
+            channelGraph = new ChannelGraph{Name = TheNodeName};
+            channelGraph.AddReplyChannel("foo", "foo://replies".ToUri());
+            channelGraph.AddReplyChannel("bar", "bar://replies".ToUri());
+
+            theRepository = new SubscriptionRepository(channelGraph, persistence);
         }
 
         [Test]
@@ -112,6 +117,37 @@ namespace FubuTransportation.Testing.Subscriptions
             requirements.ShouldContain(anotherExisting);
 
 
+        }
+
+        [Test]
+        public void save_transport_node_for_the_first_time()
+        {
+            theRepository.SaveTransportNode();
+
+            var node = persistence.NodesForGroup(channelGraph.Name)
+                .Single();
+
+            node.ShouldEqual(new TransportNode(channelGraph));
+            node.Id.ShouldNotEqual(Guid.Empty);
+        }
+
+        [Test]
+        public void saving_the_transport_node_is_idempotent()
+        {
+            theRepository.SaveTransportNode();
+
+            var id = persistence.NodesForGroup(channelGraph.Name)
+                .Single().Id;
+
+            theRepository.SaveTransportNode();
+            theRepository.SaveTransportNode();
+            theRepository.SaveTransportNode();
+            theRepository.SaveTransportNode();
+            theRepository.SaveTransportNode();
+            theRepository.SaveTransportNode();
+
+            persistence.NodesForGroup(channelGraph.Name)
+                .Single().Id.ShouldEqual(id);
         }
     }
 }

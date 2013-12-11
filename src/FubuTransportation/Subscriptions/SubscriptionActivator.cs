@@ -27,6 +27,8 @@ namespace FubuTransportation.Subscriptions
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
+            _repository.SaveTransportNode();
+
             var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
 
             log.Trace("Found subscription requirements:");
