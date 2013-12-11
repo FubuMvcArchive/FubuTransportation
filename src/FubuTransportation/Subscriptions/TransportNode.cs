@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Subscriptions
 {
     public class TransportNode
     {
         private readonly IList<Uri> _addresses = new List<Uri>();
+
+        public TransportNode()
+        {
+        }
+
+        public TransportNode(ChannelGraph graph)
+        {
+            NodeName = graph.Name;
+            Addresses = graph.ReplyUriList().ToArray();
+        }
 
         public Guid Id { get; set; }
 

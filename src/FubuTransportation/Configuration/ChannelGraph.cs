@@ -3,15 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
-using FubuTransportation.Subscriptions;
-
 
 namespace FubuTransportation.Configuration
 {
@@ -21,9 +18,11 @@ namespace FubuTransportation.Configuration
         private readonly Cache<string, ChannelNode> _channels =
             new Cache<string, ChannelNode>(key => new ChannelNode {Key = key});
 
-        private readonly Cache<string, Uri> _replyChannels = new Cache<string, Uri>(name => {
-            throw new ArgumentOutOfRangeException("No known reply channel for protocol '{0}'".ToFormat(name));
-        });
+        private readonly Cache<string, Uri> _replyChannels =
+            new Cache<string, Uri>(
+                name => {
+                    throw new ArgumentOutOfRangeException("No known reply channel for protocol '{0}'".ToFormat(name));
+                });
 
         public ChannelGraph()
         {
@@ -55,6 +54,11 @@ namespace FubuTransportation.Configuration
 
             return channel;
         }
+
+        public IEnumerable<Uri> ReplyUriList()
+        {
+            return _replyChannels;
+        } 
 
         public Uri ReplyChannelFor(string protocol)
         {
