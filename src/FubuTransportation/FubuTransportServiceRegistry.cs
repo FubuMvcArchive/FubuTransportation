@@ -30,7 +30,7 @@ namespace FubuTransportation
             eventAggregatorDef.IsSingleton = true;
             SetServiceIfNone(typeof(IEventAggregator), eventAggregatorDef);
 
-            subscriptions();
+            
 
             var stateCacheDef = new ObjectDef(typeof(SagaStateCacheFactory));
             stateCacheDef.IsSingleton = true;
@@ -74,6 +74,8 @@ namespace FubuTransportation
             SetServiceIfNone<IOutgoingSender, OutgoingSender>();
 
             SetServiceIfNone<IAsyncHandling, AsyncHandling>();
+
+            subscriptions();
         }
 
         private void subscriptions()
@@ -83,6 +85,10 @@ namespace FubuTransportation
             SetServiceIfNone(typeof (ISubscriptionCache), subscriberDef);
 
             SetServiceIfNone<ISubscriptionRepository, SubscriptionRepository>();
+
+            SetServiceIfNone<ISubscriptionPersistence, InMemorySubscriptionPersistence>();
+
+            AddService<IActivator, SubscriptionActivator>();
         }
     }
 }

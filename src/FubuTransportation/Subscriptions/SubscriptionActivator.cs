@@ -13,12 +13,10 @@ namespace FubuTransportation.Subscriptions
         private readonly ISubscriptionRepository _repository;
         private readonly IEnvelopeSender _sender;
         private readonly ISubscriptionCache _cache;
-        private readonly ChannelGraph _graph;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
 
-        public SubscriptionActivator(ChannelGraph graph, ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
+        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
         {
-            _graph = graph;
             _repository = repository;
             _sender = sender;
             _cache = cache;
@@ -29,28 +27,46 @@ namespace FubuTransportation.Subscriptions
         {
             _repository.SaveTransportNode();
 
-            var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
-
-            log.Trace("Found subscription requirements:");
-            requirements.Each(x => log.Trace(x.ToString()));
+            var requirements = determineStaticRequirements(log);
 
             var subscriptions = _repository.PersistRequirements(requirements).ToArray();
-            
-
-            subscriptions.GroupBy(x => x.Source).Each(group => {
-                var envelope = new Envelope
-                {
-                    Message = new SubscriptionRequested
-                    {
-                        Subscriptions = @group.ToArray()
-                    },
-                    Destination = @group.Key
-                };
-
-                _sender.Send(envelope);
-            });
-
             _cache.LoadSubscriptions(subscriptions);
+
+            sendSubscriptions(subscriptions);
+        }
+
+        private Subscription[] determineStaticRequirements(IPackageLog log)
+        {
+            var requirements = _requirements.SelectMany(x => x.DetermineRequirements()).ToArray();
+            traceLoadedRequirements(log, requirements);
+            return requirements;
+        }
+
+        private void sendSubscriptions(IEnumerable<Subscription> subscriptions)
+        {
+            subscriptions
+                .GroupBy(x => x.Source)
+                .Each(group => sendSubscriptionsToSource(@group.Key, @group));
+        }
+
+        private static void traceLoadedRequirements(IPackageLog log, Subscription[] requirements)
+        {
+            log.Trace("Found subscription requirements:");
+            requirements.Each(x => log.Trace(x.ToString()));
+        }
+
+        private void sendSubscriptionsToSource(Uri destination, IEnumerable<Subscription> subscriptions)
+        {
+            var envelope = new Envelope
+            {
+                Message = new SubscriptionRequested
+                {
+                    Subscriptions = subscriptions.ToArray()
+                },
+                Destination = destination
+            };
+
+            _sender.Send(envelope);
         }
     }
 }
