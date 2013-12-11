@@ -653,6 +653,7 @@
     </Compile>
     <Compile Include="Subscriptions\SubscriptionCache_replace_subscriptions_tester.cs" />
     <Compile Include="Subscriptions\SubscriptionCache_routing_with_subscription_Tester.cs" />
+    <Compile Include="Subscriptions\SubscriptionHandler_is_registered_in_fubu_application_apps.cs" />
     <Compile Include="Subscriptions\SubscriptionRepositoryTester.cs" />
     <Compile Include="Subscriptions\SubscriptionsHandlerTester.cs" />
     <Compile Include="Subscriptions\SubscriptionsIntegrationTester.cs">

@@ -5,6 +5,8 @@ using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Polling;
+using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation
 {
@@ -15,6 +17,11 @@ namespace FubuTransportation
         {
             var handlers = graph.Settings.Get<HandlerGraph>();
 
+            // TODO -- move this to a HandlerSource after we fix the duplicate calls
+            // across HandlerSource problem.
+            handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionRequested())));
+            handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionsChanged())));
+            
             handlers.ApplyGeneralizedHandlers();
 
             var policies = graph.Settings.Get<HandlerPolicies>();

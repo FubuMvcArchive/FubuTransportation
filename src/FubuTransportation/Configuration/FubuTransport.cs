@@ -35,7 +35,9 @@ namespace FubuTransportation.Configuration
 
         public static IContainerFacilityExpression DefaultPolicies()
         {
-            return For(x => { });
+            return For(x => {
+                x.EnableInMemoryTransport();
+            });
         }
 
         static FubuTransport()

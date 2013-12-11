@@ -2,6 +2,7 @@
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace FubuTransportation.Testing
                 });
             });
 
-            graph.SelectMany(x => x.OfType<HandlerCall>()).Select(x => x.HandlerType).OrderBy(x => x.Name)
+            graph.SelectMany(x => x.OfType<HandlerCall>()).Where(x => x.HandlerType != typeof(SubscriptionsHandler)).Select(x => x.HandlerType).OrderBy(x => x.Name)
                 .ShouldHaveTheSameElementsAs(typeof(MyFooHandler), typeof(MyOtherFooHandler));
 
         }
