@@ -4,7 +4,7 @@ namespace FubuTransportation.Subscriptions
 {
     public interface ISubscriptionRepository
     {
-        IEnumerable<Subscription> PersistRequirements(string name, params Subscription[] requirements);
-        IEnumerable<Subscription> LoadSubscriptions(string name);
+        IEnumerable<Subscription> PersistRequirements(params Subscription[] requirements);
+        IEnumerable<Subscription> LoadSubscriptions();
     }
 }

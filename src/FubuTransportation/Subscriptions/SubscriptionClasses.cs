@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Caching;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Subscriptions
 {
@@ -32,8 +33,31 @@ namespace FubuTransportation.Subscriptions
 
     public class SubscriptionsHandler
     {
-        public SubscriptionsHandler(ISubscriptionRepository repository)
+        private readonly ISubscriptionRepository _repository;
+        private readonly ChannelGraph _graph;
+        private readonly ISubscriptionCache _cache;
+
+        public SubscriptionsHandler(ISubscriptionRepository repository, ChannelGraph graph, ISubscriptionCache cache)
         {
+            _repository = repository;
+            _graph = graph;
+            _cache = cache;
+        }
+
+        public void Handle(SubscriptionsChanged message)
+        {
+            var subscriptions = _repository.LoadSubscriptions();
+            _cache.LoadSubscriptions(subscriptions);
+        }
+
+        public void Handle(SubscriptionRequested message)
+        {
+            /*
+             * 1. Persist the new ones.
+             * 2. Reload the new subscriptions.
+             * 3. Fan out and message to all peers to SubscriptionsChanged
+             * 
+             */
         }
     }
 

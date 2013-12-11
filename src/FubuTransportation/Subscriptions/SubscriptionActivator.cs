@@ -32,7 +32,7 @@ namespace FubuTransportation.Subscriptions
             log.Trace("Found subscription requirements:");
             requirements.Each(x => log.Trace(x.ToString()));
 
-            var subscriptions = _repository.PersistRequirements(_graph.Name, requirements).ToArray();
+            var subscriptions = _repository.PersistRequirements(requirements).ToArray();
             
 
             subscriptions.GroupBy(x => x.Source).Each(group => {

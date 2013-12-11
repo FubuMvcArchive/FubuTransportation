@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Subscriptions
 {
     public class SubscriptionRepository : ISubscriptionRepository
     {
+        private readonly ChannelGraph _graph;
         private readonly ISubscriptionPersistence _persistence;
 
-        public SubscriptionRepository(ISubscriptionPersistence persistence)
+        public SubscriptionRepository(ChannelGraph graph, ISubscriptionPersistence persistence)
         {
+            _graph = graph;
             _persistence = persistence;
         }
 
-        public IEnumerable<Subscription> PersistRequirements(string name, params Subscription[] requirements)
+        public IEnumerable<Subscription> PersistRequirements(params Subscription[] requirements)
         {
-            var existing = _persistence.LoadSubscriptions(name);
+            var existing = _persistence.LoadSubscriptions(_graph.Name);
             var newReqs = requirements.Where(x => !existing.Contains(x)).ToArray();
 
             newReqs.Each(x => x.Id = Guid.NewGuid());
@@ -24,9 +27,9 @@ namespace FubuTransportation.Subscriptions
             return existing.Union(newReqs).ToArray();
         }
 
-        public IEnumerable<Subscription> LoadSubscriptions(string name)
+        public IEnumerable<Subscription> LoadSubscriptions()
         {
-            return _persistence.LoadSubscriptions(name);
+            return _persistence.LoadSubscriptions(_graph.Name);
         }
     }
 }
