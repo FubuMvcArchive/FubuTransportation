@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 using FubuCore;
 
 namespace FubuTransportation.Subscriptions
@@ -24,6 +25,8 @@ namespace FubuTransportation.Subscriptions
         public Uri Receiver { get; set; }
         public string MessageType { get; set; }
         public string NodeName { get; set; }
+        public SubscriptionRole Role { get; set; }
+
 
         public Subscription Clone()
         {
@@ -47,7 +50,7 @@ namespace FubuTransportation.Subscriptions
 
         protected bool Equals(Subscription other)
         {
-            return Equals(Source, other.Source) && Equals(Receiver, other.Receiver) && string.Equals(MessageType, other.MessageType) && string.Equals(NodeName, other.NodeName);
+            return Equals(Source, other.Source) && Equals(Receiver, other.Receiver) && string.Equals(MessageType, other.MessageType) && string.Equals(NodeName, other.NodeName) && string.Equals(Role, other.Role);
         }
 
         public override bool Equals(object obj)

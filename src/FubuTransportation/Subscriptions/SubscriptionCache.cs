@@ -104,9 +104,14 @@ namespace FubuTransportation.Subscriptions
         }
 
 
-        public IList<Subscription> Subscriptions
+        public IEnumerable<Subscription> ActiveSubscriptions
         {
-            get { return _subscriptions; }
+            get
+            {
+                return _lock.Read(() => {
+                    return _subscriptions.ToArray();
+                });
+            }
         }
     }
 }

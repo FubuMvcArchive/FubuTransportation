@@ -29,7 +29,9 @@ namespace FubuTransportation.Subscriptions
 
             var requirements = determineStaticRequirements(log);
 
-            var subscriptions = _repository.PersistRequirements(requirements).ToArray();
+            _repository.PersistSubscriptions(requirements);
+
+            var subscriptions = _repository.LoadSubscriptions(SubscriptionRole.Subscribes);
             _cache.LoadSubscriptions(subscriptions);
 
             sendSubscriptions(subscriptions);

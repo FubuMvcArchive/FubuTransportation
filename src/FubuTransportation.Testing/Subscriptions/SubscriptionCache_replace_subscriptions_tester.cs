@@ -37,11 +37,11 @@ namespace FubuTransportation.Testing.Subscriptions
 
             cache.LoadSubscriptions(subscriptions1);
 
-            cache.Subscriptions.ShouldHaveTheSameElementsAs(subscriptions1);
+            cache.ActiveSubscriptions.ShouldHaveTheSameElementsAs(subscriptions1);
 
             cache.LoadSubscriptions(subscriptions2);
 
-            cache.Subscriptions.ShouldHaveTheSameElementsAs(subscriptions2);
+            cache.ActiveSubscriptions.ShouldHaveTheSameElementsAs(subscriptions2);
         }
     }
 }

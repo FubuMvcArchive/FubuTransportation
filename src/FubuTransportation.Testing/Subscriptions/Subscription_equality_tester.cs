@@ -16,14 +16,16 @@ namespace FubuTransportation.Testing.Subscriptions
             {
                 NodeName = "Service1",
                 Receiver = "foo://1".ToUri(),
-                Source = "foo://2".ToUri()
+                Source = "foo://2".ToUri(),
+                Role = SubscriptionRole.Subscribes
             };
 
             var s2 = new Subscription(typeof(Message1))
             {
                 NodeName = s1.NodeName,
                 Receiver = s1.Receiver,
-                Source = s1.Source
+                Source = s1.Source,
+                Role = SubscriptionRole.Subscribes
             };
 
             s1.ShouldEqual(s2);
@@ -42,6 +44,10 @@ namespace FubuTransportation.Testing.Subscriptions
 
             s2.Receiver = s1.Receiver;
             s2.Source = "foo://4".ToUri();
+            s2.ShouldNotEqual(s1);
+
+            s2.Source = s1.Source;
+            s2.Role = SubscriptionRole.Publishes;
             s2.ShouldNotEqual(s1);
         }
     }

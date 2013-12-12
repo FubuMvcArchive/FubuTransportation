@@ -18,11 +18,11 @@ namespace FubuTransportation.RavenDb
             _store = store;
         }
 
-        public IEnumerable<Subscription> LoadSubscriptions(string name)
+        public IEnumerable<Subscription> LoadSubscriptions(string name, SubscriptionRole role)
         {
             using (var session = _store.OpenSession())
             {
-                return session.Query<Subscription>().Where(x => x.NodeName == name);
+                return session.Query<Subscription>().Where(x => x.NodeName == name && x.Role == role);
             }
         }
 

@@ -24,13 +24,13 @@ namespace FubuTransportation.Subscriptions
 
         public virtual void ReloadSubscriptions()
         {
-            var subscriptions = _repository.LoadSubscriptions();
+            var subscriptions = _repository.LoadSubscriptions(SubscriptionRole.Publishes);
             _cache.LoadSubscriptions(subscriptions);
         }
 
         public void Handle(SubscriptionRequested message)
         {
-            _repository.PersistRequirements(message.Subscriptions);
+            _repository.PersistPublishing(message.Subscriptions);
             
             // Reload here!
             Handle(new SubscriptionsChanged());

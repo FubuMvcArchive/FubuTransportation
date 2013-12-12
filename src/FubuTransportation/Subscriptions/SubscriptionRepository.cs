@@ -16,20 +16,30 @@ namespace FubuTransportation.Subscriptions
             _persistence = persistence;
         }
 
-        public IEnumerable<Subscription> PersistRequirements(params Subscription[] requirements)
+        public void PersistSubscriptions(params Subscription[] requirements)
         {
-            var existing = _persistence.LoadSubscriptions(_graph.Name);
+            persist(requirements, SubscriptionRole.Subscribes);
+        }
+
+        private void persist(Subscription[] requirements, SubscriptionRole subscriptionRole)
+        {
+            requirements.Each(x => { x.Role = subscriptionRole; });
+
+            var existing = _persistence.LoadSubscriptions(_graph.Name, subscriptionRole);
             var newReqs = requirements.Where(x => !existing.Contains(x)).ToArray();
 
             newReqs.Each(x => x.Id = Guid.NewGuid());
             _persistence.Persist(newReqs);
-
-            return existing.Union(newReqs).ToArray();
         }
 
-        public IEnumerable<Subscription> LoadSubscriptions()
+        public void PersistPublishing(params Subscription[] subscriptions)
         {
-            return _persistence.LoadSubscriptions(_graph.Name);
+            persist(subscriptions, SubscriptionRole.Publishes);
+        }
+
+        public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
+        {
+            return _persistence.LoadSubscriptions(_graph.Name, role);
         }
 
         public IEnumerable<TransportNode> FindPeers()

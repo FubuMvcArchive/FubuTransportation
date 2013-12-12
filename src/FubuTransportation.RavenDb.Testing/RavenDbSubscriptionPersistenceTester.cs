@@ -58,10 +58,10 @@ namespace FubuTransportation.RavenDb.Testing
             persistence.Persist(subscriptions);
             persistence.Persist(subscriptions2);
 
-            var loaded = persistence.LoadSubscriptions("Node1");
+            var loaded = persistence.LoadSubscriptions("Node1", SubscriptionRole.Subscribes);
             loaded.ShouldHaveTheSameElementsAs(subscriptions);
-        
-            persistence.LoadSubscriptions("Node2")
+
+            persistence.LoadSubscriptions("Node2", SubscriptionRole.Subscribes)
                 .ShouldHaveTheSameElementsAs(subscriptions2);
         }
 

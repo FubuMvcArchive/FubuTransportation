@@ -31,7 +31,9 @@ namespace FubuTransportation.Testing.Subscriptions
         {
             var subscription = ObjectMother.NewSubscription();
 
-            var requirements = theRepository.PersistRequirements(subscription);
+            theRepository.PersistSubscriptions(subscription);
+
+            var requirements = theRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
             requirements
                 .ShouldHaveTheSameElementsAs(subscription);
 
@@ -49,7 +51,8 @@ namespace FubuTransportation.Testing.Subscriptions
             var subscription = ObjectMother.NewSubscription();
             subscription.NodeName = TheNodeName;
 
-            var requirements = theRepository.PersistRequirements(subscription);
+            theRepository.PersistSubscriptions(subscription);
+            var requirements = theRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
             requirements.Count().ShouldEqual(2);
             requirements.ShouldContain(existing);
             requirements.ShouldContain(subscription);
@@ -71,7 +74,9 @@ namespace FubuTransportation.Testing.Subscriptions
             var subscription = ObjectMother.NewSubscription();
             subscription.NodeName = TheNodeName;
 
-            var requirements = theRepository.PersistRequirements(subscription);
+            theRepository.PersistSubscriptions(subscription);
+
+            var requirements = theRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
             requirements.Count().ShouldEqual(2);
             requirements.ShouldContain(existing);
             requirements.ShouldContain(subscription);
@@ -85,7 +90,9 @@ namespace FubuTransportation.Testing.Subscriptions
 
             var subscription = existing.Clone();
 
-            theRepository.PersistRequirements(subscription)
+            theRepository.PersistSubscriptions(subscription);
+
+            theRepository.LoadSubscriptions(SubscriptionRole.Subscribes)
                 .Single()
                 .ShouldEqual(existing);
         }
@@ -109,7 +116,8 @@ namespace FubuTransportation.Testing.Subscriptions
             var old = existing.Clone();
             var newSubscription = ObjectMother.NewSubscription(TheNodeName);
 
-            var requirements = theRepository.PersistRequirements(old, newSubscription);
+            theRepository.PersistSubscriptions(old, newSubscription);
+            var requirements = theRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
 
             requirements.Count().ShouldEqual(3);
             requirements.ShouldContain(existing);

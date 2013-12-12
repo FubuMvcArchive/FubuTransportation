@@ -45,7 +45,9 @@ namespace FubuTransportation.Testing
                 MessageType = Guid.NewGuid().ToString(),
                 NodeName = nodeName ?? "TheNode",
                 Receiver = "memory://receiver".ToUri(),
-                Source = "memory://source".ToUri()
+                Source = "memory://source".ToUri(),
+                Role = SubscriptionRole.Subscribes
+
             };
         }
 

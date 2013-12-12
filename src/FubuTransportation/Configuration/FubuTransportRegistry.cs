@@ -33,6 +33,7 @@ namespace FubuTransportation.Configuration
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
         private readonly ProvenanceChain _provenance;
+        private string _name;
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
         {
@@ -126,7 +127,15 @@ namespace FubuTransportation.Configuration
 
         public string NodeName
         {
-            set { AlterSettings<ChannelGraph>(x => x.Name = value); }
+            set
+            {
+                _name = value;
+                AlterSettings<ChannelGraph>(x => x.Name = value);
+            }
+            get
+            {
+                return _name;
+            }
         }
 
         internal Action<ChannelGraph> channel

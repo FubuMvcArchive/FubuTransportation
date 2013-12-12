@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing.Subscriptions
             theGraph = new ChannelGraph {Name = "TheNode"};
             Services.Inject(theGraph);
 
-            MockFor<ISubscriptionRepository>().Stub(x => x.LoadSubscriptions())
+            MockFor<ISubscriptionRepository>().Stub(x => x.LoadSubscriptions(SubscriptionRole.Publishes))
                 .Return(theSubscriptions);
 
             ClassUnderTest.Handle(new SubscriptionsChanged());
@@ -114,7 +114,7 @@ namespace FubuTransportation.Testing.Subscriptions
         public void should_persist_the_new_subscriptions()
         {
             MockFor<ISubscriptionRepository>()
-                .AssertWasCalled(x => x.PersistRequirements(theMessage.Subscriptions));
+                .AssertWasCalled(x => x.PersistPublishing(theMessage.Subscriptions));
         }
 
         [Test]

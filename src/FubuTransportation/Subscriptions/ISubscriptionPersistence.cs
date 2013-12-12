@@ -4,7 +4,7 @@ namespace FubuTransportation.Subscriptions
 {
     public interface ISubscriptionPersistence
     {
-        IEnumerable<Subscription> LoadSubscriptions(string name);
+        IEnumerable<Subscription> LoadSubscriptions(string name, SubscriptionRole role);
         void Persist(IEnumerable<Subscription> subscriptions);
         void Persist(Subscription subscription);
 

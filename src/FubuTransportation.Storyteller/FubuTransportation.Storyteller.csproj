@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -133,12 +133,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixtures\BatchMessageFixture.cs" />
-    <Compile Include="Fixtures\ModelFixture.cs" />
+    <Compile Include="Fixtures\Subscriptions\HasGlobalSubscriptionsRegistry.cs" />
+    <Compile Include="Fixtures\Subscriptions\SubscriptionsFixture.cs" />
+    <Compile Include="Fixtures\RunningNode.cs" />
     <Compile Include="Fixtures\SendAndAwaitFixture.cs" />
     <Compile Include="FubuTransportationStorytellerSystem.cs" />
     <Compile Include="HarnessSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoryTellerDebug.cs" />
+    <Compile Include="Support\FourMessage.cs" />
+    <Compile Include="Support\Message.cs" />
+    <Compile Include="Support\OneMessage.cs" />
+    <Compile Include="Support\ThreeMessage.cs" />
+    <Compile Include="Support\TwoMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\LightningQueues\SendAndAwait\" />

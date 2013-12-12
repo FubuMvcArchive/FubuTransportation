@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -278,6 +278,7 @@
     <Compile Include="Subscriptions\SubscriptionRepository.cs" />
     <Compile Include="Subscriptions\SubscriptionRequested.cs" />
     <Compile Include="Subscriptions\SubscriptionRequirements.cs" />
+    <Compile Include="Subscriptions\SubscriptionRole.cs" />
     <Compile Include="Subscriptions\SubscriptionsChanged.cs" />
     <Compile Include="Subscriptions\SubscriptionsHandler.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />

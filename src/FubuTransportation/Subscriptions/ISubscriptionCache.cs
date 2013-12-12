@@ -16,5 +16,7 @@ namespace FubuTransportation.Subscriptions
         /// </summary>
         /// <param name="subscriptions"></param>
         void LoadSubscriptions(IEnumerable<Subscription> subscriptions);
+
+        IEnumerable<Subscription> ActiveSubscriptions { get; }
     }
 }

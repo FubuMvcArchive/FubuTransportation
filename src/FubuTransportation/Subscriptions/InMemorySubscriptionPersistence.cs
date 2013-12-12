@@ -11,7 +11,7 @@ namespace FubuTransportation.Subscriptions
         private readonly Cache<Guid, Subscription> _subscriptions = new Cache<Guid, Subscription>();
         private readonly IList<TransportNode> _nodes = new List<TransportNode>(); 
 
-        public IEnumerable<Subscription> LoadSubscriptions(string name)
+        public IEnumerable<Subscription> LoadSubscriptions(string name, SubscriptionRole role)
         {
             return _subscriptions.Where(x => FubuCore.StringExtensions.EqualsIgnoreCase(x.NodeName, name)).ToArray();
         }
