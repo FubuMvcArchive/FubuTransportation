@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceNode", "ServiceNode\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuTransportation.Serenity", "FubuTransportation.Serenity\FubuTransportation.Serenity.csproj", "{7E7F5ADC-D27D-4BB9-BF03-E5909330A53C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuTransportation.RavenDb", "FubuTransportation.RavenDb\FubuTransportation.RavenDb.csproj", "{0D252B13-1636-43D4-B203-CCE05DE43073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuTransportation.RavenDb.Testing", "FubuTransportation.RavenDb.Testing\FubuTransportation.RavenDb.Testing.csproj", "{9FF0BA87-2700-427F-850E-BB46D996F2E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,14 @@ Global
 		{7E7F5ADC-D27D-4BB9-BF03-E5909330A53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E7F5ADC-D27D-4BB9-BF03-E5909330A53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E7F5ADC-D27D-4BB9-BF03-E5909330A53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D252B13-1636-43D4-B203-CCE05DE43073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D252B13-1636-43D4-B203-CCE05DE43073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D252B13-1636-43D4-B203-CCE05DE43073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D252B13-1636-43D4-B203-CCE05DE43073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FF0BA87-2700-427F-850E-BB46D996F2E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FF0BA87-2700-427F-850E-BB46D996F2E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FF0BA87-2700-427F-850E-BB46D996F2E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FF0BA87-2700-427F-850E-BB46D996F2E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

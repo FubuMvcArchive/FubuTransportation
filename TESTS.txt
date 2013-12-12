@@ -1,2 +1,0 @@
-FubuTransportation.LightningQueues.Testing
-FubuTransportation.Testing

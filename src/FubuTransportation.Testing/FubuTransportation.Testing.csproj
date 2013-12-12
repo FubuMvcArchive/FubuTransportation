@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -155,28 +155,28 @@
     <Compile Include="Configuration\ByTaskSchedulerMakerTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ChannelGraphTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\ChannelGraph_can_read_thread_and_task_counts_from_config.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\ChannelGraph_has_to_be_a_StructureMap_singleton.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\ChannelNodeTester.cs">
+    <Compile Include="Configuration\ChannelGraphTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\FubuTransportRegistryTester.cs">
+    <Compile Include="Configuration\ChannelNodeTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\FubuTransportRegistry_register_subscription_requirements_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configuration\HandlerChainTester.cs">
+    <Compile Include="Configuration\FubuTransportRegistryTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\HandlerChain_Exception_Handling_Rules_Registration_Tester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\HandlerChainTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\HandlerGraphTester.cs">
@@ -266,10 +266,10 @@
     <Compile Include="ErrorHandling\RequeueContinuationTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ErrorHandling\RetryNowContinuationTester.cs">
+    <Compile Include="ErrorHandling\RetryNow_integration_testing.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ErrorHandling\RetryNow_integration_testing.cs">
+    <Compile Include="ErrorHandling\RetryNowContinuationTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Events\EventAggregatorTester.cs">
@@ -282,6 +282,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FakeHandlers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FubuTransport_default_options_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FubuTransportRegistry_application_of_policies_Tester.cs">
@@ -297,9 +300,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FubuTransportServiceRegistry_spec.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FubuTransport_default_options_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FullStackConfigurationIntegrationTester.cs">
@@ -323,10 +323,10 @@
     <Compile Include="InMemory\InMemorySagaStorageTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InMemory\InMemoryTransportTester.cs">
+    <Compile Include="InMemory\InMemoryTransport_opt_in_registration_tester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InMemory\InMemoryTransport_opt_in_registration_tester.cs">
+    <Compile Include="InMemory\InMemoryTransportTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InMemory\ReplayDelayedQueueIntegrationTester.cs">
@@ -405,11 +405,10 @@
     <Compile Include="Runtime\Cascading\RespondToSenderTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Runtime\Cascading\SendDirectlyToTester.cs" />
-    <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessorTester.cs">
+    <Compile Include="Runtime\Delayed\Delayed_Processing_Job_Registration_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Runtime\Delayed\Delayed_Processing_Job_Registration_Tester.cs">
+    <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessorTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Runtime\EnvelopeModifierTester.cs">
@@ -478,10 +477,10 @@
     <Compile Include="Runtime\Invocation\StubServiceFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Runtime\Invocation\WhenInvokingWithNoHandlerForMessageType.cs">
+    <Compile Include="Runtime\Invocation\when_invoking_a_message_right_now_happy_path.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Runtime\Invocation\when_invoking_a_message_right_now_happy_path.cs">
+    <Compile Include="Runtime\Invocation\WhenInvokingWithNoHandlerForMessageType.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Runtime\ReceiverTester.cs">
@@ -536,6 +535,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScenarioRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scenarios\Send_a_message_that_raises_events.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScenarioSupport\AnotherOneHandler.cs">
@@ -622,18 +633,6 @@
     <Compile Include="ScenarioSupport\TwoMessage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Scenarios\Request_a_reply_for_a_single_message.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Scenarios\Send_a_message_that_raises_events.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Scenarios\Send_a_single_message_to_multiple_listening_nodes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Scenarios\Send_a_single_message_to_the_correct_node.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ScenarioWriterSmokeTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -649,10 +648,13 @@
     <Compile Include="ServiceBus_DelaySend_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ServiceBus_Send_to_destination_Tester.cs" />
     <Compile Include="StubChannelNode.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Subscriptions\Subscription_equality_tester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Subscriptions\Subscription_matches_tester.cs" />
     <Compile Include="Subscriptions\SubscriptionCache_replace_subscriptions_tester.cs" />
     <Compile Include="Subscriptions\SubscriptionCache_routing_with_subscription_Tester.cs" />
     <Compile Include="Subscriptions\SubscriptionHandler_is_registered_in_fubu_application_apps.cs" />
@@ -661,10 +663,6 @@
     <Compile Include="Subscriptions\SubscriptionsIntegrationTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Subscriptions\Subscription_equality_tester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Subscriptions\Subscription_matches_tester.cs" />
     <Compile Include="Subscriptions\TransportNodeTester.cs">
       <SubType>Code</SubType>
     </Compile>

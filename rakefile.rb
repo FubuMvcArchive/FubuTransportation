@@ -1,10 +1,6 @@
 require 'fuburake'
 
-solution = FubuRake::Solution.new do |sln|
-	sln.compile = {
-		:solutionfile => 'src/FubuTransportation.sln'
-	}
-				 
+solution = FubuRake::Solution.new do |sln|	 
 	sln.assembly_info = {
 		:product_name => "FubuTransportation",
 		:copyright => 'Copyright 2013. All rights reserved.'
