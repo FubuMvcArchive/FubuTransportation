@@ -46,6 +46,11 @@ namespace FubuTransportation
             _sender.Send(new Envelope {Message = message});
         }
 
+        public void Send<T>(Uri destination, T message)
+        {
+            _sender.Send(new Envelope {Message = message, Destination = destination});
+        }
+
         public void Consume<T>(T message)
         {
             _invoker.InvokeNow(message);

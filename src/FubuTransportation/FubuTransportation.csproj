@@ -190,6 +190,7 @@
     <Compile Include="Runtime\Cascading\ISendMyself.cs" />
     <Compile Include="Runtime\Cascading\OutgoingSender.cs" />
     <Compile Include="Runtime\Cascading\RespondToSender.cs" />
+    <Compile Include="Runtime\Cascading\SendDirectlyTo.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeAddedBackToQueue.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessor.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeReceived.cs" />

@@ -405,6 +405,7 @@
     <Compile Include="Runtime\Cascading\RespondToSenderTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Runtime\Cascading\SendDirectlyToTester.cs" />
     <Compile Include="Runtime\Delayed\DelayedEnvelopeProcessorTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -648,6 +649,7 @@
     <Compile Include="ServiceBus_DelaySend_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ServiceBus_Send_to_destination_Tester.cs" />
     <Compile Include="StubChannelNode.cs">
       <SubType>Code</SubType>
     </Compile>

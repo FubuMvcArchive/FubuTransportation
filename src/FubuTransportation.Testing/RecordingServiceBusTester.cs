@@ -73,5 +73,19 @@ namespace FubuTransportation.Testing
             // Checking for awaited calls
             bus.Await.Single().ShouldBeTheSameAs(message);
         }
+
+        [Test]
+        public void send_to_destination()
+        {
+            var destination = new Uri("memory://blah");
+            var message = new Message1();
+            var bus = new RecordingServiceBus();
+
+            bus.Send(destination, message);
+
+            var sentTo = bus.SentDirectlyTo.Single();
+            sentTo.Destination.ShouldEqual(destination);
+            sentTo.Message.ShouldBeTheSameAs(message);
+        }
     }
 }

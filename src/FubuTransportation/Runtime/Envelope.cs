@@ -101,12 +101,7 @@ namespace FubuTransportation.Runtime
         
         public virtual Envelope ForResponse(object message)
         {
-            var child = new Envelope
-            {
-                Message = message,
-                OriginalId = OriginalId ?? CorrelationId,
-                ParentId = CorrelationId
-            };
+            var child = ForSend(message);
 
             // TODO -- still goofy, think we need to care about exactly what type
             // the response should be
@@ -116,6 +111,17 @@ namespace FubuTransportation.Runtime
                 child.Destination = ReplyUri;
             }
 
+            return child;
+        }
+
+        public virtual Envelope ForSend(object message)
+        {
+            var child = new Envelope
+            {
+                Message = message,
+                OriginalId = OriginalId ?? CorrelationId,
+                ParentId = CorrelationId
+            };
             return child;
         }
 

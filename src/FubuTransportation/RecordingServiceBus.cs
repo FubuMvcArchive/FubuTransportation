@@ -14,10 +14,16 @@ namespace FubuTransportation
         public readonly IList<object> Consumed = new List<object>();
         public readonly IList<object> Await = new List<object>();
         public readonly IList<DelayedMessage> DelayedSent = new List<DelayedMessage>();
+        public readonly IList<SentDirectlyToMessage> SentDirectlyTo = new List<SentDirectlyToMessage>(); 
 
         public Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null)
         {
             throw new NotSupportedException();
+        }
+
+        public void Send<T>(Uri destination, T message)
+        {
+            SentDirectlyTo.Add(new SentDirectlyToMessage {Destination = destination, Message = message});
         }
 
         public void Send<T>(T message)
@@ -58,6 +64,12 @@ namespace FubuTransportation
         {
             public TimeSpan Delay;
             public DateTime Time;
+            public object Message;
+        }
+
+        public class SentDirectlyToMessage
+        {
+            public Uri Destination;
             public object Message;
         }
     }
