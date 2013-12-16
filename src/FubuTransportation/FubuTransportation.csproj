@@ -103,6 +103,8 @@
     <Compile Include="Diagnostics\Visualization\HandlersTableTag.cs" />
     <Compile Include="Diagnostics\Visualization\HtmlTagExtensions.cs" />
     <Compile Include="Diagnostics\Visualization\MessagesFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\Visualization\SubscriptionsFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\Visualization\SubscriptionsTableTag.cs" />
     <Compile Include="Diagnostics\Visualization\TransportsTag.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />
@@ -297,6 +299,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Diagnostics\Visualization\ChannelVisualization.spark" />
+    <None Include="Diagnostics\Visualization\Subscriptions.spark" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -309,6 +312,8 @@
   <ItemGroup>
     <EmbeddedResource Include="pak-WebContent.zip" />
   </ItemGroup>
-  <ItemGroup></ItemGroup>
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
 </Project>

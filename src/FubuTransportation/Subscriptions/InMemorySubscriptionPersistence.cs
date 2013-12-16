@@ -9,11 +9,11 @@ namespace FubuTransportation.Subscriptions
     public class InMemorySubscriptionPersistence : ISubscriptionPersistence
     {
         private readonly Cache<Guid, Subscription> _subscriptions = new Cache<Guid, Subscription>();
-        private readonly IList<TransportNode> _nodes = new List<TransportNode>(); 
+        private readonly IList<TransportNode> _nodes = new List<TransportNode>();
 
         public IEnumerable<Subscription> LoadSubscriptions(string name, SubscriptionRole role)
         {
-            return _subscriptions.Where(x => FubuCore.StringExtensions.EqualsIgnoreCase(x.NodeName, name)).ToArray();
+            return _subscriptions.Where(x => x.NodeName.EqualsIgnoreCase(name) && x.Role == role).ToArray();
         }
 
         public void Persist(IEnumerable<Subscription> subscriptions)
@@ -44,6 +44,16 @@ namespace FubuTransportation.Subscriptions
             }
 
             _nodes.Fill(node);
+        }
+
+        public IEnumerable<TransportNode> AllNodes()
+        {
+            return _nodes.ToArray();
+        }
+
+        public IEnumerable<Subscription> AllSubscriptions()
+        {
+            return _subscriptions.ToArray();
         }
     }
 }

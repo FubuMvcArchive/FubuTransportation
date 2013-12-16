@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FubuPersistence;
-using FubuPersistence.RavenDb.Multiple;
 using FubuTransportation.Subscriptions;
 using Raven.Client;
 
@@ -47,6 +46,22 @@ namespace FubuTransportation.RavenDb
         public void Persist(TransportNode node)
         {
             _transaction.Execute<IDocumentSession>(x => x.Store(node));
+        }
+
+        public IEnumerable<TransportNode> AllNodes()
+        {
+            using (var session = _store.OpenSession())
+            {
+                return session.Query<TransportNode>().ToArray();
+            }
+        }
+
+        public IEnumerable<Subscription> AllSubscriptions()
+        {
+            using (var session = _store.OpenSession())
+            {
+                return session.Query<Subscription>().ToArray();
+            }
         }
     }
 }

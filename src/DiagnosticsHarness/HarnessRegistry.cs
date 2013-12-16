@@ -16,6 +16,9 @@ namespace DiagnosticsHarness
             Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true);
 
             Global.Policy<ErrorHandlingPolicy>();
+
+            SubscribeLocally().ToSource(x => x.Publisher)
+                .ToMessage<NumberMessage>();
         }
     }
 

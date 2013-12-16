@@ -45,7 +45,7 @@ namespace FubuTransportation.Subscriptions
 
             _repository.PersistSubscriptions(requirements);
 
-            var subscriptions = _repository.LoadSubscriptions(SubscriptionRole.Subscribes);
+            var subscriptions = _repository.LoadSubscriptions(SubscriptionRole.Publishes);
             _cache.LoadSubscriptions(subscriptions);
 
             sendSubscriptions(subscriptions);

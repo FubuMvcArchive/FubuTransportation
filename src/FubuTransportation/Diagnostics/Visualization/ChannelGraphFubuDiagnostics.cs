@@ -4,6 +4,7 @@ using FubuCore.Descriptions;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Subscriptions;
 using HtmlTags;
 
 namespace FubuTransportation.Diagnostics.Visualization
@@ -11,12 +12,14 @@ namespace FubuTransportation.Diagnostics.Visualization
     public class ChannelGraphFubuDiagnostics
     {
         private readonly ChannelGraph _graph;
+        private readonly ISubscriptionCache _cache;
         private readonly IEnumerable<ITransport> _transports;
         private readonly IEnumerable<IMessageSerializer> _serializers;
 
-        public ChannelGraphFubuDiagnostics(ChannelGraph graph, IEnumerable<ITransport> transports, IEnumerable<IMessageSerializer> serializers)
+        public ChannelGraphFubuDiagnostics(ChannelGraph graph, ISubscriptionCache cache, IEnumerable<ITransport> transports, IEnumerable<IMessageSerializer> serializers)
         {
             _graph = graph;
+            _cache = cache;
             _transports = transports;
             _serializers = serializers;
         }
@@ -29,7 +32,8 @@ namespace FubuTransportation.Diagnostics.Visualization
                 Graph = _graph,
                 Transports = new TransportsTag(_transports),
                 Channels = new ChannelsTableTag(_graph),
-                Serializers = new SerializersTag(_serializers)
+                Serializers = new SerializersTag(_serializers),
+                Subscriptions = new SubscriptionsTableTag(_cache.ActiveSubscriptions)
             };            
         }
     }

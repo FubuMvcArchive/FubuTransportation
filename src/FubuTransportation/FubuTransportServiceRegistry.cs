@@ -86,7 +86,7 @@ namespace FubuTransportation
 
             SetServiceIfNone<ISubscriptionRepository, SubscriptionRepository>();
 
-            SetServiceIfNone<ISubscriptionPersistence, InMemorySubscriptionPersistence>();
+            SetServiceIfNone<ISubscriptionPersistence>(new InMemorySubscriptionPersistence());
 
             AddService<IActivator, SubscriptionActivator>();
         }

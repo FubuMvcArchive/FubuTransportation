@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 using FubuTransportation;
 
 namespace DiagnosticsHarness
@@ -8,7 +9,10 @@ namespace DiagnosticsHarness
         public HarnessSettings()
         {
             Channel = "memory://harness".ToUri();
+            Publisher = "memory://publisher".ToUri();
         }
+
+        public Uri Publisher { get; set; }
 
         public Uri Channel { get; set; }
     }
