@@ -135,6 +135,7 @@
   <ItemGroup>
     <Compile Include="Fixtures\BatchMessageFixture.cs" />
     <Compile Include="Fixtures\Subscriptions\HasGlobalSubscriptionsRegistry.cs" />
+    <Compile Include="Fixtures\Subscriptions\HasLocalSubscriptionsRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\PublishingRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\SubscriptionsFixture.cs" />
     <Compile Include="Fixtures\RunningNode.cs" />
