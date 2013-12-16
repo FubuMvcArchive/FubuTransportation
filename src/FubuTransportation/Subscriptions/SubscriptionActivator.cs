@@ -48,7 +48,7 @@ namespace FubuTransportation.Subscriptions
             var subscriptions = _repository.LoadSubscriptions(SubscriptionRole.Publishes);
             _cache.LoadSubscriptions(subscriptions);
 
-            sendSubscriptions(subscriptions);
+            sendSubscriptions();
         }
 
         private Subscription[] determineStaticRequirements(IPackageLog log)
@@ -58,9 +58,9 @@ namespace FubuTransportation.Subscriptions
             return requirements;
         }
 
-        private void sendSubscriptions(IEnumerable<Subscription> subscriptions)
+        private void sendSubscriptions()
         {
-            subscriptions
+            _repository.LoadSubscriptions(SubscriptionRole.Subscribes)
                 .GroupBy(x => x.Source)
                 .Each(group => sendSubscriptionsToSource(@group.Key, @group));
         }
