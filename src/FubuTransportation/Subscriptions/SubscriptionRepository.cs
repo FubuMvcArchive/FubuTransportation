@@ -23,7 +23,10 @@ namespace FubuTransportation.Subscriptions
 
         private void persist(Subscription[] requirements, SubscriptionRole subscriptionRole)
         {
-            requirements.Each(x => { x.Role = subscriptionRole; });
+            requirements.Each(x => {
+                x.NodeName = _graph.Name;
+                x.Role = subscriptionRole;
+            });
 
             var existing = _persistence.LoadSubscriptions(_graph.Name, subscriptionRole);
             var newReqs = requirements.Where(x => !existing.Contains(x)).ToArray();

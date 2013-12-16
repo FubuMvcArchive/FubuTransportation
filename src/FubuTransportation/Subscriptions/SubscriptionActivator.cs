@@ -1,13 +1,14 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
-using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Subscriptions
 {
+    // Tested through Storyteller tests
     public class SubscriptionActivator : IActivator
     {
         private readonly ISubscriptionRepository _repository;
@@ -25,9 +26,22 @@ namespace FubuTransportation.Subscriptions
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
+            log.Trace("Determining subscriptions for node " + _cache.NodeName);
+
             _repository.SaveTransportNode();
 
             var requirements = determineStaticRequirements(log);
+
+
+            if (requirements.Any())
+            {
+                log.Trace("Found static subscription requirements:");
+                requirements.Each(x => log.Trace(x.ToString()));
+            }
+            else
+            {
+                log.Trace("No static subscriptions found from registry");
+            }
 
             _repository.PersistSubscriptions(requirements);
 

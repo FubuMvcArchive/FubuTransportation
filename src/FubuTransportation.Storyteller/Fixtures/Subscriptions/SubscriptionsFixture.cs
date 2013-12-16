@@ -5,6 +5,8 @@ using FubuCore;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
+using FubuTransportation.Subscriptions;
+using HtmlTags;
 using StoryTeller;
 using StoryTeller.Engine;
 
@@ -26,6 +28,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
 
         public override void SetUp(ITestContext context)
         {
+            RunningNode.Subscriptions.ClearAll();
             MessageHistory.ClearAll();
             InMemoryQueueManager.ClearAll();
             FubuTransport.ApplyMessageHistoryWatching = true;
@@ -36,6 +39,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
             _nodes.Each(x => x.Dispose());
         }
 
+        [FormatAs("Load a node {Key} from {Registry} with reply Uri {ReplyUri}")]
         public void LoadNode(string Key, [SelectionValues("FubuTransportRegistries")] string Registry, string ReplyUri)
         {
             MessageHistory.WaitForWorkToFinish(() => {
@@ -43,27 +47,63 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
                 node.Start();
 
                 _nodes[Key] = node;
+
+                Context.Trace(new CodeTag(Key, node.Contents));
             });
         }
 
-        [FormatAs("The node {key}")]
-        public void ForNode(string key)
+        [FormatAs("For node {Key}")]
+        public void ForNode(string Key)
         {
-            _node = _nodes[key];
+            _node = _nodes[Key];
         }
 
         public IGrammar TheActiveSubscriptionsAre()
         {
             return VerifySetOf(() => _node.LoadedSubscriptions())
-                .Titled("The active subscriptions are")
+                .Titled("The active subscriptions for publishing are")
                 .MatchOn(x => x.NodeName, x => x.MessageType, x => x.Source, x => x.Receiver);
         }
 
         public IGrammar ThePersistedSubscriptionsAre()
         {
             return VerifySetOf(() => _node.PersistedSubscriptions())
-                .Titled("The active subscriptions are")
+                .Titled("The persisted subscriptions for publishing are")
                 .MatchOn(x => x.NodeName, x => x.MessageType, x => x.Source, x => x.Receiver);
+        }
+
+        public IGrammar ThePersistedTransportNodesAre()
+        {
+            return VerifySetOf(() => _node.PersistedNodes().Select(x => new TransportNodeItem(x)))
+                .Titled("The persisted transport nodes are")
+                .MatchOn(x => x.NodeName, x => x.Address);
+        }
+    }
+
+    public class TransportNodeItem
+    {
+        public TransportNodeItem(TransportNode node)
+        {
+            NodeName = node.NodeName;
+            Address = node.Addresses.FirstOrDefault(x => x.Scheme == InMemoryChannel.Protocol).ToString();
+        }
+
+        public string NodeName { get; set; }
+        public string Address { get; set; }
+    }
+
+
+    public class CodeTag : HtmlTag
+    {
+        public CodeTag(string name, string code) : base("h4")
+        {
+            Text(name);
+            Next = new HtmlTag("pre", tag => {
+                tag.Style("border", "thin solid black");
+                tag.Style("padding", "5px");
+                tag.Text(code);
+                tag.Next = new HtmlTag("hr");
+            });
         }
     }
 }

@@ -8,6 +8,7 @@ using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
+using FubuTransportation.LightningQueues;
 using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Storyteller.Fixtures
@@ -33,7 +34,7 @@ namespace FubuTransportation.Storyteller.Fixtures
             _replyUri = replyUri;
 
 
-            _registryType = Assembly.GetExecutingAssembly().ExportedTypes.Where(x => FubuCore.TypeExtensions.IsConcreteTypeOf<FubuTransportRegistry>(x)).FirstOrDefault(x => x.Name.EqualsIgnoreCase(typeName));
+            _registryType = Assembly.GetExecutingAssembly().ExportedTypes.Where(x => x.IsConcreteTypeOf<FubuTransportRegistry>()).FirstOrDefault(x => x.Name.EqualsIgnoreCase(typeName));
 
             var file =
                 new FileSystem().FindFiles(Environment.CurrentDirectory.ParentDirectory().ParentDirectory(),
@@ -53,6 +54,8 @@ namespace FubuTransportation.Storyteller.Fixtures
                 x.ReplaceService<ISubscriptionPersistence>(_persistence);
                 x.ReplaceService(Settings);
             });
+
+            registry.AlterSettings<LightningQueueSettings>(x => x.Disabled = true);
 
             registry.EnableInMemoryTransport(_replyUri);
 
@@ -85,6 +88,12 @@ namespace FubuTransportation.Storyteller.Fixtures
         public string Contents
         {
             get { return _contents; }
+        }
+
+        public IEnumerable<TransportNode> PersistedNodes()
+        {
+            return _runtime.Factory.Get<ISubscriptionPersistence>()
+                .NodesForGroup(_runtime.Factory.Get<ChannelGraph>().Name);
         }
     }
 }

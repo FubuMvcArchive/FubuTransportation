@@ -119,6 +119,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="ThoughtWorks.Selenium.Core">
@@ -134,6 +135,7 @@
   <ItemGroup>
     <Compile Include="Fixtures\BatchMessageFixture.cs" />
     <Compile Include="Fixtures\Subscriptions\HasGlobalSubscriptionsRegistry.cs" />
+    <Compile Include="Fixtures\Subscriptions\PublishingRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\SubscriptionsFixture.cs" />
     <Compile Include="Fixtures\RunningNode.cs" />
     <Compile Include="Fixtures\SendAndAwaitFixture.cs" />

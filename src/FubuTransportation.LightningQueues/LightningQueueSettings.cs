@@ -7,6 +7,7 @@
             DefaultPort = 2020;
         }
 
+        public bool Disabled { get; set; }
         public int DefaultPort { get; set; } 
     }
 }

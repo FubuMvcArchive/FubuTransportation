@@ -12,7 +12,7 @@ namespace FubuTransportation.Runtime
 
         public void OpenChannels(ChannelGraph graph)
         {
-            // TODO -- change this to a "role"
+            if (disabled) return;
             
             var nodes = graph.NodesForProtocol(Protocol);
 
@@ -21,6 +21,14 @@ namespace FubuTransportation.Runtime
             nodes.OrderByDescending(x => x.Incoming).Each(x => x.Channel = buildChannel(x));
             
             graph.AddReplyChannel(Protocol, getReplyUri(graph));
+        }
+
+        protected virtual bool disabled
+        {
+            get
+            {
+                return false;
+            }
         }
 
         protected abstract Uri getReplyUri(ChannelGraph graph);

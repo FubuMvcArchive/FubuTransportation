@@ -68,12 +68,12 @@ namespace FubuTransportation.Testing.Configuration
                 Channel(x => x.Inbound).ReadIncoming();
 
                 SubscribeLocally()
-                    .At(x => x.Outbound)
+                    .ToSource(x => x.Outbound)
                     .ToMessage<Message1>()
                     .ToMessage<Message3>();
 
-                Subscribe(x => x.Inbound)
-                    .At(x => x.Upstream)
+                SubscribeAt(x => x.Inbound)
+                    .ToSource(x => x.Upstream)
                     .ToMessage<Message2>()
                     .ToMessage<Message4>();
             }

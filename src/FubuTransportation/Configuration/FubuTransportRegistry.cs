@@ -470,7 +470,7 @@ namespace FubuTransportation.Configuration
             return new ByTaskScheduleMaker<T>(property);
         }
 
-        public SubscriptionExpression Subscribe(Expression<Func<T, Uri>> receiving)
+        public SubscriptionExpression SubscribeAt(Expression<Func<T, Uri>> receiving)
         {
             return new SubscriptionExpression(this, receiving);
         }
@@ -495,7 +495,12 @@ namespace FubuTransportation.Configuration
                 });
             }
 
-            public TypeSubscriptionExpression At(Expression<Func<T, Uri>> sourceProperty)
+            /// <summary>
+            /// Specify the publishing source of the events you want to subscribe to
+            /// </summary>
+            /// <param name="sourceProperty"></param>
+            /// <returns></returns>
+            public TypeSubscriptionExpression ToSource(Expression<Func<T, Uri>> sourceProperty)
             {
                 ISubscriptionRequirement<T> requirement = _receiving == null
                     ? (ISubscriptionRequirement<T>) new LocalSubscriptionRequirement<T>(sourceProperty)

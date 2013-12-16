@@ -113,5 +113,13 @@ namespace FubuTransportation.Subscriptions
                 });
             }
         }
+
+        public string NodeName
+        {
+            get
+            {
+                return _graph.Name;
+            }
+        }
     }
 }

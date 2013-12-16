@@ -36,6 +36,11 @@ namespace FubuTransportation.LightningQueues
             get { return LightningUri.Protocol; }
         }
 
+        protected override bool disabled
+        {
+            get { return _settings.Disabled; }
+        }
+
         public IChannel BuildDestinationChannel(Uri destination)
         {
             return new LightningQueuesReplyChannel(destination, _queues.ManagerForReply());

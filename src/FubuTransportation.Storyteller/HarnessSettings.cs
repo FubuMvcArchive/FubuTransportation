@@ -10,8 +10,8 @@ namespace FubuTransportation.Storyteller
         public Uri Website4 { get; set; }
 
 
-        public Uri Service1 { get; set; }
-        public Uri Service2 { get; set; }
+        public Uri Publisher1 { get; set; }
+        public Uri Subscriber1 { get; set; }
         public Uri Service3 { get; set; }
         public Uri Service4 { get; set; }
     }

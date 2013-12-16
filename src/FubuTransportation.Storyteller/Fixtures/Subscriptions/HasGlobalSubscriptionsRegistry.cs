@@ -1,4 +1,5 @@
 ﻿using FubuTransportation.Configuration;
+using FubuTransportation.Storyteller.Support;
 
 namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
 {
@@ -6,7 +7,12 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
     {
         public HasGlobalSubscriptionsRegistry()
         {
+            NodeName = "GlobalSubscriber";
+            Channel(x => x.Subscriber1).ReadIncoming();
 
+            SubscribeAt(x => x.Subscriber1)
+                .ToSource(x => x.Publisher1)
+                .ToMessage<OneMessage>();
         }
     }
 }
