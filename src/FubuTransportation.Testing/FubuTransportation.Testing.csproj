@@ -443,6 +443,7 @@
     <Compile Include="Runtime\Invocation\ChainSuccessContinuationTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Runtime\Invocation\CompositeContinuationTester.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs">
       <SubType>Code</SubType>
     </Compile>

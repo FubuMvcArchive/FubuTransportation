@@ -218,6 +218,7 @@
     <Compile Include="Runtime\Invocation\ChainFailureContinuation.cs" />
     <Compile Include="Runtime\Invocation\ChainInvoker.cs" />
     <Compile Include="Runtime\Invocation\ChainSuccessContinuation.cs" />
+    <Compile Include="Runtime\Invocation\CompositeContinuation.cs" />
     <Compile Include="Runtime\Invocation\ContinuationContext.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandler.cs" />
     <Compile Include="Runtime\Invocation\DeserializationFailureContinuation.cs" />
