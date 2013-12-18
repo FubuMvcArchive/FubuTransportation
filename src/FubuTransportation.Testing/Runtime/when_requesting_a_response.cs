@@ -31,7 +31,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void the_envelope_is_sent_with_reply_requested_header()
         {
-            theEnvelope.ReplyRequested.ShouldBeTrue();
+            theEnvelope.ReplyRequested.ShouldEqual(typeof(Events.Message2).Name);
         }
 
         [Test]

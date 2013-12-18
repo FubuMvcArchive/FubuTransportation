@@ -86,7 +86,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             {
                 ReplyUri = "foo://bar".ToUri(),
                 AckRequested = false,
-                ReplyRequested = false,
+                ReplyRequested = null,
                 CorrelationId = Guid.NewGuid().ToString()
             };
 
@@ -178,7 +178,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             {
                 ReplyUri = "foo://bar".ToUri(),
                 AckRequested = false,
-                ReplyRequested = true,
+                ReplyRequested = "Message1",
                 CorrelationId = Guid.NewGuid().ToString()
             };
 

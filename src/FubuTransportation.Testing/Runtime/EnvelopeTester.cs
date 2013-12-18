@@ -3,6 +3,7 @@ using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
+using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuCore;
@@ -91,16 +92,15 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
-        public void if_reply_requested_header_exists_in_parent()
+        public void if_reply_requested_header_exists_in_parent_and_matches_the_message_type()
         {
             var parent = new Envelope
             {
                 CorrelationId = Guid.NewGuid().ToString(),
                 OriginalId = Guid.NewGuid().ToString(),
-                ReplyUri = "foo://bar".ToUri()
+                ReplyUri = "foo://bar".ToUri(),
+                ReplyRequested = typeof(Message1).Name
             };
-
-            parent.Headers[Envelope.ReplyRequestedKey] = true.ToString();
 
             var childMessage = new Events.Message1();
 
@@ -108,6 +108,26 @@ namespace FubuTransportation.Testing.Runtime
 
             child.Headers[Envelope.ResponseIdKey].ShouldEqual(parent.CorrelationId);
             child.Destination.ShouldEqual(parent.ReplyUri);
+        }
+
+
+        [Test]
+        public void if_reply_requested_header_exists_in_parent_and_does_NOT_match_the_message_type()
+        {
+            var parent = new Envelope
+            {
+                CorrelationId = Guid.NewGuid().ToString(),
+                OriginalId = Guid.NewGuid().ToString(),
+                ReplyUri = "foo://bar".ToUri(),
+                ReplyRequested = typeof(Message2).Name
+            };
+
+            var childMessage = new Events.Message1();
+
+            var child = parent.ForResponse(childMessage);
+
+            child.Headers.Has(Envelope.ResponseIdKey).ShouldBeFalse();
+            child.Destination.ShouldBeNull();
         }
 
         [Test]
@@ -242,15 +262,15 @@ namespace FubuTransportation.Testing.Runtime
         public void reply_requested()
         {
             var envelope = new Envelope();
-            envelope.ReplyRequested.ShouldBeFalse();
+            envelope.ReplyRequested.ShouldBeNull();
 
 
-            envelope.ReplyRequested = true;
-            envelope.Headers[Envelope.ReplyRequestedKey].ShouldEqual("true");
-            envelope.ReplyRequested.ShouldBeTrue();
+            envelope.ReplyRequested = "Foo";
+            envelope.Headers[Envelope.ReplyRequestedKey].ShouldEqual("Foo");
+            envelope.ReplyRequested.ShouldEqual("Foo");
 
-            envelope.ReplyRequested = false;
-            envelope.Headers.Has(Envelope.ReplyRequestedKey).ShouldBeFalse();
+            envelope.ReplyRequested = null;
+            envelope.ReplyRequested.ShouldBeNull();
         }
 
         [Test]

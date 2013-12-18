@@ -95,7 +95,10 @@ namespace FubuTransportation.Runtime
             set { _callback = value; }
         }
 
-        
+        public bool MatchesResponse(object message)
+        {
+            return message.GetType().Name == ReplyRequested;
+        }
 
         // TODO -- this is where the routing slip is going to come into place
         
@@ -103,9 +106,7 @@ namespace FubuTransportation.Runtime
         {
             var child = ForSend(message);
 
-            // TODO -- still goofy, think we need to care about exactly what type
-            // the response should be
-            if (ReplyRequested)
+            if (MatchesResponse(message))
             {
                 child.Headers[ResponseIdKey] = CorrelationId;
                 child.Destination = ReplyUri;
@@ -186,4 +187,5 @@ namespace FubuTransportation.Runtime
             }
         }
     }
+
 }

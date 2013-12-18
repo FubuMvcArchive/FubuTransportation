@@ -68,20 +68,13 @@ namespace FubuTransportation.Runtime
             set { Headers[Envelope.IdKey] = value; }
         }
 
-        public bool ReplyRequested
+        public string ReplyRequested
         {
-            get { return Headers.Has(Envelope.ReplyRequestedKey) ? Headers[Envelope.ReplyRequestedKey].EqualsIgnoreCase("true") : false; }
-            set
+            get
             {
-                if (value)
-                {
-                    Headers[Envelope.ReplyRequestedKey] = "true";
-                }
-                else
-                {
-                    Headers.Remove(Envelope.ReplyRequestedKey);
-                }
+                return Headers[Envelope.ReplyRequestedKey];
             }
+            set { Headers[Envelope.ReplyRequestedKey] = value; }
         }
 
         public bool AckRequested

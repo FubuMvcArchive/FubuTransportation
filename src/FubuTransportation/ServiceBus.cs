@@ -30,7 +30,7 @@ namespace FubuTransportation
             var envelope = new Envelope
             {
                 Message = request,
-                ReplyRequested = true
+                ReplyRequested = typeof(TResponse).Name
             };
 
             var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId, timeout.Value);

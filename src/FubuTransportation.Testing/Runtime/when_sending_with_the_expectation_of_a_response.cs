@@ -26,7 +26,7 @@ namespace FubuTransportation.Testing.Runtime
             replyUri = "fake://foo".ToUri();
 
             theMessage = new Message();
-            theEnvelope = new Envelope { Message = theMessage, ReplyRequested = true};
+            theEnvelope = new Envelope { Message = theMessage, ReplyRequested = theMessage.GetType().Name};
 
             theLogger = new RecordingLogger();
             Services.Inject<ILogger>(theLogger);

@@ -24,7 +24,7 @@ namespace FubuTransportation.Runtime.Cascading
 
         public void SendFailureAcknowledgement(Envelope original, string message)
         {
-            if (original.AckRequested || original.ReplyRequested)
+            if (original.AckRequested || original.ReplyRequested.IsNotEmpty())
             {
                 var envelope = new Envelope
                 {
