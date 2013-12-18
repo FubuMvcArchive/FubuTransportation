@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Katana;
 using FubuMVC.StructureMap;
@@ -15,12 +16,14 @@ namespace FubuTransportation.LightningQueues.Testing
         [Test]
         public void the_lightning_queues_summary_page_can_be_shown()
         {
+            // If this test fails on you, try a quick "git clean -xfd" to get rid of the old fubu-content folders,
+            // then rake compile to regenerate the bottle content
             using (var server = EmbeddedFubuMvcServer.For<LightningQueuesDiagnosticsApplication>())
             {
                 server.Endpoints.Get<LightningQueuesFubuDiagnostics>(x => x.Index())
                     .StatusCode.ShouldEqual(HttpStatusCode.OK);
             }
-        } 
+        }
     }
 
     public class LightningQueuesDiagnosticsApplication : IApplicationSource

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using FubuCore;
 using FubuCore.Descriptions;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -10,9 +11,33 @@ namespace FubuTransportation.ErrorHandling
 {
     public class ErrorHandler : IErrorHandler, IExceptionMatch, DescribesItself
     {
+        public static readonly RequeueContinuation Requeue = new RequeueContinuation();
+
         private readonly IList<IExceptionMatch> _conditions = new List<IExceptionMatch>(); 
 
-        public IContinuation Continuation = new RequeueContinuation();
+       
+        private readonly IList<IContinuation> _continuations = new List<IContinuation>(); 
+
+        public void AddContinuation(IContinuation continuation)
+        {
+            _continuations.Add(continuation);
+        }
+
+        public IContinuation Continuation()
+        {
+            var count = _continuations.Count;
+            switch (count)
+            {
+                case 0:
+                    return Requeue;
+
+                case 1:
+                    return _continuations.Single();
+
+                default:
+                    return new CompositeContinuation(_continuations.ToArray());
+            }
+        }
 
         public void AddCondition(IExceptionMatch condition)
         {
@@ -26,7 +51,7 @@ namespace FubuTransportation.ErrorHandling
 
         public IContinuation DetermineContinuation(Envelope envelope, Exception ex)
         {
-            return Matches(envelope, ex) ? Continuation : null;
+            return Matches(envelope, ex) ? Continuation() : null;
         }
 
         public bool Matches(Envelope envelope, Exception ex)
@@ -42,7 +67,18 @@ namespace FubuTransportation.ErrorHandling
                 ? _conditions.Select(x => Description.For(x).Title).Join(" and ") 
                 : "Always";
 
-            description.ShortDescription = Description.For(Continuation).ShortDescription;
+            var continuation = Continuation();
+
+            if (continuation is CompositeContinuation)
+            {
+                description.AddList("Continuations", continuation.As<CompositeContinuation>());
+            }
+            else
+            {
+                description.ShortDescription = Description.For(continuation).ShortDescription;
+            }
+
+            
         }
     }
 }

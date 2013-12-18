@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.ErrorHandling
         [Test]
         public void continuation_is_move_to_error_queue_by_default()
         {
-            new ErrorHandler().Continuation
+            new ErrorHandler().Continuation()
                               .ShouldBeOfType<RequeueContinuation>();
         }
 
@@ -83,12 +83,12 @@ namespace FubuTransportation.Testing.ErrorHandling
             var handler = new ErrorHandler();
 
             handler.AddCondition(matchingCondition1);
-            handler.Continuation = MockRepository.GenerateMock<IContinuation>();
+            handler.AddContinuation(MockRepository.GenerateMock<IContinuation>());
 
             handler.Matches(envelope, exception).ShouldBeTrue();
 
             handler.DetermineContinuation(envelope, exception)
-                   .ShouldBeTheSameAs(handler.Continuation);
+                   .ShouldBeTheSameAs(handler.Continuation());
         }
     }
 }

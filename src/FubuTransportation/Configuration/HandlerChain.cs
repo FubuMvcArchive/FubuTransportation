@@ -24,47 +24,84 @@ namespace FubuTransportation.Configuration
             calls.Each(AddToEnd);
         }
 
-        public OnExceptionExpression<T> OnException<T>() where T : Exception
+        public ContinuationExpression OnException<T>() where T : Exception
         {
             return new OnExceptionExpression<T>(this);
-        } 
+        }
 
-        public class OnExceptionExpression<T> where T : Exception
+        public interface ThenContinueExpression
+        {
+            ContinuationExpression Then { get; }
+        }
+
+        public interface ContinuationExpression
+        {
+            ThenContinueExpression Retry();
+            ThenContinueExpression Requeue();
+            ThenContinueExpression MoveToErrorQueue();
+            ThenContinueExpression RetryLater(TimeSpan delay);
+            ThenContinueExpression ContinueWith(IContinuation continuation);
+            ThenContinueExpression ContinueWith<TContinuation>() where TContinuation : IContinuation, new();
+        }
+
+        public class OnExceptionExpression<T> : ContinuationExpression, ThenContinueExpression where T : Exception
         {
             private readonly HandlerChain _parent;
+            private readonly Lazy<ErrorHandler> _handler; 
 
             public OnExceptionExpression(HandlerChain parent)
             {
                 _parent = parent;
+
+                _handler = new Lazy<ErrorHandler>(() => {
+                    var handler = new ErrorHandler();
+                    handler.AddCondition(new ExceptionTypeMatch<T>());
+                    _parent.ErrorHandlers.Add(handler);
+
+                    return handler;
+                });
             }
 
-            public void Retry()
+            public ThenContinueExpression Retry()
             {
-                ContinueWith(new RetryNowContinuation());
+                return ContinueWith(new RetryNowContinuation());
             }
 
-            public void Requeue()
+            public ThenContinueExpression Requeue()
             {
-                ContinueWith(new RequeueContinuation());
+                return ContinueWith(new RequeueContinuation());
             }
 
-            public void MoveToErrorQueue()
+            public ThenContinueExpression MoveToErrorQueue()
             {
                 _parent.ErrorHandlers.Add(new MoveToErrorQueueHandler<T>());
+
+                return this;
             }
 
-            public void RetryLater(TimeSpan delay)
+            public ThenContinueExpression RetryLater(TimeSpan delay)
             {
-                ContinueWith(new DelayedRetryContinuation(delay));
+                return ContinueWith(new DelayedRetryContinuation(delay));
             }
 
-            public void ContinueWith(IContinuation continuation)
+            public ThenContinueExpression ContinueWith(IContinuation continuation)
             {
-                var handler = new ErrorHandler();
-                handler.AddCondition(new ExceptionTypeMatch<T>());
-                handler.Continuation = continuation;
+                _handler.Value.AddContinuation(continuation);
 
-                _parent.ErrorHandlers.Add(handler);
+                return this;
+            }
+
+            public ThenContinueExpression ContinueWith<TContinuation>() where TContinuation : IContinuation, new()
+            {
+                return ContinueWith(new TContinuation());
+            }
+
+            ContinuationExpression ThenContinueExpression.Then
+            {
+                get
+                {
+                    return this;
+                }
             }
         }
 

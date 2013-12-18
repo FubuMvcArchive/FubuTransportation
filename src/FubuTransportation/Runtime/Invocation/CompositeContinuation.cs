@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using FubuCore.Descriptions;
 
 namespace FubuTransportation.Runtime.Invocation
 {
-    public class CompositeContinuation : IContinuation, IEnumerable<IContinuation>
+    public class CompositeContinuation : IContinuation, IEnumerable<IContinuation>, DescribesItself
     {
         private readonly IList<IContinuation> _continuations = new List<IContinuation>();
 
@@ -31,6 +32,12 @@ namespace FubuTransportation.Runtime.Invocation
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "Composite Continuation";
+            description.AddList("Continuations", _continuations);
         }
     }
 }
