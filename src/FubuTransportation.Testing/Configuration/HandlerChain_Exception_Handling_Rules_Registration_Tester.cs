@@ -80,6 +80,17 @@ namespace FubuTransportation.Testing.Configuration
                 .ShouldHaveTheSameElementsAs(typeof(DelayedRetryContinuation), typeof(TellTheSenderHeSentSomethingWrong));
 
         }
+
+        [Test]
+        public void respond_with_message()
+        {
+            var chain = new HandlerChain();
+
+            chain.OnException<NotImplementedException>()
+                .RespondWithMessage((ex, env) => new object());
+
+            chain.ErrorHandlers.Single().ShouldBeOfType<RespondWithMessageHandler<NotImplementedException>>();
+        }
     }
 
     public class TellTheSenderHeSentSomethingWrong : IContinuation

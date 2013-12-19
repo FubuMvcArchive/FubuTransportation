@@ -4,6 +4,7 @@ using System.Linq;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 
 namespace FubuTransportation.Configuration
@@ -42,6 +43,7 @@ namespace FubuTransportation.Configuration
             ThenContinueExpression RetryLater(TimeSpan delay);
             ThenContinueExpression ContinueWith(IContinuation continuation);
             ThenContinueExpression ContinueWith<TContinuation>() where TContinuation : IContinuation, new();
+            ThenContinueExpression RespondWithMessage(Func<Exception, Envelope, object> messageFunc);
         }
 
         public class OnExceptionExpression<T> : ContinuationExpression, ThenContinueExpression where T : Exception
@@ -102,6 +104,14 @@ namespace FubuTransportation.Configuration
                 {
                     return this;
                 }
+            }
+
+            public ThenContinueExpression RespondWithMessage(Func<Exception, Envelope, object> messageFunc)
+            {
+                var handler = new RespondWithMessageHandler<T>(messageFunc);
+                _parent.ErrorHandlers.Add(handler);
+
+                return this;
             }
         }
 

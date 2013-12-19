@@ -120,6 +120,8 @@
     <Compile Include="ErrorHandling\MoveToErrorQueue.cs" />
     <Compile Include="ErrorHandling\MoveToErrorQueueHandler.cs" />
     <Compile Include="ErrorHandling\RequeueContinuation.cs" />
+    <Compile Include="ErrorHandling\RespondWithMessageContinuation.cs" />
+    <Compile Include="ErrorHandling\RespondWithMessageHandler.cs" />
     <Compile Include="ErrorHandling\RetryNowContinuation.cs" />
     <Compile Include="EventAggregator.cs" />
     <Compile Include="Events\ExpiringListenerCleanup.cs" />
