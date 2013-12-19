@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using FubuCore.Descriptions;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
