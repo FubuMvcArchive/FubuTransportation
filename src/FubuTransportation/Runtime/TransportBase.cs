@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FubuCore;
 using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Runtime
@@ -12,23 +11,20 @@ namespace FubuTransportation.Runtime
 
         public void OpenChannels(ChannelGraph graph)
         {
-            if (disabled) return;
-            
             var nodes = graph.NodesForProtocol(Protocol);
+
+            if (Disabled(nodes)) return;
 
             seedQueues(nodes);
 
             nodes.OrderByDescending(x => x.Incoming).Each(x => x.Channel = buildChannel(x));
-            
+
             graph.AddReplyChannel(Protocol, getReplyUri(graph));
         }
 
-        protected virtual bool disabled
+        public virtual bool Disabled(IEnumerable<ChannelNode> nodes)
         {
-            get
-            {
-                return false;
-            }
+            return false;
         }
 
         protected abstract Uri getReplyUri(ChannelGraph graph);

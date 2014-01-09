@@ -152,6 +152,7 @@
     <Compile Include="LightningQueuesServiceRegistry_spec.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LightningQueuesTransport_disabled_behavior_Tester.cs" />
     <Compile Include="LightningUriTester.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -36,9 +36,13 @@ namespace FubuTransportation.LightningQueues
             get { return LightningUri.Protocol; }
         }
 
-        protected override bool disabled
+        public override bool Disabled(IEnumerable<ChannelNode> nodes)
         {
-            get { return _settings.Disabled; }
+            if (_settings.Disabled) return true;
+
+            if (!nodes.Any() && _settings.DisableIfNoChannels) return true;
+
+            return false;
         }
 
         public IChannel BuildDestinationChannel(Uri destination)
