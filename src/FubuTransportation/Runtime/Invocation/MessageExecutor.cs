@@ -26,7 +26,23 @@ namespace FubuTransportation.Runtime.Invocation
             _envelope = envelope;
         }
 
-        public void Execute(object message)
+        public bool TryExecute(object message, Action<object> onNoConsumer)
+        {
+            var inputType = message.GetType();
+
+            var chain = _graph.ChainFor(inputType);
+
+            if (chain == null)
+            {
+                if (onNoConsumer != null) onNoConsumer(message);
+                return false;
+            }
+
+            Execute(message);
+            return true;
+        }
+
+        public virtual void Execute(object message)
         {
             var inputType = message.GetType();
             _request.Set(inputType, message);

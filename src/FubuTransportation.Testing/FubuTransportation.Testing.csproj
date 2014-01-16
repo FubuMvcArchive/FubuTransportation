@@ -446,6 +446,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Runtime\Invocation\CompositeContinuationTester.cs" />
+    <Compile Include="Runtime\Invocation\sending_a_message_with_no_consumer.cs" />
     <Compile Include="Runtime\Invocation\DelayedEnvelopeHandlerTester.cs">
       <SubType>Code</SubType>
     </Compile>
