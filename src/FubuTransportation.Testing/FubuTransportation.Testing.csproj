@@ -406,6 +406,7 @@
     <Compile Include="Runtime\Cascading\OutgoingSenderTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Runtime\Cascading\RespondTester.cs" />
     <Compile Include="Runtime\Cascading\RespondToSenderTester.cs">
       <SubType>Code</SubType>
     </Compile>
