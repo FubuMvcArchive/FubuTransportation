@@ -83,6 +83,67 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 recorder.Messages.ShouldContain("Traced: now it is good");
             }
         }
+
+        [Test]
+        public void invoking_a_chain_will_execute_completely_with_cascading_immediate_continuations()
+        {
+            FubuTransport.SetupForInMemoryTesting();
+            using (var runtime = FubuApplication.BootstrapApplication<ChainInvokerApplication>())
+            {
+                var recorder = runtime.Factory.Get<MessageRecorder>();
+
+                var invoker = runtime.Factory.Get<IChainInvoker>();
+
+                MessageHistory.WaitForWorkToFinish(() =>
+                {
+                    invoker.InvokeNow(new TriggerImmediate { Text = "First", ContinueText = "I'm good"});
+                });
+
+                recorder.Messages.Each(x => Debug.WriteLine(x));
+
+                // Should process all the cascading messages that bubble up
+                // and their cascaded messages
+                recorder.Messages.ShouldContain("First");
+                recorder.Messages.ShouldContain("I'm good");
+                recorder.Messages.ShouldContain("I'm good-2");
+                recorder.Messages.ShouldContain("I'm good-2-4");
+                recorder.Messages.ShouldContain("I'm good-2-3");
+                recorder.Messages.ShouldContain("Traced: I'm good");
+            }
+        }
+
+        [Test]
+        public void invoking_a_chain_will_execute_completely_with_cascading_immediate_continuations_even_if_the_continuation_messages_fail()
+        {
+            FubuTransport.SetupForInMemoryTesting();
+            using (var runtime = FubuApplication.BootstrapApplication<ChainInvokerApplication>())
+            {
+                var recorder = runtime.Factory.Get<MessageRecorder>();
+
+                var invoker = runtime.Factory.Get<IChainInvoker>();
+
+                MessageHistory.WaitForWorkToFinish(() =>
+                {
+                    invoker.InvokeNow(new TriggerImmediate { Text = "First", ContinueText = "Bad message" });
+                });
+
+                recorder.Messages.Each(x => Debug.WriteLine(x));
+
+                // Should process all the cascading messages that bubble up
+                // and their cascaded messages
+                recorder.Messages.ShouldContain("First");
+
+
+                // will succeed on the retry because we change the text in the handler.
+                // basically just proving that the interplay w/ exception handling behaviors
+                // and continuations within the invocation is working
+                recorder.Messages.ShouldContain("now it is good");
+                recorder.Messages.ShouldContain("now it is good-2");
+                recorder.Messages.ShouldContain("now it is good-2-4");
+                recorder.Messages.ShouldContain("now it is good-2-3");
+                recorder.Messages.ShouldContain("Traced: now it is good");
+            }
+        }
     }
 
 

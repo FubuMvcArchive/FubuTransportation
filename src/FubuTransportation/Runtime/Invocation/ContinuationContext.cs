@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTransportation.Runtime.Cascading;
@@ -30,7 +32,21 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
         {
-            _outgoing.SendOutgoingMessages(original, cascadingMessages);
+            var doNowActions = cascadingMessages.OfType<IImmediateContinuation>().SelectMany(x => x.Actions());
+            var cascading = cascadingMessages.Where(x => !(x is IImmediateContinuation));
+
+            _outgoing.SendOutgoingMessages(original, cascading);
+
+            doNowActions.Each(message => {
+                try
+                {
+                    _invoker.InvokeNow(message);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error("Failed while trying to invoke a cascading message:\n" + message.ToString(), e);
+                }
+            });
         }
 
         public void SendFailureAcknowledgement(Envelope original, string message)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
@@ -43,6 +44,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public IList<string> Messages = new List<string>();
     }
 
+    public class TriggerImmediate
+    {
+        public string Text { get; set; }
+        public string ContinueText { get; set; }
+    }
+
     public class WebMessageHandler
     {
         private readonly MessageRecorder _recorder;
@@ -50,6 +57,13 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public WebMessageHandler(MessageRecorder recorder)
         {
             _recorder = recorder;
+        }
+
+        public object Handle(TriggerImmediate message)
+        {
+            _recorder.Messages.Add(message.Text);
+
+            return ContinueImmediately.With(new WebMessage {Text = message.ContinueText});
         }
 
         public void Handle(WebMessageTrace trace)
