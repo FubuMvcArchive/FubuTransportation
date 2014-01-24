@@ -10,6 +10,7 @@ namespace FubuTransportation.Runtime.Cascading
         private readonly object _message;
         private readonly IList<Action<Envelope, Envelope>> _actions = new List<Action<Envelope, Envelope>>();
         private string _description = string.Empty;
+        private bool _sentToSender;
 
         public static Respond With(object message)
         {
@@ -45,7 +46,17 @@ namespace FubuTransportation.Runtime.Cascading
             alter = (old, @new) => @new.Destination = old.ReplyUri;
             _description += "; respond to sender";
 
+            _sentToSender = true;
+
             return this;
+        }
+
+        public void AssertWasSentBackToSender()
+        {
+            if (!_sentToSender)
+            {
+                throw new Exception("Was NOT sent back to the sender");
+            }
         }
 
         public Respond To(Uri destination)

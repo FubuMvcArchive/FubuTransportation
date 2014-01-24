@@ -94,6 +94,22 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             (envelope.ExecutionTime > now.AddMinutes(4)).ShouldBeTrue();
             (envelope.ExecutionTime < now.AddMinutes(6)).ShouldBeTrue();
         }
+
+        [Test]
+        public void assert_was_sent_back_to_sender_happy_path()
+        {
+            Respond.With(new Message1()).ToSender()
+                .AssertWasSentBackToSender();
+        }
+
+        [Test]
+        public void assert_was_sent_back_to_sender_sad_path()
+        {
+            Exception<Exception>.ShouldBeThrownBy(() => {
+                Respond.With(new Message1())
+                    .AssertWasSentBackToSender();
+            }).Message.ShouldContain("Was NOT sent back to the sender");
+        }
     }
 
     
