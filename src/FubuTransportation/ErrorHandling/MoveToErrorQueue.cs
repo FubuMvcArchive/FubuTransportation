@@ -23,7 +23,7 @@ namespace FubuTransportation.ErrorHandling
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            context.Outgoing.SendFailureAcknowledgement(envelope, "Moved message {0} to the Error Queue.\n{1}".ToFormat(envelope.CorrelationId, _exception));
+            context.SendFailureAcknowledgement(envelope, "Moved message {0} to the Error Queue.\n{1}".ToFormat(envelope.CorrelationId, _exception));
 
             var report = new ErrorReport(envelope, _exception);
             envelope.Callback.MoveToErrors(report);

@@ -16,7 +16,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            context.Outgoing.SendFailureAcknowledgement(envelope, "Chain execution failed");
+            context.SendFailureAcknowledgement(envelope, "Chain execution failed");
             envelope.Callback.MarkFailed();
             context.Logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = _exception});
             if (envelope.Message == null)

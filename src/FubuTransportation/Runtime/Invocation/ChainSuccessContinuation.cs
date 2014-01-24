@@ -15,7 +15,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            context.Outgoing.SendOutgoingMessages(envelope, _context.OutgoingMessages());
+            context.SendOutgoingMessages(envelope, _context.OutgoingMessages());
 
             envelope.Callback.MarkSuccessful();
             context.Logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope.ToToken()});

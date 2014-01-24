@@ -1,4 +1,5 @@
-﻿using FubuCore.Dates;
+﻿using System.Collections.Generic;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTransportation.Runtime.Cascading;
 
@@ -19,12 +20,22 @@ namespace FubuTransportation.Runtime.Invocation
             _outgoing = outgoing;
         }
 
+        protected IOutgoingSender Outgoing
+        {
+            get { return _outgoing; }
+        }
+
         // virtual for testing, setter to avoid bi-directional dependency problems
         public virtual IHandlerPipeline Pipeline { get; set; }
 
-        public IOutgoingSender Outgoing
+        public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
         {
-            get { return _outgoing; }
+            _outgoing.SendOutgoingMessages(original, cascadingMessages);
+        }
+
+        public void SendFailureAcknowledgement(Envelope original, string message)
+        {
+            _outgoing.SendFailureAcknowledgement(original, message);
         }
 
         public ILogger Logger

@@ -21,7 +21,7 @@ namespace FubuTransportation.ErrorHandling
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            context.Outgoing.SendOutgoingMessages(envelope, new[] { Message });
+            context.SendOutgoingMessages(envelope, new[] { Message });
         }
     }
 }
