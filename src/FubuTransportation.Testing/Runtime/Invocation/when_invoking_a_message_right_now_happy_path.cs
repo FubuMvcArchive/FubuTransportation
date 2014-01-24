@@ -57,10 +57,5 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             MockFor<IDisposableBehavior>().AssertWasCalled(x => x.Dispose());
         }
 
-        [Test]
-        public void sends_the_outgoing_messages()
-        {
-            MockFor<IOutgoingSender>().AssertWasCalled(x => x.SendOutgoingMessages(null, null), x => x.IgnoreArguments());
-        }
     }
 }

@@ -42,6 +42,11 @@ namespace FubuTransportation.Runtime.Cascading
             }
         }
 
+        public void Send(Envelope envelope)
+        {
+            _sender.Send(envelope);
+        }
+
         private void sendAcknowledgement(Envelope original)
         {
             var envelope = new Envelope

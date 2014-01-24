@@ -1,9 +1,11 @@
 ﻿using System;
 using FubuCore;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime.Cascading;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -14,13 +16,15 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly HandlerGraph _graph;
         private readonly ILogger _logger;
         private readonly IOutgoingSender _sender;
+        private readonly ISystemTime _systemTime;
 
-        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IOutgoingSender sender)
+        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IOutgoingSender sender, ISystemTime systemTime)
         {
             _factory = factory;
             _graph = graph;
             _logger = logger;
             _sender = sender;
+            _systemTime = systemTime;
         }
 
         public void Invoke(Envelope envelope)
@@ -43,11 +47,15 @@ namespace FubuTransportation.Runtime.Invocation
 
             try
             {
+                envelope.Callback = new InlineMessageCallback(message, _sender);
+
                 var args = new InvocationContext(envelope, chain);
                 behavior = _factory.BuildBehavior(args, chain.UniqueId);
                 behavior.Invoke();
 
-                _sender.SendOutgoingMessages(envelope, args.OutgoingMessages());
+                var continuationContext = new ContinuationContext(_logger, _systemTime, this, _sender);
+                var continuation = args.Continuation ?? new ChainSuccessContinuation(args);
+                continuation.Execute(envelope, continuationContext);
             }
             catch (Exception e)
             {
@@ -88,6 +96,49 @@ namespace FubuTransportation.Runtime.Invocation
 
                 return context;
             }
+        }
+    }
+
+    public class InlineMessageCallback : IMessageCallback
+    {
+        private readonly object _message;
+        private readonly IOutgoingSender _sender;
+
+        public InlineMessageCallback(object message, IOutgoingSender sender)
+        {
+            _message = message;
+            _sender = sender;
+        }
+
+        public void MarkSuccessful()
+        {
+        }
+
+        public void MarkFailed()
+        {
+            
+        }
+
+        public void MoveToDelayedUntil(DateTime time)
+        {
+            _sender.Send(new Envelope
+            {
+                Message = _message,
+                ExecutionTime = time
+            });
+        }
+
+        public void MoveToErrors(ErrorReport report)
+        {
+            // TODO -- need a general way to log errors against an ITransport
+        }
+
+        public void Requeue()
+        {
+            _sender.Send(new Envelope
+            {
+                Message = _message
+            });
         }
     }
 }

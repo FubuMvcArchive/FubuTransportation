@@ -1,7 +1,9 @@
-﻿using FubuMVC.Core;
+﻿using System.Collections.Generic;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using ServiceNode;
+using StructureMap;
 
 namespace WebsiteNode
 {
@@ -9,7 +11,11 @@ namespace WebsiteNode
     {
         public FubuApplication BuildApplication()
         {
-            return FubuTransport.For<WebsiteRegistry>().StructureMap();
+            var container = new Container(x => {
+                x.For<MessageRecorder>().Singleton();
+            });
+
+            return FubuTransport.For<WebsiteRegistry>().StructureMap(container);
         }
     }
 
@@ -19,6 +25,13 @@ namespace WebsiteNode
         {
             Channel(x => x.Website).ReadIncoming();
             Channel(x => x.Service).AcceptsMessagesInAssemblyContainingType<ServiceApplication>();
+
+
         }
+    }
+
+    public class MessageRecorder
+    {
+        public IList<string> Messages = new List<string>(); 
     }
 }

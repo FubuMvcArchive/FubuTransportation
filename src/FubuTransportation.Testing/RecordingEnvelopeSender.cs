@@ -9,6 +9,8 @@ namespace FubuTransportation.Testing
         public readonly IList<Envelope> Sent = new List<Envelope>(); 
         public readonly IList<object> Outgoing = new List<object>(); 
 
+        
+
         public string Send(Envelope envelope)
         {
             Sent.Add(envelope);
@@ -25,6 +27,12 @@ namespace FubuTransportation.Testing
         {
             FailureAcknowledgementMessage = message;
         }
+
+        void IOutgoingSender.Send(Envelope envelope)
+        {
+            Sent.Add(envelope);
+        }
+
 
         public string FailureAcknowledgementMessage { get; set; }
     }

@@ -15,6 +15,8 @@ namespace FubuTransportation.Storyteller
             });
 
             OnContextCreation(TextFileWriter.Clear);
+
+            OnContextCreation<MessageRecorder>(x => x.Messages.Clear());
         }
 
 
