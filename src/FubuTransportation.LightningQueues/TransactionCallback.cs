@@ -53,7 +53,7 @@ namespace FubuTransportation.LightningQueues
 
         public void Requeue()
         {
-            _transaction.EnqueueDirectlyTo(_message.Queue, _message.SubQueue, _message.ToPayload(), _message.Id);
+            _transaction.EnqueueDirectlyTo(_message.Queue, _message.SubQueue, _message.ToPayload(), MessageId.GenerateRandom());
             MarkSuccessful();
         }
     }
