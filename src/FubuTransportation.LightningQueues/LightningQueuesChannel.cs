@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using FubuTransportation.ErrorHandling;
+using FubuCore;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Headers;
@@ -12,6 +11,8 @@ namespace FubuTransportation.LightningQueues
 {
     public class LightningQueuesChannel : IChannel
     {
+        public static string MaxAttemptsHeader = "max-delivery-attempts";
+        public static string DeliverByHeader = "deliver-by";
         private readonly Uri _address;
         private readonly string _queueName;
         private readonly IQueueManager _queueManager;
@@ -52,6 +53,8 @@ namespace FubuTransportation.LightningQueues
                 Data = data,
                 Headers = headers.ToNameValues()
             };
+            //TODO Maybe expose something to modify transport specific payloads?
+            messagePayload.TranslateHeaders();
 
             var sendingScope = _queueManager.BeginTransactionalScope();
             var id = sendingScope.Send(_address, messagePayload);
@@ -61,6 +64,7 @@ namespace FubuTransportation.LightningQueues
             //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
         }
+
 
         public void Dispose()
         {
@@ -96,12 +100,27 @@ namespace FubuTransportation.LightningQueues
                 Data = message.Data,
                 Headers = message.Headers,
             };
+            
             return payload;
         }
 
         public static DateTime ExecutionTime(this Message message)
         {
             return message.ToEnvelope().ExecutionTime.Value;
+        }
+
+        public static void TranslateHeaders(this MessagePayload messagePayload)
+        {
+            var headerValue = messagePayload.Headers[LightningQueuesChannel.MaxAttemptsHeader];
+            if (headerValue.IsNotEmpty())
+            {
+                messagePayload.MaxAttempts = int.Parse(headerValue);
+            }
+            headerValue = messagePayload.Headers[LightningQueuesChannel.DeliverByHeader];
+            if (headerValue.IsNotEmpty())
+            {
+                messagePayload.DeliverBy = DateTime.Parse(headerValue);
+            }
         }
     }
 }

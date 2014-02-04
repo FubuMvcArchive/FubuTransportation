@@ -160,6 +160,7 @@
     <Compile Include="throws_descriptive_exception_if_no_incoming_lq_channel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HeaderTranslationTester.cs" />
     <Compile Include="UriExtensionsTester.cs">
       <SubType>Code</SubType>
     </Compile>
