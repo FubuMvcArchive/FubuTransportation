@@ -5,6 +5,7 @@ using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace FubuTransportation.Testing.InMemory
             var envelope = new EnvelopeToken();
             envelope.CorrelationId = Guid.NewGuid().ToString();
             envelope.Headers["Foo"] = "Bar";
-            envelope.Data = new byte[]{1,2,3,4,5};
+            envelope.Data = new byte[] { 1, 2, 3, 4, 5 };
 
             var queue = InMemoryQueueManager.QueueFor(new Uri("memory://foo"));
 
@@ -43,7 +44,7 @@ namespace FubuTransportation.Testing.InMemory
 
             queue.Enqueue(envelope);
 
-            Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds:2000);
+            Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds: 2000);
 
             var received = receiver.Received.Single();
 
@@ -69,7 +70,7 @@ namespace FubuTransportation.Testing.InMemory
                 var envelope = new Envelope();
                 envelope.CorrelationId = Guid.NewGuid().ToString();
                 envelope.Headers["Foo"] = "Bar";
-                envelope.Data = new byte[] {1, 2, 3, 4, 5};
+                envelope.Data = new byte[] { 1, 2, 3, 4, 5 };
 
                 var receiver = new RecordingReceiver();
 
@@ -87,7 +88,32 @@ namespace FubuTransportation.Testing.InMemory
 
             }
         }
+
+        [Test]
+        public void can_be_used_after_clearing_all_messages()
+        {
+            using (var graph = new ChannelGraph())
+            {
+                var node = graph.ChannelFor<BusSettings>(x => x.Outbound);
+                node.Uri = new Uri("memory://foo");
+
+                var transport = new InMemoryTransport();
+                transport.OpenChannels(graph);
+
+                var receiver = new RecordingReceiver();
+                node.StartReceiving(receiver);
+
+                node.Channel.Send(new byte[] { 1, 2 }, new NameValueHeaders());
+
+                transport.ClearAll();
+
+                node.Channel.Send(new byte[] { 3, 4 }, new NameValueHeaders());
+
+                Wait.Until(() => receiver.Received.Any());
+                receiver.Received.ShouldHaveCount(2);
+            }
+        }
     }
 
-    
+
 }
