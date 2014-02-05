@@ -37,7 +37,7 @@ namespace FubuTransportation.Testing.InMemory
             envelope.Headers["Foo"] = "Bar";
             envelope.Data = new byte[] { 1, 2, 3, 4, 5 };
 
-            var queue = InMemoryQueueManager.QueueFor(new Uri("memory://foo"));
+            var queue = new InMemoryQueue(new Uri("memory://foo"));
 
             var receiver = new RecordingReceiver();
             var task = Task.Factory.StartNew(() => queue.Receive(receiver));

@@ -77,7 +77,7 @@ namespace FubuTransportation.InMemory
 
                         receiver.Receive(token.Data, token.Headers, callback);
                     }
-                } 
+                }
             }
         }
 
