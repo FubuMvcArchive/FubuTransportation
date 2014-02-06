@@ -109,7 +109,7 @@ namespace FubuTransportation.Testing.InMemory
 
                 node.Channel.Send(new byte[] { 3, 4 }, new NameValueHeaders());
 
-                Wait.Until(() => receiver.Received.Any());
+                Wait.Until(() => receiver.Received.Count == 2);
                 receiver.Received.ShouldHaveCount(2);
             }
         }
