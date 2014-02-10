@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using FubuTransportation.Runtime;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.TestSupport
 {
     public class TransportCleanup : Bottles.Services.Messaging.IListener<ClearAllTransports>
     {
         private readonly IEnumerable<ITransport> _transports;
+        private readonly ISubscriptionCache _subscriptions;
 
-        public TransportCleanup(IEnumerable<ITransport> transports)
+        public TransportCleanup(IEnumerable<ITransport> transports, ISubscriptionCache subscriptions)
         {
             _transports = transports;
+            _subscriptions = subscriptions;
         }
 
         public void Receive(ClearAllTransports message)
@@ -27,6 +29,7 @@ namespace FubuTransportation.TestSupport
                 Debug.WriteLine("Clearing up all messages on " + x);
                 x.ClearAll();
             });
+            _subscriptions.ClearAll();
         }
     }
 }
