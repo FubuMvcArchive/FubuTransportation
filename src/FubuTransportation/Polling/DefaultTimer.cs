@@ -14,34 +14,47 @@ namespace FubuTransportation.Polling
             _timer.Elapsed += elapsedHandler;
         }
 
+        public bool Enabled { get; private set; }
+
         public void Start(Action callback, double interval)
         {
             _callback = callback;
-
             _timer.Interval = interval;
+
             _timer.Start();
+            Enabled = true;
         }
 
         public void Stop()
         {
+            Enabled = false;
             _timer.Stop();
-            _timer.Enabled = false;
         }
-
-        public bool Enabled { get { return _timer.Enabled; } }
 
         public void Restart()
         {
             _timer.Start();
+            Enabled = true;
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
         }
 
         private void elapsedHandler(object sender, ElapsedEventArgs eventArgs)
         {
+            if (!Enabled) return;
             if (_callback == null) return;
+
             _callback();
 
-            // TODO -- harden this w/ errors?  Or handle it in the chains?
-            _timer.Start();
+            // Callback could take a while, recheck Enabled
+            if (Enabled)
+            {
+                // TODO -- harden this w/ errors?  Or handle it in the chains?
+                _timer.Start();
+            }
         }
     }
 }

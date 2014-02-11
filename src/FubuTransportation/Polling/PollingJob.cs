@@ -71,6 +71,12 @@ namespace FubuTransportation.Polling
             _timer.Stop();
         }
 
+        public void Dispose()
+        {
+            Stop();
+            _timer.Dispose();
+        }
+
         public void ResetInterval(double interval)
         {
             _interval = interval;
