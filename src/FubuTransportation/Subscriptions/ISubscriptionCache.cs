@@ -7,6 +7,8 @@ namespace FubuTransportation.Subscriptions
 {
     public interface ISubscriptionCache
     {
+        void ClearAll();
+
         IEnumerable<ChannelNode> FindDestinationChannels(Envelope envelope);
 
         Uri ReplyUriFor(ChannelNode destination);

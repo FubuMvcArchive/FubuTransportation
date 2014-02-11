@@ -43,6 +43,18 @@ namespace FubuTransportation.Subscriptions
             });
         }
 
+        public void ClearAll()
+        {
+            _lock.Write(() =>
+            {
+                _routes.Clear();
+                _subscriptions.Clear();
+
+                _volatileNodes.Each(x => x.Dispose());
+                _volatileNodes.ClearAll();
+            });
+        }
+
         public IEnumerable<ChannelNode> FindDestinationChannels(Envelope envelope)
         {
             if (envelope.Destination != null)
