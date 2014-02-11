@@ -28,7 +28,7 @@ namespace FubuTransportation.Polling
             _jobs.Each(x => {
                 try
                 {
-                    x.Stop();
+                    x.Dispose();
                 }
                 catch (Exception ex)
                 {

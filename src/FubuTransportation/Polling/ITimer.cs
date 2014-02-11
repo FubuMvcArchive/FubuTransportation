@@ -2,7 +2,7 @@
 
 namespace FubuTransportation.Polling
 {
-    public interface ITimer
+    public interface ITimer : IDisposable
     {
         void Start(Action callback, double interval);
         void Restart();

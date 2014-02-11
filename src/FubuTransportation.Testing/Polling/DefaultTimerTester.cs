@@ -21,11 +21,19 @@ namespace FubuTransportation.Testing.Polling
                 i++;
                 reset.Set();
                 timer.Stop();
-            }, 1000);
+            }, 500);
 
-            reset.WaitOne();
+            reset.WaitOne(1000);
 
             i.ShouldEqual(1);
+
+            // Should only fire once because timer.Stop was called
+            reset.Reset();
+            reset.WaitOne(1000);
+
+            i.ShouldEqual(1);
+
+            timer.Dispose();
         }
 
         [Test]
@@ -47,9 +55,11 @@ namespace FubuTransportation.Testing.Polling
                 }
             }, 100);
 
-            reset.WaitOne(30000);
+            reset.WaitOne(1000);
 
             i.ShouldEqual(5);
+
+            timer.Dispose();
         }
     }
 }
