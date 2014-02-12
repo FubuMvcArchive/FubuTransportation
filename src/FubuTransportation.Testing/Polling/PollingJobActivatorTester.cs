@@ -67,8 +67,8 @@ namespace FubuTransportation.Testing.Polling
             ex1 = new NotImplementedException();
             ex2 = new NotSupportedException();
 
-            theJobs[1].Expect(x => x.Stop()).Throw(ex1);
-            theJobs[2].Expect(x => x.Stop()).Throw(ex2);
+            theJobs[1].Expect(x => x.Dispose()).Throw(ex1);
+            theJobs[2].Expect(x => x.Dispose()).Throw(ex2);
 
             ClassUnderTest.Deactivate(theLog);
         }
@@ -76,7 +76,7 @@ namespace FubuTransportation.Testing.Polling
         [Test]
         public void should_stop_all_the_jobs()
         {
-            theJobs.Each(x => x.AssertWasCalled(job => job.Stop()));
+            theJobs.Each(x => x.AssertWasCalled(job => job.Dispose()));
         }
 
         [Test]
