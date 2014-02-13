@@ -55,7 +55,7 @@ namespace FubuTransportation.Testing.Polling
                 }
             }, 100);
 
-            reset.WaitOne(1000);
+            reset.WaitOne();
 
             i.ShouldEqual(5);
 
