@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
@@ -22,11 +23,11 @@ namespace FubuTransportation.Testing
             theGraph = MockFor<ChannelGraph>();
             Services.PartialMockTheClassUnderTest();
 
-            ClassUnderTest.Expect(x => x.OpenChannels());
+             ClassUnderTest.Stub(x => x.OpenChannels());
+            ClassUnderTest.Stub(x => x.ExecuteActivators());
 
             ClassUnderTest.Activate(new IPackageInfo[0], new PackageLog());
         }
-
 
         [Test]
         public void reads_the_settings()
@@ -34,11 +35,10 @@ namespace FubuTransportation.Testing
             theGraph.AssertWasCalled(x => x.ReadSettings(MockFor<IServiceLocator>()));
         }
 
-
         [Test]
         public void should_start_the_channels()
         {
-            ClassUnderTest.VerifyAllExpectations();
+            ClassUnderTest.AssertWasCalled(x => x.OpenChannels());
         }
 
         [Test]
@@ -46,8 +46,13 @@ namespace FubuTransportation.Testing
         {
             theGraph.AssertWasCalled(x => x.StartReceiving(MockFor<IHandlerPipeline>()));
         }
-    }
 
+        [Test]
+        public void should_invoke_activators()
+        {
+            ClassUnderTest.AssertWasCalled(x => x.ExecuteActivators());
+        }
+    }
 
     [TestFixture]
     public class when_starting_the_subscriptions : InteractionContext<TransportActivator>
@@ -69,8 +74,6 @@ namespace FubuTransportation.Testing
         {
             theTransports.Each(transport => transport.AssertWasCalled(x => x.OpenChannels(theGraph)));
         }
-
-
     }
 
     [TestFixture]
@@ -93,10 +96,30 @@ namespace FubuTransportation.Testing
             });
 
             var subscriptions = new TransportActivator(graph, null, null,
-                new ITransport[] {new FubuTransportation.InMemory.InMemoryTransport()});
+                new ITransport[] {new FubuTransportation.InMemory.InMemoryTransport()},
+                Enumerable.Empty<IFubuTransportActivator>());
 
 
             Exception<InvalidOrMissingTransportException>.ShouldBeThrownBy(subscriptions.OpenChannels);
+        }
+    }
+
+    [TestFixture]
+    public class when_starting_the_subscriptions_and_there_are_activators :
+        InteractionContext<TransportActivator>
+    {
+        private IFubuTransportActivator[] theActivators;
+
+        protected override void beforeEach()
+        {
+            theActivators = Services.CreateMockArrayFor<IFubuTransportActivator>(5);
+            ClassUnderTest.ExecuteActivators();
+        }
+
+        [Test]
+        public void invokes_each_activator()
+        {
+            theActivators.Each(activator => activator.AssertWasCalled(x => x.Activate()));
         }
     }
 }

@@ -16,13 +16,15 @@ namespace FubuTransportation.Runtime
         private readonly IServiceLocator _services;
         private readonly IHandlerPipeline _pipeline;
         private readonly IEnumerable<ITransport> _transports;
+        private readonly IEnumerable<IFubuTransportActivator> _fubuTransportActivators;
 
-        public TransportActivator(ChannelGraph graph, IServiceLocator services, IHandlerPipeline pipeline, IEnumerable<ITransport> transports)
+        public TransportActivator(ChannelGraph graph, IServiceLocator services, IHandlerPipeline pipeline, IEnumerable<ITransport> transports, IEnumerable<IFubuTransportActivator> fubuTransportActivators)
         {
             _graph = graph;
             _services = services;
             _pipeline = pipeline;
             _transports = transports;
+            _fubuTransportActivators = fubuTransportActivators;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
@@ -30,6 +32,13 @@ namespace FubuTransportation.Runtime
             _graph.ReadSettings(_services);
             OpenChannels();
             _graph.StartReceiving(_pipeline);
+            ExecuteActivators();
+        }
+
+        // virtual for testing
+        public virtual void ExecuteActivators()
+        {
+            _fubuTransportActivators.Each(x => x.Activate());
         }
 
         // virtual for testing
