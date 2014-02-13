@@ -5,7 +5,7 @@ using FubuTestingSupport;
 
 namespace FubuTransportation.Testing.Polling
 {
-    [TestFixture]
+    [TestFixture, Explicit("Doesn't play nicely on CI")]
     public class DefaultTimerTester
     {
         [Test]
