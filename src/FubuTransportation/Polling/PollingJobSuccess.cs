@@ -23,5 +23,10 @@ namespace FubuTransportation.Polling
         {
             return (Description != null ? Description.GetHashCode() : 0);
         }
+
+        public override string ToString()
+        {
+            return "PollingJob Success: " + Description;
+        }
     }
 }

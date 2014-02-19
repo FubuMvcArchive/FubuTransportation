@@ -1,6 +1,5 @@
 ﻿using System;
 using FubuCore.Logging;
-using FubuMVC.Core.Behaviors;
 using FubuCore;
 
 namespace FubuTransportation.Polling
@@ -16,17 +15,17 @@ namespace FubuTransportation.Polling
 
         public void Stopping(Type jobType)
         {
-            _logger.InfoMessage(() => new PollingJobStopped{JobType = jobType});
+            _logger.DebugMessage(() => new PollingJobStopped { JobType = jobType });
         }
 
         public void Starting(IJob job)
         {
-            _logger.InfoMessage(() => new PollingJobStarted() { Description = job.ToString() });
+            _logger.DebugMessage(() => new PollingJobStarted { Description = job.ToString() });
         }
 
         public void Successful(IJob job)
         {
-            _logger.InfoMessage(() => new PollingJobSuccess{Description = job.ToString()});
+            _logger.DebugMessage(() => new PollingJobSuccess { Description = job.ToString() });
         }
 
         public void Failed(IJob job, Exception ex)
