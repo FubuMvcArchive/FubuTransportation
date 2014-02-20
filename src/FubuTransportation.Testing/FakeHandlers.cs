@@ -1,4 +1,6 @@
-﻿namespace FubuTransportation.Testing
+﻿using FubuTransportation.Runtime.Cascading;
+
+namespace FubuTransportation.Testing
 {
 
     public interface ITargetHandler
@@ -10,6 +12,8 @@
         void ZeroInZeroOut();
 
         void ManyIn(Input i1, Input i2);
+
+        IImmediateContinuation ReturnsInterface(Input input);
     }
 
     public class Input
