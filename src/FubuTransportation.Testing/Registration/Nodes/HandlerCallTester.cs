@@ -88,6 +88,12 @@ namespace FubuTransportation.Testing.Registration.Nodes
         }
 
         [Test]
+        public void is_candidate_allows_interface_return_types()
+        {
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsInterface(null))).ShouldBeTrue();
+        }
+
+        [Test]
         public void could_handle()
         {
             var handler1 = HandlerCall.For<SomeHandler>(x => x.Interface(null));

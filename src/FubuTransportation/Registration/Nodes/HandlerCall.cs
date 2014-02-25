@@ -23,16 +23,10 @@ namespace FubuTransportation.Registration.Nodes
             var parameterCount = method.GetParameters() == null ? 0 : method.GetParameters().Length;
             if (parameterCount != 1) return false;
 
-
-            var hasOutput = method.ReturnType != typeof(void);
-            if (hasOutput && !method.ReturnType.IsClass) return false;
-
             if (method.IsSpecialName && (method.Name.StartsWith("get_") || method.Name.StartsWith("set_")))
                 return false;
 
-            if (hasOutput) return true;
-
-            return parameterCount == 1;
+            return true;
         }
 
         public static HandlerCall For<T>(Expression<Action<T>> method)
