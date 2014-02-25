@@ -26,7 +26,8 @@ namespace FubuTransportation.Registration.Nodes
             if (method.IsSpecialName && (method.Name.StartsWith("get_") || method.Name.StartsWith("set_")))
                 return false;
 
-            return true;
+            bool hasOutput = method.ReturnType != typeof(void);
+            return !hasOutput || !method.ReturnType.IsValueType;
         }
 
         public static HandlerCall For<T>(Expression<Action<T>> method)

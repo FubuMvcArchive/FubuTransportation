@@ -85,6 +85,7 @@ namespace FubuTransportation.Testing.Registration.Nodes
             HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.OneInOneOut(null))).ShouldBeTrue();
             HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.OneInZeroOut(null))).ShouldBeTrue();
             HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ManyIn(null, null))).ShouldBeFalse();
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsValueType(null))).ShouldBeFalse();
         }
 
         [Test]

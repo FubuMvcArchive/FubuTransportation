@@ -14,6 +14,7 @@ namespace FubuTransportation.Testing
         void ManyIn(Input i1, Input i2);
 
         IImmediateContinuation ReturnsInterface(Input input);
+        bool ReturnsValueType(Input input);
     }
 
     public class Input
