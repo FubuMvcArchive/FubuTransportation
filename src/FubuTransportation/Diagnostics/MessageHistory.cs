@@ -75,11 +75,6 @@ namespace FubuTransportation.Diagnostics
             return tag;
         }
 
-        public HtmlTag ToNodeTag()
-        {
-            return new HtmlTag("ol", x => x.Append(ToLeafTag()));
-        }
-
         public void Record(MessageRecord record)
         {
             if (Type.IsEmpty() && record.Type.IsNotEmpty())

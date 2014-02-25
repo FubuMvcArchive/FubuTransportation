@@ -23,10 +23,13 @@ namespace FubuTransportation.Serenity
         {
             yield return new HtmlTag("h3").Text("Message History");
 
-            foreach (MessageHistory topLevelMessage in _session.TopLevelMessages())
+            yield return new HtmlTag("ol", x =>
             {
-                yield return topLevelMessage.ToNodeTag();
-            }
+                foreach (MessageHistory topLevelMessage in _session.TopLevelMessages())
+                {
+                    x.Append(topLevelMessage.ToLeafTag());
+                }
+            });
 
             foreach (MessageHistory history in _session.AllMessages())
             {
