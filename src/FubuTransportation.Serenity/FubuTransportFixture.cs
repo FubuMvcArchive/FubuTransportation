@@ -18,7 +18,7 @@ namespace FubuTransportation.Serenity
 
         protected static void startListening()
         {
-            MessageHistory.ClearAll();
+            MessageHistory.ClearHistory();
         }
 
         protected virtual void setup()
