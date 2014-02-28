@@ -17,6 +17,7 @@ using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
@@ -374,6 +375,28 @@ namespace FubuTransportation.Configuration
                         value(node);
                     };
                 }
+            }
+
+            /// <summary>
+            /// Add an IEnvelopeModifier that will apply to only this channel
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <returns></returns>
+            public ChannelExpression ModifyWith<T>() where T : IEnvelopeModifier, new()
+            {
+                return ModifyWith(new T());
+            }
+
+            /// <summary>
+            /// Add an IEnvelopeModifier that will apply to only this channel
+            /// </summary>
+            /// <param name="modifier"></param>
+            /// <returns></returns>
+            public ChannelExpression ModifyWith(IEnvelopeModifier modifier)
+            {
+                alter = node => node.Modifiers.Add(modifier);
+
+                return this;
             }
 
             public ChannelExpression DefaultSerializer<TSerializer>() where TSerializer : IMessageSerializer, new()

@@ -26,6 +26,8 @@ namespace FubuTransportation.Configuration
             }
         }
 
+        public readonly IList<IEnvelopeModifier> Modifiers = new List<IEnvelopeModifier>(); 
+
         public readonly IList<ISettingsAware> SettingsRules = new List<ISettingsAware>(); 
 
         public string Key { get; set; }

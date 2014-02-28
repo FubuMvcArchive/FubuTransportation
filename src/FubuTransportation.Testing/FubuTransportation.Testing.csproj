@@ -167,6 +167,7 @@
     <Compile Include="Configuration\ChannelNodeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\Configuring_envelope_modifier_by_channel.cs" />
     <Compile Include="Configuration\FubuTransportRegistry_register_subscription_requirements_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
