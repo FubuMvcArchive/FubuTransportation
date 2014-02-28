@@ -31,6 +31,8 @@ namespace FubuTransportation.Runtime
             envelope.Headers[Envelope.MessageTypeKey] = envelope.Message.GetType().FullName;
 
             _modifiers.Each(x => x.Modify(envelope));
+
+            // This moves down(?)
             _serializer.Serialize(envelope);
             
 
@@ -54,6 +56,13 @@ namespace FubuTransportation.Runtime
 
             return envelope.CorrelationId;
         }
+
+        /*
+         * Changes
+         * 1.) Do serialization within sendToChannel
+         * 2.) do the cloning *outside* of sendToChannel
+         * 3.) Make envelopeserializer smart enough not to replace the contents if it needs to
+         */
 
         private void sendToChannel(Envelope envelope, ChannelNode node)
         {

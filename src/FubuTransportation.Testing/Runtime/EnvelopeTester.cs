@@ -362,5 +362,25 @@ namespace FubuTransportation.Testing.Runtime
 
             envelope.Attempts.ShouldEqual(1);
         }
+
+        [Test]
+        public void cloning_an_envelope()
+        {
+            var envelope = new Envelope();
+            envelope.Message = new Message1();
+            envelope.Headers["a"] = "1";
+            envelope.Headers["b"] = "2";
+
+            var clone = envelope.Clone();
+
+            clone.ShouldNotBeTheSameAs(envelope);
+            clone.Message.ShouldBeTheSameAs(envelope.Message);
+            clone.Headers.ShouldNotBeTheSameAs(envelope.Headers);
+
+            clone.Headers["a"].ShouldEqual("1");
+            clone.Headers["b"].ShouldEqual("2");
+        }
     }
+
+    
 }

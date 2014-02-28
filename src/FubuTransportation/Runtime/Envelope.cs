@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using FubuMVC.Core.Http;
@@ -143,12 +144,14 @@ namespace FubuTransportation.Runtime
 
         public Envelope Clone()
         {
-            var stream = new MemoryStream();
-            formatter.Serialize(stream, this);
+            var clone = new Envelope
+            {
+                Message = Message
+            };
 
-            stream.Position = 0;
+            Headers.Keys().Each(key => clone.Headers[key] = Headers[key]);
 
-            return (Envelope) formatter.Deserialize(stream);
+            return clone;
         }
 
         public EnvelopeToken ToToken()
