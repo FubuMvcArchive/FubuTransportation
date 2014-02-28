@@ -48,7 +48,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
                 ClassUnderTest.Serialize(theEnvelope, new ChannelNode());
             }).Message.ShouldContain("random/nonexistent");
         }
-
+        
         [Test]
         public void throws_on_serialize_with_no_message()
         {
@@ -65,6 +65,67 @@ namespace FubuTransportation.Testing.Runtime.Serializers
                 ClassUnderTest.Deserialize(new Envelope());
             }).Message.ShouldEqual("No data on this envelope to deserialize");
         }
+
+
+        [Test]
+        public void select_serializer_uses_the_envelope_override_if_it_exists()
+        {
+            var node = new ChannelNode
+            {
+                DefaultContentType = serializers[1].ContentType
+            };
+            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+
+            theEnvelope.ContentType = serializers[3].ContentType;
+
+            ClassUnderTest.SelectSerializer(theEnvelope, node)
+                .ShouldBeTheSameAs(serializers[3]);
+        }
+
+        [Test]
+        public void select_the_graph_default_in_the_absence_of_everything_else()
+        {
+            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            ClassUnderTest.SelectSerializer(theEnvelope, new ChannelNode())
+                .ShouldBeTheSameAs(serializers[4]);
+
+        }
+
+        [Test]
+        public void use_channel_node_default_content_type_if_it_exists_and_not_set_on_the_envelope()
+        {
+            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            var node = new ChannelNode
+            {
+                DefaultContentType = serializers[1].ContentType
+            };
+
+            ClassUnderTest.SelectSerializer(theEnvelope, node)
+                .ShouldBeTheSameAs(serializers[1]);
+        }
+
+        [Test]
+        public void use_a_serializer_on_the_channel_node_as_the_default_if_content_type_is_not_explicitly_set()
+        {
+            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            var node = new ChannelNode
+            {
+                DefaultSerializer = MockRepository.GenerateMock<IMessageSerializer>()
+            };
+
+            ClassUnderTest.SelectSerializer(theEnvelope, node)
+                .ShouldBeTheSameAs(node.DefaultSerializer);
+        }
+
+        [Test]
+        public void ask_for_a_content_type_that_does_not_exist()
+        {
+            theEnvelope.ContentType = "weird";
+            Exception<EnvelopeDeserializationException>.ShouldBeThrownBy(() => {
+                ClassUnderTest.SelectSerializer(theEnvelope, new ChannelNode());
+            });
+        }
+
 
     }
 }

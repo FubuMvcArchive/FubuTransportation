@@ -62,6 +62,32 @@ namespace FubuTransportation.Testing.Configuration
             });
         }
 
+        [Test]
+        public void setting_default_content_type_will_clear_the_serializer()
+        {
+            var node = new ChannelNode();
+            node.DefaultSerializer = new BinarySerializer();
+
+            node.DefaultContentType = "application/xml";
+
+            node.DefaultContentType.ShouldEqual("application/xml");
+            node.DefaultSerializer.ShouldBeNull();
+        }
+
+        [Test]
+        public void setting_the_default_serializer_will_clear_the_default_content_type()
+        {
+            var node = new ChannelNode
+            {
+                DefaultContentType = "application/xml"
+            };
+
+            node.DefaultSerializer = new BinarySerializer();
+
+            node.DefaultSerializer.ShouldBeOfType<BinarySerializer>();
+            node.DefaultContentType.ShouldBeNull();
+        }
+
         public void start_receiving()
         {
             if (DateTime.Today > new DateTime(2013, 11, 21))

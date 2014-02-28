@@ -24,12 +24,13 @@ namespace FubuTransportation.Runtime.Serializers
             _serializers = serializers;
         }
 
+        // TODO -- take in ChannelNode here!
         public object Deserialize(Envelope envelope)
         {
             if (envelope.Data == null) throw new EnvelopeDeserializationException("No data on this envelope to deserialize");
 
 
-            var serializer = selectSerializer(envelope);
+            var serializer = SelectSerializer(envelope, null);
             
             using (var stream = new MemoryStream(envelope.Data))
             {
@@ -37,28 +38,49 @@ namespace FubuTransportation.Runtime.Serializers
             }
         }
 
-        private IMessageSerializer selectSerializer(Envelope envelope)
+        private IMessageSerializer findSerializer(string contentType)
         {
-            var serializer = _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(envelope.ContentType));
-        
+            var serializer = _serializers.FirstOrDefault(x => x.ContentType.EqualsIgnoreCase(contentType));
+
+
             if (serializer == null)
             {
-                throw new EnvelopeDeserializationException("Unknown content-type '{0}'".ToFormat(envelope.ContentType));
+                throw new EnvelopeDeserializationException("Unknown content-type '{0}'".ToFormat(contentType));
             }
 
             return serializer;
+        }
+
+        public IMessageSerializer SelectSerializer(Envelope envelope, ChannelNode node)
+        {
+            if (envelope.ContentType.IsNotEmpty())
+            {
+                return findSerializer(envelope.ContentType);
+            }
+
+            if (node.DefaultSerializer != null)
+            {
+                return node.DefaultSerializer;
+            }
+
+            if (node.DefaultContentType.IsNotEmpty())
+            {
+                return findSerializer(node.DefaultContentType);
+            }
+
+            return findSerializer(_graph.DefaultContentType);
         }
 
         public void Serialize(Envelope envelope, ChannelNode node)
         {
             if (envelope.Message == null) throw new InvalidOperationException("No message on this envelope to serialize");
 
+            var serializer = SelectSerializer(envelope, node);
             if (envelope.ContentType.IsEmpty())
             {
-                envelope.ContentType = _graph.DefaultContentType;
+                envelope.ContentType = serializer.ContentType;
             }
 
-            var serializer = selectSerializer(envelope);
             using (var stream = new MemoryStream())
             {
                 serializer.Serialize(envelope.Message, stream);

@@ -42,7 +42,7 @@ namespace FubuTransportation.Configuration
         public Uri Uri { get; set; }
         public IChannel Channel { get; set; }
 
-        public string DefaultContentType { get; set; }
+        
 
         public bool Publishes(Type type)
         {
@@ -126,6 +126,32 @@ namespace FubuTransportation.Configuration
             Channel.Send(clone.Data, clone.Headers);
 
             return clone.Headers;
+        }
+
+        private string _defaultContentType;
+        private IMessageSerializer _defaultSerializer;
+
+        public IMessageSerializer DefaultSerializer
+        {
+            get { return _defaultSerializer; }
+            set
+            {
+                _defaultContentType = null;
+                _defaultSerializer = value;
+            }
+        }
+
+        public string DefaultContentType
+        {
+            get
+            {
+                return _defaultContentType;
+            }
+            set
+            {
+                _defaultSerializer = null;
+                _defaultContentType = value;
+            }
         }
     }
 
