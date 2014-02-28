@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Descriptions;
 using FubuTransportation.Configuration;
 using HtmlTags;
@@ -17,6 +18,8 @@ namespace FubuTransportation.Diagnostics.Visualization
                 row.Header("Description");
                 row.Header("Incoming Scheduler");
                 row.Header("Routing Rules");
+                row.Header("Serialization Default");
+                row.Header("Modifiers");
             });
 
             graph.OrderBy(x => x.Key).Each(channel => {
@@ -31,6 +34,40 @@ namespace FubuTransportation.Diagnostics.Visualization
             addSchedulers(row, channel);
 
             addRoutingRules(row, channel);
+
+            addSerialization(row, channel);
+
+            addModifiers(row, channel);
+        }
+
+        private void addModifiers(TableRowTag row, ChannelNode channel)
+        {
+            var cell = row.Cell().AddClass("modifiers");
+            if (channel.Modifiers.Any())
+            {
+                cell.Add("ul", ul => { channel.Modifiers.Each(x => ul.Add("li").Text(x.ToString())); });
+            }
+            else
+            {
+                cell.Text("None");
+            }
+        }
+
+        private void addSerialization(TableRowTag row, ChannelNode channel)
+        {
+            var cell = row.Cell().AddClass("serialization");
+            if (channel.DefaultContentType.IsNotEmpty())
+            {
+                cell.Text(channel.DefaultContentType);
+            }
+            else if (channel.DefaultSerializer != null)
+            {
+                cell.Text(channel.DefaultSerializer.ToString());
+            }
+            else
+            {
+                cell.Text("None");
+            }
         }
 
         private static void addRoutingRules(TableRowTag row, ChannelNode channel)

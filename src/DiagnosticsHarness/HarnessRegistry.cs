@@ -2,6 +2,7 @@
 using System.Data;
 using FubuTransportation;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime.Serializers;
 using StructureMap.Diagnostics;
 
 namespace DiagnosticsHarness
@@ -13,7 +14,7 @@ namespace DiagnosticsHarness
             EnableInMemoryTransport();
 
             // TODO -- publish everything option in the FI?
-            Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true);
+            Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true).DefaultSerializer<XmlMessageSerializer>();
 
             Global.Policy<ErrorHandlingPolicy>();
 
