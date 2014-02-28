@@ -32,10 +32,6 @@ namespace FubuTransportation.Runtime
 
             _modifiers.Each(x => x.Modify(envelope));
 
-            // This moves down(?)
-            _serializer.Serialize(envelope);
-            
-
             var channels = _router.FindDestinationChannels(envelope).ToArray();
 
             if (!channels.Any())
@@ -68,7 +64,7 @@ namespace FubuTransportation.Runtime
         {
             var replyUri = _router.ReplyUriFor(node);
 
-            var headers = node.Send(envelope, replyUri: replyUri);
+            var headers = node.Send(envelope, _serializer, replyUri: replyUri);
             _logger.InfoMessage(() => new EnvelopeSent(new EnvelopeToken
             {
                 Headers = headers,

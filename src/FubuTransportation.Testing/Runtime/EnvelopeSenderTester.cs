@@ -67,12 +67,6 @@ namespace FubuTransportation.Testing.Runtime
         }
 
         [Test]
-        public void should_serialize_the_envelope()
-        {
-            MockFor<IEnvelopeSerializer>().AssertWasCalled(x => x.Serialize(theEnvelope));
-        }
-
-        [Test]
         public void all_nodes_receive_teh_message()
         {
             node1.LastEnvelope.ShouldBeTheSameAs(theEnvelope);

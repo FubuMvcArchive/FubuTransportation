@@ -3,6 +3,7 @@ using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
+using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Testing
 {
@@ -16,7 +17,7 @@ namespace FubuTransportation.Testing
             Uri = ("{0}://{1}".ToFormat(protocol ?? "fake", Key)).ToUri();
         }
 
-        public override IHeaders Send(Envelope envelope, Uri replyUri = null)
+        public override IHeaders Send(Envelope envelope, IEnvelopeSerializer serializer, Uri replyUri = null)
         {
             if (replyUri != null)
             {

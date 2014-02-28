@@ -5,12 +5,14 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using Rhino.Mocks;
 using TestMessages;
 using FubuTestingSupport;
 using System.Linq;
+using Is = Rhino.Mocks.Constraints.Is;
 
 namespace FubuTransportation.Testing.Configuration
 {
@@ -108,6 +110,7 @@ namespace FubuTransportation.Testing.Configuration
         private Envelope theEnvelope;
         private RecordingChannel theChannel;
         private ChannelNode theNode;
+        private IEnvelopeSerializer theSerializer;
 
         [SetUp]
         public void SetUp()
@@ -118,9 +121,12 @@ namespace FubuTransportation.Testing.Configuration
                 
             };
 
+            theSerializer = MockRepository.GenerateMock<IEnvelopeSerializer>();
+
             theEnvelope.Headers["A"] = "1";
             theEnvelope.Headers["B"] = "2";
             theEnvelope.Headers["C"] = "3";
+            theEnvelope.CorrelationId = Guid.NewGuid().ToString();
 
             theChannel = new RecordingChannel();
 
@@ -134,7 +140,7 @@ namespace FubuTransportation.Testing.Configuration
             theNode.Modifiers.Add(new HeaderSetter("D", "4"));
             theNode.Modifiers.Add(new HeaderSetter("E", "5"));
 
-            theNode.Send(theEnvelope);
+            theNode.Send(theEnvelope, theSerializer);
         }
 
         public class HeaderSetter : IEnvelopeModifier
@@ -155,6 +161,20 @@ namespace FubuTransportation.Testing.Configuration
         }
 
         [Test]
+        public void should_serialize_the_envelope()
+        {
+            theSerializer.AssertWasCalled(x => x.Serialize(null), x => {
+                x.Constraints(Is.Matching<Envelope>(o => {
+                    o.CorrelationId.ShouldEqual(theEnvelope.CorrelationId);
+                    o.ShouldNotBeTheSameAs(theEnvelope);
+
+
+                    return true;
+                }));
+            });
+        }
+
+        [Test]
         public void should_have_applied_the_channel_specific_modifiers()
         {
             var sentHeaders = theChannel.Sent.Single().Headers;
@@ -162,12 +182,7 @@ namespace FubuTransportation.Testing.Configuration
             sentHeaders["E"].ShouldEqual("5");
         }
 
-        [Test]
-        public void should_have_sent_the_data()
-        {
-            theChannel.Sent.Single().Data.ShouldEqual(theEnvelope.Data);
-        }
-
+ 
         [Test]
         public void should_have_sent_a_copy_of_the_headers()
         {

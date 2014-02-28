@@ -7,6 +7,7 @@ using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using System.Linq;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.Configuration
@@ -106,11 +107,13 @@ namespace FubuTransportation.Configuration
         }
 
         // virtual for testing of course
-        public virtual IHeaders Send(Envelope envelope, Uri replyUri = null)
+        public virtual IHeaders Send(Envelope envelope, IEnvelopeSerializer serializer, Uri replyUri = null)
         {
             var clone = envelope.Clone();
 
+            // Must be done in this order!
             Modifiers.Each(x => x.Modify(clone));
+            serializer.Serialize(clone);
 
             clone.Headers[Envelope.DestinationKey] = Uri.ToString();
             clone.Headers[Envelope.ChannelKey] = Key;
@@ -120,7 +123,7 @@ namespace FubuTransportation.Configuration
                 clone.Headers[Envelope.ReplyUriKey] = replyUri.ToString();
             }
 
-            Channel.Send(envelope.Data, clone.Headers);
+            Channel.Send(clone.Data, clone.Headers);
 
             return clone.Headers;
         }
