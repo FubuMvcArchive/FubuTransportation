@@ -96,9 +96,9 @@ namespace FubuTransportation.Testing
             theRegistry.Channel(x => x.Downstream).DefaultSerializer<XmlMessageSerializer>();
             theRegistry.Channel(x => x.Upstream).DefaultSerializer<BasicJsonMessageSerializer>();
 
-            channelFor(x => x.Outbound).DefaultContentType.ShouldEqual(new BinarySerializer().ContentType);
-            channelFor(x => x.Downstream).DefaultContentType.ShouldEqual(new XmlMessageSerializer().ContentType);
-            channelFor(x => x.Upstream).DefaultContentType.ShouldEqual(new BasicJsonMessageSerializer().ContentType);
+            channelFor(x => x.Outbound).DefaultSerializer.ShouldBeOfType<BinarySerializer>();
+            channelFor(x => x.Downstream).DefaultSerializer.ShouldBeOfType<XmlMessageSerializer>();
+            channelFor(x => x.Upstream).DefaultSerializer.ShouldBeOfType<BasicJsonMessageSerializer>();
         }
 
         [Test]

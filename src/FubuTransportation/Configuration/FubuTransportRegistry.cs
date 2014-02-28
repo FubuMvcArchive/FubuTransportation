@@ -401,7 +401,7 @@ namespace FubuTransportation.Configuration
 
             public ChannelExpression DefaultSerializer<TSerializer>() where TSerializer : IMessageSerializer, new()
             {
-                alter = node => node.DefaultContentType = new TSerializer().ContentType;
+                alter = node => node.DefaultSerializer = new TSerializer();
                 return this;
             }
 
