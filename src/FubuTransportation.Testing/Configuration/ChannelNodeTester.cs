@@ -131,7 +131,35 @@ namespace FubuTransportation.Testing.Configuration
                 Uri = "foo://bar".ToUri()
             };
 
+            theNode.Modifiers.Add(new HeaderSetter("D", "4"));
+            theNode.Modifiers.Add(new HeaderSetter("E", "5"));
+
             theNode.Send(theEnvelope);
+        }
+
+        public class HeaderSetter : IEnvelopeModifier
+        {
+            private readonly string _key;
+            private readonly string _value;
+
+            public HeaderSetter(string key, string value)
+            {
+                _key = key;
+                _value = value;
+            }
+
+            public void Modify(Envelope envelope)
+            {
+                envelope.Headers[_key] = _value;
+            }
+        }
+
+        [Test]
+        public void should_have_applied_the_channel_specific_modifiers()
+        {
+            var sentHeaders = theChannel.Sent.Single().Headers;
+            sentHeaders["D"].ShouldEqual("4");
+            sentHeaders["E"].ShouldEqual("5");
         }
 
         [Test]

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using FubuCore;
 using FubuTransportation.Configuration;
 
@@ -67,18 +66,6 @@ namespace FubuTransportation.Runtime.Serializers
 
                 envelope.Data = stream.ReadAllBytes();
             }
-        }
-    }
-
-    [Serializable]
-    public class EnvelopeDeserializationException : Exception
-    {
-        public EnvelopeDeserializationException(string message) : base(message)
-        {
-        }
-
-        public EnvelopeDeserializationException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
         }
     }
 }

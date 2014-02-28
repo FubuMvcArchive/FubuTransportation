@@ -253,6 +253,7 @@
     <Compile Include="Runtime\Routing\SingleTypeRoutingRule.cs" />
     <Compile Include="Runtime\Serializers\BasicJsonMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\BinarySerializer.cs" />
+    <Compile Include="Runtime\Serializers\EnvelopeDeserializationException.cs" />
     <Compile Include="Runtime\Serializers\EnvelopeSerializer.cs" />
     <Compile Include="Runtime\Serializers\IMessageSerializer.cs" />
     <Compile Include="Runtime\Serializers\XmlMessageSerializer.cs" />

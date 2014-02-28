@@ -108,20 +108,21 @@ namespace FubuTransportation.Configuration
         // virtual for testing of course
         public virtual IHeaders Send(Envelope envelope, Uri replyUri = null)
         {
-            var clone = new NameValueHeaders();
-            envelope.Headers.Keys().Each(key => clone[key] = envelope.Headers[key]);
+            var clone = envelope.Clone();
 
-            clone[Envelope.DestinationKey] = Uri.ToString();
-            clone[Envelope.ChannelKey] = Key;
+            Modifiers.Each(x => x.Modify(clone));
+
+            clone.Headers[Envelope.DestinationKey] = Uri.ToString();
+            clone.Headers[Envelope.ChannelKey] = Key;
 
             if (replyUri != null)
             {
-                clone[Envelope.ReplyUriKey] = replyUri.ToString();
+                clone.Headers[Envelope.ReplyUriKey] = replyUri.ToString();
             }
 
-            Channel.Send(envelope.Data, clone);
+            Channel.Send(envelope.Data, clone.Headers);
 
-            return clone;
+            return clone.Headers;
         }
     }
 
