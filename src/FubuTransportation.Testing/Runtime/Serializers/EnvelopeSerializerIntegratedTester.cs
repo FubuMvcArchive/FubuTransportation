@@ -34,7 +34,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
                 ContentType = contentType
             };
 
-            theSerializer.Serialize(envelope);
+            theSerializer.Serialize(envelope, new ChannelNode());
 
             envelope.Message = theSerializer.Deserialize(envelope);
 
@@ -59,7 +59,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
                 ContentType = null
             };
 
-            theSerializer.Serialize(envelope);
+            theSerializer.Serialize(envelope, new ChannelNode());
 
             envelope.ContentType.ShouldEqual(theGraph.DefaultContentType);
 

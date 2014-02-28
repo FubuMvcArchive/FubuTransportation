@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
@@ -44,7 +45,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
             theEnvelope.Message = new object();
 
             Exception<EnvelopeDeserializationException>.ShouldBeThrownBy(() => {
-                ClassUnderTest.Serialize(theEnvelope);
+                ClassUnderTest.Serialize(theEnvelope, new ChannelNode());
             }).Message.ShouldContain("random/nonexistent");
         }
 
@@ -52,7 +53,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         public void throws_on_serialize_with_no_message()
         {
             Exception<InvalidOperationException>.ShouldBeThrownBy(() => {
-                ClassUnderTest.Serialize(new Envelope());
+                ClassUnderTest.Serialize(new Envelope(), new ChannelNode());
             }).Message.ShouldEqual("No message on this envelope to serialize");
         }
 

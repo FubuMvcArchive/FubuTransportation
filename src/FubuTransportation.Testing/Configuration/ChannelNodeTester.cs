@@ -163,14 +163,14 @@ namespace FubuTransportation.Testing.Configuration
         [Test]
         public void should_serialize_the_envelope()
         {
-            theSerializer.AssertWasCalled(x => x.Serialize(null), x => {
+            theSerializer.AssertWasCalled(x => x.Serialize(null, theNode), x => {
                 x.Constraints(Is.Matching<Envelope>(o => {
                     o.CorrelationId.ShouldEqual(theEnvelope.CorrelationId);
                     o.ShouldNotBeTheSameAs(theEnvelope);
 
 
                     return true;
-                }));
+                }), Is.Same(theNode));
             });
         }
 

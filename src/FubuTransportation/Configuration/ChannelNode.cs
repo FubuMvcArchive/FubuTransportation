@@ -113,7 +113,7 @@ namespace FubuTransportation.Configuration
 
             // Must be done in this order!
             Modifiers.Each(x => x.Modify(clone));
-            serializer.Serialize(clone);
+            serializer.Serialize(clone, this);
 
             clone.Headers[Envelope.DestinationKey] = Uri.ToString();
             clone.Headers[Envelope.ChannelKey] = Key;

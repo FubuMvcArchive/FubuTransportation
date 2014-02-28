@@ -10,7 +10,7 @@ namespace FubuTransportation.Runtime.Serializers
     public interface IEnvelopeSerializer
     {
         object Deserialize(Envelope envelope);
-        void Serialize(Envelope envelope);
+        void Serialize(Envelope envelope, ChannelNode node);
     }
 
     public class EnvelopeSerializer : IEnvelopeSerializer
@@ -49,7 +49,7 @@ namespace FubuTransportation.Runtime.Serializers
             return serializer;
         }
 
-        public void Serialize(Envelope envelope)
+        public void Serialize(Envelope envelope, ChannelNode node)
         {
             if (envelope.Message == null) throw new InvalidOperationException("No message on this envelope to serialize");
 
