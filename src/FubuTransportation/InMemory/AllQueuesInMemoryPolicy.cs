@@ -2,6 +2,7 @@
 using FubuMVC.Core.Registration;
 using System.Collections.Generic;
 using FubuMVC.Core.Registration.ObjectGraph;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.InMemory
 {
@@ -15,6 +16,7 @@ namespace FubuTransportation.InMemory
                 var settingObject = InMemoryTransport.ToInMemory(settingType);
 
                 graph.Services.AddService(settingType, ObjectDef.ForValue(settingObject));
+                graph.Services.Clear(typeof(ITransport));
             });
         }
     }
