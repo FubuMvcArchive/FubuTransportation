@@ -24,7 +24,7 @@ namespace FubuTransportation.LightningQueues
         {
             _logger = logger;
             _delayedMessages = delayedMessages;
-            _queueManagers = new Cache<int, QueueManager>(port => new QueueManager(new IPEndPoint(IPAddress.Any, port), EsentPath + "." + port, new QueueManagerConfiguration(), _logger));
+            _queueManagers = new Cache<int, QueueManager>(port => new QueueManager(new IPEndPoint(IPAddress.Any, port), EsentPath + "." + port, new QueueManagerConfiguration()));
         }
 
         public void Dispose()
