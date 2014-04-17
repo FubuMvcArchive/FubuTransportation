@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
@@ -10,12 +11,27 @@ namespace FubuTransportation.Testing
 {
     public class RecordingReceiver : IReceiver
     {
-        public IList<Envelope> Received = new List<Envelope>(); 
+        // An immutable list would be useful here, if we were using the immutable library.
+        private readonly IList<Envelope> _received = new List<Envelope>(); 
+
+        public IList<Envelope> Received
+        {
+            get
+            {
+                lock (_received)
+                {
+                    return _received.ToList(); 
+                }
+            }
+        }
 
         public void Receive(byte[] data, IHeaders headers, IMessageCallback callback)
         {
             var envelope = new Envelope(data, headers, callback);
-            Received.Add(envelope);
+            lock (_received)
+            {
+                _received.Add(envelope); 
+            }
 
             envelope.Callback.MarkSuccessful();
         }
