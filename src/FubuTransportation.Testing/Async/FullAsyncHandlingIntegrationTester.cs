@@ -28,6 +28,7 @@ namespace FubuTransportation.Testing.Async
 
                 invoker.InvokeNow(message);
 
+                Wait.Until(() => AsyncWatcher.Messages.Count == 4);
                 AsyncWatcher.Messages[0].ShouldEqual("wrapper:start");
                 AsyncWatcher.Messages[1].ShouldEndWith("Buck Rogers");
                 AsyncWatcher.Messages[2].ShouldEndWith("Buck Rogers");

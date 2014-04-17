@@ -1,7 +1,6 @@
 ﻿using System;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
-using FubuTransportation.Runtime.Cascading;
 using FubuTransportation.Runtime.Serializers;
 
 namespace FubuTransportation.Runtime.Invocation

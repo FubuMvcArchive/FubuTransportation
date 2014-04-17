@@ -23,29 +23,9 @@ namespace FubuTransportation.Runtime.Invocation
             _context.Pipeline = this;
         }
 
-        public void Invoke(Envelope envelope)
+        public IList<IEnvelopeHandler> Handlers
         {
-            envelope.Attempts++; // needs to be done here.
-            if (envelope.Message == null)
-            {
-                envelope.UseSerializer(_serializer);
-            }
-
-            _context.Logger.InfoMessage(() => new EnvelopeReceived {Envelope = envelope.ToToken()});
-
-            var continuation = FindContinuation(envelope);
-
-            try
-            {
-                continuation.Execute(envelope, _context);
-            }
-            catch (Exception e)
-            {
-                envelope.Callback.MarkFailed(); // TODO -- watch this one.
-                _context.Logger.Error(envelope.CorrelationId,
-                    "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope,
-                        continuation), e);
-            }
+            get { return _handlers; }
         }
 
         // virtual for testing as usual
@@ -67,12 +47,34 @@ namespace FubuTransportation.Runtime.Invocation
                 }
             }
 
-            throw new NotSupportedException();
+            throw new NoHandlerException(envelope.Message.GetType());
         }
 
-        public IList<IEnvelopeHandler> Handlers
+        public virtual void Invoke(Envelope envelope)
         {
-            get { return _handlers; }
+            envelope.Attempts++; // needs to be done here.
+            var continuation = FindContinuation(envelope);
+
+            try
+            {
+                continuation.Execute(envelope, _context);
+            }
+            catch (Exception e)
+            {
+                envelope.Callback.MarkFailed(); // TODO -- watch this one.
+                _context.Logger.Error(envelope.CorrelationId,
+                    "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope,
+                        continuation),
+                    e);
+            }
+        }
+
+        public void Receive(Envelope envelope)
+        {
+            envelope.UseSerializer(_serializer);
+            _context.Logger.InfoMessage(() => new EnvelopeReceived { Envelope = envelope.ToToken() });
+
+            Invoke(envelope);
         }
     }
 }

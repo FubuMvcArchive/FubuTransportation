@@ -16,6 +16,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
                 throw new DivideByZeroException("it was Bad");
             }
+
+            if (Text.Contains("Retry"))
+            {
+                Text = "now it is good";
+                throw new InvalidOperationException("triggering retry now");
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 namespace FubuTransportation.Testing.Runtime.Invocation
 {
     [TestFixture]
-    public class WhenInvokingWithNoHandlerForMessageType : InteractionContext<ChainInvoker>
+    public class WhenInvokingWithNoHandlerForMessageType : InteractionContext<HandlerPipeline>
     {
         private HandlerGraph theGraph;
  
@@ -29,10 +30,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         [Test]
         public void should_throw_the_no_handler_exception()
         {
-            Exception<NoHandlerException>.ShouldBeThrownBy(() => {
-                ClassUnderTest.InvokeNow(new Events.Message1()); // we don't have a handler for this type
+            Exception<NoHandlerException>.ShouldBeThrownBy(() =>
+            {
+                var envelope = new Envelope { Message = new Events.Message1() };
+                ClassUnderTest.Invoke(envelope); // we don't have a handler for this type
             })
-                                         .Message.ShouldContain(typeof(Events.Message1).FullName);
+            .Message.ShouldContain(typeof(Events.Message1).FullName);
         }
     }
 }

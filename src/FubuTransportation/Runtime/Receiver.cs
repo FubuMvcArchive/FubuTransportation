@@ -32,8 +32,8 @@ namespace FubuTransportation.Runtime
             };
 
             envelope.ContentType = envelope.ContentType ?? _node.DefaultContentType ?? _graph.DefaultContentType;
-
-            _pipeline.Invoke(envelope);
+            
+            _pipeline.Receive(envelope);
         }
 
         protected bool Equals(Receiver other)

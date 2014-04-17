@@ -36,7 +36,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 x.Handlers.DisableDefaultHandlerSource();
             });
 
-            var invoker = new ChainInvoker(null, graph, null, null, null);
+            var invoker = new ChainInvoker(null, graph, null, null, null, null);
 
             invoker.FindChain(new Envelope {Message = new OneMessage()})
                    .OfType<HandlerCall>().Single()

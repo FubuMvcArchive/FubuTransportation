@@ -17,14 +17,21 @@ namespace FubuTransportation.Runtime.Invocation
         private readonly ILogger _logger;
         private readonly IOutgoingSender _sender;
         private readonly ISystemTime _systemTime;
+        private readonly Func<IHandlerPipeline> _pipeline;
 
-        public ChainInvoker(IServiceFactory factory, HandlerGraph graph, ILogger logger, IOutgoingSender sender, ISystemTime systemTime)
+        public ChainInvoker(IServiceFactory factory,
+            HandlerGraph graph,
+            ILogger logger,
+            IOutgoingSender sender,
+            ISystemTime systemTime,
+            Func<IHandlerPipeline> pipeline)
         {
             _factory = factory;
             _graph = graph;
             _logger = logger;
             _sender = sender;
             _systemTime = systemTime;
+            _pipeline = pipeline;
         }
 
         public void Invoke(Envelope envelope)
@@ -36,39 +43,9 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void InvokeNow<T>(T message)
         {
-            var envelope = new Envelope {Message = message};
-            var chain = FindChain(envelope);
-            if (chain == null)
-            {
-                throw new NoHandlerException(typeof (T));
-            }
-
-            IActionBehavior behavior = null;
-
-            try
-            {
-                envelope.Callback = new InlineMessageCallback(message, _sender);
-
-                var args = new InvocationContext(envelope, chain);
-                behavior = _factory.BuildBehavior(args, chain.UniqueId);
-                behavior.Invoke();
-
-                var continuationContext = new ContinuationContext(_logger, _systemTime, this, _sender);
-                var continuation = args.Continuation ?? new ChainSuccessContinuation(args);
-                continuation.Execute(envelope, continuationContext);
-            }
-            catch (Exception e)
-            {
-                if (!envelope.ToToken().IsPollingJobRelated())
-                {
-                    _logger.Error("Failed while invoking message " + message, e);
-                }
-                throw;
-            }
-            finally
-            {
-                (behavior as IDisposable).CallIfNotNull(x => x.SafeDispose());
-            }
+            var envelope = new Envelope { Message = message };
+            envelope.Callback = new InlineMessageCallback(message, _sender);
+            _pipeline().Invoke(envelope);
         }
 
         public virtual HandlerChain FindChain(Envelope envelope)
@@ -116,7 +93,7 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void MarkFailed()
         {
-            
+
         }
 
         public void MoveToDelayedUntil(DateTime time)
