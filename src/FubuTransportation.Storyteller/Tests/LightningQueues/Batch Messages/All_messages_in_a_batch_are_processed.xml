@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Test name="All messages in a batch are processed" lifecycle="Regression">
+<Test name="All messages in a batch are processed" lifecycle="Regression" retryAttemptNumber="0">
   <BatchMessage>
     <SendBatch isStep="True">
       <DefineBatchMessage>

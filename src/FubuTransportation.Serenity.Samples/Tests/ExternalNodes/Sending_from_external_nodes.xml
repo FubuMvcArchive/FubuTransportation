@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Test name="Sending from external nodes" lifecycle="Regression" retryAttemptNumber="0">
+  <MultipleEndpoints>
+    <SendMessageFromNode isStep="True" name="Client 1" />
+  </MultipleEndpoints>
+</Test>

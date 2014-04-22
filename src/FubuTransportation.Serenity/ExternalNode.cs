@@ -9,6 +9,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
 using FubuTransportation.Events;
 using FubuTransportation.InMemory;
+using FubuTransportation.Runtime;
 using StructureMap;
 
 namespace FubuTransportation.Serenity
@@ -92,8 +93,6 @@ namespace FubuTransportation.Serenity
             Uri destination = channelNode.Uri;
             var bus = _runtime.Factory.Get<IServiceBus>();
             bus.Send(destination, message);
-            //var bus = _runtime.Factory.Get<IServiceBus>();
-            //bus.Send(message);
         }
 
         public void Start()
