@@ -48,6 +48,9 @@
     <Reference Include="FubuMVC.OwinHost">
       <HintPath>..\packages\FubuMVC.OwinHost\lib\net40\FubuMVC.OwinHost.dll</HintPath>
     </Reference>
+    <Reference Include="FubuMVC.StructureMap">
+      <HintPath>..\packages\FubuMVC.StructureMap\lib\net40\FubuMVC.StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlTags">
       <HintPath>..\packages\HtmlTags\lib\4.0\HtmlTags.dll</HintPath>
     </Reference>
@@ -73,6 +76,9 @@
     <Reference Include="StoryTeller">
       <HintPath>..\packages\Storyteller2\lib\net40\StoryTeller.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\packages\structuremap\lib\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -94,10 +100,14 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ExternalNode.cs" />
+    <Compile Include="ExternalNodeFixture.cs" />
     <Compile Include="FubuTransportFixture.cs" />
     <Compile Include="FubuTransportSystem.cs" />
     <Compile Include="MessageContextualInfoProvider.cs" />
+    <Compile Include="MessageRecorder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestNodes.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuTransportation\FubuTransportation.csproj">
