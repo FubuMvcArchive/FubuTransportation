@@ -2,5 +2,7 @@
 <Test name="Sending from external nodes" lifecycle="Regression" retryAttemptNumber="0">
   <MultipleEndpoints>
     <SendMessageFromNode isStep="True" name="Client 1" />
+    <SystemReceivedMessage isStep="True" />
+    <NodeReceivedMessage isStep="True" name="Client 1" />
   </MultipleEndpoints>
 </Test>
