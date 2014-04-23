@@ -8,7 +8,7 @@ namespace FubuTransportation.Serenity.Samples.Setup
         public ClientRegistry()
         {
             Channel(x => x.Client)
-                .AcceptsMessage<MessageForClient>()
+                .AcceptsMessage<MessageForExternalService>()
                 .ReadIncoming();
         }
     }
@@ -21,7 +21,7 @@ namespace FubuTransportation.Serenity.Samples.Setup
                 .ReadIncoming();
 
             SubscribeLocally()
-                .ToSource(x => x.Service)
+                .ToSource(x => x.SystemUnderTest)
                 .ToMessage<PublishedEvent>();
         }
     }

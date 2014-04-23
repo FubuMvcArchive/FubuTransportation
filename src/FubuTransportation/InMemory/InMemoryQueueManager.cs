@@ -73,7 +73,9 @@ namespace FubuTransportation.InMemory
 
         public static InMemoryQueue QueueFor(Uri uri)
         {
-            return _queues[uri];
+            var queue = _queues[uri];
+            queue.EnsureReady();
+            return queue;
         }
 
         public static IEnumerable<EnvelopeToken> DelayedEnvelopes()

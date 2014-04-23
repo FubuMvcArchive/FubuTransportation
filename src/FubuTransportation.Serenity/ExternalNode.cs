@@ -129,6 +129,18 @@ namespace FubuTransportation.Serenity
         private object CreateInMemorySettings()
         {
             var settings = InMemoryTransport.ToInMemory(_settingsType);
+
+            // Sync the URIs between the external endpoints and the channels 
+            // configured in the system under test.
+            _systemUnderTest.Each(channel =>
+            {
+                string channelName = channel.Key.Split(':')[1];
+                var property = _settingsType.GetProperty(channelName);
+                if (property != null && property.CanWrite)
+                {
+                    property.SetValue(settings, channel.Uri);
+                }
+            });
             return settings;
         }
     }

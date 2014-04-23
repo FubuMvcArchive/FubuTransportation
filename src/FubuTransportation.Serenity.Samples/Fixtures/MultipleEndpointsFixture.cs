@@ -15,10 +15,10 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
             Title = "Multiple Endpoints";
         }
 
-        [FormatAs("Add another service to listen for events from the system under test")]
+        [FormatAs("Add another service that communicates with the system under test")]
         public void SetupAnotherService()
         {
-            AddTestNode<AnotherServiceRegistry>("AnotherService");
+            AddOtherService();
         }
 
         [FormatAs("Send SomeCommand from node {name}")]
@@ -35,6 +35,12 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
             node.Send(new TestMessage());
         }
 
+        [FormatAs("Send message from the system under test to the external service")]
+        public void SendMessageToOtherService()
+        {
+            Retrieve<IServiceBus>().Send(new MessageForExternalService());
+        }
+
         [FormatAs("Node {name} received a response")]
         public bool NodeReceivedMessage(string name)
         {
@@ -45,8 +51,19 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         [FormatAs("External service received the event")]
         public bool OtherServiceReceivedEvent()
         {
-            var node = AddTestNode<AnotherServiceRegistry>("AnotherService");
-            return ShortWait(() => node.ReceivedMessage<PublishedEvent>());
+            return OtherServiceReceivedMessage<PublishedEvent>();
+        }
+
+        [FormatAs("External service received the message")]
+        public bool OtherServiceReceivedMessage()
+        {
+            return OtherServiceReceivedMessage<MessageForExternalService>();
+        }
+
+        private bool OtherServiceReceivedMessage<T>()
+        {
+            var node = AddOtherService();
+            return ShortWait(() => node.ReceivedMessage<T>());
         }
 
         [FormatAs("The system under test should receive the message")]
@@ -54,6 +71,11 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         {
             var messages = Retrieve<MessageRecorder>().Messages;
             return ShortWait(() => messages.Any(x => x is TestMessage));
+        }
+
+        private ExternalNode AddOtherService()
+        {
+            return AddTestNode<AnotherServiceRegistry>("AnotherService");
         }
 
         private bool ShortWait(Func<bool> condition)

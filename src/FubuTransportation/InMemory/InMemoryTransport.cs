@@ -74,15 +74,13 @@ namespace FubuTransportation.InMemory
             var replyNode = new ChannelNode
             {
                 Uri = uri,
-                Channel = new InMemoryChannel(uri),
                 Incoming = true
             };
 
             replyNode.Key = replyNode.Key ?? "{0}:{1}".ToFormat(Protocol, "replies");
+            replyNode.Channel = buildChannel(replyNode);
 
             graph.Add(replyNode);
-
-            replyNode.Channel = buildChannel(replyNode);
 
             return uri;
         }

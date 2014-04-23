@@ -63,6 +63,16 @@ namespace FubuTransportation.InMemory
             _queue.CompleteAdding();
         }
 
+        public void EnsureReady()
+        {
+            // InMemoryQueues are shared across multiple channels, so they might need to be reset.
+            _disposed = false;
+            if (_queue.IsAddingCompleted)
+            {
+                _queue = InitializeQueue();
+            }
+        }
+
         public void Receive(IReceiver receiver)
         {
             while (!_disposed)

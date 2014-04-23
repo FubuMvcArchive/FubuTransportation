@@ -1,6 +1,6 @@
 ﻿namespace FubuTransportation.Serenity.Samples.Setup
 {
-    public class MessageForClient
+    public class MessageForExternalService
     {
     }
 }
