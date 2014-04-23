@@ -8,8 +8,6 @@ using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
 using FubuTransportation.Events;
-using FubuTransportation.InMemory;
-using FubuTransportation.Runtime;
 using StructureMap;
 
 namespace FubuTransportation.Serenity
@@ -108,10 +106,8 @@ namespace FubuTransportation.Serenity
 
             Debug.WriteLine("Starting test node for {0} using registry {1}", _name, _registryType);
 
-            var settings = CreateInMemorySettings();
             var container = new Container(x =>
             {
-                x.For(settings.GetType()).Use(settings);
                 x.ForSingletonOf<IMessageRecorder>().Use<MessageRecorder>();
                 x.Forward<IMessageRecorder, IListener>();
             });
@@ -124,24 +120,6 @@ namespace FubuTransportation.Serenity
             Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(session);
 
             Debug.WriteLine("Started test node with URI: {0}", Uri);
-        }
-
-        private object CreateInMemorySettings()
-        {
-            var settings = InMemoryTransport.ToInMemory(_settingsType);
-
-            // Sync the URIs between the external endpoints and the channels 
-            // configured in the system under test.
-            _systemUnderTest.Each(channel =>
-            {
-                string channelName = channel.Key.Split(':')[1];
-                var property = _settingsType.GetProperty(channelName);
-                if (property != null && property.CanWrite)
-                {
-                    property.SetValue(settings, channel.Uri);
-                }
-            });
-            return settings;
         }
     }
 }

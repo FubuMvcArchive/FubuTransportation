@@ -1,6 +1,5 @@
 ﻿using System;
 using FubuTransportation.Configuration;
-using FubuTransportation.InMemory;
 using FubuTransportation.Serenity.Samples.Setup;
 using FubuTransportation.Serenity.Samples.SystemUnderTest.Subscriptions;
 
@@ -18,12 +17,6 @@ namespace FubuTransportation.Serenity.Samples.SystemUnderTest
 
             Channel(x => x.AnotherService)
                 .AcceptsMessage<MessageForExternalService>();
-
-            if (InMemory)
-            {
-                EnableInMemoryTransport();
-                Services(x => x.AddService(InMemoryTransport.ToInMemory<TestSettings>()));
-            }
         }
     }
 

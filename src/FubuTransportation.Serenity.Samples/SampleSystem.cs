@@ -1,4 +1,5 @@
-﻿using FubuTransportation.Serenity.Samples.SystemUnderTest;
+﻿using FubuTransportation.Configuration;
+using FubuTransportation.Serenity.Samples.SystemUnderTest;
 
 namespace FubuTransportation.Serenity.Samples
 {
@@ -7,9 +8,7 @@ namespace FubuTransportation.Serenity.Samples
         public SampleSystem()
         {
             OnContextCreation<MessageRecorder>(x => x.Messages.Clear());
-
-            TestRegistry.InMemory = true;
-            TestNodes.OnNodeCreation(registry => registry.EnableInMemoryTransport());
+            FubuTransport.SetupForInMemoryTesting<TestSettings>();
         }
     }
 }

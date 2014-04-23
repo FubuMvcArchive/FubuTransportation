@@ -145,7 +145,6 @@ namespace FubuTransportation.Configuration
         }
 
 
-
         private IEnumerable<IHandlerSource> allSources()
         {
             foreach (var handlerSource in _sources)
@@ -341,6 +340,13 @@ namespace FubuTransportation.Configuration
         protected FubuTransportRegistry()
         {
             AlterSettings<TransportSettings>(x => x.SettingTypes.Fill(typeof (T)));
+            AlterSettings<ChannelGraph>(graph =>
+            {
+                if (FubuTransport.DefaultSettings == typeof(T))
+                {
+                    FubuTransport.DefaultChannelGraph = graph;
+                }
+            });
         }
 
 

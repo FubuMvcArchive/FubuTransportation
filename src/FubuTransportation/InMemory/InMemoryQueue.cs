@@ -45,9 +45,9 @@ namespace FubuTransportation.InMemory
             }
         }
 
-        public IEnumerable<Envelope> Peek()
+        public IEnumerable<EnvelopeToken> Peek()
         {
-            return _queue.ToArray().Select(x => _formatter.Deserialize(new MemoryStream(x)).As<Envelope>());
+            return _queue.ToArray().Select(x => _formatter.Deserialize(new MemoryStream(x)).As<EnvelopeToken>());
         }
 
         public void Clear()
