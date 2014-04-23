@@ -19,7 +19,6 @@ namespace FubuTransportation.Serenity
         private readonly Type _registryType;
         private FubuRuntime _runtime;
         private bool _isStarted;
-        private Type _settingsType;
 
         public ExternalNode(string name, Type registryType, ChannelGraph systemUnderTest)
         {
@@ -29,27 +28,13 @@ namespace FubuTransportation.Serenity
 
             if (!IsValidRegistryType(_registryType))
             {
-                throw new ArgumentException("Registry type must extend FubuTransportRegistry<T>", "registryType");
+                throw new ArgumentException("Registry type must extend FubuTransportRegistry", "registryType");
             }
         }
 
         private bool IsValidRegistryType(Type type)
         {
-            var baseType = type.BaseType;
-            bool isTransportRegistry = false;
-            while (baseType != null)
-            {
-                if (baseType.IsConstructedGenericType
-                    && baseType.GetGenericTypeDefinition() == typeof(FubuTransportRegistry<>))
-                {
-                    isTransportRegistry = true;
-                    _settingsType = baseType.GetGenericArguments()[0];
-                    break;
-                }
-
-                baseType = baseType.BaseType;
-            }
-            return isTransportRegistry && type.IsConcrete();
+            return type.IsConcreteTypeOf<FubuTransportRegistry>();
         }
 
         public Uri Uri { get; private set; }
