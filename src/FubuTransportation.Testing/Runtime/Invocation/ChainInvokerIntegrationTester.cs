@@ -33,8 +33,9 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
                 var invoker = runtime.Factory.Get<IChainInvoker>();
 
-                MessageHistory.WaitForWorkToFinish(() => {
-                    invoker.InvokeNow(new WebMessage{Text = "I'm good"});
+                MessageHistory.WaitForWorkToFinish(() =>
+                {
+                    invoker.InvokeNow(new WebMessage { Text = "I'm good" });
                 });
 
                 recorder.Messages.Each(x => Debug.WriteLine(x));
@@ -59,7 +60,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
                 var invoker = runtime.Factory.Get<IChainInvoker>();
 
-                
+
                 MessageHistory.WaitForWorkToFinish(() =>
                 {
                     // The handler for WebMessage is rigged to throw exceptions
@@ -72,15 +73,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 // NO MESSAGES SHOULD GET OUT WITH THE ORIGINAL 'Bad Message'
                 recorder.Messages.Any(x => x.Contains("Bad message")).ShouldBeFalse();
 
-                // will succeed on the retry because we change the text in the handler.
-                // basically just proving that the interplay w/ exception handling behaviors
-                // and continuations within the invocation is working
-
-                recorder.Messages.ShouldContain("now it is good");
-                recorder.Messages.ShouldContain("now it is good-2");
-                recorder.Messages.ShouldContain("now it is good-2-4");
-                recorder.Messages.ShouldContain("now it is good-2-3");
-                recorder.Messages.ShouldContain("Traced: now it is good");
+                AssertCascadedMessages(recorder);
             }
         }
 
@@ -96,7 +89,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
                 MessageHistory.WaitForWorkToFinish(() =>
                 {
-                    invoker.InvokeNow(new TriggerImmediate { Text = "First", ContinueText = "I'm good"});
+                    invoker.InvokeNow(new TriggerImmediate { Text = "First", ContinueText = "I'm good" });
                 });
 
                 recorder.Messages.Each(x => Debug.WriteLine(x));
@@ -133,16 +126,46 @@ namespace FubuTransportation.Testing.Runtime.Invocation
                 // and their cascaded messages
                 recorder.Messages.ShouldContain("First");
 
-
-                // will succeed on the retry because we change the text in the handler.
-                // basically just proving that the interplay w/ exception handling behaviors
-                // and continuations within the invocation is working
-                recorder.Messages.ShouldContain("now it is good");
-                recorder.Messages.ShouldContain("now it is good-2");
-                recorder.Messages.ShouldContain("now it is good-2-4");
-                recorder.Messages.ShouldContain("now it is good-2-3");
-                recorder.Messages.ShouldContain("Traced: now it is good");
+                AssertCascadedMessages(recorder);
             }
+        }
+
+        [Test]
+        public void invoking_a_chain_will_execute_completely_with_cascading_immediate_continuations_even_if_the_continuation_messages_fail_and_retry_immediately()
+        {
+            FubuTransport.SetupForInMemoryTesting();
+            using (var runtime = FubuApplication.BootstrapApplication<ChainInvokerApplication>())
+            {
+                var recorder = runtime.Factory.Get<MessageRecorder>();
+
+                var invoker = runtime.Factory.Get<IChainInvoker>();
+
+                MessageHistory.WaitForWorkToFinish(() =>
+                {
+                    invoker.InvokeNow(new TriggerImmediate { Text = "First", ContinueText = "Retry message" });
+                });
+
+                recorder.Messages.Each(x => Debug.WriteLine(x));
+
+                // Should process all the cascading messages that bubble up
+                // and their cascaded messages
+                recorder.Messages.ShouldContain("First");
+
+                AssertCascadedMessages(recorder);
+            }
+        }
+
+        private static void AssertCascadedMessages(MessageRecorder recorder)
+        {
+            // will succeed on the retry because we change the text in the handler.
+            // basically just proving that the interplay w/ exception handling behaviors
+            // and continuations within the invocation is working
+
+            recorder.Messages.ShouldContain("now it is good");
+            recorder.Messages.ShouldContain("now it is good-2");
+            recorder.Messages.ShouldContain("now it is good-2-4");
+            recorder.Messages.ShouldContain("now it is good-2-3");
+            recorder.Messages.ShouldContain("Traced: now it is good");
         }
     }
 
@@ -152,11 +175,12 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public Uri Incoming { get; set; }
     }
 
-    public class ChainInvokerApplication : IApplicationSource 
+    public class ChainInvokerApplication : IApplicationSource
     {
         public FubuApplication BuildApplication()
         {
-            var container = new Container(x => {
+            var container = new Container(x =>
+            {
                 x.ForSingletonOf<MessageRecorder>();
             });
 
@@ -168,7 +192,8 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     {
         public ChainInvokerTransportRegistry()
         {
-            AlterSettings<TransportSettings>(x => {
+            AlterSettings<TransportSettings>(x =>
+            {
                 x.EnableInMemoryTransport = true;
                 x.DebugEnabled = true;
             });
@@ -185,6 +210,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             chain.MaximumAttempts = 3;
             chain.OnException<DivideByZeroException>().Requeue();
+            chain.OnException<InvalidOperationException>().Retry();
         }
     }
 }

@@ -53,6 +53,40 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         }
 
         [Test]
+        public void should_invoke_the_continuation()
+        {
+            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope, theContext));
+        }
+    }
+
+    [TestFixture]
+    public class when_receiving_an_envelope : InteractionContext<HandlerPipeline>
+    {
+        private IContinuation theContinuation;
+        private Envelope theEnvelope;
+        private TestContinuationContext theContext;
+
+        protected override void beforeEach()
+        {
+            Services.Inject<IEnumerable<IEnvelopeHandler>>(new IEnvelopeHandler[0]);
+
+            theContext = new TestContinuationContext();
+            Services.Inject<ContinuationContext>(theContext);
+
+            theContinuation = MockFor<IContinuation>();
+            theEnvelope = ObjectMother.Envelope();
+            theEnvelope.Attempts = 1;
+
+            theEnvelope.Callback = MockFor<IMessageCallback>();
+
+            Services.PartialMockTheClassUnderTest();
+            ClassUnderTest.Expect(x => x.FindContinuation(theEnvelope))
+                          .Return(theContinuation);
+
+            ClassUnderTest.Receive(theEnvelope);
+        }
+
+        [Test]
         public void the_serializer_should_be_set_on_the_envelope()
         {
             var theExpectedMessage = new object();
@@ -64,18 +98,18 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         }
 
         [Test]
-        public void should_invoke_the_continuation()
-        {
-            theContinuation.AssertWasCalled(x => x.Execute(theEnvelope, theContext));
-        }
-
-        [Test]
         public void log_the_envelope_received()
         {
             theContext.RecordedLogs.InfoMessages.ShouldContain(new EnvelopeReceived
             {
                 Envelope = theEnvelope.ToToken()
             });
+        }
+
+        [Test]
+        public void should_invoke()
+        {
+            ClassUnderTest.AssertWasCalled(x => x.Invoke(theEnvelope));
         }
     }
 

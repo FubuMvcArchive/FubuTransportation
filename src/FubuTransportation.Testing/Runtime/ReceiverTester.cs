@@ -92,6 +92,11 @@ namespace FubuTransportation.Testing.Runtime
             Invoked.Add(envelope);
         }
 
+        public void Receive(Envelope envelope)
+        {
+            Invoke(envelope);
+        }
+
         public void InvokeNow<T>(T message)
         {
             throw new NotImplementedException();
@@ -182,7 +187,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_call_through_to_the_pipeline()
         {
-            MockFor<IHandlerPipeline>().AssertWasCalled(x => x.Invoke(new Envelope(theData, theHeaders, theCallback)));
+            MockFor<IHandlerPipeline>().AssertWasCalled(x => x.Receive(new Envelope(theData, theHeaders, theCallback)));
         }
 
     }
