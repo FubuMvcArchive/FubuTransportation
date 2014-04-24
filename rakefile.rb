@@ -27,3 +27,9 @@ FubuRake::Storyteller.new({
   :path => 'src/FubuTransportation.Storyteller',
   :compilemode => solution.compilemode
 })
+
+FubuRake::Storyteller.new({
+  :path => 'src/FubuTransportation.Serenity.Samples',
+  :compilemode => solution.compilemode,
+  :prefix => "samples:st"
+})

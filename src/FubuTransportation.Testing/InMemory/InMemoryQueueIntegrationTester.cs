@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
-using FubuTransportation.Scheduling;
 using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
-using TaskScheduler = FubuTransportation.Scheduling.TaskScheduler;
 
 namespace FubuTransportation.Testing.InMemory
 {
@@ -112,6 +109,20 @@ namespace FubuTransportation.Testing.InMemory
                 Wait.Until(() => receiver.Received.Count == 2);
                 receiver.Received.ShouldHaveCount(2);
             }
+        }
+
+        [Test]
+        public void can_reuse_queues()
+        {
+            var uri = new Uri("memory://foo");
+            var queue = InMemoryQueueManager.QueueFor(uri);
+            queue.Enqueue(new EnvelopeToken());
+            queue.Clear();
+            queue.Dispose();
+
+            queue = InMemoryQueueManager.QueueFor(uri);
+            queue.Enqueue(new EnvelopeToken());
+            queue.Peek().ShouldHaveCount(1);
         }
     }
 

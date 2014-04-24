@@ -46,6 +46,8 @@ namespace FubuTransportation.Serenity
             {
                 RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x));
             });
+
+            OnContextCreation(TestNodes.Reset);
         }
     }
 }

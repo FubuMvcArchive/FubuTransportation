@@ -74,15 +74,13 @@ namespace FubuTransportation.InMemory
             var replyNode = new ChannelNode
             {
                 Uri = uri,
-                Channel = new InMemoryChannel(uri),
                 Incoming = true
             };
 
             replyNode.Key = replyNode.Key ?? "{0}:{1}".ToFormat(Protocol, "replies");
+            replyNode.Channel = buildChannel(replyNode);
 
             graph.Add(replyNode);
-
-            replyNode.Channel = buildChannel(replyNode);
 
             return uri;
         }
@@ -106,13 +104,34 @@ namespace FubuTransportation.InMemory
 
             type.GetProperties().Where(x => x.CanWrite && x.PropertyType == typeof (Uri)).Each(prop => {
                 var accessor = new SingleProperty(prop);
-                var uri = "{0}://{1}/{2}".ToFormat(InMemoryChannel.Protocol, accessor.OwnerType.Name.Replace("Settings", ""),
-                                                   accessor.Name).ToLower();
+                var uri = GetUriForProperty(accessor);
 
-                accessor.SetValue(settings, new Uri(uri));
+                accessor.SetValue(settings, uri);
             });
 
             return settings;
+        }
+
+        private static Uri GetUriForProperty(SingleProperty accessor)
+        {
+            var channelGraph = FubuTransport.DefaultChannelGraph;
+            if (channelGraph != null && accessor.DeclaringType != FubuTransport.DefaultSettings)
+            {
+                // A default graph has been set via SetupForInMemoryTesting, so
+                // sync the URIs for the channels that match.
+                var channel = channelGraph.FirstOrDefault(x =>
+                {
+                    string channelName = x.Key.Split(':')[1];
+                    return channelName == accessor.Name;
+                });
+
+                if (channel != null)
+                    return channel.Uri;
+            }
+
+            string uri = "{0}://{1}/{2}".ToFormat(InMemoryChannel.Protocol, accessor.OwnerType.Name.Replace("Settings", ""),
+                accessor.Name).ToLower();
+            return new Uri(uri);
         }
     }
 }

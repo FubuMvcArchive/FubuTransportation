@@ -45,9 +45,9 @@ namespace FubuTransportation.InMemory
             }
         }
 
-        public IEnumerable<Envelope> Peek()
+        public IEnumerable<EnvelopeToken> Peek()
         {
-            return _queue.ToArray().Select(x => _formatter.Deserialize(new MemoryStream(x)).As<Envelope>());
+            return _queue.ToArray().Select(x => _formatter.Deserialize(new MemoryStream(x)).As<EnvelopeToken>());
         }
 
         public void Clear()
@@ -61,6 +61,16 @@ namespace FubuTransportation.InMemory
         {
             _disposed = true;
             _queue.CompleteAdding();
+        }
+
+        public void EnsureReady()
+        {
+            // InMemoryQueues are shared across multiple channels, so they might need to be reset.
+            _disposed = false;
+            if (_queue.IsAddingCompleted)
+            {
+                _queue = InitializeQueue();
+            }
         }
 
         public void Receive(IReceiver receiver)

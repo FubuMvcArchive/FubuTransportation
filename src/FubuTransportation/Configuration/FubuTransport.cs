@@ -61,6 +61,22 @@ namespace FubuTransportation.Configuration
             UseSynchronousLogging = ApplyMessageHistoryWatching = AllQueuesInMemory = true;
         }
 
+        /// <summary>
+        /// Configures FT to use in-memory queues system-wide and apply message 
+        /// history watching.  Any properties in Settings classes used with 
+        /// ExternalNodes that match properties on <typeparamref name="TSettings"/> 
+        /// will be automatically configured to match.
+        /// </summary>
+        /// <typeparam name="TSettings">The settings type used by the system under test.</typeparam>
+        public static void SetupForInMemoryTesting<TSettings>()
+        {
+            SetupForInMemoryTesting();
+            DefaultSettings = typeof(TSettings);
+        }
+
+        internal static Type DefaultSettings { get; set; }
+        internal static ChannelGraph DefaultChannelGraph { get; set; }
+
         public static void SetupForTesting()
         {
             FubuMode.SetupForTestingMode();
