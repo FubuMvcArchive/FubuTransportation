@@ -40,7 +40,10 @@ namespace FubuTransportation.Testing.Publishing
             });
             theServiceBus = MockRepository.GenerateMock<IServiceBus>();
 
-            theRuntime = FubuApplication.DefaultPolicies().StructureMap(container).Bootstrap();
+            var registry = new FubuRegistry();
+            registry.Actions.IncludeType<MessageOnePublisher>();
+
+            theRuntime = FubuApplication.For(registry).StructureMap(container).Bootstrap();
             theGraph = theRuntime.Factory.Get<BehaviorGraph>();
             chain = theGraph.BehaviorFor<MessageOnePublisher>(x => x.post_message1(null));
 
@@ -93,17 +96,10 @@ namespace FubuTransportation.Testing.Publishing
         [Test]
         public void should_be_a_PublishEvent_node_directly_after_the_publishing_action()
         {
-            chain.FirstCall().Next.Next.ShouldBeOfType<SendsMessage>()
+            chain.FirstCall().Next.ShouldBeOfType<SendsMessage>()
                 .EventType.ShouldEqual(typeof(Message1));
         }
 
-        [Test]
-        public void just_out_of_paranoia_lets_check_for_ajax_continuation_writer()
-        {
-            var writerChain = chain.Output.Writers;
-            writerChain.OfType<Writer>().Single()
-                .WriterType.ShouldEqual(typeof (AjaxContinuationWriter<AjaxContinuation>));
-        }
     }
 
     public class MessageOnePublisher : ISendMessages

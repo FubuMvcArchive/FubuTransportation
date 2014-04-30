@@ -5,7 +5,6 @@ using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.Async
 {
-    [ConfigurationType(ConfigurationType.Instrumentation)]
     public class AsyncHandlingConvention : HandlerChainPolicy    
     {
         public override bool Matches(HandlerChain chain)

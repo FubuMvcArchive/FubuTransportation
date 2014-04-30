@@ -10,6 +10,11 @@ solution = FubuRake::Solution.new do |sln|
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
+	
+
+	sln.options[:nuget_publish_folder] = 'nupkgs'
+	sln.options[:nuget_publish_url] = 'https://www.myget.org/F/fubumvc-edge/'
+
 end
 
 FubuRake::BottleServices.new({
