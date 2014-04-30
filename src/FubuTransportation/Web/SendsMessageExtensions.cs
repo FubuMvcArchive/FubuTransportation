@@ -8,7 +8,7 @@ namespace FubuTransportation.Web
         public void Configure(FubuRegistry registry)
         {
             registry.Actions.FindWith<SendsMessageActionSource>();
-            registry.Policies.Add<SendsMessageConvention>();
+            registry.Policies.Global.Add<SendsMessageConvention>();
         }
     }
 }

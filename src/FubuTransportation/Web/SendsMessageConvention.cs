@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
-using FubuMVC.Core;
 using FubuMVC.Core.Ajax;
 using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Web
 {
-    [ConfigurationType(ConfigurationType.Explicit)]
     public class SendsMessageConvention : IConfigurationAction
     {
         public void Configure(BehaviorGraph graph)
