@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuMVC.Core.Http;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Registration.Nodes;
@@ -11,18 +12,21 @@ namespace FubuTransportation.Configuration
 {
     public class HandlerChain : BehaviorChain, IMayHaveInputType
     {
-        public static readonly string Category = "Handler";
         public readonly IList<IErrorHandler> ErrorHandlers = new List<IErrorHandler>();
         public int MaximumAttempts = 1;
 
         public HandlerChain()
         {
-            UrlCategory.Category = Category;
         }
 
         public HandlerChain(IEnumerable<HandlerCall> calls) : this()
         {
             calls.Each(AddToEnd);
+        }
+
+        protected override void InsertNodes(ConnegSettings settings)
+        {
+            // do nothing.
         }
 
         public ContinuationExpression OnException<T>() where T : Exception

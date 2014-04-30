@@ -11,7 +11,6 @@ using FubuCore.Reflection;
 using FubuMVC.Core;
 using FubuMVC.Core.Configuration;
 using FubuMVC.Core.Registration;
-using FubuMVC.Core.Registration.Diagnostics;
 using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
@@ -32,8 +31,7 @@ namespace FubuTransportation.Configuration
         internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>();
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
-        private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
-        private readonly ProvenanceChain _provenance;
+        private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet();
         private string _name;
 
         public static FubuTransportRegistry For(Action<FubuTransportRegistry> configure)
@@ -109,8 +107,6 @@ namespace FubuTransportation.Configuration
 
         protected FubuTransportRegistry()
         {
-            _provenance = new ProvenanceChain(new Provenance[] {new FubuTransportRegistryProvenance(this)});
-
             _sources.Add(new DefaultHandlerSource());
 
             AlterSettings<ChannelGraph>(x => {
@@ -121,7 +117,7 @@ namespace FubuTransportation.Configuration
             });
         }
 
-        public void AlterSettings<T>(Action<T> alteration) where T : new()
+        public void AlterSettings<T>(Action<T> alteration) where T : class, new()
         {
             _alterations.Add(r => r.AlterSettings(alteration));
         }
@@ -288,7 +284,7 @@ namespace FubuTransportation.Configuration
         /// <returns></returns>
         public PoliciesExpression Local
         {
-            get { return new PoliciesExpression(x => _localPolicies.Fill(_provenance, x)); }
+            get { return new PoliciesExpression(x => _localPolicies.Fill(x)); }
         }
 
         /// <summary>

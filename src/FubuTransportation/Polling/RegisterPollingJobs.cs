@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Polling
 {
-    [ConfigurationType(ConfigurationType.Policy)]
     public class RegisterPollingJobs : IConfigurationAction
     {
         public void Configure(BehaviorGraph graph)
