@@ -17,7 +17,6 @@ namespace FubuTransportation.Configuration
 
         public HandlerChain()
         {
-            IsPartialOnly = false; // need to do this to get it to apply to diagnostics
         }
 
         public HandlerChain(IEnumerable<HandlerCall> calls) : this()

@@ -40,7 +40,7 @@ namespace FubuTransportation
 
                 // Hate how we're doing this, but disable tracing
                 // on the polling job requests here.
-                if (chain.InputType().Closes(typeof (JobRequest<>)))
+                if (chain.InputType().Closes(typeof(JobRequest<>)))
                 {
                     chain.Tags.Add(BehaviorChain.NoTracing);
                 }
@@ -48,5 +48,6 @@ namespace FubuTransportation
 
             return handlers;
         }
+
     }
 }
