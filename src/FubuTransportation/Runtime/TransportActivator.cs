@@ -10,6 +10,24 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Runtime
 {
+    public class CompoundActivator : IActivator
+    {
+        private readonly TransportActivator _transports;
+        private readonly SubscriptionActivator _subscriptions;
+
+        public CompoundActivator(TransportActivator transports, SubscriptionActivator subscriptions)
+        {
+            _transports = transports;
+            _subscriptions = subscriptions;
+        }
+
+        public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
+        {
+            _transports.Activate(packages, log);
+            _subscriptions.Activate(packages, log);
+        }
+    }
+
     public class TransportActivator : IActivator
     {
         private readonly ChannelGraph _graph;
