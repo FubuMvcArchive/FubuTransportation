@@ -36,6 +36,9 @@ namespace FubuTransportation.LightningQueues.Testing
         public void IDelayedMessageCacheMessageId_is_registered()
         {
             registeredTypeIs<IDelayedMessageCache<MessageId>, DelayedMessageCache<MessageId>>();
+
+            ServiceRegistry.ShouldBeSingleton(typeof(DelayedMessageCache<MessageId>))
+                .ShouldBeTrue();
         }
     }
 }

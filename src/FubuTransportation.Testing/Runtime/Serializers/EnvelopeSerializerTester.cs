@@ -13,9 +13,13 @@ namespace FubuTransportation.Testing.Runtime.Serializers
     {
         private IMessageSerializer[] serializers;
         private Envelope theEnvelope;
+        private ChannelGraph theGraph;
 
         protected override void beforeEach()
         {
+            theGraph = MockRepository.GenerateMock<ChannelGraph>();
+            Services.Inject(theGraph);
+
             serializers = Services.CreateMockArrayFor<IMessageSerializer>(5);
             for (int i = 0; i < serializers.Length; i++)
             {
@@ -74,7 +78,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
             {
                 DefaultContentType = serializers[1].ContentType
             };
-            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            theGraph.DefaultContentType = serializers[4].ContentType;
 
             theEnvelope.ContentType = serializers[3].ContentType;
 
@@ -85,7 +89,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         [Test]
         public void select_the_graph_default_in_the_absence_of_everything_else()
         {
-            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            theGraph.DefaultContentType = serializers[4].ContentType;
             ClassUnderTest.SelectSerializer(theEnvelope, new ChannelNode())
                 .ShouldBeTheSameAs(serializers[4]);
 
@@ -94,7 +98,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         [Test]
         public void use_channel_node_default_content_type_if_it_exists_and_not_set_on_the_envelope()
         {
-            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            theGraph.DefaultContentType = serializers[4].ContentType;
             var node = new ChannelNode
             {
                 DefaultContentType = serializers[1].ContentType
@@ -107,7 +111,7 @@ namespace FubuTransportation.Testing.Runtime.Serializers
         [Test]
         public void use_a_serializer_on_the_channel_node_as_the_default_if_content_type_is_not_explicitly_set()
         {
-            MockFor<ChannelGraph>().DefaultContentType = serializers[4].ContentType;
+            theGraph.DefaultContentType = serializers[4].ContentType;
             var node = new ChannelNode
             {
                 DefaultSerializer = MockRepository.GenerateMock<IMessageSerializer>()
