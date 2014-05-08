@@ -20,7 +20,9 @@ namespace FubuTransportation.Testing
 
         protected override void beforeEach()
         {
-            theGraph = MockFor<ChannelGraph>();
+            theGraph = MockRepository.GenerateMock<ChannelGraph>();
+
+            Services.Inject(theGraph);
             Services.PartialMockTheClassUnderTest();
 
              ClassUnderTest.Stub(x => x.OpenChannels());
@@ -62,7 +64,8 @@ namespace FubuTransportation.Testing
 
         protected override void beforeEach()
         {
-            theGraph = MockFor<ChannelGraph>();
+            theGraph = new ChannelGraph();
+            Services.Inject(theGraph);
             theTransports = Services.CreateMockArrayFor<ITransport>(5);
 
             ClassUnderTest.OpenChannels();

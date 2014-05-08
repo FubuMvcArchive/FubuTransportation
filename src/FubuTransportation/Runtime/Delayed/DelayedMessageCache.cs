@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using FubuCore;
+using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Runtime.Delayed
 {
@@ -12,6 +13,7 @@ namespace FubuTransportation.Runtime.Delayed
         IEnumerable<TIdentifier> AllMessagesBefore(DateTime time);
     }
 
+    [Singleton]
     public class DelayedMessageCache<TIdentifier> : IDelayedMessageCache<TIdentifier>
     {
         private readonly IList<DelayedMessage> _delayedMessages = new List<DelayedMessage>();
