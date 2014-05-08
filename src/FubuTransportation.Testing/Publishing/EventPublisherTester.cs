@@ -6,7 +6,6 @@ using FubuTestingSupport;
 using FubuTransportation.Testing.Events;
 using FubuTransportation.Web;
 using NUnit.Framework;
-using NUnit.Mocks;
 using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Publishing
