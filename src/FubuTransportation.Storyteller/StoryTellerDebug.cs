@@ -1,27 +1,22 @@
 using FubuCore;
 using StoryTeller.Execution;
-using StoryTeller.Workspace;
+using StoryTeller.ProjectUtils.Loaders;
+using FileSystem = FubuCore.FileSystem;
 
 namespace StoryTellerTestHarness
 {
-
-    public class Debugging
+    public class Template
     {
-        public void SendAndAwait_Happy_Path()
-        {
-            var project = new Project
-            {
-                ProjectFolder = ".".ToFullPath().ParentDirectory().ParentDirectory(),
-                TimeoutInSeconds = 240
-            };
 
+        public void Simple_local_subscription()
+        {
+            var project = new ProjectDirectoryLoader(new FileSystem()).Load(".".ToFullPath().ParentDirectory().ParentDirectory());
             using (var runner = new ProjectTestRunner(project))
             {
-                runner.RunAndAssertTest("Subscriptions/Simple global subscriptions from one node to another");
+                runner.RunAndAssertTest("Subscriptions/Simple local subscription");
             }
-
             
         }
-    }
 
+    }
 }
