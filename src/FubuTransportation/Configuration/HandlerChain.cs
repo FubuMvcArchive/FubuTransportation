@@ -17,6 +17,7 @@ namespace FubuTransportation.Configuration
 
         public HandlerChain()
         {
+
         }
 
         public HandlerChain(IEnumerable<HandlerCall> calls) : this()
