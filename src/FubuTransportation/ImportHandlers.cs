@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Bottles;
 using FubuCore;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
@@ -14,6 +15,11 @@ namespace FubuTransportation
     public class ImportHandlers : IChainSource
     {
         public IEnumerable<BehaviorChain> BuildChains(BehaviorGraph graph)
+        {
+            return PackageRegistry.Timer.Record("Building FubuTransportation Chains", () => buildChains(graph));
+        }
+
+        private static IEnumerable<BehaviorChain> buildChains(BehaviorGraph graph)
         {
             var handlers = graph.Settings.Get<HandlerGraph>();
 
@@ -34,7 +40,7 @@ namespace FubuTransportation
 
                 // Hate how we're doing this, but disable tracing
                 // on the polling job requests here.
-                if (chain.InputType().Closes(typeof(JobRequest<>)))
+                if (chain.InputType().Closes(typeof (JobRequest<>)))
                 {
                     chain.Tags.Add(BehaviorChain.NoTracing);
                 }
@@ -42,6 +48,5 @@ namespace FubuTransportation
 
             return handlers;
         }
-
     }
 }
