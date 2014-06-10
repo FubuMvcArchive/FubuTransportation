@@ -22,7 +22,10 @@ namespace FubuTransportation.Diagnostics
 
         public void DebugMessage(object message)
         {
-            _session.Record(message.As<MessageLogRecord>().ToRecord());
+            var record = message.As<MessageLogRecord>().ToRecord();
+            if (record.IsPollingJobRelated()) return;
+
+            _session.Record(record);
         }
 
         public void InfoMessage(object message)
