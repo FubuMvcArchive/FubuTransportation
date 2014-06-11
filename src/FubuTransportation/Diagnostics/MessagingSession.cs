@@ -11,7 +11,7 @@ namespace FubuTransportation.Diagnostics
     public class MessagingSession : IMessagingSession, Bottles.Services.Messaging.IListener<MessageRecord>
     {
         private readonly ChannelGraph _graph;
-        private readonly Cache<string, MessageHistory> _histories = new Cache<string, MessageHistory>(id => new MessageHistory{Id = id});
+        private readonly ConcurrentCache<string, MessageHistory> _histories = new ConcurrentCache<string, MessageHistory>(id => new MessageHistory{Id = id});
         private readonly IList<MessageRecord> _all = new List<MessageRecord>(); 
 
         public MessagingSession(ChannelGraph graph)
