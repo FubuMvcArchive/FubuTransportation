@@ -43,3 +43,5 @@ fubutransportation.esent
 fubutransportation.esent.*
 src/FubuTransportation.Docs/snippets
 *.stresult
+st-artifacts/
+st-results

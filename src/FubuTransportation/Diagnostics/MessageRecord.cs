@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuTransportation.Polling;
 using FubuTransportation.Runtime;
 using HtmlTags;
 
@@ -8,6 +10,7 @@ namespace FubuTransportation.Diagnostics
 {
     public class MessageRecord : MessageRecordNode
     {
+        private Type _messageType;
         public string Id;
         public string Message;
         public string Node;
@@ -26,10 +29,16 @@ namespace FubuTransportation.Diagnostics
             ParentId = envelope.ParentId;
             if (envelope.Message != null)
             {
-                Type = envelope.Message.GetType().FullName;
+                _messageType = envelope.Message.GetType();
+                Type = _messageType.FullName;
             }
 
             Headers = envelope.Headers.Keys().Select(x => "{0}={1}".ToFormat(x, envelope.Headers[x])).Join(";");
+        }
+
+        public bool IsPollingJobRelated()
+        {
+            return _messageType != null && _messageType.Closes(typeof(JobRequest<>));
         }
 
         public override HtmlTag ToLeafTag()
