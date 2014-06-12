@@ -53,17 +53,17 @@ namespace FubuTransportation.Diagnostics
 
         public IEnumerable<MessageHistory> TopLevelMessages()
         {
-            return _histories.Where(x => x.Parent == null);
+            return _histories.Where(x => x.Parent == null).OrderBy(x => x.Timestamp);
         }
 
         public IEnumerable<MessageHistory> AllMessages()
         {
-            return _histories;
+            return _histories.OrderBy(x => x.Timestamp);
         }
 
         public IEnumerable<MessageRecord> All()
         {
-            return _histories.SelectMany(x => x.Records());
+            return AllMessages().SelectMany(x => x.Records());
         }
 
         public void Receive(MessageRecord message)
