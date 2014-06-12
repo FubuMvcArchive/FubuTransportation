@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FubuTransportation.Diagnostics;
 using HtmlTags;
 using Serenity;
@@ -25,13 +26,13 @@ namespace FubuTransportation.Serenity
 
             yield return new HtmlTag("ol", x =>
             {
-                foreach (MessageHistory topLevelMessage in _session.TopLevelMessages())
+                foreach (MessageHistory topLevelMessage in _session.TopLevelMessages().ToList())
                 {
                     x.Append(topLevelMessage.ToLeafTag());
                 }
             });
 
-            foreach (MessageHistory history in _session.AllMessages())
+            foreach (MessageHistory history in _session.AllMessages().ToList())
             {
                 yield return new MessageHistoryTableTag(history);
             }

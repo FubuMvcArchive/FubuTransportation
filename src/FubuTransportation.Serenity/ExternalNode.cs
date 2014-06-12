@@ -19,6 +19,7 @@ namespace FubuTransportation.Serenity
         private readonly Type _registryType;
         private FubuRuntime _runtime;
         private bool _isStarted;
+        private IMessagingSession _messageListener;
 
         public ExternalNode(string name, Type registryType, ChannelGraph systemUnderTest)
         {
@@ -44,6 +45,7 @@ namespace FubuTransportation.Serenity
             _isStarted = false;
             if (_runtime != null)
             {
+                Bottles.Services.Messaging.EventAggregator.Messaging.RemoveListener(_messageListener);
                 _runtime.Dispose();
                 _runtime = null;
             }
@@ -101,8 +103,8 @@ namespace FubuTransportation.Serenity
             Uri = _runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
 
             // Wireup the messaging session so the MessageHistory gets notified of messages on this node
-            var session = _runtime.Factory.Get<IMessagingSession>();
-            Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(session);
+            _messageListener = _runtime.Factory.Get<IMessagingSession>();
+            Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(_messageListener);
 
             Debug.WriteLine("Started test node with URI: {0}", Uri);
         }
