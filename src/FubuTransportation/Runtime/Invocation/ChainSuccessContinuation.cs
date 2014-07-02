@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Logging;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -15,10 +17,19 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            context.SendOutgoingMessages(envelope, _context.OutgoingMessages());
+            try
+            {
+                context.SendOutgoingMessages(envelope, _context.OutgoingMessages());
 
-            envelope.Callback.MarkSuccessful();
-            context.Logger.InfoMessage(() => new MessageSuccessful {Envelope = envelope.ToToken()});
+                envelope.Callback.MarkSuccessful();
+                context.Logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
+            }
+            catch (Exception ex)
+            {
+                context.SendFailureAcknowledgement(envelope, "Sending cascading message failed: " + ex.Message);
+                context.Logger.Error(envelope.CorrelationId, ex.Message, ex);
+                envelope.Callback.MoveToErrors(new ErrorReport(envelope, ex));
+            }
         }
 
         public IInvocationContext Context
