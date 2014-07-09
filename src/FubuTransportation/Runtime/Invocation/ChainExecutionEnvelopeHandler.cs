@@ -16,15 +16,23 @@ namespace FubuTransportation.Runtime.Invocation
 
         public IContinuation Handle(Envelope envelope)
         {
-            var chain = _invoker.FindChain(envelope);
-            if (chain == null)
+            try
             {
-                return null;
-            }
+                var chain = _invoker.FindChain(envelope);
+                if (chain == null)
+                {
+                    return null;
+                }
 
-            return chain.IsAsync
-                ? new AsyncChainExecutionContinuation(() => ExecuteChain(envelope, chain))
-                : ExecuteChain(envelope, chain);
+                return chain.IsAsync
+                    ? new AsyncChainExecutionContinuation(() => ExecuteChain(envelope, chain))
+                    : ExecuteChain(envelope, chain);
+
+            }
+            catch (EnvelopeDeserializationException ex)
+            {
+                return new DeserializationFailureContinuation(ex);
+            }
         }
 
         public IContinuation ExecuteChain(Envelope envelope, HandlerChain chain)

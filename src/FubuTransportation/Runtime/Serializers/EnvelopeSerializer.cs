@@ -34,7 +34,14 @@ namespace FubuTransportation.Runtime.Serializers
             
             using (var stream = new MemoryStream(envelope.Data))
             {
-                return serializer.Deserialize(stream);
+                try
+                {
+                    return serializer.Deserialize(stream);
+                }
+                catch (Exception ex)
+                {
+                    throw new EnvelopeDeserializationException("Message serializer has failed", ex);
+                }
             }
         }
 

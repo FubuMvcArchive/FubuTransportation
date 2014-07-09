@@ -2,6 +2,7 @@
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -66,6 +67,18 @@ namespace FubuTransportation.Testing.Runtime.Serializers
             }).Message.ShouldEqual("No data on this envelope to deserialize");
         }
 
+        [Test]
+        public void throws_on_deserialize_of_bad_message()
+        {
+            Exception<EnvelopeDeserializationException>.ShouldBeThrownBy(() =>
+            {
+                var messageSerializer = new BasicJsonMessageSerializer();
+                var serializer = new EnvelopeSerializer(null, new[] { messageSerializer });
+                var envelope = new Envelope(new byte[10], new NameValueHeaders(), null);
+                envelope.ContentType = messageSerializer.ContentType;
+                serializer.Deserialize(envelope);
+            }).Message.ShouldEqual("Message serializer has failed");
+        }
 
         [Test]
         public void select_serializer_uses_the_envelope_override_if_it_exists()

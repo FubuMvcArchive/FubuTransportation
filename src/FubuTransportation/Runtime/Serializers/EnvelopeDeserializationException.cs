@@ -10,6 +10,10 @@ namespace FubuTransportation.Runtime.Serializers
         {
         }
 
+        public EnvelopeDeserializationException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
         public EnvelopeDeserializationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
