@@ -141,4 +141,31 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
 
     }
+
+
+    [TestFixture]
+    public class when_finding_a_chain_errors : InteractionContext<ChainExecutionEnvelopeHandler>
+    {
+        private Envelope theEnvelope;
+        private IChainInvoker theInvoker;
+        private EnvelopeDeserializationException theException;
+
+        protected override void beforeEach()
+        {
+            theEnvelope = ObjectMother.Envelope();
+            theInvoker = MockFor<IChainInvoker>();
+
+            theException = new EnvelopeDeserializationException("I failed!");
+            theInvoker.Stub(x => x.FindChain(theEnvelope))
+                .Throw(theException);
+        }
+
+        [Test]
+        public void returns_a_deserialization_failure_continuation()
+        {
+            ClassUnderTest.Handle(theEnvelope)
+                .ShouldBeOfType<DeserializationFailureContinuation>()
+                .Exception.ShouldBeTheSameAs(theException);
+        }
+    }
 }
