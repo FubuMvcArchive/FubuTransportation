@@ -1,11 +1,12 @@
 ﻿using System;
-using FubuCore.Util;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace FubuTransportation.InMemory
 {
     public class SagaStateCache<T> : ISagaStateCache<T> where T : class
     {
-        private readonly Cache<Guid, T> _cache = new Cache<Guid, T>();
+        private readonly IDictionary<Guid, T> _cache = new ConcurrentDictionary<Guid, T>();
 
         public void Store(Guid correlationId, T state)
         {
@@ -14,7 +15,8 @@ namespace FubuTransportation.InMemory
 
         public T Find(Guid correlationId)
         {
-            return _cache.Has(correlationId) ? _cache[correlationId] : null;
+            T state;
+            return _cache.TryGetValue(correlationId, out state) ? state : null;
         }
 
         public void Delete(Guid correlationId)

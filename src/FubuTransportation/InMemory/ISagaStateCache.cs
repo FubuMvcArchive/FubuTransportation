@@ -11,7 +11,7 @@ namespace FubuTransportation.InMemory
 
     public class SagaStateCacheFactory : ISagaStateCacheFactory
     {
-        private readonly Cache<Type, object> _cache = new Cache<Type, object>(type => {
+        private readonly ConcurrentCache<Type, object> _cache = new ConcurrentCache<Type, object>(type => {
             var cacheType = typeof (SagaStateCache<>).MakeGenericType(type);
             return Activator.CreateInstance(cacheType);
         });
