@@ -34,6 +34,11 @@ namespace FubuTransportation.Serenity
             return node;
         }
 
+        public static void ClearReceivedMessages()
+        {
+            Nodes.Values.Each(x => x.ClearReceivedMessages());
+        }
+
         public static void Reset()
         {
             Nodes.Values.Each(x => x.SafeDispose());

@@ -13,6 +13,7 @@ namespace FubuTransportation.Serenity
     {
         IEnumerable<EnvelopeToken> ReceivedEnvelopes { get; }
         IEnumerable<object> ReceivedMessages { get; }
+        void Clear();
     }
 
     internal class MessageRecorder : IMessageRecorder, IListener, IListener<EnvelopeReceived>
@@ -49,6 +50,11 @@ namespace FubuTransportation.Serenity
         public IEnumerable<object> ReceivedMessages
         {
             get { return _receivedEnvelopes.Select(x => x.Message); }
+        }
+
+        public void Clear()
+        {
+            _receivedEnvelopes.Clear();
         }
     }
 }

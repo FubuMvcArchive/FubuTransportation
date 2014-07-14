@@ -20,6 +20,7 @@ namespace FubuTransportation.Serenity
         private FubuRuntime _runtime;
         private bool _isStarted;
         private IMessagingSession _messageListener;
+        private IMessageRecorder _recorder;
 
         public ExternalNode(string name, Type registryType, ChannelGraph systemUnderTest)
         {
@@ -40,6 +41,11 @@ namespace FubuTransportation.Serenity
 
         public Uri Uri { get; private set; }
 
+        public void ClearReceivedMessages()
+        {
+            _recorder.Clear();
+        }
+
         public void Dispose()
         {
             _isStarted = false;
@@ -53,16 +59,14 @@ namespace FubuTransportation.Serenity
 
         public bool ReceivedMessage<T>(Func<T, bool> predicate = null)
         {
-            var recorder = _runtime.Factory.Get<IMessageRecorder>();
-            return recorder.ReceivedMessages
+            return _recorder.ReceivedMessages
                 .Any(x => x.GetType().CanBeCastTo<T>()
                           && (predicate == null || predicate(x.As<T>())));
         }
 
         public IEnumerable<T> ReceivedMessages<T>()
         {
-            var recorder = _runtime.Factory.Get<IMessageRecorder>();
-            return recorder.ReceivedMessages
+            return _recorder.ReceivedMessages
                 .OfType<T>();
         }
 
@@ -101,6 +105,7 @@ namespace FubuTransportation.Serenity
 
             _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
             Uri = _runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
+            _recorder = _runtime.Factory.Get<IMessageRecorder>();
 
             // Wireup the messaging session so the MessageHistory gets notified of messages on this node
             _messageListener = _runtime.Factory.Get<IMessagingSession>();
