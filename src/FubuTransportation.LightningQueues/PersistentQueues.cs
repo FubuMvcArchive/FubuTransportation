@@ -67,12 +67,20 @@ namespace FubuTransportation.LightningQueues
                     queueManager.CreateQueues(LightningQueuesTransport.ErrorQueueName);
 
                     queueManager.Start();
+                    RecoverDelayedMessages(queueManager);
                 }
                 catch (Exception e)
                 {
                     throw new LightningQueueTransportException(new IPEndPoint(IPAddress.Any, group.Key), e);
                 }
             });
+        }
+
+        private void RecoverDelayedMessages(QueueManager queueManager)
+        {
+            queueManager.GetQueue(LightningQueuesTransport.DelayedQueueName)
+                .GetAllMessages(null)
+                .Each(x => _delayedMessages.Add(x.Id, x.ExecutionTime()));
         }
 
         public void CreateQueue(LightningUri uri)

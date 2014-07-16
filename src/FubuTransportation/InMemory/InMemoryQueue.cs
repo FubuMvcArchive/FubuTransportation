@@ -121,6 +121,7 @@ namespace FubuTransportation.InMemory
         public void MoveToDelayedUntil(DateTime time)
         {
             //TODO leverage delayed message cache?
+            _token.ExecutionTime = time;
             InMemoryQueueManager.AddToDelayedQueue(_token);
         }
 
@@ -131,7 +132,7 @@ namespace FubuTransportation.InMemory
 
         public void Requeue()
         {
-            throw new NotImplementedException();
+            _parent.Enqueue(_token);
         }
     }
 }

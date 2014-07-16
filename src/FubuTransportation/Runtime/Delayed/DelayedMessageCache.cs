@@ -24,10 +24,14 @@ namespace FubuTransportation.Runtime.Delayed
         
         public IEnumerable<TIdentifier> AllMessagesBefore(DateTime time)
         {
-            var readyToPlayMessages = _lock.Read<IEnumerable<DelayedMessage>>(() => 
+            var readyToPlayMessages = _lock.Read<IList<DelayedMessage>>(() => 
                 _delayedMessages.Where(x => x.ReceiveAt <= time).ToArray());
 
-            _lock.Write(() => readyToPlayMessages.Each(x => _delayedMessages.Remove(x)));
+            if (readyToPlayMessages.Any())
+            {
+                _lock.Write(() => readyToPlayMessages.Each(x => _delayedMessages.Remove(x)));
+            }
+
             return readyToPlayMessages.Select(x => x.MessageId).ToArray();
         }
 

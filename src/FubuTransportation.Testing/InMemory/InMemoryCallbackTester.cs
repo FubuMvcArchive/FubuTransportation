@@ -19,8 +19,9 @@ namespace FubuTransportation.Testing.InMemory
             var callback = new InMemoryCallback(null, envelope);
             callback.MoveToDelayedUntil(DateTime.Now);
 
-            InMemoryQueueManager.DelayedEnvelopes()
-                                .Single().CorrelationId.ShouldEqual(envelope.CorrelationId);
+            var delayed = InMemoryQueueManager.DelayedEnvelopes().Single();
+            delayed.CorrelationId.ShouldEqual(envelope.CorrelationId);
+            delayed.ExecutionTime.ShouldNotBeNull();
         }
     }
 }
