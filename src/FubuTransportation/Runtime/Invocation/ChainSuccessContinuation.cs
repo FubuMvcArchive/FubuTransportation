@@ -22,7 +22,10 @@ namespace FubuTransportation.Runtime.Invocation
                 context.SendOutgoingMessages(envelope, _context.OutgoingMessages());
 
                 envelope.Callback.MarkSuccessful();
-                context.Logger.InfoMessage(() => new MessageSuccessful { Envelope = envelope.ToToken() });
+
+                var message = new MessageSuccessful { Envelope = envelope.ToToken() };
+                if (!message.Envelope.IsDelayedEnvelopePollingJobRelated())
+                    context.Logger.InfoMessage(message);
             }
             catch (Exception ex)
             {

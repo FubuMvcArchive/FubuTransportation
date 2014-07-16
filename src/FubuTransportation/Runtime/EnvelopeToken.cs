@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuCore;
 using FubuTransportation.Polling;
+using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Headers;
 
 namespace FubuTransportation.Runtime
@@ -38,6 +39,11 @@ namespace FubuTransportation.Runtime
         public bool IsPollingJobRelated()
         {
             return Message == null ? false : Message.GetType().Closes(typeof (JobRequest<>));
+        }
+
+        public bool IsDelayedEnvelopePollingJobRelated()
+        {
+            return Message == null ? false : Message.GetType() == typeof(JobRequest<DelayedEnvelopeProcessor>);
         }
 
         protected bool Equals(EnvelopeToken other)
