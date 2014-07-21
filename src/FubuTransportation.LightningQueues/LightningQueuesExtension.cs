@@ -1,5 +1,6 @@
 ﻿using FubuMVC.Core;
 using FubuMVC.Core.Registration;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
 using LightningQueues.Model;
@@ -11,6 +12,8 @@ namespace FubuTransportation.LightningQueues
         public void Configure(FubuRegistry registry)
         {
             registry.Services<LightningQueuesServiceRegistry>();
+
+            registry.Import<LightningQueuesJobRegistry>();
         }
     }
 
@@ -21,6 +24,16 @@ namespace FubuTransportation.LightningQueues
             AddService<ITransport, LightningQueuesTransport>();
             SetServiceIfNone<IPersistentQueues, PersistentQueues>(x => x.IsSingleton = true);
             SetServiceIfNone<IDelayedMessageCache<MessageId>, DelayedMessageCache<MessageId>>();
+        }
+    }
+
+    public class LightningQueuesJobRegistry : FubuTransportRegistry
+    {
+        public LightningQueuesJobRegistry()
+        {
+            Handlers.DisableDefaultHandlerSource();
+            Polling.RunJob<PurgeQueuesJob>()
+                .ScheduledAtInterval<LightningQueueSettings>(x => x.PurgeQueuesPolling);
         }
     }
 }

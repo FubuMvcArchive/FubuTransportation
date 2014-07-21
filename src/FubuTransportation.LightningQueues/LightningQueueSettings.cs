@@ -1,10 +1,13 @@
-﻿namespace FubuTransportation.LightningQueues
+﻿using System;
+
+namespace FubuTransportation.LightningQueues
 {
     public class LightningQueueSettings
     {
         public LightningQueueSettings()
         {
             DefaultPort = 2020;
+            PurgeQueuesPolling = TimeSpan.FromMinutes(3).TotalMilliseconds;
         }
 
         public bool Disabled { get; set; }
@@ -16,5 +19,7 @@
         /// are no LightningQueues channels
         /// </summary>
         public bool DisableIfNoChannels { get; set; }
+
+        public double PurgeQueuesPolling { get; set; }
     }
 }
