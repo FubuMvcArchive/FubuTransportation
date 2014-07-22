@@ -160,6 +160,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurgeQueuesTester.cs" />
     <Compile Include="throws_descriptive_exception_if_no_incoming_lq_channel.cs">
       <SubType>Code</SubType>
     </Compile>
