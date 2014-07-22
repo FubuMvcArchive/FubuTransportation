@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
 
@@ -47,24 +48,30 @@ namespace FubuTransportation.Runtime.Invocation
                 }
             }
 
-            throw new NoHandlerException(envelope.Message.GetType());
+            // TODO - add rules for what to do when we have no handler
+            return new MoveToErrorQueue(new NoHandlerException(envelope.Message.GetType()));
         }
 
         public virtual void Invoke(Envelope envelope)
         {
             envelope.Attempts++; // needs to be done here.
-            var continuation = FindContinuation(envelope);
+            IContinuation continuation = null;
 
             try
             {
+                continuation = FindContinuation(envelope);
                 continuation.Execute(envelope, _context);
+            }
+            catch (EnvelopeDeserializationException ex)
+            {
+                new DeserializationFailureContinuation(ex).Execute(envelope, _context);
             }
             catch (Exception e)
             {
                 envelope.Callback.MarkFailed(); // TODO -- watch this one.
                 _context.Logger.Error(envelope.CorrelationId,
                     "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope,
-                        continuation),
+                        (object)continuation ?? "could not find continuation"),
                     e);
             }
         }

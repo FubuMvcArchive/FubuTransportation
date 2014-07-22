@@ -4,6 +4,7 @@ using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Subscriptions;
 using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
@@ -27,6 +28,13 @@ namespace FubuTransportation.Testing
             var envelope = Envelope();
             envelope.Message = new Message1();
 
+            return envelope;
+        }
+
+        public static Envelope EnvelopeWithSerializationError()
+        {
+            var envelope = Envelope();
+            envelope.UseSerializer(new ThrowingEnvelopeSerializer());
             return envelope;
         }
 
@@ -65,5 +73,18 @@ namespace FubuTransportation.Testing
         }
 
 
+    }
+
+    public class ThrowingEnvelopeSerializer : IEnvelopeSerializer
+    {
+        public object Deserialize(Envelope envelope)
+        {
+            throw new EnvelopeDeserializationException("Error");
+        }
+
+        public void Serialize(Envelope envelope, ChannelNode node)
+        {
+            throw new EnvelopeDeserializationException("Error");
+        }
     }
 }

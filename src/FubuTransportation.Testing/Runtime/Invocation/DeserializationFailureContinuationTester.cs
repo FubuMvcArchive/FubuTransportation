@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             theException = new EnvelopeDeserializationException("foo");
             theContext = new TestContinuationContext();
 
-            theEnvelope = ObjectMother.Envelope();
+            theEnvelope = ObjectMother.EnvelopeWithSerializationError();
 
 
             new DeserializationFailureContinuation(theException)
