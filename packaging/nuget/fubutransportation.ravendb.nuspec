@@ -18,5 +18,6 @@
   </metadata>
   <files xmlns="">
     <file src="..\..\src\FubuTransportation.RavenDb\bin\release\FubuTransportation.RavenDb.dll" target="lib\4.5" />
+    <file src="..\..\src\FubuTransportation.RavenDb\bin\release\FubuTransportation.RavenDb.pdb" target="lib\4.5" />
   </files>
 </package>
