@@ -60,6 +60,33 @@ namespace FubuTransportation.Testing.Runtime.Invocation
     }
 
     [TestFixture]
+    public class when_invoking_an_envelope_with_serialization_error : InteractionContext<HandlerPipeline>
+    {
+        private Envelope theEnvelope;
+        private TestContinuationContext theContext;
+
+        protected override void beforeEach()
+        {
+            Services.Inject<IEnumerable<IEnvelopeHandler>>(new IEnvelopeHandler[0]);
+
+            theContext = new TestContinuationContext();
+            Services.Inject<ContinuationContext>(theContext);
+
+            theEnvelope = ObjectMother.EnvelopeWithSerializationError();
+            theEnvelope.Attempts = 1;
+
+            theEnvelope.Callback = MockFor<IMessageCallback>();
+        }
+
+        [Test]
+        public void exception_is_handled()
+        {
+            ClassUnderTest.Invoke(theEnvelope);
+            // Just testing that no exception bubbles up.
+        }
+    }
+
+    [TestFixture]
     public class when_receiving_an_envelope : InteractionContext<HandlerPipeline>
     {
         private IContinuation theContinuation;
