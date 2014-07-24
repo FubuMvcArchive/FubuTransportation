@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Data;
-using FubuTransportation;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime.Serializers;
-using StructureMap.Diagnostics;
 
 namespace DiagnosticsHarness
 {
@@ -11,6 +9,7 @@ namespace DiagnosticsHarness
     {
         public HarnessRegistry()
         {
+            //Comment out in order to test with LightningQueues
             EnableInMemoryTransport();
 
             // TODO -- publish everything option in the FI?
