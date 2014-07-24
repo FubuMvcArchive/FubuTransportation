@@ -27,10 +27,7 @@ namespace FubuTransportation.LightningQueues
 
         public void Send(byte[] data, IHeaders headers)
         {
-            var payload = new MessagePayload {Data = data, Headers = headers.ToNameValues()};
-            var scope = _queueManager.BeginTransactionalScope();
-            scope.Send(Address, payload);
-            scope.Commit();
+            _queueManager.Send(data, headers, Address);
         }
     }
 }

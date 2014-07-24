@@ -48,21 +48,7 @@ namespace FubuTransportation.LightningQueues
 
         public void Send(byte[] data, IHeaders headers)
         {
-            var messagePayload = new MessagePayload
-            {
-                Data = data,
-                Headers = headers.ToNameValues()
-            };
-            //TODO Maybe expose something to modify transport specific payloads?
-            messagePayload.TranslateHeaders();
-
-            var sendingScope = _queueManager.BeginTransactionalScope();
-            var id = sendingScope.Send(_address, messagePayload);
-            
-            // TODO -- do we grab this?
-            
-            //data.CorrelationId = id.MessageIdentifier;
-            sendingScope.Commit();
+            _queueManager.Send(data, headers, _address);
         }
 
 
@@ -121,6 +107,25 @@ namespace FubuTransportation.LightningQueues
             {
                 messagePayload.DeliverBy = DateTime.Parse(headerValue);
             }
+        }
+
+        public static void Send(this IQueueManager queueManager, byte[] data, IHeaders headers, Uri address)
+        {
+            var messagePayload = new MessagePayload
+            {
+                Data = data,
+                Headers = headers.ToNameValues()
+            };
+            //TODO Maybe expose something to modify transport specific payloads?
+            messagePayload.TranslateHeaders();
+
+            var sendingScope = queueManager.BeginTransactionalScope();
+            var id = sendingScope.Send(address, messagePayload);
+            
+            // TODO -- do we grab this?
+            
+            //data.CorrelationId = id.MessageIdentifier;
+            sendingScope.Commit();
         }
     }
 }
