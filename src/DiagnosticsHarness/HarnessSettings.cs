@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
 using FubuTransportation;
 
 namespace DiagnosticsHarness
@@ -10,6 +9,10 @@ namespace DiagnosticsHarness
         {
             Channel = "memory://harness".ToUri();
             Publisher = "memory://publisher".ToUri();
+
+            //Use this instead if you want to test with LightningQueues
+            //Channel = "lq.tcp://localhost:9998/channel".ToUri();
+            //Publisher = "lq.tcp://localhost:9999/publisher".ToUri();
         }
 
         public Uri Publisher { get; set; }

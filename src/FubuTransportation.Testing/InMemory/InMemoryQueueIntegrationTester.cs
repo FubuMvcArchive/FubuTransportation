@@ -41,7 +41,7 @@ namespace FubuTransportation.Testing.InMemory
 
             queue.Enqueue(envelope);
 
-            Wait.Until(() => receiver.Received.Any(), timeoutInMilliseconds: 2000);
+            Wait.Until(() => receiver.Received.Count > 0, timeoutInMilliseconds: 2000);
 
             var received = receiver.Received.Single();
 
