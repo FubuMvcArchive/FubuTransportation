@@ -18,14 +18,17 @@ namespace FubuTransportation.LightningQueues.Diagnostics
         private readonly IEnvelopeSerializer _serializer;
         private readonly IFubuRequest _fubuRequest;
 
-        public MessageFubuDiagnostics(IQueueMessageRetrieval queueMessageRetrieval, IEnvelopeSerializer serializer, IFubuRequest fubuRequest)
+        public MessageFubuDiagnostics(IQueueMessageRetrieval queueMessageRetrieval, IEnvelopeSerializer serializer,
+            IFubuRequest fubuRequest)
         {
             _queueMessageRetrieval = queueMessageRetrieval;
             _serializer = serializer;
             _fubuRequest = fubuRequest;
         }
 
-        public QueueMessageVisualization get_message_details_Port_QueueName_SourceInstanceId_MessageId(MessageInputModel input)
+        [QueueMessageResourceNotFound]
+        public QueueMessageVisualization get_message_details_Port_QueueName_SourceInstanceId_MessageId(
+            MessageInputModel input)
         {
             var messageId = new MessageId
             {
@@ -56,11 +59,13 @@ namespace FubuTransportation.LightningQueues.Diagnostics
                 Status = message.Status,
                 SentAt = message.SentAt,
                 Headers = message.Headers,
-                Payload= envelope.Message
+                Payload = envelope.Message
             };
         }
 
-        public ErrorQueueMessageVisualization get_error_message_details_Port_QueueName_SourceInstanceId_MessageId(ErrorMessageInputModel input)
+        [QueueMessageResourceNotFound]
+        public ErrorQueueMessageVisualization get_error_message_details_Port_QueueName_SourceInstanceId_MessageId(
+            ErrorMessageInputModel input)
         {
             var messageId = new MessageId
             {
@@ -89,7 +94,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
                 ExceptionText = errorReport.ExceptionText
             };
 
-            var envelope = new Envelope(new NameValueHeaders(message.Headers)) { Data = errorReport.RawData };
+            var envelope = new Envelope(new NameValueHeaders(message.Headers)) {Data = errorReport.RawData};
             envelope.UseSerializer(_serializer);
 
             return new ErrorQueueMessageVisualization
@@ -134,10 +139,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
 
         public string PayloadAsJson
         {
-            get
-            {
-                return Payload != null ? JsonSerialization.ToJson(Payload, true) : null;
-            }
+            get { return Payload != null ? JsonSerialization.ToJson(Payload, true) : null; }
         }
 
         public HtmlTag HeadersAsHtml
@@ -178,5 +180,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
         public string QueueName { get; set; }
     }
 
-    public class ErrorMessageInputModel : MessageInputModel {}
+    public class ErrorMessageInputModel : MessageInputModel
+    {
+    }
 }

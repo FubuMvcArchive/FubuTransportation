@@ -15,7 +15,6 @@ namespace FubuTransportation.LightningQueues
             registry.Services<LightningQueuesServiceRegistry>();
 
             registry.Import<LightningQueuesJobRegistry>();
-            registry.Policies.Add<QueueMessageNotFoundConvention>(); // For diagnostics
         }
     }
 

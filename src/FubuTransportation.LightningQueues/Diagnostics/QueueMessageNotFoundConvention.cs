@@ -2,19 +2,18 @@
 using System.Linq;
 using FubuCore;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.Registration.Nodes;
 using FubuMVC.Core.Resources.Conneg;
 using FubuMVC.Core.Runtime;
 using LightningQueues.Model;
 
 namespace FubuTransportation.LightningQueues.Diagnostics
 {
-    public class QueueMessageNotFoundConvention : IConfigurationAction
+    public class QueueMessageResourceNotFoundAttribute : ModifyChainAttribute
     {
-        public void Configure(BehaviorGraph graph)
+        public override void Alter(ActionCall call)
         {
-            graph.Behaviors
-                 .Where(x => x.Calls.Any() && x.Calls.Last().OutputType().CanBeCastTo<QueueMessageVisualization>())
-                 .Each(x => x.Output.UseForResourceNotFound<QueueMessageNotFoundWriter>());
+            call.ParentChain().Output.As<OutputNode>().UseForResourceNotFound<QueueMessageNotFoundWriter>();
         }
     }
 
