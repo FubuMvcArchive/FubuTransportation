@@ -20,7 +20,7 @@ namespace FubuTransportation.LightningQueues.Testing
             // then rake compile to regenerate the bottle content
             using (var server = EmbeddedFubuMvcServer.For<LightningQueuesDiagnosticsApplication>())
             {
-                server.Endpoints.Get<LightningQueuesFubuDiagnostics>(x => x.Index())
+                server.Endpoints.Get<LightningQueuesFubuDiagnostics>(x => x.get_queue__managers())
                     .StatusCode.ShouldEqual(HttpStatusCode.OK);
             }
         }

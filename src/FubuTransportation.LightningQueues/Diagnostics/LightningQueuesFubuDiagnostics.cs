@@ -20,7 +20,7 @@ namespace FubuTransportation.LightningQueues.Diagnostics
             _urls = urls;
         }
 
-        public QueueManagersVisualization Index()
+        public QueueManagersVisualization get_queue__managers()
         {
             var visualization = new QueueManagersVisualization
             {

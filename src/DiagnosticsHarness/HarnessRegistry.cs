@@ -10,7 +10,7 @@ namespace DiagnosticsHarness
         public HarnessRegistry()
         {
             //Comment out in order to test with LightningQueues
-            EnableInMemoryTransport();
+            //EnableInMemoryTransport();
 
             // TODO -- publish everything option in the FI?
             Channel(x => x.Channel).ReadIncoming().AcceptsMessages(x => true).DefaultSerializer<XmlMessageSerializer>();
