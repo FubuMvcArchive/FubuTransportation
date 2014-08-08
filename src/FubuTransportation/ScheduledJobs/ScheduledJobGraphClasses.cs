@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using FubuCore.Dates;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
@@ -15,7 +16,7 @@ namespace FubuTransportation.ScheduledJobs
     [ApplicationLevel]
     public class ScheduledJobGraph : IHandlerSource
     {
-        public readonly IList<ScheduledJob> Jobs = new List<ScheduledJob>();
+        public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
 
         public void DetermineSchedule(DateTimeOffset now, JobSchedule schedule)
         {
@@ -91,6 +92,16 @@ namespace FubuTransportation.ScheduledJobs
 
         public void RunScheduledJobs()
         {
+            var jobs = _repository.FindReadyToExecuteJobs(_graph.Name, _systemTime.UtcNow());
+            while (jobs.Any())
+            {
+                var tasks = jobs.Select(job => {
+                    throw new NotImplementedException();
+                    return Task.Factory.StartNew(() => {
+                        
+                    });
+                });
+            }
         }
 
         public void Reschedule()
@@ -126,58 +137,5 @@ namespace FubuTransportation.ScheduledJobs
         {
             throw new NotImplementedException();
         }
-    }
-
-    public static class JobStatusExtensions
-    {
-        public static JobSchedule ToSchedule(this IEnumerable<JobStatus> statuses)
-        {
-            return new JobSchedule(statuses);
-        }
-    }
-
-    public class JobStatus : IJobStatus
-    {
-        public JobStatus()
-        {
-        }
-
-        public JobStatus(Type jobType, DateTimeOffset nextTime)
-        {
-            JobType = jobType.FullName;
-            NextTime = nextTime;
-        }
-
-        public string JobType { get; set; }
-        public DateTimeOffset? NextTime { get; set; }
-        public JobExecutionRecord LastExecution { get; set; }
-
-        protected bool Equals(JobStatus other)
-        {
-            return string.Equals(JobType, other.JobType) && NextTime.Equals(other.NextTime);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((JobStatus) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((JobType != null ? JobType.GetHashCode() : 0)*397) ^ NextTime.GetHashCode();
-            }
-        }
-    }
-
-
-    public class ScheduleChanges
-    {
-        public readonly IList<JobSchedule> Changes = new List<JobSchedule>();
-        public readonly IList<JobSchedule> Removals = new List<JobSchedule>();
     }
 }

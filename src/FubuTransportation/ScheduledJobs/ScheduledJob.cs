@@ -1,20 +1,34 @@
 using System;
 using FubuCore;
+using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJob
+    public interface IScheduledJob
+    {
+        Type JobType { get; }
+        IScheduleRule Scheduler { get; }
+        void Reschedule(DateTimeOffset now, JobSchedule schedule);
+        HandlerCall ToHandlerCall();
+    }
+
+    public class ScheduledJob<T> : IScheduledJob where T : IJob
     {
         // TODO -- need to add channel here.
 
-        public ScheduledJob(Type jobType, IScheduleRule scheduler)
+        public ScheduledJob(IScheduleRule scheduler)
         {
-            JobType = jobType;
             Scheduler = scheduler;
         }
 
-        public Type JobType { get; private set; }
+        public Type JobType
+        {
+            get
+            {
+                return typeof (T);
+            }
+        }
         public IScheduleRule Scheduler { get; private set; }
 
         public void Reschedule(DateTimeOffset now, JobSchedule schedule)

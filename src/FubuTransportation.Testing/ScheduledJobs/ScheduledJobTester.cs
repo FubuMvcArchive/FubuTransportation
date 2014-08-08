@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void can_create_a_handler_call()
         {
-            var job = new ScheduledJob(typeof (AJob), new DummyScheduleRule());
+            var job = new ScheduledJob<AJob>(new DummyScheduleRule());
 
             var call = job.ToHandlerCall();
             call.HandlerType.ShouldEqual(typeof (ScheduledJobRunner<AJob>));
@@ -28,7 +28,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private StubbedScheduleRule theRule;
         private readonly DateTimeOffset now = DateTime.Today;
         private readonly DateTimeOffset next = DateTime.Today.AddHours(4);
-        private ScheduledJob theJob;
+        private ScheduledJob<AJob> theJob;
 
         [SetUp]
         public void SetUp()
@@ -39,7 +39,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             theRule.ScheduledTimes[now] = next;
 
-            theJob = new ScheduledJob(typeof (AJob), theRule);
+            theJob = new ScheduledJob<AJob>(theRule);
         }
 
         [Test]

@@ -34,7 +34,7 @@ namespace FubuTransportation.ScheduledJobs
 
             public ScheduledJobExpression ScheduledBy(IScheduleRule rule)
             {
-                var definition = new ScheduledJob(typeof (TJob), rule);
+                var definition = new ScheduledJob<TJob>(rule);
 
                 _parent._graph.Jobs.Add(definition);
 
