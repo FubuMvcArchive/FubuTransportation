@@ -47,13 +47,6 @@ namespace FubuTransportation.Testing.ScheduledJob
             chains.ShouldHaveCount(3);
         }
 
-        [Test]
-        public void there_are_scheduled_job_initializers_registered()
-        {
-            var scheduledJobs = container.GetAllInstances<IScheduledJobInitializer>();
-
-            scheduledJobs.ShouldHaveCount(3);
-        }
     }
 
     public class ScheduledJobRegistry : FubuTransportRegistry

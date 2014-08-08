@@ -1,5 +1,6 @@
 ﻿using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
+using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.ScheduledJob
 {
@@ -26,12 +27,17 @@ namespace FubuTransportation.ScheduledJob
                 _parent = parent;
             }
 
-            public ScheduledJobExpression ScheduledBy<TScheduler>() where TScheduler : IJobScheduler
+            public ScheduledJobExpression ScheduledBy<TScheduler>() where TScheduler : IJobScheduler, new()
+            {
+                return ScheduledBy(new TScheduler());
+            }
+
+            public ScheduledJobExpression ScheduledBy(IJobScheduler scheduler)
             {
                 var definition = new ScheduledJobDefinition
                 {
                     JobType = typeof(TJob),
-                    SchedulerType = typeof(TScheduler)
+                    Scheduler = scheduler
                 };
 
                 _parent._parent._scheduledJobs.AddJobType(typeof(TJob));

@@ -271,11 +271,9 @@
     <Compile Include="ScheduledJob\EveryDayAtSpecificTime.cs" />
     <Compile Include="ScheduledJob\IJobScheduler.cs" />
     <Compile Include="ScheduledJob\IScheduledJobLogger.cs" />
-    <Compile Include="ScheduledJob\RegisterScheduledJobs.cs" />
     <Compile Include="ScheduledJob\ScheduledJobDefinition.cs" />
     <Compile Include="ScheduledJob\ScheduledJobExpression.cs" />
     <Compile Include="ScheduledJob\ScheduledJobHandlerSource.cs" />
-    <Compile Include="ScheduledJob\ScheduledJobInitializer.cs" />
     <Compile Include="ScheduledJob\ScheduledJobLogger.cs" />
     <Compile Include="ScheduledJob\ScheduledJobLogRecords.cs" />
     <Compile Include="ScheduledJob\ScheduledJobRunner.cs" />
