@@ -1,5 +1,4 @@
-﻿using FubuCore.Descriptions;
-using FubuMVC.Core;
+﻿using FubuMVC.Core;
 using FubuMVC.Core.Registration.Conventions;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
@@ -7,6 +6,7 @@ using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
+using FubuTransportation.ScheduledJob;
 
 namespace FubuTransportation
 {
@@ -17,7 +17,9 @@ namespace FubuTransportation
             registry.Policies.Add<ImportHandlers>();
             registry.Services<FubuTransportServiceRegistry>();
             registry.Services<PollingServicesRegistry>();
+            registry.Services<ScheduledJobServicesRegistry>();
             registry.Policies.Add<RegisterPollingJobs>();
+            registry.Policies.Add<RegisterScheduledJobs>();
             registry.Policies.Add<StatefulSagaConvention>();
             registry.Policies.Add<AsyncHandlingConvention>();
 

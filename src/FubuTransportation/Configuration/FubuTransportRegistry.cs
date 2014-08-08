@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,6 +20,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
+using FubuTransportation.ScheduledJob;
 using FubuTransportation.Scheduling;
 using FubuTransportation.Subscriptions;
 
@@ -30,6 +30,7 @@ namespace FubuTransportation.Configuration
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>();
         internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
+        internal readonly ScheduledJobHandlerSource _scheduledJobs = new ScheduledJobHandlerSource();
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>();
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
@@ -156,6 +157,11 @@ namespace FubuTransportation.Configuration
             {
                 yield return _pollingJobs;
             }
+
+            if (_scheduledJobs.HasAny())
+            {
+                yield return _scheduledJobs;
+            }
         }
 
         void IFubuRegistryExtension.Configure(FubuRegistry registry)
@@ -268,6 +274,11 @@ namespace FubuTransportation.Configuration
         public PollingJobExpression Polling
         {
             get { return new PollingJobExpression(this); }
+        }
+
+        public ScheduledJobExpression ScheduledJob
+        {
+            get { return new ScheduledJobExpression(this); }
         }
 
         public void DefaultSerializer<T>() where T : IMessageSerializer, new()
