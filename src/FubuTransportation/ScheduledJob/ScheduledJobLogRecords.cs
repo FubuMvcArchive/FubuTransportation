@@ -4,6 +4,17 @@ using FubuCore.Logging;
 
 namespace FubuTransportation.ScheduledJob
 {
+    public class ScheduledJobScheduled : LogRecord
+    {
+        public string Description { get; set; }
+        public DateTimeOffset ScheduledTime { get; set; }
+
+        public override string ToString()
+        {
+            return "Scheduled job {0} scheduled to start at {1}".ToFormat(Description, ScheduledTime.ToLocalTime());
+        }
+    }
+
     public class ScheduledJobStarted : LogRecord
     {
         public string Description { get; set; }

@@ -48,5 +48,14 @@ namespace FubuTransportation.ScheduledJob
                 });
             }
         }
+
+        public void LogNextScheduledRun(IJob job, DateTimeOffset nextTime)
+        {
+            _logger.InfoMessage(() => new ScheduledJobScheduled
+            {
+                Description = job.ToString(),
+                ScheduledTime = nextTime
+            });
+        }
     }
 }

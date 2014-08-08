@@ -268,7 +268,9 @@
     <Compile Include="Sagas\SagaTypes.cs" />
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Sagas\StatefulSagaNode.cs" />
+    <Compile Include="ScheduledJob\IJobScheduler.cs" />
     <Compile Include="ScheduledJob\IScheduledJobLogger.cs" />
+    <Compile Include="ScheduledJob\ScheduledJobInitializer.cs" />
     <Compile Include="ScheduledJob\ScheduledJobLogger.cs" />
     <Compile Include="ScheduledJob\ScheduledJobLogRecords.cs" />
     <Compile Include="ScheduledJob\ScheduledJobRunner.cs" />

@@ -95,6 +95,29 @@ namespace FubuTransportation.Testing.ScheduledJob
         }
     }
 
+    [TestFixture]
+    public class when_job_is_scheduled : InteractionContext<ScheduledJobLogger>
+    {
+        protected DateTimeOffset _nextScheduledTime;
+
+        protected override void beforeEach()
+        {
+            RecordLogging();
+            _nextScheduledTime = DateTimeOffset.UtcNow;
+
+            ClassUnderTest.LogNextScheduledRun(new ADummyJob(), _nextScheduledTime);
+        }
+
+        [Test]
+        public void should_log_next_scheduled_time()
+        {
+            var logRecords = RecordedLog().InfoMessages.ToList();
+            logRecords.ShouldHaveCount(1);
+
+            logRecords[0].ShouldBeOfType<ScheduledJobScheduled>().ScheduledTime.ShouldEqual(_nextScheduledTime);
+        }
+    }
+
     public class ADummyJob : IJob
     {
         public void Execute()
