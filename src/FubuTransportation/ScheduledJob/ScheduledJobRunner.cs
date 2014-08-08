@@ -13,6 +13,7 @@ namespace FubuTransportation.ScheduledJob
             _logger = logger;
         }
 
+        // TODO -- have this return the timer
         public void Execute(ExecuteScheduledJob<T> request)
         {
             _logger.LogAndTimeExecution(_job, () => _job.Execute());

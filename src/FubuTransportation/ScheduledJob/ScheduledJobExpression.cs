@@ -1,22 +1,22 @@
 ﻿using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
-using FubuTransportation.Scheduling;
 
 namespace FubuTransportation.ScheduledJob
 {
     public class ScheduledJobExpression
     {
+        private readonly ScheduledJobGraph _graph;
         private readonly FubuTransportRegistry _parent;
 
-        public ScheduledJobExpression(FubuTransportRegistry parent)
+        public ScheduledJobExpression(ScheduledJobGraph graph)
         {
-            _parent = parent;
+            _graph = graph;
         }
 
         public ScheduleExpression<TJob> RunJob<TJob>() where TJob : IJob
         {
             return new ScheduleExpression<TJob>(this);
-        } 
+        }
 
         public class ScheduleExpression<TJob> where TJob : IJob
         {
@@ -32,16 +32,12 @@ namespace FubuTransportation.ScheduledJob
                 return ScheduledBy(new TScheduler());
             }
 
-            public ScheduledJobExpression ScheduledBy(IScheduleRule scheduler)
+            public ScheduledJobExpression ScheduledBy(IScheduleRule rule)
             {
-                var definition = new ScheduledJobDefinition
-                {
-                    JobType = typeof(TJob),
-                    Scheduler = scheduler
-                };
+                var definition = new ScheduledJobDefinition(typeof (TJob), rule);
 
-                _parent._parent._scheduledJobs.AddJobType(typeof(TJob));
-                _parent._parent.AlterSettings<ScheduledJobSettings>(x => x.Jobs.Add(definition));
+                _parent._graph.Jobs.Add(definition);
+
                 return _parent;
             }
         }

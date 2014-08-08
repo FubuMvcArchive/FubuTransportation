@@ -30,7 +30,7 @@ namespace FubuTransportation.Configuration
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>();
         internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
-        internal readonly ScheduledJobHandlerSource _scheduledJobs = new ScheduledJobHandlerSource();
+        internal readonly ScheduledJobGraph _scheduledJobs = new ScheduledJobGraph();
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>();
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
@@ -158,10 +158,9 @@ namespace FubuTransportation.Configuration
                 yield return _pollingJobs;
             }
 
-            if (_scheduledJobs.HasAny())
-            {
-                yield return _scheduledJobs;
-            }
+
+            yield return _scheduledJobs;
+
         }
 
         void IFubuRegistryExtension.Configure(FubuRegistry registry)
@@ -278,7 +277,7 @@ namespace FubuTransportation.Configuration
 
         public ScheduledJobExpression ScheduledJob
         {
-            get { return new ScheduledJobExpression(this); }
+            get { return new ScheduledJobExpression(_scheduledJobs); }
         }
 
         public void DefaultSerializer<T>() where T : IMessageSerializer, new()
