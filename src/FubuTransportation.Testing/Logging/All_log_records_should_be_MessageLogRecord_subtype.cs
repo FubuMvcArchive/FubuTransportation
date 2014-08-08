@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.Logging
         {
             var wrongTypes = typeof (MessageLogRecord).Assembly.GetExportedTypes()
                 .Where(x => x.IsConcreteTypeOf<LogRecord>() && !x.IsConcreteTypeOf<MessageLogRecord>())
-                .Where(x => !x.Name.Contains("Polling"))
+                .Where(x => !x.Name.Contains("Polling") && !x.Name.Contains("ScheduledJob"))
                 .ToList();
 
             if (wrongTypes.Any())

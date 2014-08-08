@@ -373,6 +373,8 @@
     <Compile Include="Polling\PollingServicesRegistry_spec.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ScheduledJob\ScheduledJobLoggerTester.cs" />
+    <Compile Include="ScheduledJob\ScheduledJobRunnerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishing\EventPublisherTester.cs">
       <SubType>Code</SubType>
