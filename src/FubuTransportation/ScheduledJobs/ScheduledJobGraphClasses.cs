@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FubuCore.Dates;
-using FubuCore.Util;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
@@ -96,6 +95,8 @@ namespace FubuTransportation.ScheduledJobs
 
         public void Reschedule()
         {
+            if (!_settings.Jobs.Any()) return;
+
             var schedule = _repository.FindJobSchedule(_graph.Name).ToSchedule();
 
             _settings.DetermineSchedule(_systemTime.UtcNow(), schedule);
@@ -170,59 +171,6 @@ namespace FubuTransportation.ScheduledJobs
             {
                 return ((JobType != null ? JobType.GetHashCode() : 0)*397) ^ NextTime.GetHashCode();
             }
-        }
-    }
-
-    public class JobSchedule
-    {
-        private readonly IList<JobStatus> _changes = new List<JobStatus>();
-        private readonly IList<JobStatus> _removals = new List<JobStatus>();
-
-        private readonly Cache<string, JobStatus> _status =
-            new Cache<string, JobStatus>(x => new JobStatus {JobType = x});
-
-
-        public JobSchedule()
-        {
-        }
-
-        public JobSchedule(IEnumerable<JobStatus> all)
-        {
-            all.Each(x => _status[x.JobType] = x);
-        }
-
-        public IJobStatus Find(Type jobType)
-        {
-            return _status[jobType.FullName];
-        }
-
-        public IJobStatus Schedule(Type jobType, DateTimeOffset nextTime)
-        {
-            var status = _status[jobType.FullName];
-            status.NextTime = nextTime;
-            _changes.Fill(status);
-
-            return status;
-        }
-
-        public void RemoveObsoleteJobs(IEnumerable<Type> jobTypes)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<JobStatus> Changes()
-        {
-            return _changes;
-        }
-
-        public IEnumerable<JobStatus> Removals()
-        {
-            return _removals;
-        }
-
-        public DateTimeOffset NextExecutionTime()
-        {
-            throw new NotImplementedException();
         }
     }
 

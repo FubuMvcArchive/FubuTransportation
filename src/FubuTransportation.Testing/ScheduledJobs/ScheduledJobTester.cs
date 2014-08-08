@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Caching;
 using FubuCore.Util;
 using FubuTestingSupport;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
@@ -21,7 +19,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
             call.HandlerType.ShouldEqual(typeof (ScheduledJobRunner<AJob>));
             call.Method.Name.ShouldEqual("Execute");
         }
-
     }
 
     [TestFixture]
@@ -42,7 +39,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             theRule.ScheduledTimes[now] = next;
 
-            theJob = new ScheduledJob(typeof(AJob), theRule);
+            theJob = new ScheduledJob(typeof (AJob), theRule);
         }
 
         [Test]
@@ -70,8 +67,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void no_change_do_nothing()
         {
-            theSchedule = new JobSchedule(new[]{new JobStatus(typeof(AJob), next), });
-       
+            theSchedule = new JobSchedule(new[] {new JobStatus(typeof (AJob), next),});
+
             theJob.Reschedule(now, theSchedule);
 
             theSchedule.Find(theJob.JobType)
@@ -85,7 +82,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class StubbedScheduleRule : IScheduleRule
     {
-        public readonly Cache<DateTimeOffset, DateTimeOffset> ScheduledTimes 
+        public readonly Cache<DateTimeOffset, DateTimeOffset> ScheduledTimes
             = new Cache<DateTimeOffset, DateTimeOffset>();
 
         public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
@@ -93,6 +90,4 @@ namespace FubuTransportation.Testing.ScheduledJobs
             return ScheduledTimes[currentTime];
         }
     }
-
-
 }
