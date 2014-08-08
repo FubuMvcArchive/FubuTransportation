@@ -27,12 +27,12 @@ namespace FubuTransportation.ScheduledJob
                 _parent = parent;
             }
 
-            public ScheduledJobExpression ScheduledBy<TScheduler>() where TScheduler : IJobScheduler, new()
+            public ScheduledJobExpression ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
             {
                 return ScheduledBy(new TScheduler());
             }
 
-            public ScheduledJobExpression ScheduledBy(IJobScheduler scheduler)
+            public ScheduledJobExpression ScheduledBy(IScheduleRule scheduler)
             {
                 var definition = new ScheduledJobDefinition
                 {

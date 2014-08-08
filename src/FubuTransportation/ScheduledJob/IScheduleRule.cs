@@ -2,7 +2,7 @@ using System;
 
 namespace FubuTransportation.ScheduledJob
 {
-    public interface IJobScheduler
+    public interface IScheduleRule
     {
         DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime);
     }

@@ -55,9 +55,9 @@ namespace FubuTransportation.Testing.ScheduledJob
         {
             EnableInMemoryTransport();
 
-            ScheduledJob.RunJob<AJob>().ScheduledBy<DummyJobScheduler>();
-            ScheduledJob.RunJob<BJob>().ScheduledBy<DummyJobScheduler>();
-            ScheduledJob.RunJob<CJob>().ScheduledBy<DummyJobScheduler>();
+            ScheduledJob.RunJob<AJob>().ScheduledBy<DummyScheduleRule>();
+            ScheduledJob.RunJob<BJob>().ScheduledBy<DummyScheduleRule>();
+            ScheduledJob.RunJob<CJob>().ScheduledBy<DummyScheduleRule>();
         }
     }
 
@@ -85,7 +85,7 @@ namespace FubuTransportation.Testing.ScheduledJob
         public static void Reset() { Executed = 0; }
     }
 
-    public class DummyJobScheduler : IJobScheduler
+    public class DummyScheduleRule : IScheduleRule
     {
         public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
         {

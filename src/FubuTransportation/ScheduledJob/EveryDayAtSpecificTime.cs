@@ -2,7 +2,7 @@ using System;
 
 namespace FubuTransportation.ScheduledJob
 {
-    public class EveryDayAtSpecificTime : IJobScheduler
+    public class EveryDayAtSpecificTime : IScheduleRule
     {
         private readonly int _hour;
         private readonly int _minute;

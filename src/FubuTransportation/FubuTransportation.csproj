@@ -269,7 +269,7 @@
     <Compile Include="Sagas\StatefulSagaConvention.cs" />
     <Compile Include="Sagas\StatefulSagaNode.cs" />
     <Compile Include="ScheduledJob\EveryDayAtSpecificTime.cs" />
-    <Compile Include="ScheduledJob\IJobScheduler.cs" />
+    <Compile Include="ScheduledJob\IScheduleRule.cs" />
     <Compile Include="ScheduledJob\IScheduledJobLogger.cs" />
     <Compile Include="ScheduledJob\ScheduledJobDefinition.cs" />
     <Compile Include="ScheduledJob\ScheduledJobExpression.cs" />
