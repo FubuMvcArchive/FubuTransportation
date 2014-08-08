@@ -1,9 +1,9 @@
 ﻿using System;
 using FubuTestingSupport;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 
-namespace FubuTransportation.Testing.ScheduledJob
+namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
     public class when_scheduling_every_day_after_specified_time : InteractionContext<EveryDayAtSpecificTime>

@@ -2,7 +2,7 @@ using System;
 using FubuCore;
 using FubuCore.Logging;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobScheduled : LogRecord
     {

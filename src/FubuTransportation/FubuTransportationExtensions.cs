@@ -6,7 +6,7 @@ using FubuTransportation.InMemory;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 
 namespace FubuTransportation
 {

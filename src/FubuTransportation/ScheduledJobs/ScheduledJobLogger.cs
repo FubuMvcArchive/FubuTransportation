@@ -4,7 +4,7 @@ using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobLogger : IScheduledJobLogger
     {

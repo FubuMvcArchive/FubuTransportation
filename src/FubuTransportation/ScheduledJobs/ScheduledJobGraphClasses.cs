@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;
@@ -10,13 +10,13 @@ using FubuTransportation.Polling;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     // Need to add the default job channel
     [ApplicationLevel]
     public class ScheduledJobGraph : IHandlerSource
     {
-        public readonly IList<ScheduledJobDefinition> Jobs = new List<ScheduledJobDefinition>();
+        public readonly IList<ScheduledJob> Jobs = new List<ScheduledJob>();
 
         public void DetermineSchedule(DateTimeOffset now, JobSchedule schedule)
         {
@@ -35,29 +35,6 @@ namespace FubuTransportation.ScheduledJob
         }
     }
 
-    // TODO -- need to add channel here.
-    public class ScheduledJobDefinition
-    {
-        public ScheduledJobDefinition(Type jobType, IScheduleRule scheduler)
-        {
-            JobType = jobType;
-            Scheduler = scheduler;
-        }
-
-        public Type JobType { get; private set; }
-        public IScheduleRule Scheduler { get; private set; }
-
-        public void Reschedule(DateTimeOffset now, JobSchedule schedule)
-        {
-            throw new NotImplementedException();
-        }
-
-        public HandlerCall ToHandlerCall()
-        {
-            return typeof (ScheduledJobHandlerCall<>)
-                .CloseAndBuildAs<HandlerCall>(JobType);
-        }
-    }
 
     public class JobExecutionRecord
     {
@@ -166,7 +143,8 @@ namespace FubuTransportation.ScheduledJob
 
         public JobStatus(Type jobType, DateTimeOffset nextTime)
         {
-            throw new NotImplementedException();
+            JobType = jobType.FullName;
+            NextTime = nextTime;
         }
 
         public string JobType { get; set; }
@@ -203,6 +181,11 @@ namespace FubuTransportation.ScheduledJob
         private readonly Cache<string, JobStatus> _status =
             new Cache<string, JobStatus>(x => new JobStatus {JobType = x});
 
+
+        public JobSchedule()
+        {
+        }
+
         public JobSchedule(IEnumerable<JobStatus> all)
         {
             all.Each(x => _status[x.JobType] = x);
@@ -213,11 +196,13 @@ namespace FubuTransportation.ScheduledJob
             return _status[jobType.FullName];
         }
 
-        public void Schedule(Type jobType, DateTimeOffset nextTime)
+        public IJobStatus Schedule(Type jobType, DateTimeOffset nextTime)
         {
             var status = _status[jobType.FullName];
             status.NextTime = nextTime;
-            _changes.Add(status);
+            _changes.Fill(status);
+
+            return status;
         }
 
         public void RemoveObsoleteJobs(IEnumerable<Type> jobTypes)

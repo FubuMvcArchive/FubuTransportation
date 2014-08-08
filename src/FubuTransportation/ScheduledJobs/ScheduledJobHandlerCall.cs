@@ -3,7 +3,7 @@ using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobHandlerCall<T> : HandlerCall where T : IJob
     {

@@ -20,7 +20,7 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 using FubuTransportation.Scheduling;
 using FubuTransportation.Subscriptions;
 

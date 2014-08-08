@@ -1,6 +1,6 @@
 using System;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public interface IScheduleRule
     {

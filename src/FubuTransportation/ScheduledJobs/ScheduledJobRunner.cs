@@ -1,6 +1,6 @@
 using FubuTransportation.Polling;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobRunner<T> where T : IJob
     {

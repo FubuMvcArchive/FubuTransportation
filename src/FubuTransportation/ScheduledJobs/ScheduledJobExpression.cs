@@ -1,7 +1,7 @@
 ﻿using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobExpression
     {
@@ -34,7 +34,7 @@ namespace FubuTransportation.ScheduledJob
 
             public ScheduledJobExpression ScheduledBy(IScheduleRule rule)
             {
-                var definition = new ScheduledJobDefinition(typeof (TJob), rule);
+                var definition = new ScheduledJob(typeof (TJob), rule);
 
                 _parent._graph.Jobs.Add(definition);
 

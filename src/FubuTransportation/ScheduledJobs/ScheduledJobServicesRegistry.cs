@@ -1,6 +1,6 @@
 ﻿using FubuMVC.Core.Registration;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobServicesRegistry : ServiceRegistry
     {

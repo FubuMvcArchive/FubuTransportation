@@ -7,11 +7,11 @@ using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 using StructureMap;
 
-namespace FubuTransportation.Testing.ScheduledJob
+namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
     public class ScheduledJobIntegrationTester

@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 
-namespace FubuTransportation.Testing.ScheduledJob
+namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
     public class when_scheduled_job_succeeds : InteractionContext<ScheduledJobLogger>

@@ -373,10 +373,10 @@
     <Compile Include="Polling\PollingServicesRegistry_spec.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ScheduledJob\EveryDayAtSpecificTimeJobSchedulerTester.cs" />
-    <Compile Include="ScheduledJob\ScheduledJobIntegrationTester.cs" />
-    <Compile Include="ScheduledJob\ScheduledJobLoggerTester.cs" />
-    <Compile Include="ScheduledJob\ScheduledJobRunnerTester.cs" />
+    <Compile Include="ScheduledJobs\EveryDayAtSpecificTimeJobSchedulerTester.cs" />
+    <Compile Include="ScheduledJobs\ScheduledJobIntegrationTester.cs" />
+    <Compile Include="ScheduledJobs\ScheduledJobLoggerTester.cs" />
+    <Compile Include="ScheduledJobs\ScheduledJobRunnerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishing\EventPublisherTester.cs">
       <SubType>Code</SubType>
@@ -651,6 +651,7 @@
     <Compile Include="ScenarioWriterSmokeTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ScheduledJobs\ScheduledJobTester.cs" />
     <Compile Include="Scheduling\TaskSchedulerTester.cs">
       <SubType>Code</SubType>
     </Compile>

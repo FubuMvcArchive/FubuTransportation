@@ -1,6 +1,6 @@
 using System;
 
-namespace FubuTransportation.ScheduledJob
+namespace FubuTransportation.ScheduledJobs
 {
     public class EveryDayAtSpecificTime : IScheduleRule
     {

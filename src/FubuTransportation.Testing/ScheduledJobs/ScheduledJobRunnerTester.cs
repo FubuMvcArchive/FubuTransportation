@@ -1,11 +1,11 @@
 ﻿using System;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
-using FubuTransportation.ScheduledJob;
+using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace FubuTransportation.Testing.ScheduledJob
+namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
     public class when_running_a_scheduled_job_successfully : InteractionContext<ScheduledJobRunner<AScheduledJob>>
