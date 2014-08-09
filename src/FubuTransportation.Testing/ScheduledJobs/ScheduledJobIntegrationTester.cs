@@ -49,7 +49,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     }
 
-    public class ScheduledJobRegistry : FubuTransportRegistry
+    public class ScheduledJobRegistry : FubuTransportRegistry<BusSettings>
     {
         public ScheduledJobRegistry()
         {

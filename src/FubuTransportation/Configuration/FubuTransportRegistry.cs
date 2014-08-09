@@ -275,11 +275,6 @@ namespace FubuTransportation.Configuration
             get { return new PollingJobExpression(this); }
         }
 
-        public ScheduledJobExpression ScheduledJob
-        {
-            get { return new ScheduledJobExpression(_scheduledJobs); }
-        }
-
         public void DefaultSerializer<T>() where T : IMessageSerializer, new()
         {
             channel = graph => graph.DefaultContentType = new T().ContentType;
@@ -357,6 +352,11 @@ namespace FubuTransportation.Configuration
                     FubuTransport.DefaultChannelGraph = graph;
                 }
             });
+        }
+
+        public ScheduledJobExpression<T> ScheduledJob
+        {
+            get { return new ScheduledJobExpression<T>(_scheduledJobs); }
         }
 
 

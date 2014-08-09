@@ -3,7 +3,7 @@ using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJobExpression
+    public class ScheduledJobExpression<T>
     {
         private readonly ScheduledJobGraph _graph;
         private readonly FubuTransportRegistry _parent;
@@ -20,19 +20,19 @@ namespace FubuTransportation.ScheduledJobs
 
         public class ScheduleExpression<TJob> where TJob : IJob
         {
-            private readonly ScheduledJobExpression _parent;
+            private readonly ScheduledJobExpression<T> _parent;
 
-            public ScheduleExpression(ScheduledJobExpression parent)
+            public ScheduleExpression(ScheduledJobExpression<T> parent)
             {
                 _parent = parent;
             }
 
-            public ScheduledJobExpression ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
+            public ScheduledJobExpression<T> ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
             {
                 return ScheduledBy(new TScheduler());
             }
 
-            public ScheduledJobExpression ScheduledBy(IScheduleRule rule)
+            public ScheduledJobExpression<T> ScheduledBy(IScheduleRule rule)
             {
                 var definition = new ScheduledJob<TJob>(rule);
 
