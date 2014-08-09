@@ -1,7 +1,7 @@
 using System;
-using FubuCore;
+using FubuCore.Reflection;
 using FubuTransportation.Polling;
-using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Runtime.Routing;
 
 namespace FubuTransportation.ScheduledJobs
 {
@@ -10,6 +10,9 @@ namespace FubuTransportation.ScheduledJobs
         Type JobType { get; }
         IScheduleRule Scheduler { get; }
         void Reschedule(DateTimeOffset now, JobSchedule schedule);
+        Accessor Channel { get; }
+
+        IRoutingRule ToRoutingRule();
     }
 
     public class ScheduledJob<T> : IScheduledJob where T : IJob
@@ -21,13 +24,18 @@ namespace FubuTransportation.ScheduledJobs
             Scheduler = scheduler;
         }
 
+        public Accessor Channel { get; set; }
+
+        public IRoutingRule ToRoutingRule()
+        {
+            return new ScheduledJobRoutingRule<T>();
+        }
+
         public Type JobType
         {
-            get
-            {
-                return typeof (T);
-            }
+            get { return typeof (T); }
         }
+
         public IScheduleRule Scheduler { get; private set; }
 
         public void Reschedule(DateTimeOffset now, JobSchedule schedule)
@@ -40,6 +48,5 @@ namespace FubuTransportation.ScheduledJobs
                 schedule.Schedule(JobType, next);
             }
         }
-
     }
 }

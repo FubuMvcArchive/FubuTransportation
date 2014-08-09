@@ -5,32 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Dates;
+using FubuCore.Reflection;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
-using FubuTransportation.Registration;
-using FubuTransportation.Registration.Nodes;
+using FubuTransportation.Runtime.Routing;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJobHandlerSource : IHandlerSource
-    {
-        public readonly IList<Type> JobTypes = new List<Type>(); 
-
-        public IEnumerable<HandlerCall> FindCalls()
-        {
-            return JobTypes.Select(type => {
-                return typeof (ScheduledJobHandlerCall<>).CloseAndBuildAs<HandlerCall>(type);
-
-            });
-        }
-    }
-
     // Need to add the default job channel
     [ApplicationLevel]
     public class ScheduledJobGraph 
     {
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
+        public Accessor DefaultChannel { get; set; }
 
         public void DetermineSchedule(DateTimeOffset now, JobSchedule schedule)
         {
@@ -40,8 +28,25 @@ namespace FubuTransportation.ScheduledJobs
             var types = Jobs.Select(x => x.JobType).ToArray();
             schedule.RemoveObsoleteJobs(types);
         }
+
+        public IScheduledJob FindJob(Type jobType)
+        {
+            return Jobs.FirstOrDefault(x => x.JobType == jobType);
+        }
     }
 
+    public class ScheduledJobRoutingRule<T> : IRoutingRule where T : IJob
+    {
+        public bool Matches(Type type)
+        {
+            return type == typeof (ExecuteScheduledJob<T>);
+        }
+
+        public string Describe()
+        {
+            return "Executes scheduled job: " + typeof (T).GetFullName();
+        }
+    }
 
     public class JobExecutionRecord
     {

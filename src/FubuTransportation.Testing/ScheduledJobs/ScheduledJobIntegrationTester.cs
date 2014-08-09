@@ -7,6 +7,7 @@ using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
+using FubuTransportation.Runtime.Routing;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 using StructureMap;
@@ -22,13 +23,14 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [TestFixtureSetUp]
         public void SetUp()
         {
+            FubuTransport.AllQueuesInMemory = true;
+
             AJob.Reset();
             BJob.Reset();
             CJob.Reset();
 
-            container = new Container();
             theRuntime = FubuTransport.For<ScheduledJobRegistry>()
-                .StructureMap(container)
+                .StructureMap()
                 .Bootstrap();
         }
 
@@ -47,6 +49,39 @@ namespace FubuTransportation.Testing.ScheduledJobs
             chains.ShouldHaveCount(3);
         }
 
+        [Test]
+        public void registration_of_scheduled_jobs_can_capture_channel_names()
+        {
+            var graph = theRuntime.Factory.Get<ScheduledJobGraph>();
+            graph.DefaultChannel.Name.ShouldEqual("Downstream");
+            graph.FindJob(typeof (AJob)).Channel.Name.ShouldEqual("Upstream");
+        }
+
+        [Test]
+        public void explicitly_register_a_routing_rule_for_a_scheduled_job()
+        {
+            var graph = theRuntime.Factory.Get<ChannelGraph>();
+            graph.ChannelFor<BusSettings>(x => x.Upstream).ShouldExecuteJob<AJob>();
+        }
+
+        [Test]
+        public void use_the_default_channel_for_scheduled_jobs_if_none_is_explicitly_set()
+        {
+            var graph = theRuntime.Factory.Get<ChannelGraph>();
+            graph.ChannelFor<BusSettings>(x => x.Downstream)
+                .ShouldExecuteJob<BJob>()
+                .ShouldExecuteJob<CJob>();
+        }
+
+    }
+
+    public static class ChannelGraphExtensions
+    {
+        public static ChannelNode ShouldExecuteJob<T>(this ChannelNode node) where T : IJob
+        {
+            node.Rules.OfType<ScheduledJobRoutingRule<T>>().ShouldHaveCount(1);
+            return node;
+        }
     }
 
     public class ScheduledJobRegistry : FubuTransportRegistry<BusSettings>
@@ -55,7 +90,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             EnableInMemoryTransport();
 
-            ScheduledJob.RunJob<AJob>().ScheduledBy<DummyScheduleRule>();
+            ScheduledJob.DefaultJobChannel(x => x.Downstream);
+            ScheduledJob.RunJob<AJob>().ScheduledBy<DummyScheduleRule>().Channel(x => x.Upstream);
             ScheduledJob.RunJob<BJob>().ScheduledBy<DummyScheduleRule>();
             ScheduledJob.RunJob<CJob>().ScheduledBy<DummyScheduleRule>();
         }

@@ -46,6 +46,11 @@ namespace FubuTransportation.Configuration
             return ChannelFor(ReflectionHelper.GetAccessor(property));
         }
 
+        public ChannelNode ChannelFor(string name)
+        {
+            return _channels.FirstOrDefault(x => x.SettingAddress.Name == name);
+        }
+
         public ChannelNode ChannelFor(Accessor accessor)
         {
             var key = ToKey(accessor);

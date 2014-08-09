@@ -14,5 +14,7 @@ namespace FubuTransportation.Runtime.Routing
         {
             return typeof(T).Name;
         }
+
+
     }
 }

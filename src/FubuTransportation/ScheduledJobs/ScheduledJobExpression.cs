@@ -1,4 +1,7 @@
-﻿using FubuTransportation.Configuration;
+﻿using System;
+using System.Linq.Expressions;
+using FubuCore.Reflection;
+using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
@@ -19,6 +22,13 @@ namespace FubuTransportation.ScheduledJobs
             return new ScheduleExpression<TJob>(this);
         }
 
+
+        public ScheduledJobExpression<T> DefaultJobChannel(Expression<Func<T, object>> channel)
+        {
+            _parent.AlterSettings<ScheduledJobGraph>(x => x.DefaultChannel = channel.ToAccessor());
+            return this;
+        } 
+
         public class ScheduleExpression<TJob> where TJob : IJob
         {
             private readonly ScheduledJobExpression<T> _parent;
@@ -28,19 +38,36 @@ namespace FubuTransportation.ScheduledJobs
                 _parent = parent;
             }
 
-            public ScheduledJobExpression<T> ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
+
+
+            public ChannelExpression<TJob> ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
             {
                 return ScheduledBy(new TScheduler());
             }
 
-            public ScheduledJobExpression<T> ScheduledBy(IScheduleRule rule)
+            public ChannelExpression<TJob> ScheduledBy(IScheduleRule rule)
             {
-                var definition = new ScheduledJob<TJob>(rule);
+                var job = new ScheduledJob<TJob>(rule);
 
                 _parent._scheduledJobs.JobTypes.Add(typeof(TJob));
-                _parent._parent.AlterSettings<ScheduledJobGraph>(x => x.Jobs.Add(definition));
+                _parent._parent.AlterSettings<ScheduledJobGraph>(x => x.Jobs.Add(job));
 
-                return _parent;
+                return new ChannelExpression<TJob>(job);
+            }
+
+            public class ChannelExpression<TJob> where TJob : IJob
+            {
+                private readonly ScheduledJob<TJob> _job;
+
+                public ChannelExpression(ScheduledJob<TJob> job)
+                {
+                    _job = job;
+                }
+
+                public void Channel(Expression<Func<T, object>> channel)
+                {
+                    _job.Channel = channel.ToAccessor();
+                }
             }
         }
     }

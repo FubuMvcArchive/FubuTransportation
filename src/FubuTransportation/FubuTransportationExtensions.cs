@@ -15,6 +15,7 @@ namespace FubuTransportation
         public void Configure(FubuRegistry registry)
         {
             registry.Policies.Add<ImportHandlers>();
+            registry.Policies.Add<ApplyScheduledJobRouting>();
             registry.Services<FubuTransportServiceRegistry>();
             registry.Services<PollingServicesRegistry>();
             registry.Services<ScheduledJobServicesRegistry>();
