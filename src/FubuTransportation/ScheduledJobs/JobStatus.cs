@@ -1,9 +1,15 @@
 using System;
+using System.Diagnostics;
 
 namespace FubuTransportation.ScheduledJobs
 {
     public class JobStatus : IJobStatus
     {
+        public static JobStatus For<T>(DateTimeOffset nextTime)
+        {
+            return new JobStatus(typeof(T), nextTime);
+        }
+
         public JobStatus()
         {
         }

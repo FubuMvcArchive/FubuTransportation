@@ -87,9 +87,21 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class DummyScheduleRule : IScheduleRule
     {
+        private readonly DateTimeOffset _nextTime;
+
+        public DummyScheduleRule()
+        {
+            _nextTime = DateTimeOffset.Now;
+        }
+
+        public DummyScheduleRule(DateTimeOffset nextTime)
+        {
+            _nextTime = nextTime;
+        }
+
         public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
         {
-            throw new NotImplementedException();
+            return _nextTime;
         }
     }
 }

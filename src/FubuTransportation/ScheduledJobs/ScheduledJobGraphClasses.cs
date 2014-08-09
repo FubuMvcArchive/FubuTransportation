@@ -20,8 +20,6 @@ namespace FubuTransportation.ScheduledJobs
 
         public void DetermineSchedule(DateTimeOffset now, JobSchedule schedule)
         {
-            throw new NotImplementedException("Not really done");
-
             // Make sure that all existing jobs are schedules
             Jobs.Each(x => x.Reschedule(now, schedule));
 
@@ -52,13 +50,21 @@ namespace FubuTransportation.ScheduledJobs
         JobExecutionRecord LastExecution { get; }
     }
 
-    public interface IScheduleRepository
+    public interface ISchedulePersistence
     {
         IEnumerable<JobStatus> FindJobSchedule(string nodeName);
         void PersistChanges(string nodeName, IEnumerable<JobStatus> changes, IEnumerable<JobStatus> deletions);
         void PersistChange(string nodeName, JobStatus status);
 
         IEnumerable<JobStatus> FindReadyToExecuteJobs(string nodeName, DateTimeOffset now);
+    }
+
+    public interface IScheduleRepository
+    {
+        void Reschedule(Action<JobSchedule> scheduling);
+        void Reschedule(JobStatus status);
+
+        IEnumerable<JobStatus> FindReadyToExecuteJobs(DateTimeOffset now);
     }
 
     public interface IJobScheduler
@@ -76,23 +82,20 @@ namespace FubuTransportation.ScheduledJobs
         private readonly IScheduleRepository _repository;
         private readonly ScheduledJobGraph _settings;
         private readonly IServiceBus _serviceBus;
-        private readonly ChannelGraph _graph;
         private DefaultTimer _timer;
 
-        public JobScheduler(ISystemTime systemTime, IScheduleRepository repository, ScheduledJobGraph settings,
-            IServiceBus serviceBus, ChannelGraph graph)
+        public JobScheduler(ISystemTime systemTime, IScheduleRepository repository, ScheduledJobGraph settings, IServiceBus serviceBus)
         {
             _systemTime = systemTime;
             _repository = repository;
             _settings = settings;
             _serviceBus = serviceBus;
-            _graph = graph;
             _timer = new DefaultTimer();
         }
 
         public void RunScheduledJobs()
         {
-            var jobs = _repository.FindReadyToExecuteJobs(_graph.Name, _systemTime.UtcNow());
+            var jobs = _repository.FindReadyToExecuteJobs(_systemTime.UtcNow());
             while (jobs.Any())
             {
                 var tasks = jobs.Select(job => {
@@ -108,16 +111,15 @@ namespace FubuTransportation.ScheduledJobs
         {
             if (!_settings.Jobs.Any()) return;
 
-            var schedule = _repository.FindJobSchedule(_graph.Name).ToSchedule();
+            _repository.Reschedule(schedule => {
+                _settings.DetermineSchedule(_systemTime.UtcNow(), schedule);
 
-            _settings.DetermineSchedule(_systemTime.UtcNow(), schedule);
+                var nextTime = schedule.NextExecutionTime();
 
-            // TODO -- do some logging here.
-            _repository.PersistChanges(_graph.Name, schedule.Changes(), schedule.Removals());
+                ResetTimerTo(nextTime.AddSeconds(1));
+            });
 
-            var nextTime = schedule.NextExecutionTime();
 
-            ResetTimerTo(nextTime.AddSeconds(1));
         }
 
         public void ResetTimerTo(DateTimeOffset time)
