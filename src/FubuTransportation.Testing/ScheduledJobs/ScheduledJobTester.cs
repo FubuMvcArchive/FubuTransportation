@@ -7,19 +7,7 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-    [TestFixture]
-    public class ScheduledJobTester
-    {
-        [Test]
-        public void can_create_a_handler_call()
-        {
-            var job = new ScheduledJob<AJob>(new DummyScheduleRule());
 
-            var call = job.ToHandlerCall();
-            call.HandlerType.ShouldEqual(typeof (ScheduledJobRunner<AJob>));
-            call.Method.Name.ShouldEqual("Execute");
-        }
-    }
 
     [TestFixture]
     public class when_rescheduling_a_job

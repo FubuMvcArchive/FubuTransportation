@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Dates;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
@@ -12,9 +13,22 @@ using FubuTransportation.Registration.Nodes;
 
 namespace FubuTransportation.ScheduledJobs
 {
+    public class ScheduledJobHandlerSource : IHandlerSource
+    {
+        public readonly IList<Type> JobTypes = new List<Type>(); 
+
+        public IEnumerable<HandlerCall> FindCalls()
+        {
+            return JobTypes.Select(type => {
+                return typeof (ScheduledJobHandlerCall<>).CloseAndBuildAs<HandlerCall>(type);
+
+            });
+        }
+    }
+
     // Need to add the default job channel
     [ApplicationLevel]
-    public class ScheduledJobGraph : IHandlerSource
+    public class ScheduledJobGraph 
     {
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
 
@@ -25,11 +39,6 @@ namespace FubuTransportation.ScheduledJobs
 
             var types = Jobs.Select(x => x.JobType).ToArray();
             schedule.RemoveObsoleteJobs(types);
-        }
-
-        public IEnumerable<HandlerCall> FindCalls()
-        {
-            return Jobs.Select(x => x.ToHandlerCall());
         }
     }
 

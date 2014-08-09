@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Expressions;
 using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Polling

@@ -5,12 +5,13 @@ namespace FubuTransportation.ScheduledJobs
 {
     public class ScheduledJobExpression<T>
     {
-        private readonly ScheduledJobGraph _graph;
         private readonly FubuTransportRegistry _parent;
+        private readonly ScheduledJobHandlerSource _scheduledJobs;
 
-        public ScheduledJobExpression(ScheduledJobGraph graph)
+        public ScheduledJobExpression(FubuTransportRegistry parent, ScheduledJobHandlerSource scheduledJobs)
         {
-            _graph = graph;
+            _parent = parent;
+            _scheduledJobs = scheduledJobs;
         }
 
         public ScheduleExpression<TJob> RunJob<TJob>() where TJob : IJob
@@ -36,7 +37,8 @@ namespace FubuTransportation.ScheduledJobs
             {
                 var definition = new ScheduledJob<TJob>(rule);
 
-                _parent._graph.Jobs.Add(definition);
+                _parent._scheduledJobs.JobTypes.Add(typeof(TJob));
+                _parent._parent.AlterSettings<ScheduledJobGraph>(x => x.Jobs.Add(definition));
 
                 return _parent;
             }

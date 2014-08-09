@@ -10,7 +10,6 @@ namespace FubuTransportation.ScheduledJobs
         Type JobType { get; }
         IScheduleRule Scheduler { get; }
         void Reschedule(DateTimeOffset now, JobSchedule schedule);
-        HandlerCall ToHandlerCall();
     }
 
     public class ScheduledJob<T> : IScheduledJob where T : IJob
@@ -42,10 +41,5 @@ namespace FubuTransportation.ScheduledJobs
             }
         }
 
-        public HandlerCall ToHandlerCall()
-        {
-            return typeof (ScheduledJobHandlerCall<>)
-                .CloseAndBuildAs<HandlerCall>(JobType);
-        }
     }
 }

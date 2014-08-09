@@ -12,10 +12,10 @@ namespace FubuTransportation.Polling
 
         public ObjectDef ToObjectDef()
         {
-            var def = new ObjectDef(typeof (PollingJob<,>), JobType, SettingType);
+            var def = new ObjectDef(typeof(PollingJob<,>), JobType, SettingType);
 
-            var funcType = typeof (Func<,>).MakeGenericType(SettingType, typeof (double));
-            var intervalSourceType = typeof (Expression<>).MakeGenericType(funcType);
+            var funcType = typeof(Func<,>).MakeGenericType(SettingType, typeof(double));
+            var intervalSourceType = typeof(Expression<>).MakeGenericType(funcType);
             def.DependencyByValue(intervalSourceType, IntervalSource);
 
             return def;

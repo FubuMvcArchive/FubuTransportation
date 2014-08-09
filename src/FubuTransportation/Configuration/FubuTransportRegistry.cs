@@ -30,7 +30,7 @@ namespace FubuTransportation.Configuration
     {
         private readonly IList<IHandlerSource> _sources = new List<IHandlerSource>();
         internal readonly PollingJobHandlerSource _pollingJobs = new PollingJobHandlerSource(); // leave it as internal
-        internal readonly ScheduledJobGraph _scheduledJobs = new ScheduledJobGraph();
+        internal readonly ScheduledJobHandlerSource _scheduledJobs = new ScheduledJobHandlerSource();
         private readonly IList<Action<ChannelGraph>> _channelAlterations = new List<Action<ChannelGraph>>();
         private readonly IList<Action<FubuRegistry>> _alterations = new List<Action<FubuRegistry>>();
         private readonly ConfigurationActionSet _localPolicies = new ConfigurationActionSet(ConfigurationType.Policy);
@@ -145,7 +145,7 @@ namespace FubuTransportation.Configuration
             set { _channelAlterations.Add(value); }
         }
 
-
+        // TODO -- this probably needs to be somewhere else.
         private IEnumerable<IHandlerSource> allSources()
         {
             foreach (var handlerSource in _sources)
@@ -356,7 +356,7 @@ namespace FubuTransportation.Configuration
 
         public ScheduledJobExpression<T> ScheduledJob
         {
-            get { return new ScheduledJobExpression<T>(_scheduledJobs); }
+            get { return new ScheduledJobExpression<T>(this, _scheduledJobs); }
         }
 
 
