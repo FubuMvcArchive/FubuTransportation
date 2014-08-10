@@ -15,6 +15,8 @@ namespace FubuTransportation.ScheduledJobs
         void Schedule(Type type, DateTimeOffset time, Action action);
         void ClearAll();
         IEnumerable<ITimedExecution> Status();
+
+        DateTimeOffset Now();
     }
 
     public class JobTimer : IJobTimer
@@ -61,6 +63,11 @@ namespace FubuTransportation.ScheduledJobs
         public IEnumerable<ITimedExecution> Status()
         {
             return _executions;
+        }
+
+        public DateTimeOffset Now()
+        {
+            return _systemTime.UtcNow();
         }
 
         /// <summary>

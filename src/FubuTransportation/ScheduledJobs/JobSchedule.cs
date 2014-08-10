@@ -51,5 +51,10 @@ namespace FubuTransportation.ScheduledJobs
         {
             return GetEnumerator();
         }
+
+        public IEnumerable<JobStatus> Active()
+        {
+            return _status.Where(x => x.Active);
+        }
     }
 }

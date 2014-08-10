@@ -293,6 +293,7 @@
     <Compile Include="ScheduledJobs\ScheduledJobRoutingRule.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobRunner.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobServicesRegistry.cs" />
+    <Compile Include="ScheduledJobs\SPIKE.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />
     <Compile Include="Scheduling\TaskScheduler.cs" />
     <Compile Include="Scheduling\ThreadScheduler.cs" />
