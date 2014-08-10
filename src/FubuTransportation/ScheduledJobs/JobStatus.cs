@@ -20,6 +20,12 @@ namespace FubuTransportation.ScheduledJobs
             NextTime = nextTime;
         }
 
+        // for persistence
+        public Guid Id { get; set; }
+
+        // for persistence
+        public string NodeName { get; set; }
+
         public string JobType { get; set; }
         public DateTimeOffset? NextTime { get; set; }
         public JobExecutionRecord LastExecution { get; set; }

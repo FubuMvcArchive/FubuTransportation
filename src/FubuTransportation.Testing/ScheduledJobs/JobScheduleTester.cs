@@ -43,34 +43,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
         }
 
         [Test]
-        public void calculate_next_execution_time_1()
-        {
-            var schedule = new JobSchedule(new[]
-            {
-                new JobStatus(typeof (AJob), DateTime.Today.AddHours(1)),
-                new JobStatus(typeof (BJob), DateTime.Today.AddHours(2)),
-                new JobStatus(typeof (CJob), DateTime.Today.AddMinutes(1)),
-            });
-
-
-            schedule.NextExecutionTime().ShouldEqual(schedule.Find(typeof(CJob)).NextTime);
-        }
-
-        [Test]
-        public void calculate_next_execution_time_2()
-        {
-            var schedule = new JobSchedule(new[]
-            {
-                new JobStatus(typeof (AJob), DateTime.Today.AddHours(-1)),
-                new JobStatus(typeof (BJob), DateTime.Today.AddHours(2)),
-                new JobStatus(typeof (CJob), DateTime.Today.AddMinutes(1)),
-            });
-
-            schedule.NextExecutionTime()
-                .ShouldEqual(schedule.Find(typeof(AJob)).NextTime);
-        }
-
-        [Test]
         public void rescheduling_a_job_tracks_it_as_a_change()
         {
             var schedule = new JobSchedule(new[]

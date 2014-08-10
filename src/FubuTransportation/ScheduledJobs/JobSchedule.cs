@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Util;
 
 namespace FubuTransportation.ScheduledJobs
@@ -54,19 +55,6 @@ namespace FubuTransportation.ScheduledJobs
         public IEnumerable<JobStatus> Removals()
         {
             return _removals;
-        }
-
-        public DateTimeOffset NextExecutionTime()
-        {
-            var status = _status.Where(x => x.NextTime != null).OrderBy(x => x.NextTime.Value)
-                .FirstOrDefault();
-
-            if (status == null)
-            {
-                throw new InvalidOperationException("No jobs are currently scheduled");
-            }
-
-            return status.NextTime.Value;
         }
 
         public IEnumerator<JobStatus> GetEnumerator()
