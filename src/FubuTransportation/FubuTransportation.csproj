@@ -276,6 +276,7 @@
     <Compile Include="ScheduledJobs\JobSchedule.cs" />
     <Compile Include="ScheduledJobs\JobStatus.cs" />
     <Compile Include="ScheduledJobs\JobStatusExtensions.cs" />
+    <Compile Include="ScheduledJobs\JobTimer.cs" />
     <Compile Include="ScheduledJobs\ScheduledJob.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobExpression.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobGraph.cs" />
