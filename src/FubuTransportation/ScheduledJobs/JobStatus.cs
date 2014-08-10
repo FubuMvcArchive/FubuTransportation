@@ -2,15 +2,6 @@ using System;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class JobStatusDTO
-    {
-        public string JobKey { get; set; }
-        public Guid Id { get; set; }
-        public string JobType { get; set; }
-        public DateTimeOffset? NextTime { get; set; }
-        public JobExecutionRecord LastExecution { get; set; }
-    }
-
     public class JobStatus 
     {
         public static JobStatus For<T>(DateTimeOffset nextTime)

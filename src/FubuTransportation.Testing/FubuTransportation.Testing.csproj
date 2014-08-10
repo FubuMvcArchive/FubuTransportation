@@ -374,6 +374,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScheduledJobs\EveryDayAtSpecificTimeJobSchedulerTester.cs" />
+    <Compile Include="ScheduledJobs\InMemorySchedulePersistenceTester.cs" />
     <Compile Include="ScheduledJobs\JobScheduleTester.cs" />
     <Compile Include="ScheduledJobs\JobTimerIntegratedTester.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobGraphTester.cs" />
@@ -655,6 +656,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScheduledJobs\ScheduledJobTester.cs" />
+    <Compile Include="ScheduledJobs\ScheduleRepositoryTester.cs" />
     <Compile Include="Scheduling\TaskSchedulerTester.cs">
       <SubType>Code</SubType>
     </Compile>
