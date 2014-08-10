@@ -52,12 +52,18 @@ namespace FubuTransportation.ScheduledJobs
             return new JobStatusDTO
             {
                 NodeName = nodeName,
-                JobKey =
-                    JobType.HasAttribute<JobKeyAttribute>() ? JobType.GetAttribute<JobKeyAttribute>().Key : JobType.Name,
+                JobKey = GetKey(JobType),
                 LastExecution = LastExecution,
                 NextTime = NextTime,
                 Active = Active
             };
+        }
+
+        public static string GetKey(Type jobType)
+        {
+            return jobType.HasAttribute<JobKeyAttribute>() 
+                ? jobType.GetAttribute<JobKeyAttribute>().Key 
+                : jobType.Name;
         }
     }
 }

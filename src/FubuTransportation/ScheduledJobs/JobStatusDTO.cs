@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Web.Caching;
-using FubuTransportation.Configuration;
 
 namespace FubuTransportation.ScheduledJobs
 {
@@ -42,39 +40,4 @@ namespace FubuTransportation.ScheduledJobs
             }
         }
     }
-
-
-    public interface IScheduleRepository
-    {
-        void Reschedule(Action<JobSchedule> scheduling);
-        void Reschedule(JobStatus status);
-    }
-
-    // TODO -- register this thing
-    public class ScheduleRepository : IScheduleRepository
-    {
-        private readonly ChannelGraph _channels;
-        private readonly ScheduledJobGraph _jobs;
-        private readonly ISchedulePersistence _persistence;
-
-        public ScheduleRepository(ChannelGraph channels, ScheduledJobGraph jobs, ISchedulePersistence persistence)
-        {
-            _channels = channels;
-            _jobs = jobs;
-            _persistence = persistence;
-        }
-
-
-        public void Reschedule(Action<JobSchedule> scheduling)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reschedule(JobStatus status)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
 }
