@@ -1,7 +1,24 @@
 using System;
+using FubuCore.Reflection;
 
 namespace FubuTransportation.ScheduledJobs
 {
+    [AttributeUsage(AttributeTargets.Class)]
+    public class JobKeyAttribute : Attribute
+    {
+        private readonly string _key;
+
+        public JobKeyAttribute(string key)
+        {
+            _key = key;
+        }
+
+        public string Key
+        {
+            get { return _key; }
+        }
+    }
+
     public class JobStatus 
     {
         public static JobStatus For<T>(DateTimeOffset nextTime)
@@ -43,6 +60,18 @@ namespace FubuTransportation.ScheduledJobs
             {
                 return ((JobType != null ? JobType.GetHashCode() : 0)*397) ^ NextTime.GetHashCode();
             }
+        }
+
+        public JobStatusDTO ToDTO(string nodeName)
+        {
+            return new JobStatusDTO
+            {
+                NodeName = nodeName,
+                JobKey =
+                    JobType.HasAttribute<JobKeyAttribute>() ? JobType.GetAttribute<JobKeyAttribute>().Key : JobType.Name,
+                LastExecution = LastExecution,
+                NextTime = NextTime
+            };
         }
     }
 }
