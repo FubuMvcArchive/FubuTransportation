@@ -37,7 +37,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theSchedule.Find(theJob.JobType)
                 .NextTime.ShouldEqual(next);
 
-            theSchedule.Changes().Single().JobType.ShouldEqual(theJob.JobType);
         }
 
         [Test]
@@ -49,23 +48,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theSchedule.Find(theJob.JobType)
                 .NextTime.ShouldEqual(next);
 
-            theSchedule.Changes().Single().JobType.ShouldEqual(theJob.JobType);
         }
 
-        [Test]
-        public void no_change_do_nothing()
-        {
-            theSchedule = new JobSchedule(new[] {new JobStatus(typeof (AJob), next),});
-
-            theJob.Reschedule(now, theSchedule);
-
-            theSchedule.Find(theJob.JobType)
-                .NextTime.ShouldEqual(next);
-
-            theSchedule.Changes()
-                .Any()
-                .ShouldBeFalse();
-        }
     }
 
     public class StubbedScheduleRule : IScheduleRule

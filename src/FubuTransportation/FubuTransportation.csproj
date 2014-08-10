@@ -275,6 +275,7 @@
     <Compile Include="ScheduledJobs\IScheduleRule.cs" />
     <Compile Include="ScheduledJobs\IScheduledJobLogger.cs" />
     <Compile Include="ScheduledJobs\JobExecutionRecord.cs" />
+    <Compile Include="ScheduledJobs\JobKeyAttribute.cs" />
     <Compile Include="ScheduledJobs\JobSchedule.cs" />
     <Compile Include="ScheduledJobs\JobStatus.cs" />
     <Compile Include="ScheduledJobs\JobStatusExtensions.cs" />

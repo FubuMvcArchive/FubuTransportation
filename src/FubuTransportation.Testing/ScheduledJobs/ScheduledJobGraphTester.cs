@@ -49,17 +49,9 @@ namespace FubuTransportation.Testing.ScheduledJobs
         }
 
         [Test]
-        public void tracks_the_jobs_that_have_changed_or_been_added()
-        {
-            theSchedule.Changes().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof(CJob), typeof(DJob), typeof(EJob));
-        }
-
-        [Test]
         public void removes_obsolete_jobs()
         {
-            theSchedule.Removals().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof(AJob));
+            theSchedule.Find(typeof(AJob)).Active.ShouldBeFalse();
         }
     }
 
