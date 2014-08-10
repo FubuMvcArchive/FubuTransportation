@@ -9,13 +9,6 @@ using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public interface IJobStatus
-    {
-        string JobType { get; }
-        DateTimeOffset? NextTime { get; }
-
-        JobExecutionRecord LastExecution { get; }
-    }
 
     // TODO -- write a simple in memory version of this.
     public interface ISchedulePersistence
@@ -23,8 +16,6 @@ namespace FubuTransportation.ScheduledJobs
         IEnumerable<JobStatus> FindJobSchedule(string nodeName);
         void PersistChanges(string nodeName, IEnumerable<JobStatus> changes, IEnumerable<JobStatus> deletions);
         void PersistChange(string nodeName, JobStatus status);
-
-        IEnumerable<JobStatus> FindReadyToExecuteJobs(string nodeName, DateTimeOffset now);
     }
 
     public class InMemorySchedulePersistence : ISchedulePersistence
@@ -59,8 +50,6 @@ namespace FubuTransportation.ScheduledJobs
     {
         void Reschedule(Action<JobSchedule> scheduling);
         void Reschedule(JobStatus status);
-
-        IEnumerable<JobStatus> FindReadyToExecuteJobs(DateTimeOffset now);
     }
 
     // TODO -- register this thing
@@ -87,11 +76,6 @@ namespace FubuTransportation.ScheduledJobs
         public void Reschedule(JobStatus status)
         {
             _persistence.PersistChange(_channels.Name, status);
-        }
-
-        public IEnumerable<JobStatus> FindReadyToExecuteJobs(DateTimeOffset now)
-        {
-            return _persistence.FindReadyToExecuteJobs(_channels.Name, now);
         }
     }
 
@@ -123,16 +107,7 @@ namespace FubuTransportation.ScheduledJobs
 
         public void RunScheduledJobs()
         {
-            var jobs = _repository.FindReadyToExecuteJobs(_systemTime.UtcNow());
-            while (jobs.Any())
-            {
-                var tasks = jobs.Select(job => {
-                    throw new NotImplementedException();
-                    return Task.Factory.StartNew(() => {
-                        
-                    });
-                });
-            }
+            throw new NotImplementedException();
         }
 
         public void Reschedule()
@@ -164,4 +139,6 @@ namespace FubuTransportation.ScheduledJobs
             throw new NotImplementedException();
         }
     }
+
+    
 }

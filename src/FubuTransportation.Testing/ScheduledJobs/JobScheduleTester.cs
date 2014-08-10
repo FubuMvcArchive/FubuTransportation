@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             schedule.Schedule(typeof (CJob), DateTime.Today.AddHours(5));
         
             schedule.Changes().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof(AJob).FullName, typeof(CJob).FullName);
+                .ShouldHaveTheSameElementsAs(typeof(AJob), typeof(CJob));
         }
 
         [Test]
@@ -39,7 +39,21 @@ namespace FubuTransportation.Testing.ScheduledJobs
             schedule.RemoveObsoleteJobs(new Type[]{typeof(AJob), typeof(CJob)});
 
             schedule.Removals().Single()
-                .JobType.ShouldEqual(typeof (BJob).FullName);
+                .JobType.ShouldEqual(typeof (BJob));
+        }
+
+        [Test]
+        public void removing_an_obsolete_removes_it_from_the_active_list()
+        {
+            var schedule = new JobSchedule(new[]
+            {
+                new JobStatus(typeof (AJob), DateTime.Today),
+                new JobStatus(typeof (BJob), DateTime.Today),
+            });
+
+            schedule.RemoveObsoleteJobs(new Type[] { typeof(AJob), typeof(CJob) });
+
+            schedule.Any(x => x.JobType == typeof(BJob)).ShouldBeFalse();
         }
 
         [Test]
@@ -56,7 +70,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             schedule.Schedule(typeof (CJob), DateTime.Today);
 
             schedule.Changes().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof (AJob).FullName, typeof (CJob).FullName);
+                .ShouldHaveTheSameElementsAs(typeof (AJob), typeof (CJob));
         }
     }
 }

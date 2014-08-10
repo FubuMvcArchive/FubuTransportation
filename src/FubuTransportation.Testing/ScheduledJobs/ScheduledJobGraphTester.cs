@@ -52,14 +52,14 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public void tracks_the_jobs_that_have_changed_or_been_added()
         {
             theSchedule.Changes().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof(CJob).FullName, typeof(DJob).FullName, typeof(EJob).FullName);
+                .ShouldHaveTheSameElementsAs(typeof(CJob), typeof(DJob), typeof(EJob));
         }
 
         [Test]
         public void removes_obsolete_jobs()
         {
             theSchedule.Removals().Select(x => x.JobType)
-                .ShouldHaveTheSameElementsAs(typeof(AJob).FullName);
+                .ShouldHaveTheSameElementsAs(typeof(AJob));
         }
     }
 

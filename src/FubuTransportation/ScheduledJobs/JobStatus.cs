@@ -1,32 +1,35 @@
 using System;
-using System.Diagnostics;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class JobStatus : IJobStatus
+    public class JobStatusDTO
+    {
+        public string JobKey { get; set; }
+        public Guid Id { get; set; }
+        public string JobType { get; set; }
+        public DateTimeOffset? NextTime { get; set; }
+        public JobExecutionRecord LastExecution { get; set; }
+    }
+
+    public class JobStatus 
     {
         public static JobStatus For<T>(DateTimeOffset nextTime)
         {
-            return new JobStatus(typeof(T), nextTime);
+            return new JobStatus(typeof (T), nextTime);
         }
 
-        public JobStatus()
+        public JobStatus(Type jobType)
         {
+            JobType = jobType;
         }
 
         public JobStatus(Type jobType, DateTimeOffset nextTime)
         {
-            JobType = jobType.FullName;
+            JobType = jobType;
             NextTime = nextTime;
         }
 
-        // for persistence
-        public Guid Id { get; set; }
-
-        // for persistence
-        public string NodeName { get; set; }
-
-        public string JobType { get; set; }
+        public Type JobType { get; set; }
         public DateTimeOffset? NextTime { get; set; }
         public JobExecutionRecord LastExecution { get; set; }
 

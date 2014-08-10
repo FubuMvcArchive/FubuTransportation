@@ -12,8 +12,8 @@ namespace FubuTransportation.ScheduledJobs
         private readonly IList<JobStatus> _changes = new List<JobStatus>();
         private readonly IList<JobStatus> _removals = new List<JobStatus>();
 
-        private readonly Cache<string, JobStatus> _status =
-            new Cache<string, JobStatus>(x => new JobStatus {JobType = x});
+        private readonly Cache<Type, JobStatus> _status =
+            new Cache<Type, JobStatus>(x => new JobStatus(x));
 
 
         public JobSchedule()
@@ -25,14 +25,14 @@ namespace FubuTransportation.ScheduledJobs
             all.Each(x => _status[x.JobType] = x);
         }
 
-        public IJobStatus Find(Type jobType)
+        public JobStatus Find(Type jobType)
         {
-            return _status[jobType.FullName];
+            return _status[jobType];
         }
 
-        public IJobStatus Schedule(Type jobType, DateTimeOffset nextTime)
+        public JobStatus Schedule(Type jobType, DateTimeOffset nextTime)
         {
-            var status = _status[jobType.FullName];
+            var status = _status[jobType];
             status.NextTime = nextTime;
             _changes.Fill(status);
 
@@ -41,10 +41,11 @@ namespace FubuTransportation.ScheduledJobs
 
         public void RemoveObsoleteJobs(IEnumerable<Type> jobTypes)
         {
-            var names = jobTypes.Select(x => x.FullName).ToArray();
-
-            var obsoletes = _status.Where(x => !names.Contains(x.JobType));
+            var obsoletes = _status.Where(x => !jobTypes.Contains(x.JobType)).ToArray();
             _removals.AddRange(obsoletes);
+
+            obsoletes.Each(x => _status.Remove(x.JobType));
+
         }
 
         public IEnumerable<JobStatus> Changes()
