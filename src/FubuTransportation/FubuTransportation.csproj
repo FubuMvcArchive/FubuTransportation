@@ -271,6 +271,7 @@
     <Compile Include="ScheduledJobs\ApplyScheduledJobRouting.cs" />
     <Compile Include="ScheduledJobs\EveryDayAtSpecificTime.cs" />
     <Compile Include="ScheduledJobs\InMemorySchedulePersistence.cs" />
+    <Compile Include="ScheduledJobs\IScheduledJob.cs" />
     <Compile Include="ScheduledJobs\ISchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduleRepository.cs" />
     <Compile Include="ScheduledJobs\IScheduleRule.cs" />

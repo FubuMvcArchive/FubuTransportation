@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
@@ -9,14 +8,13 @@ namespace FubuTransportation.ScheduledJobs
     public interface IJobExecutor
     {
         Task<JobExecutionRecord> Execute<T>() where T : IJob;
-        void ResetExecution<T>(IScheduledJob job, DateTimeOffset nextTime, JobExecutionRecord record);
-        void Schedule<T>(IScheduledJob job, DateTimeOffset nextTime);
+        void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null) where T : IJob;
 
         DateTimeOffset Now();
     }
 
 
-    public class ScheduledJobController : IDisposable
+    public class ScheduledJobController : IDisposable, IJobExecutor
     {
         private readonly ScheduledJobGraph _jobs;
         private readonly IJobTimer _timer;
@@ -26,10 +24,10 @@ namespace FubuTransportation.ScheduledJobs
         private bool _active;
 
         public ScheduledJobController(
-            ScheduledJobGraph jobs, 
+            ScheduledJobGraph jobs,
             IJobTimer timer,
-            IScheduleRepository repository, 
-            IServiceBus serviceBus, 
+            IScheduleRepository repository,
+            IServiceBus serviceBus,
             ILogger logger)
         {
             _jobs = jobs;
@@ -70,6 +68,23 @@ namespace FubuTransportation.ScheduledJobs
         {
             _active = false;
             _timer.ClearAll();
+        }
+
+
+        public Task<JobExecutionRecord> Execute<T>() where T : IJob
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null)
+            where T : IJob
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTimeOffset Now()
+        {
+            throw new NotImplementedException();
         }
     }
 }

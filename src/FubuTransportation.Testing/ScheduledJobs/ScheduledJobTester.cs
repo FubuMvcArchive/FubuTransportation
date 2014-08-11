@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Util;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
@@ -28,7 +27,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             theJob = new ScheduledJob<AJob>(rule);
 
-            theRecord = new JobExecutionRecord { Success = true };
+            theRecord = new JobExecutionRecord {Success = true};
             theJob.Reschedule(theRecord, theExecutor);
         }
 
@@ -36,7 +35,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public void should_just_reschedule()
         {
             theExecutor.Scheduled[theJob.JobType]
-                .ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(1));
+                .ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(1));
         }
 
         [Test]
@@ -51,7 +50,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             theJob.LastExecution.ShouldBeTheSameAs(theRecord);
         }
-
     }
 
     [TestFixture]
@@ -73,16 +71,15 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theJob = new ScheduledJob<AJob>(rule);
             theJob.LastExecution = new JobExecutionRecord();
 
-            theRecord = new JobExecutionRecord { Success = true };
+            theRecord = new JobExecutionRecord {Success = true};
             theJob.Reschedule(theRecord, theExecutor);
-
         }
 
         [Test]
         public void should_just_reschedule()
         {
             theExecutor.Scheduled[theJob.JobType]
-                .ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(1));
+                .ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(1));
         }
 
         [Test]
@@ -97,7 +94,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             theJob.LastExecution.ShouldBeTheSameAs(theRecord);
         }
-
     }
 
     [TestFixture]
@@ -130,7 +126,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theSchedule.Find(theJob.JobType)
                 .LastExecution = theLastRun;
 
-            theJob.Initialize(theExecutor, theSchedule);
+            theJob.As<IScheduledJob>().Initialize(theExecutor, theSchedule);
         }
 
         [Test]
@@ -152,7 +148,6 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theExecutor.Scheduled[theJob.JobType]
                 .ShouldEqual(next);
         }
-
     }
 
     public class StubbedScheduleRule : IScheduleRule
@@ -196,25 +191,27 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private DateTimeOffset _now;
 
 
-
         public Task<JobExecutionRecord> Execute<T>() where T : IJob
         {
             throw new NotImplementedException();
         }
 
-        public void ResetExecution<T>(IScheduledJob job, DateTimeOffset nextTime, JobExecutionRecord record)
-        {
-            Scheduled[typeof(T)] = nextTime;
-            Recorded[typeof (T)] = record;
-        }
+        public readonly Cache<Type, DateTimeOffset> Scheduled = new Cache<Type, DateTimeOffset>();
+        public readonly Cache<Type, JobExecutionRecord> Recorded = new Cache<Type, JobExecutionRecord>();
 
-        public readonly Cache<Type, DateTimeOffset> Scheduled = new Cache<Type, DateTimeOffset>(); 
-        public readonly Cache<Type, JobExecutionRecord> Recorded = new Cache<Type, JobExecutionRecord>(); 
-
-        public void Schedule<T>(IScheduledJob job, DateTimeOffset nextTime)
+        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null)
+            where T : IJob
         {
             Scheduled[typeof (T)] = nextTime;
+
+            if (record != null)
+            {
+                Recorded[typeof(T)] = record;    
+            }
         }
+
+
+
 
         public StubJobExecutor NowIs(DateTimeOffset now)
         {
