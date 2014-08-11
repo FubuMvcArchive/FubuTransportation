@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
@@ -11,18 +10,41 @@ namespace FubuTransportation.ScheduledJobs
         Type JobType { get; }
         IScheduleRule Scheduler { get; }
         void Initialize(IJobExecutor executor, JobSchedule schedule);
+        void Reschedule(JobExecutionRecord record, IJobExecutor executor);
+
         Accessor Channel { get; }
 
         IRoutingRule ToRoutingRule();
+    }
 
+    public interface IScheduledJob<T> : IScheduledJob
+    {
+       
     }
 
 
-    public class ScheduledJob<T> : IScheduledJob where T : IJob
+    public class ScheduledJob<T> : IScheduledJob<T> where T : IJob
     {
         public ScheduledJob(IScheduleRule scheduler)
         {
             Scheduler = scheduler;
+        }
+
+        public void Reschedule(JobExecutionRecord record, IJobExecutor executor)
+        {
+            if (record.Success)
+            {
+                LastExecution = record;
+                var next = Scheduler.ScheduleNextTime(executor.Now());
+
+                executor.ResetExecution<T>(this, next, record);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            
+            
         }
 
         public Accessor Channel { get; set; }
@@ -50,7 +72,6 @@ namespace FubuTransportation.ScheduledJobs
             schedule.Schedule(JobType, next);
 
             executor.Schedule<T>(this, next);
-
         }
     }
 }

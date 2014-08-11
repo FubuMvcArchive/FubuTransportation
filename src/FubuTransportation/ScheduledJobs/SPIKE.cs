@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FubuCore.Logging;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
@@ -18,18 +19,24 @@ namespace FubuTransportation.ScheduledJobs
     public class ScheduledJobController : IDisposable
     {
         private readonly ScheduledJobGraph _jobs;
-        private readonly IJobExecutor _executor;
         private readonly IJobTimer _timer;
         private readonly IScheduleRepository _repository;
+        private readonly IServiceBus _serviceBus;
+        private readonly ILogger _logger;
         private bool _active;
 
-        public ScheduledJobController(ScheduledJobGraph jobs, IJobExecutor executor, IJobTimer timer,
-            IScheduleRepository repository)
+        public ScheduledJobController(
+            ScheduledJobGraph jobs, 
+            IJobTimer timer,
+            IScheduleRepository repository, 
+            IServiceBus serviceBus, 
+            ILogger logger)
         {
             _jobs = jobs;
-            _executor = executor;
             _timer = timer;
             _repository = repository;
+            _serviceBus = serviceBus;
+            _logger = logger;
         }
 
         public void RescheduleAll()
