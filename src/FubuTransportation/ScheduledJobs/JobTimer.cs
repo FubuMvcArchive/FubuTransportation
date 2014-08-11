@@ -19,6 +19,13 @@ namespace FubuTransportation.ScheduledJobs
         DateTimeOffset Now();
     }
 
+    public interface ITimerCallback
+    {
+        void Reschedule(DateTimeOffset next);
+        void Complete();
+        DateTimeOffset Now();
+    }
+
     public class JobTimer : IJobTimer
     {
         private readonly ISystemTime _systemTime;

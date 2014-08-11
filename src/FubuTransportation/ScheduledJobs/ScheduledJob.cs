@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
@@ -13,15 +14,11 @@ namespace FubuTransportation.ScheduledJobs
         Accessor Channel { get; }
 
         IRoutingRule ToRoutingRule();
-        void RegisterJob(IJobTimer timer, IJobExecutor executor, JobStatus status);
+
     }
 
-    public interface IScheduledJob<T> : IScheduledJob where T : IJob
-    {
-        JobStatus ToNewJobStatus(JobExecutionRecord record, DateTimeOffset now);
-    }
 
-    public class ScheduledJob<T> : IScheduledJob<T> where T : IJob
+    public class ScheduledJob<T> : IScheduledJob where T : IJob
     {
         // TODO -- need to add channel here.
 
@@ -35,16 +32,6 @@ namespace FubuTransportation.ScheduledJobs
         public IRoutingRule ToRoutingRule()
         {
             return new ScheduledJobRoutingRule<T>();
-        }
-
-        public void RegisterJob(IJobTimer timer, IJobExecutor executor, JobStatus status)
-        {
-            throw new NotImplementedException();
-        }
-
-        public JobStatus ToNewJobStatus(JobExecutionRecord record, DateTimeOffset now)
-        {
-            throw new NotImplementedException();
         }
 
         public Type JobType
