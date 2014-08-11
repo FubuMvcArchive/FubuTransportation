@@ -8,7 +8,14 @@ namespace FubuTransportation.ScheduledJobs
 {
     // TODO -- add LOTS of logging
     // TODO -- more state tracing!
-    public class ScheduledJobController : IDisposable, IJobExecutor
+    public interface IScheduledJobController
+    {
+        void Activate();
+        bool IsActive();
+        void Deactivate();
+    }
+
+    public class ScheduledJobController : IDisposable, IJobExecutor, IScheduledJobController
     {
         private readonly ScheduledJobGraph _jobs;
         private readonly IJobTimer _timer;
@@ -31,7 +38,7 @@ namespace FubuTransportation.ScheduledJobs
             _logger = logger;
         }
 
-        public void RescheduleAll()
+        public void Activate()
         {
             _timer.ClearAll();
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
@@ -13,10 +14,12 @@ namespace FubuTransportation.ScheduledJobs
             _logger = logger;
         }
 
-        // TODO -- have this return the timer
-        public void Execute(ExecuteScheduledJob<T> request)
+        public JobExecutionRecord Execute(ExecuteScheduledJob<T> request)
         {
             _logger.LogAndTimeExecution(_job, () => _job.Execute());
+
+            // TODO -- do this for realsies
+            return new JobExecutionRecord{Success = true};
         }
     }
 

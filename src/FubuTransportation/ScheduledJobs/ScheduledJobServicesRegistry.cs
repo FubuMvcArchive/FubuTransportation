@@ -7,6 +7,12 @@ namespace FubuTransportation.ScheduledJobs
         public ScheduledJobServicesRegistry()
         {
             SetServiceIfNone<IScheduledJobLogger, ScheduledJobLogger>();
+            SetServiceIfNone<IScheduledJobController, ScheduledJobController>(x => x.AsSingleton());
+            SetServiceIfNone<IJobTimer, JobTimer>(x => x.AsSingleton());
+
+            SetServiceIfNone<ISchedulePersistence, InMemorySchedulePersistence>();
+
+            SetServiceIfNone<IScheduleRepository, ScheduleRepository>();
         }
     }
 }
