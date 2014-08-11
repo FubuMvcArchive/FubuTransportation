@@ -1,19 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public interface IJobExecutor
-    {
-        Task<JobExecutionRecord> Execute<T>() where T : IJob;
-        void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null) where T : IJob;
-
-        DateTimeOffset Now();
-    }
-
-
+    // TODO -- add LOTS of logging
+    // TODO -- more state tracing!
     public class ScheduledJobController : IDisposable, IJobExecutor
     {
         private readonly ScheduledJobGraph _jobs;
@@ -42,13 +36,12 @@ namespace FubuTransportation.ScheduledJobs
             _timer.ClearAll();
 
             _repository.Persist(schedule => {
-                throw new NotImplementedException();
-//                _jobs.DetermineSchedule(_timer.Now(), schedule);
-//
-//                schedule.Active().Each(status => {
-//                    var job = _jobs.FindJob(status.JobType);
-//                    job.Initialize(_timer, _executor, status);
-//                });
+                _jobs.DetermineSchedule(this, schedule);
+
+                schedule.Active().Each(status => {
+                    var job = _jobs.FindJob(status.JobType);
+                    job.Initialize(this, schedule);
+                });
             });
 
             _active = true;
@@ -73,18 +66,27 @@ namespace FubuTransportation.ScheduledJobs
 
         public Task<JobExecutionRecord> Execute<T>() where T : IJob
         {
-            throw new NotImplementedException();
+            return _serviceBus.Request<JobExecutionRecord>(new ExecuteScheduledJob<T>());
         }
 
-        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null)
-            where T : IJob
+        public void Reschedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record) where T : IJob
         {
-            throw new NotImplementedException();
+            _repository.Persist(new JobStatus(typeof(T), nextTime)
+            {
+                LastExecution = record
+            });
+
+            Schedule(job, nextTime);
+        }
+
+        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
+        {
+            _timer.Schedule(typeof(T), nextTime, () => job.Execute(this));
         }
 
         public DateTimeOffset Now()
         {
-            throw new NotImplementedException();
+            return _timer.Now();
         }
     }
 }

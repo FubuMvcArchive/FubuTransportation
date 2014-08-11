@@ -27,6 +27,11 @@ namespace FubuTransportation.ScheduledJobs
 
         public void Persist(JobStatusDTO status)
         {
+            if (_statusCache.Has(status.Id) && status.LastExecution == null)
+            {
+                status.LastExecution = _statusCache[status.Id].LastExecution;
+            }
+
             _statusCache[status.Id] = status;
         }
 

@@ -196,21 +196,19 @@ namespace FubuTransportation.Testing.ScheduledJobs
             throw new NotImplementedException();
         }
 
-        public readonly Cache<Type, DateTimeOffset> Scheduled = new Cache<Type, DateTimeOffset>();
-        public readonly Cache<Type, JobExecutionRecord> Recorded = new Cache<Type, JobExecutionRecord>();
-
-        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null)
-            where T : IJob
+        public void Reschedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record = null) where T : IJob
         {
-            Scheduled[typeof (T)] = nextTime;
-
-            if (record != null)
-            {
-                Recorded[typeof(T)] = record;    
-            }
+            Recorded[typeof(T)] = record;
+            Scheduled[typeof(T)] = nextTime;
         }
 
+        public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
+        {
+            Scheduled[typeof(T)] = nextTime;
+        }
 
+        public readonly Cache<Type, DateTimeOffset> Scheduled = new Cache<Type, DateTimeOffset>();
+        public readonly Cache<Type, JobExecutionRecord> Recorded = new Cache<Type, JobExecutionRecord>();
 
 
         public StubJobExecutor NowIs(DateTimeOffset now)
