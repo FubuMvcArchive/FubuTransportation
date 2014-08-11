@@ -10,7 +10,7 @@ namespace FubuTransportation.ScheduledJobs
     {
         Type JobType { get; }
         IScheduleRule Scheduler { get; }
-        void Reschedule(DateTimeOffset now, JobSchedule schedule);
+        void Initialize(IJobExecutor executor, JobSchedule schedule);
         Accessor Channel { get; }
 
         IRoutingRule ToRoutingRule();
@@ -20,8 +20,6 @@ namespace FubuTransportation.ScheduledJobs
 
     public class ScheduledJob<T> : IScheduledJob where T : IJob
     {
-        // TODO -- need to add channel here.
-
         public ScheduledJob(IScheduleRule scheduler)
         {
             Scheduler = scheduler;
@@ -40,16 +38,19 @@ namespace FubuTransportation.ScheduledJobs
         }
 
         public IScheduleRule Scheduler { get; private set; }
+        public JobExecutionRecord LastExecution { get; set; }
 
-        public void Reschedule(DateTimeOffset now, JobSchedule schedule)
+        public void Initialize(IJobExecutor executor, JobSchedule schedule)
         {
             var status = schedule.Find(JobType);
-            var next = Scheduler.ScheduleNextTime(now);
+            LastExecution = status.LastExecution;
 
-            if (next != status.NextTime)
-            {
-                schedule.Schedule(JobType, next);
-            }
+            var next = Scheduler.ScheduleNextTime(executor.Now());
+
+            schedule.Schedule(JobType, next);
+
+            executor.Schedule<T>(this, next);
+
         }
     }
 }

@@ -12,10 +12,10 @@ namespace FubuTransportation.ScheduledJobs
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
         public Accessor DefaultChannel { get; set; }
 
-        public void DetermineSchedule(DateTimeOffset now, JobSchedule schedule)
+        public void DetermineSchedule(IJobExecutor executor, JobSchedule schedule)
         {
             // Make sure that all existing jobs are schedules
-            Jobs.Each(x => x.Reschedule(now, schedule));
+            Jobs.Each(x => x.Initialize(executor, schedule));
 
             var types = Jobs.Select(x => x.JobType).ToArray();
             schedule.RemoveObsoleteJobs(types);

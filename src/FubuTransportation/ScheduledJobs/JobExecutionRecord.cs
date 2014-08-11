@@ -8,6 +8,7 @@ namespace FubuTransportation.ScheduledJobs
         public DateTimeOffset Finished { get; set; }
         public bool Success { get; set; }
         public string ExceptionText { get; set; }
+        public int Attempts { get; set; }
 
         protected bool Equals(JobExecutionRecord other)
         {
