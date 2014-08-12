@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web.Caching;
 using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Util;
@@ -44,7 +40,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             thePersistence = runtime.Factory.Get<ISchedulePersistence>();
             theTimer = runtime.Factory.Get<IJobTimer>();
 
-            theStartingTime = (DateTimeOffset)DateTime.Today.AddHours(8).ToUniversalTime();
+            theStartingTime = (DateTimeOffset) DateTime.Today.AddHours(8).ToUniversalTime();
 
             theEndingTime = theStartingTime.AddSeconds(30);
 
@@ -75,7 +71,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             var next = theStartingTime.AddSeconds(seconds);
             while (next <= theEndingTime)
             {
-                history.Expect(typeof(T), next);
+                history.Expect(typeof (T), next);
                 next = next.AddSeconds(seconds);
             }
         }
@@ -85,10 +81,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             runtime.Dispose();
         }
-
-
     }
-    
+
     public class RewindableClock : ISystemTime
     {
         private TimeSpan _offset = 0.Seconds();
@@ -243,10 +237,11 @@ namespace FubuTransportation.Testing.ScheduledJobs
                 {
                     var expectedMessage = _expected.Select(x => x.ToLocalTime().ToString()).Join(", ");
                     var actualMessage = _actual.Select(x => x.ToLocalTime().ToString()).Join(", ");
-                    list.Add("More executions of job {0} than expected. Expected {1}, but got {2}".ToFormat(_type.Name, expectedMessage, actualMessage));
+                    list.Add("More executions of job {0} than expected. Expected {1}, but got {2}".ToFormat(_type.Name,
+                        expectedMessage, actualMessage));
                 }
 
-                for (int i = 0; i < _expected.Count; i++)
+                for (var i = 0; i < _expected.Count; i++)
                 {
                     if (i >= _actual.Count)
                     {
@@ -263,13 +258,13 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
                         if (totalMilliseconds > 750)
                         {
-                            list.Add("Expected execution of job {0} at {1}, but was at {2} / {3} ms different".ToFormat(_type.Name,
-                                expected.ToLocalTime(), actual.ToLocalTime(), totalMilliseconds));
-                        }                        
+                            list.Add(
+                                "Expected execution of job {0} at {1}, but was at {2} / {3} ms different".ToFormat(
+                                    _type.Name,
+                                    expected.ToLocalTime(), actual.ToLocalTime(), totalMilliseconds));
+                        }
                     }
-                    
                 }
-
             }
         }
     }

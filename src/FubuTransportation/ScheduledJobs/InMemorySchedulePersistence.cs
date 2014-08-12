@@ -6,7 +6,10 @@ namespace FubuTransportation.ScheduledJobs
 {
     public class InMemorySchedulePersistence : ISchedulePersistence
     {
-        private readonly Cache<string, JobStatusDTO> _statusCache = new Cache<string, JobStatusDTO>(); 
+        private readonly Cache<string, JobStatusDTO> _statusCache = new Cache<string, JobStatusDTO>(id => {
+            var parts = id.Split('/');
+            return new JobStatusDTO {JobKey = parts.Last(), NodeName = parts.First()};
+        }); 
 
         public IEnumerable<JobStatusDTO> FindAllActive(string nodeName)
         {
