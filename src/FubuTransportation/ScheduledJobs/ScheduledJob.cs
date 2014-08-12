@@ -32,7 +32,11 @@ namespace FubuTransportation.ScheduledJobs
             }
             else
             {
-                throw new NotImplementedException();
+                // TODO -- this won't be like this in the long run
+                LastExecution = record;
+                var next = Scheduler.ScheduleNextTime(executor.Now());
+
+                executor.Schedule(this, next);
             }
         }
 
