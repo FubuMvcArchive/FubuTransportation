@@ -65,5 +65,12 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             thePersistence.Load("foo", "1").ShouldBeTheSameAs(change);
         }
+
+        [Test]
+        public void find_a_single_status()
+        {
+            thePersistence.Find("foo", "1")
+                .ShouldBeTheSameAs(foo1);
+        }
     }
 }

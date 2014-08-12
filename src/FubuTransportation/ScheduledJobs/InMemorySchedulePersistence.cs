@@ -35,6 +35,11 @@ namespace FubuTransportation.ScheduledJobs
             _statusCache[status.Id] = status;
         }
 
+        public JobStatusDTO Find(string nodeName, string jobKey)
+        {
+            return _statusCache[new JobStatusDTO {NodeName = nodeName, JobKey = jobKey}.Id];
+        }
+
         public JobStatusDTO Load(string nodeName, string jobKey)
         {
             var key = new JobStatusDTO {NodeName = nodeName, JobKey = jobKey}.Id;

@@ -7,6 +7,7 @@ using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
@@ -15,19 +16,24 @@ namespace FubuTransportation.Testing.ScheduledJobs
         protected RecordingLogger theLogger;
         protected ISettableClock theClock;
         protected JobExecutionRecord theRecord;
+        protected IScheduleRepository TheRepository;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
             theLogger = new RecordingLogger();
             theClock = new SettableClock().LocalNow(DateTime.Today.AddHours(8));
+
             var job = new AScheduledJob();
+
+            TheRepository = MockRepository.GenerateMock<IScheduleRepository>();
 
             theJobRunsLike(job);
 
-            theRecord = new ScheduledJobRunner<AScheduledJob>(job, theLogger, theClock)
+            theRecord = new ScheduledJobRunner<AScheduledJob>(job, theLogger, theClock, TheRepository)
                 .Execute(new ExecuteScheduledJob<AScheduledJob>());
         }
+
 
         protected abstract void theJobRunsLike(AScheduledJob job);
     }
@@ -39,6 +45,18 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             job.Duration = 100;
             job.Exception = null;
+        }
+
+        [Test]
+        public void should_mark_the_job_as_executing()
+        {
+            TheRepository.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
+        }
+
+        [Test]
+        public void should_later_mark_the_job_as_completed()
+        {
+            TheRepository.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
         }
 
         [Test]
@@ -71,6 +89,19 @@ namespace FubuTransportation.Testing.ScheduledJobs
             job.Duration = 100;
             job.Exception = EX;
         }
+
+        [Test]
+        public void should_mark_the_job_as_executing()
+        {
+            TheRepository.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
+        }
+
+        [Test]
+        public void should_later_mark_the_job_as_completed()
+        {
+            TheRepository.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
+        }
+
 
         [Test]
         public void should_record_the_duration_of_the_job()

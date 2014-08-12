@@ -28,7 +28,7 @@ namespace FubuTransportation.ScheduledJobs
                 LastExecution = record;
                 var next = Scheduler.ScheduleNextTime(executor.Now());
 
-                executor.Reschedule(this, next, record);
+                executor.Schedule(this, next);
             }
             else
             {

@@ -15,12 +15,15 @@ namespace FubuTransportation.ScheduledJobs
         public string JobKey { get; set; }
     }
 
-    public class ScheduledJobScheduled : ScheduledJobRecord
+    public class ScheduledJobScheduled : LogRecord
     {
-        public ScheduledJobScheduled(IJob job) : base(job)
+        public ScheduledJobScheduled(Type jobType, DateTimeOffset next)
         {
+            JobKey = JobStatus.GetKey(jobType);
+            ScheduledTime = next;
         }
 
+        public string JobKey { get; set; }
         public DateTimeOffset ScheduledTime { get; set; }
 
         public override string ToString()

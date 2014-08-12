@@ -8,5 +8,7 @@ namespace FubuTransportation.ScheduledJobs
         IEnumerable<JobStatusDTO> FindAllActive(string nodeName);
         void Persist(IEnumerable<JobStatusDTO> statuses);
         void Persist(JobStatusDTO status);
+
+        JobStatusDTO Find(string nodeName, string jobKey);
     }
 }

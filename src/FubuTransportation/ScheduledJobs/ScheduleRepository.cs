@@ -6,8 +6,6 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    // TODO -- register this thing
-    // Going to be tested strictly through integration tests
     public class ScheduleRepository : IScheduleRepository
     {
         private readonly ChannelGraph _channels;
@@ -46,11 +44,35 @@ namespace FubuTransportation.ScheduledJobs
             };
         }
 
-        public void Persist(JobStatus status)
+        private void modifyStatus<T>(Action<JobStatusDTO> change)
         {
-            _persistence.Persist(status.ToDTO(_channels.Name));
+            var jobKey = JobStatus.GetKey(typeof (T));
+            var status = _persistence.Find(_channels.Name, jobKey);
+
+            change(status);
+
+            _persistence.Persist(status);
+        }
+
+        public void MarkScheduled<T>(DateTimeOffset nextTime)
+        {
+            modifyStatus<T>(_ => {
+                _.Status = JobExecutionStatus.Scheduled;
+                _.NextTime = nextTime;
+            });
+        }
+
+        public void MarkExecuting<T>()
+        {
+            modifyStatus<T>(_ => { _.Status = JobExecutionStatus.Executing; });
+        }
+
+        public void MarkCompletion<T>(JobExecutionRecord record)
+        {
+            modifyStatus<T>(_ => {
+                _.Status = JobExecutionStatus.Completed;
+                _.LastExecution = record;
+            });
         }
     }
-
-
 }

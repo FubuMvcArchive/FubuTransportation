@@ -76,25 +76,12 @@ namespace FubuTransportation.ScheduledJobs
             return _serviceBus.Request<JobExecutionRecord>(new ExecuteScheduledJob<T>());
         }
 
-        public void Reschedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime, JobExecutionRecord record) where T : IJob
-        {
-            _repository.Persist(new JobStatus(typeof(T), nextTime)
-            {
-                LastExecution = record
-            });
-
-            Schedule(job, nextTime);
-        }
-
         public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
         {
-//            _logger.InfoMessage(() => new ScheduledJobScheduled
-//            {
-//                Description = job.ToString(),
-//                ScheduledTime = nextTime
-//            });
-
+            _repository.MarkScheduled<T>(nextTime);
             _timer.Schedule(typeof(T), nextTime, () => job.Execute(this));
+
+            _logger.InfoMessage(() => new ScheduledJobScheduled(typeof(T), nextTime));
         }
 
         public DateTimeOffset Now()

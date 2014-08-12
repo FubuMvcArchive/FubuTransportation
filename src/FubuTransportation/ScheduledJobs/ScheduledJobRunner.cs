@@ -12,12 +12,14 @@ namespace FubuTransportation.ScheduledJobs
         private readonly T _job;
         private readonly ILogger _logger;
         private readonly ISystemTime _systemTime;
+        private readonly IScheduleRepository _repository;
 
-        public ScheduledJobRunner(T job, ILogger logger, ISystemTime systemTime)
+        public ScheduledJobRunner(T job, ILogger logger, ISystemTime systemTime, IScheduleRepository repository)
         {
             _job = job;
             _logger = logger;
             _systemTime = systemTime;
+            _repository = repository;
         }
 
         public JobExecutionRecord Execute(ExecuteScheduledJob<T> request)
@@ -30,6 +32,8 @@ namespace FubuTransportation.ScheduledJobs
 
             try
             {
+                _repository.MarkExecuting<T>();
+
                 _job.Execute();
 
                 record.Success = true;
@@ -52,6 +56,7 @@ namespace FubuTransportation.ScheduledJobs
 
                 record.Duration = duration;
 
+                _repository.MarkCompletion<T>(record);
                 _logger.InfoMessage(() => new ScheduledJobFinished(_job, duration));
             }
 
