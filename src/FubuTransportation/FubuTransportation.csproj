@@ -130,6 +130,7 @@
     <Compile Include="Events\IExpiringListener.cs" />
     <Compile Include="Events\IListener.cs" />
     <Compile Include="Events\SynchronousEventAggregator.cs" />
+    <Compile Include="FubuTransportationActivator.cs" />
     <Compile Include="FubuTransportationExtensions.cs" />
     <Compile Include="FubuTransportServiceRegistry.cs" />
     <Compile Include="HandlerExtensions.cs" />

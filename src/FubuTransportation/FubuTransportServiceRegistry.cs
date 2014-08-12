@@ -39,7 +39,7 @@ namespace FubuTransportation
             SetServiceIfNone<IChainInvoker, ChainInvoker>();
             SetServiceIfNone<IEnvelopeSender, EnvelopeSender>();
             AddService<IMessageSerializer, XmlMessageSerializer>();
-            AddService<IActivator, TransportActivator>();
+            AddService<IActivator, FubuTransportationActivator>();
 
             SetServiceIfNone<IServiceBus, ServiceBus>();
 
@@ -88,7 +88,6 @@ namespace FubuTransportation
 
             SetServiceIfNone<ISubscriptionPersistence>(new InMemorySubscriptionPersistence());
 
-            AddService<IActivator, SubscriptionActivator>();
         }
     }
 }

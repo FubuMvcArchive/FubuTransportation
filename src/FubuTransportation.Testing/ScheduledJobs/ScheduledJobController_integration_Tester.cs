@@ -40,6 +40,10 @@ namespace FubuTransportation.Testing.ScheduledJobs
             thePersistence = runtime.Factory.Get<ISchedulePersistence>();
             theTimer = runtime.Factory.Get<IJobTimer>();
 
+            theController.Deactivate();
+            theTimer.ClearAll();
+            history.ClearAll();
+
             theStartingTime = (DateTimeOffset) DateTime.Today.AddHours(8).ToUniversalTime();
 
             theEndingTime = theStartingTime.AddSeconds(30);
@@ -266,6 +270,11 @@ namespace FubuTransportation.Testing.ScheduledJobs
                     }
                 }
             }
+        }
+
+        public void ClearAll()
+        {
+            _expectations.ClearAll();
         }
     }
 }

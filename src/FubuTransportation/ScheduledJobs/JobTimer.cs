@@ -109,6 +109,8 @@ namespace FubuTransportation.ScheduledJobs
         public TimedExecution(ILogger logger, Type type, DateTimeOffset expectedTime, double millisecondsToWait,
             Action action)
         {
+            if (millisecondsToWait <= 0) millisecondsToWait = 1;
+
             Status = JobExecutionStatus.Scheduled;
             _type = type;
             _expectedTime = expectedTime;

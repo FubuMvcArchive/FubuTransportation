@@ -234,7 +234,7 @@ namespace FubuTransportation.Testing
         [Test]
         public void TransportActivator_is_registered()
         {
-            registeredTypeIs<IActivator, TransportActivator>();
+            registeredTypeIs<IActivator, FubuTransportationActivator>();
         }
 
 

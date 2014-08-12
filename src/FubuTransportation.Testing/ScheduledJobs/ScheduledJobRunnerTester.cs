@@ -62,8 +62,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void should_record_the_duration_of_the_job()
         {
-            theRecord.Duration.ShouldBeGreaterThan(99);
-            theRecord.Duration.ShouldBeLessThan(125);
+            theRecord.Duration.ShouldBeGreaterThan(75);
         }
 
         [Test]
@@ -106,7 +105,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void should_record_the_duration_of_the_job()
         {
-            theRecord.Duration.ShouldBeGreaterThan(99);
+            theRecord.Duration.ShouldBeGreaterThan(75);
         }
 
         [Test]

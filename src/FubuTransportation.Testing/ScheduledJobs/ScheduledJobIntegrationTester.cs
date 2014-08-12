@@ -127,7 +127,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
         public DummyScheduleRule()
         {
-            _nextTime = DateTimeOffset.Now;
+            _nextTime = DateTimeOffset.UtcNow.AddDays(1);
         }
 
         public DummyScheduleRule(DateTimeOffset nextTime)
