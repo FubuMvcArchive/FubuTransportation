@@ -40,15 +40,15 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             });
 
-            execution.Status.ShouldEqual(JobExecutionStatus.scheduled);
+            execution.Status.ShouldEqual(JobExecutionStatus.Scheduled);
 
             Thread.Sleep(20);
-            execution.Status.ShouldEqual(JobExecutionStatus.executing);
+            execution.Status.ShouldEqual(JobExecutionStatus.Executing);
             started.Set();
 
             Thread.Sleep(50);
 
-            execution.Status.ShouldEqual(JobExecutionStatus.complete);
+            execution.Status.ShouldEqual(JobExecutionStatus.Completed);
         }
 
         [Test, Explicit]

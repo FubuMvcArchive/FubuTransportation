@@ -10,7 +10,7 @@ namespace FubuTransportation.ScheduledJobs
 
         public IEnumerable<JobStatusDTO> FindAllActive(string nodeName)
         {
-            return _statusCache.Where(x => x.NodeName == nodeName && x.Active);
+            return _statusCache.Where(x => x.NodeName == nodeName && x.Status != JobExecutionStatus.Inactive);
         }
 
         public IEnumerable<JobStatusDTO> FindAll(string nodeName)

@@ -17,7 +17,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             var status = new JobStatus(typeof (AJob), DateTime.Today)
             {
                 NextTime = DateTime.Today.AddHours(1),
-                Active = true,
+                Status = JobExecutionStatus.Scheduled,
                 LastExecution = new JobExecutionRecord
                 {
                     Duration = 123,
@@ -33,7 +33,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             dto.JobKey.ShouldEqual("AJob");
             dto.LastExecution.ShouldEqual(status.LastExecution);
             dto.NextTime.ShouldEqual(status.NextTime);
-            dto.Active.ShouldBeTrue();
+            dto.Status.ShouldEqual(JobExecutionStatus.Scheduled);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             var status = new JobStatus(typeof(DecoratedJob), DateTime.Today)
             {
-                Active = false,
+                Status = JobExecutionStatus.Executing,
                 NextTime = DateTime.Today.AddHours(1),
                 LastExecution = new JobExecutionRecord
                 {
@@ -57,7 +57,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             dto.JobKey.ShouldEqual("Special");
             dto.LastExecution.ShouldEqual(status.LastExecution);
             dto.NextTime.ShouldEqual(status.NextTime);
-            dto.Active.ShouldBeFalse();
+            dto.Status.ShouldEqual(JobExecutionStatus.Executing);
         }
     }
 

@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void removes_obsolete_jobs()
         {
-            theSchedule.Find(typeof(AJob)).Active.ShouldBeFalse();
+            theSchedule.Find(typeof(AJob)).Status.ShouldEqual(JobExecutionStatus.Inactive);
         }
     }
 

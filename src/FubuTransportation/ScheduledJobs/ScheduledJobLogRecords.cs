@@ -25,7 +25,7 @@ namespace FubuTransportation.ScheduledJobs
 
         public override string ToString()
         {
-            return "Scheduled job {0} scheduled to start at {1}".ToFormat(JobKey, ScheduledTime.ToLocalTime());
+            return "Scheduled job {0} Scheduled to start at {1}".ToFormat(JobKey, ScheduledTime.ToLocalTime());
         }
     }
 

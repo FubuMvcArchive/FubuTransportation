@@ -19,7 +19,7 @@ namespace FubuTransportation.ScheduledJobs
             {
                 var missing = jobs.Jobs.Where(x => x.Channel == null);
                 var message =
-                    "No channel configured for jobs {0} and no default scheduled job channel configured".ToFormat(
+                    "No channel configured for jobs {0} and no default Scheduled job channel configured".ToFormat(
                         missing.Select(x => x.JobType.GetFullName()).Join(", "));
 
                 throw new InvalidOperationException(message);
@@ -30,7 +30,7 @@ namespace FubuTransportation.ScheduledJobs
                 var channel = channels.ChannelFor(accessor);
                 if (channel == null)
                 {
-                    throw new InvalidOperationException("Nonexistent Channel '{0}' configured for scheduled job {1}".ToFormat(accessor, job.JobType.GetFullName()));
+                    throw new InvalidOperationException("Nonexistent Channel '{0}' configured for Scheduled job {1}".ToFormat(accessor, job.JobType.GetFullName()));
                 }
 
                 channel.Rules.Add(job.ToRoutingRule());

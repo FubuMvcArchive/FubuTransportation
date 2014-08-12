@@ -21,7 +21,8 @@ namespace FubuTransportation.ScheduledJobs
             NextTime = nextTime;
         }
 
-        public bool Active { get; set; }
+        public JobExecutionStatus Status { get; set; }
+
         public Type JobType { get; set; }
         public DateTimeOffset? NextTime { get; set; }
         public JobExecutionRecord LastExecution { get; set; }
@@ -55,7 +56,7 @@ namespace FubuTransportation.ScheduledJobs
                 JobKey = GetKey(JobType),
                 LastExecution = LastExecution,
                 NextTime = NextTime,
-                Active = Active
+                Status = Status
             };
         }
 

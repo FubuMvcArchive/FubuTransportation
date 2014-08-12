@@ -37,7 +37,7 @@ namespace FubuTransportation.Polling
 
         public void FailedToSchedule(Type jobType, Exception exception)
         {
-            _logger.Error("Job {0} could not be scheduled to run".ToFormat(jobType.FullName), exception);
+            _logger.Error("Job {0} could not be Scheduled to run".ToFormat(jobType.FullName), exception);
         }
     }
 }

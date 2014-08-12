@@ -187,7 +187,7 @@ namespace FubuTransportation.Configuration
         }
 
         /// <summary>
-        ///   Finds the currently executing assembly.
+        ///   Finds the currently Executing assembly.
         /// </summary>
         /// <returns></returns>
         public static Assembly FindTheCallingAssembly()

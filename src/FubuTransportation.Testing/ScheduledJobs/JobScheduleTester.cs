@@ -21,7 +21,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             });
 
             schedule.RemoveObsoleteJobs(new Type[]{typeof(AJob), typeof(CJob)});
-            schedule.Find(typeof(BJob)).Active.ShouldBeFalse();
+            schedule.Find(typeof (BJob)).Status.ShouldEqual(JobExecutionStatus.Inactive);
         }
 
 

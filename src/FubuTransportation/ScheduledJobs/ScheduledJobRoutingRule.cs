@@ -14,7 +14,7 @@ namespace FubuTransportation.ScheduledJobs
 
         public string Describe()
         {
-            return "Executes scheduled job: " + typeof (T).GetFullName();
+            return "Executes Scheduled job: " + typeof (T).GetFullName();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FubuTransportation.Runtime.Invocation
         /// <summary>
         /// Consumes and executes the message within the same
         /// request and transaction context as the currently
-        /// executing handler. Throws exception if no consumer
+        /// Executing handler. Throws exception if no consumer
         /// found.
         /// </summary>
         /// <param name="message"></param>
@@ -20,7 +20,7 @@ namespace FubuTransportation.Runtime.Invocation
         /// <summary>
         /// Consumes and executes the message within the same
         /// request and transaction context as the currently
-        /// executing handler for messages with a consumer;
+        /// Executing handler for messages with a consumer;
         /// when no consumer is found, the onNoConsumer
         /// action is executed
         /// </summary>

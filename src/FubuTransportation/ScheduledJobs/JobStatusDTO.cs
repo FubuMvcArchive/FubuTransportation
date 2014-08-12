@@ -17,7 +17,7 @@ namespace FubuTransportation.ScheduledJobs
         public DateTimeOffset? NextTime { get; set; }
         public JobExecutionRecord LastExecution { get; set; }
         public string NodeName { get; set; }
-        public bool Active { get; set; }
+        public JobExecutionStatus Status { get; set; }
 
         protected bool Equals(JobStatusDTO other)
         {

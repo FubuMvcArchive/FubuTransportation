@@ -41,7 +41,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void find_all_active_for_node()
         {
-            foo1.Active = foo2.Active = bar1.Active = true;
+            foo1.Status = foo2.Status = bar1.Status = JobExecutionStatus.Scheduled;
+            foo3.Status = bar2.Status = JobExecutionStatus.Inactive;
 
             thePersistence.FindAllActive("foo")
                 .ShouldHaveTheSameElementsAs(foo1, foo2);
@@ -53,7 +54,9 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void persist_job_status()
         {
-            var change = new JobStatusDTO {JobKey = "1", NodeName = "foo", Active = true};
+            foo1.Status = foo2.Status = foo3.Status = bar1.Status = bar2.Status = JobExecutionStatus.Inactive;
+
+            var change = new JobStatusDTO { JobKey = "1", NodeName = "foo", Status = JobExecutionStatus.Scheduled };
 
             thePersistence.Persist(change);
 

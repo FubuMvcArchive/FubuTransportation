@@ -37,7 +37,7 @@ namespace FubuTransportation.ScheduledJobs
         public void RemoveObsoleteJobs(IEnumerable<Type> jobTypes)
         {
             _status.Where(x => !jobTypes.Contains(x.JobType)).Each(x => {
-                x.Active = false;
+                x.Status = JobExecutionStatus.Inactive;
                 x.NextTime = null;
             });
         }
@@ -54,7 +54,7 @@ namespace FubuTransportation.ScheduledJobs
 
         public IEnumerable<JobStatus> Active()
         {
-            return _status.Where(x => x.Active);
+            return _status.Where(x => x.Status != JobExecutionStatus.Inactive);
         }
     }
 }

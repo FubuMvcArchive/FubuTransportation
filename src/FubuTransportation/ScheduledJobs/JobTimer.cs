@@ -109,22 +109,22 @@ namespace FubuTransportation.ScheduledJobs
         public TimedExecution(ILogger logger, Type type, DateTimeOffset expectedTime, double millisecondsToWait,
             Action action)
         {
-            Status = JobExecutionStatus.scheduled;
+            Status = JobExecutionStatus.Scheduled;
             _type = type;
             _expectedTime = expectedTime;
 
             _timer = new Timer {AutoReset = false, Interval = millisecondsToWait};
             _timer.Elapsed += (sender, args) => {
-                Status = JobExecutionStatus.executing;
+                Status = JobExecutionStatus.Executing;
                 try
                 {
                     action();
                 }
                 catch (Exception e)
                 {
-                    logger.Error("Trying to execute scheduled job " + type.GetFullName(), e);
+                    logger.Error("Trying to execute Scheduled job " + type.GetFullName(), e);
                 }
-                Status = JobExecutionStatus.complete;
+                Status = JobExecutionStatus.Completed;
                 _finished.Set();
             };
 

@@ -40,7 +40,7 @@ namespace FubuTransportation.ScheduledJobs
         {
             return new JobStatus(_jobTypes[dto.JobKey])
             {
-                Active = dto.Active,
+                Status = dto.Status,
                 LastExecution = dto.LastExecution,
                 NextTime = dto.NextTime
             };
