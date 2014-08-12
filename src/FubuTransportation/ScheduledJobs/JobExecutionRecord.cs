@@ -4,7 +4,7 @@ namespace FubuTransportation.ScheduledJobs
 {
     public class JobExecutionRecord
     {
-        public double Duration { get; set; }
+        public long Duration { get; set; }
         public DateTimeOffset Finished { get; set; }
         public bool Success { get; set; }
         public string ExceptionText { get; set; }

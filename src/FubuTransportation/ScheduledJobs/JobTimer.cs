@@ -92,16 +92,9 @@ namespace FubuTransportation.ScheduledJobs
         }
     }
 
-    public enum TimedExecutionStatus
-    {
-        waiting,
-        executing,
-        complete
-    }
-
     public interface ITimedExecution
     {
-        TimedExecutionStatus Status { get; }
+        JobExecutionStatus Status { get; }
         Type Type { get; }
         DateTimeOffset ExpectedTime { get; }
     }
@@ -116,13 +109,13 @@ namespace FubuTransportation.ScheduledJobs
         public TimedExecution(ILogger logger, Type type, DateTimeOffset expectedTime, double millisecondsToWait,
             Action action)
         {
-            Status = TimedExecutionStatus.waiting;
+            Status = JobExecutionStatus.scheduled;
             _type = type;
             _expectedTime = expectedTime;
 
             _timer = new Timer {AutoReset = false, Interval = millisecondsToWait};
             _timer.Elapsed += (sender, args) => {
-                Status = TimedExecutionStatus.executing;
+                Status = JobExecutionStatus.executing;
                 try
                 {
                     action();
@@ -131,7 +124,7 @@ namespace FubuTransportation.ScheduledJobs
                 {
                     logger.Error("Trying to execute scheduled job " + type.GetFullName(), e);
                 }
-                Status = TimedExecutionStatus.complete;
+                Status = JobExecutionStatus.complete;
                 _finished.Set();
             };
 
@@ -143,7 +136,7 @@ namespace FubuTransportation.ScheduledJobs
             _finished.WaitOne(timeout);
         }
 
-        public TimedExecutionStatus Status { get; private set; }
+        public JobExecutionStatus Status { get; private set; }
 
         public Type Type
         {

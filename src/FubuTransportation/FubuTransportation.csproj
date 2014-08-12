@@ -270,14 +270,15 @@
     <Compile Include="Sagas\StatefulSagaNode.cs" />
     <Compile Include="ScheduledJobs\ApplyScheduledJobRouting.cs" />
     <Compile Include="ScheduledJobs\EveryDayAtSpecificTime.cs" />
+    <Compile Include="ScheduledJobs\ExecuteScheduledJob.cs" />
     <Compile Include="ScheduledJobs\IJobExecutor.cs" />
     <Compile Include="ScheduledJobs\InMemorySchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduledJob.cs" />
     <Compile Include="ScheduledJobs\ISchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduleRepository.cs" />
     <Compile Include="ScheduledJobs\IScheduleRule.cs" />
-    <Compile Include="ScheduledJobs\IScheduledJobLogger.cs" />
     <Compile Include="ScheduledJobs\JobExecutionRecord.cs" />
+    <Compile Include="ScheduledJobs\JobExecutionStatus.cs" />
     <Compile Include="ScheduledJobs\JobKeyAttribute.cs" />
     <Compile Include="ScheduledJobs\JobSchedule.cs" />
     <Compile Include="ScheduledJobs\JobStatus.cs" />
@@ -290,7 +291,6 @@
     <Compile Include="ScheduledJobs\ScheduledJobGraph.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobHandlerCall.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobHandlerSource.cs" />
-    <Compile Include="ScheduledJobs\ScheduledJobLogger.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobLogRecords.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobRoutingRule.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobRunner.cs" />

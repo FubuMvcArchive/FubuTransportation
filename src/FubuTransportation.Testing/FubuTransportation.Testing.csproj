@@ -381,7 +381,6 @@
     <Compile Include="ScheduledJobs\ScheduledJobController_integration_Tester.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobGraphTester.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobIntegrationTester.cs" />
-    <Compile Include="ScheduledJobs\ScheduledJobLoggerTester.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobRunnerTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishing\EventPublisherTester.cs">

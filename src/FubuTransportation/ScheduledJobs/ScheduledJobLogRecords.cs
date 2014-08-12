@@ -1,59 +1,85 @@
 using System;
 using FubuCore;
 using FubuCore.Logging;
+using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJobScheduled : LogRecord
+    public abstract class ScheduledJobRecord : LogRecord
     {
-        public string Description { get; set; }
+        public ScheduledJobRecord(IJob job)
+        {
+            JobKey = JobStatus.GetKey(job.GetType());
+        }
+
+        public string JobKey { get; set; }
+    }
+
+    public class ScheduledJobScheduled : ScheduledJobRecord
+    {
+        public ScheduledJobScheduled(IJob job) : base(job)
+        {
+        }
+
         public DateTimeOffset ScheduledTime { get; set; }
 
         public override string ToString()
         {
-            return "Scheduled job {0} scheduled to start at {1}".ToFormat(Description, ScheduledTime.ToLocalTime());
+            return "Scheduled job {0} scheduled to start at {1}".ToFormat(JobKey, ScheduledTime.ToLocalTime());
         }
     }
 
-    public class ScheduledJobStarted : LogRecord
+    public class ScheduledJobStarted : ScheduledJobRecord
     {
-        public string Description { get; set; }
+        public ScheduledJobStarted(IJob job) : base(job)
+        {
+        }
 
         public override string ToString()
         {
-            return "Scheduled job {0} started".ToFormat(Description);
+            return "Scheduled job {0} started".ToFormat(JobKey);
         }
     }
 
-    public class ScheduledJobSucceeded : LogRecord
+    public class ScheduledJobSucceeded : ScheduledJobRecord
     {
-        public string Description { get; set; }
+        public ScheduledJobSucceeded(IJob job) : base(job)
+        {
+        }
 
         public override string ToString()
         {
-            return "Scheduled job {0} succeeded".ToFormat(Description);
+            return "Scheduled job {0} succeeded".ToFormat(JobKey);
         }
     }
 
-    public class ScheduledJobFailed : LogRecord
+    public class ScheduledJobFailed : ScheduledJobRecord
     {
-        public string Description { get; set; }
+        public ScheduledJobFailed(IJob job, Exception ex) : base(job)
+        {
+            Exception = ex;
+        }
+
         public Exception Exception { get; set; }
 
         public override string ToString()
         {
-            return "Scheduled job {0} failed with exception {1}".ToFormat(Description, Exception);
+            return "Scheduled job {0} failed with exception {1}".ToFormat(JobKey, Exception);
         }
     }
 
-    public class ScheduledJobFinished : LogRecord
+    public class ScheduledJobFinished : ScheduledJobRecord
     {
-        public string Description { get; set; }
+        public ScheduledJobFinished(IJob job, long duration) : base(job)
+        {
+            Duration = duration;
+        }
+
         public long Duration { get; set; }
 
         public override string ToString()
         {
-            return "Scheduled job {0} finished in {1} ms".ToFormat(Description, Duration);
+            return "Scheduled job {0} finished in {1} ms".ToFormat(JobKey, Duration);
         }
     }
 }

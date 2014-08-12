@@ -1,85 +1,109 @@
 ﻿using System;
+using System.Threading;
+using FubuCore;
+using FubuCore.Dates;
+using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-    [TestFixture]
-    public class when_running_a_scheduled_job_successfully : InteractionContext<ScheduledJobRunner<AScheduledJob>>
+    public abstract class ScheduledJobRunnerContext
     {
-        private IJob theJob;
+        protected RecordingLogger theLogger;
+        protected ISettableClock theClock;
+        protected JobExecutionRecord theRecord;
 
-        protected override void beforeEach()
+        [TestFixtureSetUp]
+        public void SetUp()
         {
-            theJob = MockFor<AScheduledJob>();
-            MockFor<IScheduledJobLogger>()
-                .Expect(x => x.LogAndTimeExecution(Arg<IJob>.Matches(j => ReferenceEquals(j, theJob)), Arg<Action>.Is.Anything))
-                .WhenCalled(x =>
-                {
-                    var action = x.Arguments[1] as Action;
-                    action();
-                });
+            theLogger = new RecordingLogger();
+            theClock = new SettableClock().LocalNow(DateTime.Today.AddHours(8));
+            var job = new AScheduledJob();
 
-            ClassUnderTest.Execute(new ExecuteScheduledJob<AScheduledJob>());
+            theJobRunsLike(job);
+
+            theRecord = new ScheduledJobRunner<AScheduledJob>(job, theLogger, theClock)
+                .Execute(new ExecuteScheduledJob<AScheduledJob>());
+        }
+
+        protected abstract void theJobRunsLike(AScheduledJob job);
+    }
+
+    [TestFixture]
+    public class when_running_a_scheduled_job_successfully : ScheduledJobRunnerContext
+    {
+        protected override void theJobRunsLike(AScheduledJob job)
+        {
+            job.Duration = 100;
+            job.Exception = null;
         }
 
         [Test]
-        public void should_run_the_internal_job()
+        public void should_record_the_duration_of_the_job()
         {
-            MockFor<AScheduledJob>().AssertWasCalled(x => x.Execute());
+            theRecord.Duration.ShouldBeGreaterThan(99);
+            theRecord.Duration.ShouldBeLessThan(125);
+        }
+
+        [Test]
+        public void records_success()
+        {
+            theRecord.Success.ShouldBeTrue();
+        }
+
+        [Test]
+        public void exception_text_should_be_empty()
+        {
+            theRecord.ExceptionText.IsEmpty().ShouldBeTrue();
         }
     }
 
     [TestFixture]
-    public class when_running_a_scheduled_job_with_a_job_failure : InteractionContext<ScheduledJobRunner<AScheduledJob>>
+    public class when_running_a_scheduled_job_with_a_job_failure : ScheduledJobRunnerContext
     {
-        private NotImplementedException theException;
-        private Exception caughtException;
-        private IJob theJob;
+        private readonly Exception EX = new Exception("You stink!");
 
-        protected override void beforeEach()
+        protected override void theJobRunsLike(AScheduledJob job)
         {
-            theException = new NotImplementedException();
-
-            theJob = MockFor<AScheduledJob>();
-            theJob.Expect(x => x.Execute()).Throw(theException);
-
-            MockFor<IScheduledJobLogger>()
-                .Expect(x => x.LogAndTimeExecution(Arg<IJob>.Matches(j => ReferenceEquals(j, theJob)), Arg<Action>.Is.Anything))
-                .WhenCalled(x =>
-                {
-                    var action = x.Arguments[1] as Action;
-                    action();
-                });
-
-            try
-            {
-                ClassUnderTest.Execute(new ExecuteScheduledJob<AScheduledJob>());
-            }
-            catch (Exception ex)
-            {
-                caughtException = ex;
-            }
+            job.Duration = 100;
+            job.Exception = EX;
         }
 
         [Test]
-        public void should_run_the_internal_job()
+        public void should_record_the_duration_of_the_job()
         {
-            MockFor<AScheduledJob>().AssertWasCalled(x => x.Execute());
+            theRecord.Duration.ShouldBeGreaterThan(99);
         }
 
         [Test]
-        public void should_allow_exception_to_bubble_up_so_normal_message_retry_behavior_can_kick_in()
+        public void records_a_failure()
         {
-            caughtException.ShouldNotBeNull();
-            caughtException.ShouldBeOfType<NotImplementedException>();
+            theRecord.Success.ShouldBeFalse();
+        }
+
+        [Test]
+        public void exception_text_should_be_empty()
+        {
+            theRecord.ExceptionText.ShouldEqual(EX.ToString());
         }
     }
 
-    public interface AScheduledJob : IJob
+    public class AScheduledJob : IJob
     {
+        public Exception Exception = null;
+        public int Duration = 100;
+
+        public void Execute()
+        {
+            Thread.Sleep(Duration);
+
+            if (Exception != null)
+            {
+                throw Exception;
+            }
+        }
     }
 }

@@ -88,6 +88,12 @@ namespace FubuTransportation.ScheduledJobs
 
         public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
         {
+//            _logger.InfoMessage(() => new ScheduledJobScheduled
+//            {
+//                Description = job.ToString(),
+//                ScheduledTime = nextTime
+//            });
+
             _timer.Schedule(typeof(T), nextTime, () => job.Execute(this));
         }
 
