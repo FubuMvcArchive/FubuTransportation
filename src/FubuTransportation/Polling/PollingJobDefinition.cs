@@ -9,14 +9,17 @@ namespace FubuTransportation.Polling
         public Type JobType { get; set; }
         public Type SettingType { get; set; }
         public Expression IntervalSource { get; set; }
+        public ScheduledExecution ScheduledExecution { get; set; }
+
+        public PollingJobDefinition()
+        {
+            ScheduledExecution = ScheduledExecution.WaitUntilInterval;
+        }
 
         public ObjectDef ToObjectDef()
         {
             var def = new ObjectDef(typeof(PollingJob<,>), JobType, SettingType);
-
-            var funcType = typeof(Func<,>).MakeGenericType(SettingType, typeof(double));
-            var intervalSourceType = typeof(Expression<>).MakeGenericType(funcType);
-            def.DependencyByValue(intervalSourceType, IntervalSource);
+            def.DependencyByValue(this);
 
             return def;
         }
@@ -30,5 +33,11 @@ namespace FubuTransportation.Polling
                 SettingType = typeof(TSettings)
             };
         }
+    }
+
+    public enum ScheduledExecution
+    {
+        WaitUntilInterval,
+        RunImmediately
     }
 }

@@ -27,22 +27,35 @@ namespace FubuTransportation.Polling
                 _parent = parent;
             }
 
-            public PollingJobExpression ScheduledAtInterval<TSettings>(
+            public ScheduledExecutionExpression ScheduledAtInterval<TSettings>(
                 Expression<Func<TSettings, double>> intervalInMillisecondsProperty)
             {
                 var definition = new PollingJobDefinition
                 {
-                    JobType = typeof (TJob),
-                    SettingType = typeof (TSettings),
+                    JobType = typeof(TJob),
+                    SettingType = typeof(TSettings),
                     IntervalSource = intervalInMillisecondsProperty
                 };
 
                 _parent._parent._pollingJobs.AddJobType(typeof(TJob));
-                _parent._parent.AlterSettings<PollingJobSettings>(x => {
-                    x.Jobs.Add(definition);
-                });
+                _parent._parent.AlterSettings<PollingJobSettings>(x => x.Jobs.Add(definition));
 
-                return _parent;
+                return new ScheduledExecutionExpression(definition);
+            }
+
+            public class ScheduledExecutionExpression
+            {
+                private readonly PollingJobDefinition _definition;
+
+                public ScheduledExecutionExpression(PollingJobDefinition definition)
+                {
+                    _definition = definition;
+                }
+
+                public void RunImmediately()
+                {
+                    _definition.ScheduledExecution = ScheduledExecution.RunImmediately;
+                }
             }
         }
     }

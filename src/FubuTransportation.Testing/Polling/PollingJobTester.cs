@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Security.Cryptography;
 using FubuCore.Descriptions;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Is = Rhino.Mocks.Constraints.Is;
 
 namespace FubuTransportation.Testing.Polling
 {
@@ -15,8 +12,8 @@ namespace FubuTransportation.Testing.Polling
     {
         protected override void beforeEach()
         {
-            Expression<Func<PollingJobSettings, double>> intervalSource = x => 350;
-            Services.Inject(intervalSource);
+            var definition = PollingJobDefinition.For<APollingJob, PollingJobSettings>(x => x.Polling);
+            Services.Inject(definition);
         }
 
         [Test]
@@ -44,7 +41,11 @@ namespace FubuTransportation.Testing.Polling
         public void smoke_test_describe()
         {
             var description = Description.For(ClassUnderTest);
+            description.Title.ShouldEqual("Polling Job for APollingJob");
+            description.ShortDescription.ShouldEqual("A polling job just for testing purposes");
             description.Properties["Interval"].ShouldEqual("350 ms");
+            description.Properties["Config"].ShouldEqual("x => x.Polling");
+            description.Properties["Scheduled Execution"].ShouldEqual("WaitUntilInterval");
         }
     }
 
@@ -52,7 +53,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public PollingJobSettings()
         {
-            Polling = 1000;
+            Polling = 350;
         }
 
         public double Polling { get; set; }

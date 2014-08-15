@@ -70,6 +70,7 @@ namespace FubuTransportation.Testing.Polling
         }
     }
 
+    [System.ComponentModel.Description("A polling job just for testing purposes")]
     public interface APollingJob : IJob
     {
     }

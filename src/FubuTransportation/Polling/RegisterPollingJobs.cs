@@ -10,10 +10,10 @@ namespace FubuTransportation.Polling
     {
         public void Configure(BehaviorGraph graph)
         {
-            var settings = graph.Settings.Get<PollingJobSettings>();
-            settings.Jobs.Select(x => x.ToObjectDef()).Each(x => {
-                graph.Services.AddService(typeof(IPollingJob), x);
-            });
+            var jobs = graph.Settings.Get<PollingJobSettings>().Jobs;
+
+            jobs.Select(x => x.ToObjectDef())
+                .Each(x => graph.Services.AddService(typeof(IPollingJob), x));
         }
     }
 }
