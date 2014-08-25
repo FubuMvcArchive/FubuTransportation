@@ -361,6 +361,7 @@
     <Compile Include="Polling\JobRunnerTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Polling\JobTimeoutTester.cs" />
     <Compile Include="Polling\PollingJobActivatorTester.cs">
       <SubType>Code</SubType>
     </Compile>
