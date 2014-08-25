@@ -10,6 +10,7 @@ namespace FubuTransportation.ScheduledJobs
         Type JobType { get; }
         void Initialize(IJobExecutor executor, JobSchedule schedule);
         Accessor Channel { get; }
+        TimeSpan Timeout { get;}
         IRoutingRule ToRoutingRule();
     }
 

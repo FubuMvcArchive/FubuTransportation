@@ -64,9 +64,16 @@ namespace FubuTransportation.ScheduledJobs
                     _job = job;
                 }
 
-                public void Channel(Expression<Func<T, object>> channel)
+                public ChannelExpression<TJob> Channel(Expression<Func<T, object>> channel)
                 {
                     _job.Channel = channel.ToAccessor();
+                    return this;
+                }
+
+                public ChannelExpression<TJob> Timeout(TimeSpan timeout)
+                {
+                    _job.Timeout = timeout;
+                    return this;
                 }
             }
         }

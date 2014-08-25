@@ -1,4 +1,5 @@
 using System;
+using FubuCore;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
@@ -10,6 +11,7 @@ namespace FubuTransportation.ScheduledJobs
         public ScheduledJob(IScheduleRule scheduler)
         {
             Scheduler = scheduler;
+            Timeout = 5.Minutes();
         }
 
         // TODO -- add timeouts?
@@ -41,6 +43,7 @@ namespace FubuTransportation.ScheduledJobs
         }
 
         public Accessor Channel { get; set; }
+        public TimeSpan Timeout { get; set; }
 
         IRoutingRule IScheduledJob.ToRoutingRule()
         {
