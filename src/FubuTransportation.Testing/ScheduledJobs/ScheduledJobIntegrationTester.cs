@@ -66,6 +66,14 @@ namespace FubuTransportation.Testing.ScheduledJobs
         }
 
         [Test]
+        public void jobs_are_registered_in_the_container()
+        {
+            theRuntime.Factory.Get<IScheduledJob<AJob>>().ShouldNotBeNull();
+            theRuntime.Factory.Get<IScheduledJob<BJob>>().ShouldNotBeNull();
+            theRuntime.Factory.Get<IScheduledJob<CJob>>().ShouldNotBeNull();
+        }
+
+        [Test]
         public void use_the_default_channel_for_scheduled_jobs_if_none_is_explicitly_set()
         {
             var graph = theRuntime.Factory.Get<ChannelGraph>();

@@ -20,6 +20,7 @@ namespace FubuTransportation
             registry.Services<PollingServicesRegistry>();
             registry.Services<ScheduledJobServicesRegistry>();
             registry.Policies.Add<RegisterPollingJobs>();
+            registry.Policies.Add<RegisterScheduledJobs>();
             registry.Policies.Add<StatefulSagaConvention>();
             registry.Policies.Add<AsyncHandlingConvention>();
 
