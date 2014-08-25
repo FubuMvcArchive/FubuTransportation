@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
@@ -60,7 +61,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class DJob : IJob
     {
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             throw new System.NotImplementedException();
         }
@@ -68,7 +69,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class EJob : IJob
     {
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             throw new System.NotImplementedException();
         }

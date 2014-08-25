@@ -1,4 +1,5 @@
-﻿using FubuCore.Dates;
+﻿using System.Threading;
+using FubuCore.Dates;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.Events
@@ -14,7 +15,7 @@ namespace FubuTransportation.Events
             _systemTime = systemTime;
         }
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             _events.PruneExpiredListeners(_systemTime.UtcNow());
         }

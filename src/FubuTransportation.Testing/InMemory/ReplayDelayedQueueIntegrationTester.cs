@@ -68,12 +68,12 @@ namespace FubuTransportation.Testing.InMemory
         {
             TestMessageRecorder.AllProcessed.Any().ShouldBeFalse();
 
-            theProcessor.Execute();
+            theProcessor.Execute(new CancellationToken());
             Thread.Sleep(2000);
             TestMessageRecorder.AllProcessed.Any().ShouldBeFalse();
 
             theClock.LocalNow(theClock.LocalTime().Add(61.Minutes()));
-            theProcessor.Execute();
+            theProcessor.Execute(new CancellationToken());
 
             Wait.Until(() => TestMessageRecorder.HasProcessed(message1)).ShouldBeTrue();
             Wait.Until(() => TestMessageRecorder.HasProcessed(message2)).ShouldBeTrue();
@@ -82,7 +82,7 @@ namespace FubuTransportation.Testing.InMemory
             TestMessageRecorder.HasProcessed(message4).ShouldBeFalse();
 
             theClock.LocalNow(theClock.LocalTime().Add(61.Minutes()));
-            theProcessor.Execute();
+            theProcessor.Execute(new CancellationToken());
 
             Wait.Until(() => TestMessageRecorder.HasProcessed(message3)).ShouldBeTrue();
             Wait.Until(() => TestMessageRecorder.HasProcessed(message4)).ShouldBeTrue();
