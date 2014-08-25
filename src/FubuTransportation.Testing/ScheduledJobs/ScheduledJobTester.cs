@@ -178,7 +178,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private DateTimeOffset _now;
 
 
-        public Task<JobExecutionRecord> Execute<T>() where T : IJob
+        public Task<JobExecutionRecord> Execute<T>(TimeSpan timeout) where T : IJob
         {
             throw new NotImplementedException();
         }

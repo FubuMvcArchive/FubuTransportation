@@ -71,9 +71,9 @@ namespace FubuTransportation.ScheduledJobs
         }
 
 
-        public Task<JobExecutionRecord> Execute<T>() where T : IJob
+        public Task<JobExecutionRecord> Execute<T>(TimeSpan timeout) where T : IJob
         {
-            return _serviceBus.Request<JobExecutionRecord>(new ExecuteScheduledJob<T>());
+            return _serviceBus.Request<JobExecutionRecord>(new ExecuteScheduledJob<T>{Timeout = timeout});
         }
 
         public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
