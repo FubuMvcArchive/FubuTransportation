@@ -138,7 +138,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             _systemTime = systemTime;
         }
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             _history.CaptureActual(GetType(), _systemTime.UtcNow());
             Thread.Sleep(250);

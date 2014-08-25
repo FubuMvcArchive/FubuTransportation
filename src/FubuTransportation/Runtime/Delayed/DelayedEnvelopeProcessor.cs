@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
@@ -19,7 +20,7 @@ namespace FubuTransportation.Runtime.Delayed
             _transports = transports;
         }
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             var currentTime = _systemTime.UtcNow();
             _transports.Each(transport => {

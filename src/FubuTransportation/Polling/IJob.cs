@@ -1,7 +1,9 @@
-﻿namespace FubuTransportation.Polling
+﻿using System.Threading;
+
+namespace FubuTransportation.Polling
 {
     public interface IJob
     {
-        void Execute();
+        void Execute(CancellationToken cancellation);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Logging;
@@ -22,6 +23,7 @@ namespace FubuTransportation.ScheduledJobs
             _repository = repository;
         }
 
+
         public JobExecutionRecord Execute(ExecuteScheduledJob<T> request)
         {
             var record = new JobExecutionRecord();
@@ -34,7 +36,9 @@ namespace FubuTransportation.ScheduledJobs
             {
                 _repository.MarkExecuting<T>();
 
-                _job.Execute();
+                var cancellation = new CancellationToken(false);
+
+                _job.Execute(cancellation);
 
                 record.Success = true;
                 _logger.InfoMessage(() => new ScheduledJobSucceeded(_job));

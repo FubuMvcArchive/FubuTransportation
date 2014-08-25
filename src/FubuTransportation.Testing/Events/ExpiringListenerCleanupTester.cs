@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -21,7 +22,7 @@ namespace FubuTransportation.Testing.Events
         {
             LocalSystemTime = DateTime.Today.AddHours(8);
 
-            ClassUnderTest.Execute();
+            ClassUnderTest.Execute(new CancellationToken());
 
             MockFor<IEventAggregator>().AssertWasCalled(x => x.PruneExpiredListeners(UtcSystemTime));
         }

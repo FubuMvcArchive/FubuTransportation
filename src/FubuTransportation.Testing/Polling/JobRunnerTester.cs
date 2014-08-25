@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using NUnit.Framework;
@@ -31,7 +32,7 @@ namespace FubuTransportation.Testing.Polling
         [Test]
         public void should_run_the_internal_job()
         {
-            MockFor<APollingJob>().AssertWasCalled(x => x.Execute());
+            MockFor<APollingJob>().AssertWasCalled(x => x.Execute(new CancellationToken()), x => x.IgnoreArguments());
         }
     }
 
@@ -43,8 +44,9 @@ namespace FubuTransportation.Testing.Polling
         protected override void beforeEach()
         {
             theException = new NotImplementedException();
-            MockFor<APollingJob>().Expect(x => x.Execute())
-                                  .Throw(theException);
+            MockFor<APollingJob>().Expect(x => x.Execute(new CancellationToken()))
+                .IgnoreArguments()
+                .Throw(theException);
 
             ClassUnderTest.Run(new JobRequest<APollingJob>());
         }
@@ -66,7 +68,7 @@ namespace FubuTransportation.Testing.Polling
         [Test]
         public void should_run_the_internal_job()
         {
-            MockFor<APollingJob>().AssertWasCalled(x => x.Execute());
+            MockFor<APollingJob>().AssertWasCalled(x => x.Execute(new CancellationToken()), x => x.IgnoreArguments());
         }
     }
 

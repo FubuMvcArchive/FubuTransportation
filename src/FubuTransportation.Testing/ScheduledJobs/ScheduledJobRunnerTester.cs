@@ -126,7 +126,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public Exception Exception = null;
         public int Duration = 100;
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             Thread.Sleep(Duration);
 

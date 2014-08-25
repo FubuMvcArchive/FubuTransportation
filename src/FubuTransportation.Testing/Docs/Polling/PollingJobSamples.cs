@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 
@@ -16,7 +17,7 @@ namespace FubuTransportation.Testing.Docs.Polling
     public class PomodoroJob : IJob
     {
         //Again, similar to message handlers this method is executed in a behavior chain
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             //Lock doors and shutdown all distractions, time to get work done
         }

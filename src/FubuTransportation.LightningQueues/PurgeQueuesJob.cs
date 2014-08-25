@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using FubuTransportation.Polling;
 
 namespace FubuTransportation.LightningQueues
@@ -12,7 +13,7 @@ namespace FubuTransportation.LightningQueues
             _persistentQueues = persistentQueues;
         }
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             _persistentQueues.AllQueueManagers.Each(x => x.PurgeOldData());
         }

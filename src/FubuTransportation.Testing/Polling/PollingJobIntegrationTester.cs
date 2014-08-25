@@ -104,7 +104,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public static int Executed = 0;
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             Executed++;
         }
@@ -114,7 +114,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public static int Executed = 0;
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             Executed++;
         }
@@ -124,7 +124,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public static int Executed = 0;
 
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             Executed++;
         }

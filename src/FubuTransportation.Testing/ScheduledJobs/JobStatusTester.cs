@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FubuCore;
 using FubuCore.Dates;
 using FubuTestingSupport;
@@ -64,7 +65,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
     [JobKey("Special")]
     public class DecoratedJob : IJob
     {
-        public void Execute()
+        public void Execute(CancellationToken cancellation)
         {
             throw new NotImplementedException();
         }

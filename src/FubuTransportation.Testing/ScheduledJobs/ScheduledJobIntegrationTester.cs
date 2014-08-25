@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using FubuCore;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
@@ -101,7 +102,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
     {
         public static int Executed = 0;
 
-        public void Execute() { ++Executed; }
+        public void Execute(CancellationToken cancellation) { ++Executed; }
         public static void Reset() { Executed = 0; }
     }
 
@@ -109,7 +110,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
     {
         public static int Executed = 0;
 
-        public void Execute() { ++Executed; }
+        public void Execute(CancellationToken cancellation) { ++Executed; }
         public static void Reset() { Executed = 0; }
     }
 
@@ -117,7 +118,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
     {
         public static int Executed = 0;
 
-        public void Execute() { ++Executed; }
+        public void Execute(CancellationToken cancellation) { ++Executed; }
         public static void Reset() { Executed = 0; }
     }
 

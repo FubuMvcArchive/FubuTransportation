@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
@@ -20,7 +21,7 @@ namespace FubuTransportation.Testing.Runtime.Delayed
 
             LocalSystemTime = DateTime.Today.AddHours(5);
 
-            ClassUnderTest.Execute();
+            ClassUnderTest.Execute(new CancellationToken());
 
             transports.Each(transport => {
                 transport.AssertWasCalled(x => x.ReplayDelayed(UtcSystemTime));

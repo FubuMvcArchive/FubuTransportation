@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace FubuTransportation.Polling
 {
@@ -19,7 +20,7 @@ namespace FubuTransportation.Polling
 
             try
             {
-                _job.Execute();
+                _job.Execute(new CancellationToken());
                 _logger.Successful(_job);
             }
             catch (Exception e)

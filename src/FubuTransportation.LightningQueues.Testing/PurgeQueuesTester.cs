@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -54,7 +55,7 @@ namespace FubuTransportation.LightningQueues.Testing
             var persistenQueues = MockFor<IPersistentQueues>();
             persistenQueues.Expect(x => x.AllQueueManagers).Return(queueManagers);
 
-            ClassUnderTest.Execute();
+            ClassUnderTest.Execute(new CancellationToken(false));
 
             queueManagers.Each(x =>
                 x.AssertWasCalled(qm => qm.PurgeOldData()));
