@@ -74,6 +74,14 @@ namespace FubuTransportation.Testing.ScheduledJobs
                 .ShouldExecuteJob<CJob>();
         }
 
+        [Test]
+        public void can_override_the_default_timeout()
+        {
+            var graph = theRuntime.Factory.Get<ScheduledJobGraph>();
+            graph.FindJob(typeof (BJob))
+                .Timeout.ShouldEqual(11.Minutes());
+        }
+
     }
 
     public static class ChannelGraphExtensions
@@ -93,7 +101,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             ScheduledJob.DefaultJobChannel(x => x.Downstream);
             ScheduledJob.RunJob<AJob>().ScheduledBy<DummyScheduleRule>().Channel(x => x.Upstream);
-            ScheduledJob.RunJob<BJob>().ScheduledBy<DummyScheduleRule>();
+            ScheduledJob.RunJob<BJob>().ScheduledBy<DummyScheduleRule>().Timeout(11.Minutes());
             ScheduledJob.RunJob<CJob>().ScheduledBy<DummyScheduleRule>();
         }
     }
