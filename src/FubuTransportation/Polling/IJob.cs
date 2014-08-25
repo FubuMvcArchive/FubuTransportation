@@ -41,5 +41,14 @@ namespace FubuTransportation.Polling
                 await marker.Task;
             }
         }
+
+        // TODO -- TEMPORARY!!!
+        public void ExecuteSynchronously(IJob job)
+        {
+            var task = Execute(job);
+            task.Wait();
+
+            if (task.Exception != null) throw task.Exception;
+        }
     }
 }

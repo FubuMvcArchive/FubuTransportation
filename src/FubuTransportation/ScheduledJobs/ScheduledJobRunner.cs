@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FubuCore;
 using FubuCore.Dates;
@@ -36,12 +38,21 @@ namespace FubuTransportation.ScheduledJobs
             {
                 _repository.MarkExecuting<T>();
 
-                var cancellation = new CancellationToken(false);
+                var timeout = new JobTimeout(request.Timeout);
+                timeout.ExecuteSynchronously(_job);
 
-                _job.Execute(cancellation);
 
                 record.Success = true;
                 _logger.InfoMessage(() => new ScheduledJobSucceeded(_job));
+            }
+            catch (AggregateException ex)
+            {
+                _logger.Error("Scheduled job {0} failed".ToFormat(_job), ex);
+                _logger.InfoMessage(() => new ScheduledJobFailed(_job, ex));
+                record.Success = false;
+                record.ExceptionText = ex.InnerExceptions.Select(x => x.ToString()).Join("\n");
+
+                // TODO -- might throw this later
             }
             catch (Exception ex)
             {

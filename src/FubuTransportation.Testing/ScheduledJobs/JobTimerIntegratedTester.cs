@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             });
 
-            execution.WaitForCompletion(1.Seconds());
+            execution.WaitForCompletion(5.Seconds());
 
             executed.ShouldBeTrue();
         }

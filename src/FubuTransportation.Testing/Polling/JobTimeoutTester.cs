@@ -42,7 +42,6 @@ namespace FubuTransportation.Testing.Polling
 
             task.Exception.InnerException.ShouldBeOfType<TimeoutException>();
             job.Finished.ShouldBeFalse();
-            job.WasCancelled.ShouldBeTrue();
         }
     }
 

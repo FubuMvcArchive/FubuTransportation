@@ -19,7 +19,7 @@ namespace FubuTransportation.ScheduledJobs
         // tests only
         void IScheduledJob<T>.Execute(IJobExecutor executor)
         {
-            executor.Execute<T>()
+            executor.Execute<T>(Timeout)
                 .ContinueWith(task => Reschedule(task.Result, executor));
         }
 
