@@ -16,7 +16,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         protected RecordingLogger theLogger;
         protected ISettableClock theClock;
         protected JobExecutionRecord theRecord;
-        protected IScheduleRepository TheRepository;
+        protected IScheduleStatusMonitor TheStatusMonitor;
 
         [TestFixtureSetUp]
         public void SetUp()
@@ -26,12 +26,13 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             var job = new AScheduledJob();
 
-            TheRepository = MockRepository.GenerateMock<IScheduleRepository>();
+            TheStatusMonitor = MockRepository.GenerateMock<IScheduleStatusMonitor>();
 
             theJobRunsLike(job);
 
-            theRecord = new ScheduledJobRunner<AScheduledJob>(job, theLogger, theClock, TheRepository)
-                .Execute(new ExecuteScheduledJob<AScheduledJob>());
+            Assert.Fail("NWO");
+//            theRecord = new ScheduledJobRunner<AScheduledJob>(job, TheStatusMonitor, null)
+//                .Execute(new ExecuteScheduledJob<AScheduledJob>());
         }
 
 
@@ -50,13 +51,15 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void should_mark_the_job_as_executing()
         {
-            TheRepository.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
+            Assert.Fail("NWO");
+            //TheStatusMonitor.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
         }
 
         [Test]
         public void should_later_mark_the_job_as_completed()
         {
-            TheRepository.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
+            Assert.Fail("NWO");
+            //TheStatusMonitor.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
         }
 
         [Test]
@@ -92,13 +95,15 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void should_mark_the_job_as_executing()
         {
-            TheRepository.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
+            Assert.Fail("NWO");
+            //TheStatusMonitor.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
         }
 
         [Test]
         public void should_later_mark_the_job_as_completed()
         {
-            TheRepository.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
+            Assert.Fail("NWO");
+            //TheStatusMonitor.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
         }
 
 

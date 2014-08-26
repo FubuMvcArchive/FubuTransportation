@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -19,7 +20,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private JobStatusDTO bar2;
         private InMemorySchedulePersistence thePersistence;
         private RecordingLogger theLogger;
-        private ScheduleRepository theRepository;
+        private ScheduleStatusMonitor theStatusMonitor;
 
         [SetUp]
         public void SetUp()
@@ -33,7 +34,9 @@ namespace FubuTransportation.Testing.ScheduledJobs
             thePersistence = new InMemorySchedulePersistence();
             thePersistence.Persist(new[] { foo1, foo2, foo3, bar1, bar2 });
 
-            theRepository = new ScheduleRepository(new ChannelGraph {Name = "foo"}, new ScheduledJobGraph(), thePersistence);
+            theLogger = new RecordingLogger();
+
+            theStatusMonitor = new ScheduleStatusMonitor(new ChannelGraph {Name = "foo"}, new ScheduledJobGraph(), thePersistence, theLogger, SystemTime.Default());
 
         }
 
@@ -41,7 +44,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public void mark_scheduled_persistence()
         {
             var next = (DateTimeOffset)DateTime.Today;
-            theRepository.MarkScheduled<FooJob1>(next);
+            theStatusMonitor.MarkScheduled<FooJob1>(next);
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Scheduled);
             foo1.NextTime.ShouldEqual(next);
@@ -50,7 +53,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void mark_executing_persistence()
         {
-            theRepository.MarkExecuting<FooJob1>();
+            theStatusMonitor.MarkExecuting<FooJob1>();
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Executing);
         }
@@ -59,7 +62,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public void mark_completion_persistence()
         {
             var record = new JobExecutionRecord();
-            theRepository.MarkCompletion<FooJob1>(record);
+            theStatusMonitor.MarkCompletion<FooJob1>(record);
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Completed);
             foo1.LastExecution.ShouldBeTheSameAs(record);

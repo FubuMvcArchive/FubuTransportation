@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
@@ -8,7 +9,7 @@ namespace FubuTransportation.ScheduledJobs
     public interface IScheduledJob
     {
         Type JobType { get; }
-        void Initialize(IJobExecutor executor, JobSchedule schedule);
+        void Initialize(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule);
         Accessor Channel { get; }
         TimeSpan Timeout { get;}
         IRoutingRule ToRoutingRule();
@@ -17,5 +18,6 @@ namespace FubuTransportation.ScheduledJobs
     public interface IScheduledJob<T> where T : IJob
     {
         void Execute(IJobExecutor executor);
+        Task<RescheduleRequest<T>> ToTask(IJob job, IJobRunTracker tracker);
     }
 }

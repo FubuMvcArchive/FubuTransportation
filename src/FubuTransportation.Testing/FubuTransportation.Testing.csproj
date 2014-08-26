@@ -377,6 +377,7 @@
     </Compile>
     <Compile Include="ScheduledJobs\EveryDayAtSpecificTimeJobSchedulerTester.cs" />
     <Compile Include="ScheduledJobs\InMemorySchedulePersistenceTester.cs" />
+    <Compile Include="ScheduledJobs\JobExecutionRecordTester.cs" />
     <Compile Include="ScheduledJobs\JobScheduleTester.cs" />
     <Compile Include="ScheduledJobs\JobStatusTester.cs" />
     <Compile Include="ScheduledJobs\JobTimerIntegratedTester.cs" />

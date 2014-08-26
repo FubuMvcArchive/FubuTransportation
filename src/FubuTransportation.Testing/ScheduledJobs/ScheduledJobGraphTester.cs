@@ -15,11 +15,12 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private JobSchedule theSchedule;
         private ScheduledJobGraph theGraph;
         private StubJobExecutor theExecutor;
+        private readonly DateTimeOffset now = DateTime.Today.AddHours(-1);
 
         [SetUp]
         public void SetUp()
         {
-            theExecutor = new StubJobExecutor().NowIs(DateTime.Today.AddHours(-1));
+            theExecutor = new StubJobExecutor();
 
             theSchedule = new JobSchedule(new []
             {
@@ -35,7 +36,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theGraph.Jobs.Add(new ScheduledJob<EJob>(new DummyScheduleRule(DateTime.Today.AddHours(5))));
         
             // not that worried about pushing the time around
-            theGraph.DetermineSchedule(theExecutor, theSchedule);
+            theGraph.DetermineSchedule(now, theExecutor, theSchedule);
         }
 
         [Test]

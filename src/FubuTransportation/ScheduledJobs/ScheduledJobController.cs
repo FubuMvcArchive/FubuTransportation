@@ -19,7 +19,7 @@ namespace FubuTransportation.ScheduledJobs
     {
         private readonly ScheduledJobGraph _jobs;
         private readonly IJobTimer _timer;
-        private readonly IScheduleRepository _repository;
+        private readonly IScheduleStatusMonitor _statusMonitor;
         private readonly IServiceBus _serviceBus;
         private readonly ILogger _logger;
         private bool _active;
@@ -27,13 +27,13 @@ namespace FubuTransportation.ScheduledJobs
         public ScheduledJobController(
             ScheduledJobGraph jobs,
             IJobTimer timer,
-            IScheduleRepository repository,
+            IScheduleStatusMonitor statusMonitor,
             IServiceBus serviceBus,
             ILogger logger)
         {
             _jobs = jobs;
             _timer = timer;
-            _repository = repository;
+            _statusMonitor = statusMonitor;
             _serviceBus = serviceBus;
             _logger = logger;
         }
@@ -42,12 +42,12 @@ namespace FubuTransportation.ScheduledJobs
         {
             _timer.ClearAll();
 
-            _repository.Persist(schedule => {
-                _jobs.DetermineSchedule(this, schedule);
+            _statusMonitor.Persist(schedule => {
+                _jobs.DetermineSchedule(_timer.Now(), this, schedule);
 
                 schedule.Active().Each(status => {
                     var job = _jobs.FindJob(status.JobType);
-                    job.Initialize(this, schedule);
+                    job.Initialize(_timer.Now(), this, schedule);
                 });
             });
 
@@ -71,22 +71,18 @@ namespace FubuTransportation.ScheduledJobs
         }
 
 
-        public Task<JobExecutionRecord> Execute<T>(TimeSpan timeout) where T : IJob
+        public void Execute<T>(TimeSpan timeout) where T : IJob
         {
-            return _serviceBus.Request<JobExecutionRecord>(new ExecuteScheduledJob<T>{Timeout = timeout});
+            _serviceBus.Send(new ExecuteScheduledJob<T>());
         }
 
         public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
         {
-            _repository.MarkScheduled<T>(nextTime);
+            _statusMonitor.MarkScheduled<T>(nextTime);
             _timer.Schedule(typeof(T), nextTime, () => job.Execute(this));
 
             _logger.InfoMessage(() => new ScheduledJobScheduled(typeof(T), nextTime));
         }
 
-        public DateTimeOffset Now()
-        {
-            return _timer.Now();
-        }
     }
 }

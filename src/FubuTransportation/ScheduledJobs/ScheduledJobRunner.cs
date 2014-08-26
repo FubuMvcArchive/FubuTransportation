@@ -3,79 +3,63 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.ScheduledJobs
 {
+    public class RescheduleRequest<T> where T : IJob
+    {
+        public DateTimeOffset NextTime { get; set; }
+
+        protected bool Equals(RescheduleRequest<T> other)
+        {
+            return NextTime.Equals(other.NextTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((RescheduleRequest<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return NextTime.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Reschedule job {0} to {1}", typeof(T).GetFullName(), NextTime);
+        }
+    }
+
     public class ScheduledJobRunner<T> where T : IJob
     {
         private readonly T _job;
-        private readonly ILogger _logger;
-        private readonly ISystemTime _systemTime;
-        private readonly IScheduleRepository _repository;
+        private readonly IScheduleStatusMonitor _monitor;
+        private readonly IScheduledJob<T> _scheduledJob;
+        private readonly Envelope _envelope;
 
-        public ScheduledJobRunner(T job, ILogger logger, ISystemTime systemTime, IScheduleRepository repository)
+        public ScheduledJobRunner(T job, IScheduleStatusMonitor monitor, IScheduledJob<T> scheduledJob, Envelope envelope)
         {
             _job = job;
-            _logger = logger;
-            _systemTime = systemTime;
-            _repository = repository;
+            _monitor = monitor;
+            _scheduledJob = scheduledJob;
+            _envelope = envelope;
         }
 
 
-        public JobExecutionRecord Execute(ExecuteScheduledJob<T> request)
+        public Task<RescheduleRequest<T>> Execute(ExecuteScheduledJob<T> request)
         {
-            var record = new JobExecutionRecord();
-
-            _logger.InfoMessage(() => new ScheduledJobStarted(_job));
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            try
-            {
-                _repository.MarkExecuting<T>();
-
-                var timeout = new JobTimeout(request.Timeout);
-                timeout.ExecuteSynchronously(_job);
-
-
-                record.Success = true;
-                _logger.InfoMessage(() => new ScheduledJobSucceeded(_job));
-            }
-            catch (AggregateException ex)
-            {
-                _logger.Error("Scheduled job {0} failed".ToFormat(_job), ex);
-                _logger.InfoMessage(() => new ScheduledJobFailed(_job, ex));
-                record.Success = false;
-                record.ExceptionText = ex.InnerExceptions.Select(x => x.ToString()).Join("\n");
-
-                // TODO -- might throw this later
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Scheduled job {0} failed".ToFormat(_job), ex);
-                _logger.InfoMessage(() => new ScheduledJobFailed(_job, ex));
-                record.Success = false;
-                record.ExceptionText = ex.ToString();
-
-                // TODO -- might throw this later
-            }
-            finally
-            {
-                stopwatch.Stop();
-                var duration = stopwatch.ElapsedMilliseconds;
-                record.Finished = _systemTime.UtcNow();
-
-                record.Duration = duration;
-
-                _repository.MarkCompletion<T>(record);
-                _logger.InfoMessage(() => new ScheduledJobFinished(_job, duration));
-            }
-
-            return record;
+            var tracker = _monitor.TrackJob(_envelope.Attempts, _job);
+            return _scheduledJob.ToTask(_job, tracker);
         }
     }
 }

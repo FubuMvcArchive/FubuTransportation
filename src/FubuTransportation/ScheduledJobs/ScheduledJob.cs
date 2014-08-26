@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
@@ -19,27 +20,30 @@ namespace FubuTransportation.ScheduledJobs
         // tests only
         void IScheduledJob<T>.Execute(IJobExecutor executor)
         {
-            executor.Execute<T>(Timeout)
-                .ContinueWith(task => Reschedule(task.Result, executor));
+            executor.Execute<T>(Timeout);
         }
 
-        public void Reschedule(JobExecutionRecord record, IJobExecutor executor)
+        public Task<RescheduleRequest<T>> ToTask(IJob job, IJobRunTracker tracker)
         {
-            if (record.Success)
-            {
-                LastExecution = record;
-                var next = Scheduler.ScheduleNextTime(executor.Now());
+            var timeout = new JobTimeout(Timeout);
+            return timeout.Execute(job).ContinueWith(t => {
+                if (t.IsFaulted)
+                {
+                    tracker.Failure(t.Exception);
+                    throw t.Exception;
+                }
+                else
+                {
+                    var nextTime = Scheduler.ScheduleNextTime(tracker.Now());
 
-                executor.Schedule(this, next);
-            }
-            else
-            {
-                // TODO -- this won't be like this in the long run
-                LastExecution = record;
-                var next = Scheduler.ScheduleNextTime(executor.Now());
+                    tracker.Success(nextTime);
 
-                executor.Schedule(this, next);
-            }
+                    return new RescheduleRequest<T>
+                    {
+                        NextTime = nextTime
+                    };
+                }
+            });
         }
 
         public Accessor Channel { get; set; }
@@ -58,12 +62,12 @@ namespace FubuTransportation.ScheduledJobs
         public IScheduleRule Scheduler { get; private set; }
         public JobExecutionRecord LastExecution { get; set; }
 
-        void IScheduledJob.Initialize(IJobExecutor executor, JobSchedule schedule)
+        void IScheduledJob.Initialize(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule)
         {
             var status = schedule.Find(JobType);
             LastExecution = status.LastExecution;
 
-            var next = Scheduler.ScheduleNextTime(executor.Now());
+            var next = Scheduler.ScheduleNextTime(now);
 
             schedule.Schedule(JobType, next);
 
