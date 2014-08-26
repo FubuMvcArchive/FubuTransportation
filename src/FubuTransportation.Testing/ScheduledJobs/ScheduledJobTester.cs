@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Util;
@@ -6,11 +7,10 @@ using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-
-
     [TestFixture]
     public class when_initializing_a_job
     {
@@ -61,6 +61,160 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             theExecutor.Scheduled[theJob.JobType]
                 .ShouldEqual(next);
+        }
+    }
+
+    public abstract class ScheduledJobExecutionContext
+    {
+        protected readonly DateTimeOffset now = DateTime.Today;
+        protected readonly DateTimeOffset theNextTimeAccordingToTheSchedulerRule = DateTime.Today.AddHours(4);
+        protected readonly IJobRunTracker TheJobTracker = MockRepository.GenerateMock<IJobRunTracker>();
+        protected Task<RescheduleRequest<RiggedJob>> theTask;
+        protected readonly TimeSpan theConfiguredTimeout = 1.Seconds();
+
+        [TestFixtureSetUp]
+        public void SetUp()
+        {
+            var rule = new StubbedScheduleRule();
+            rule.ScheduledTimes[now] = theNextTimeAccordingToTheSchedulerRule;
+
+            TheJobTracker.Stub(x => x.Now()).Return(now);
+
+            var job = theJobIs();
+
+            var scheduledJob = new ScheduledJob<RiggedJob>(rule);
+            scheduledJob.Timeout = theConfiguredTimeout;
+            theTask = scheduledJob.ToTask(job, TheJobTracker);
+
+            try
+            {
+                theTask.Wait();
+            }
+            catch (Exception)
+            {
+                // okay to swallow because you'll
+                // check it on task itself
+            }
+        }
+
+        protected abstract RiggedJob theJobIs();
+    }
+
+    [TestFixture]
+    public class when_running_a_job_happy_path : ScheduledJobExecutionContext
+    {
+        protected override RiggedJob theJobIs()
+        {
+            return new RiggedJob
+            {
+                Exception = null,
+                TimeToRun = 0.Minutes()
+            };
+        }
+
+        [Test]
+        public void should_mark_the_job_as_executing_correctly_and_reschedules()
+        {
+            TheJobTracker.AssertWasCalled(x => x.Success(theNextTimeAccordingToTheSchedulerRule));
+        }
+
+        [Test]
+        public void should_return_the_reschedule_request_message()
+        {
+            theTask.Result.NextTime.ShouldEqual(theNextTimeAccordingToTheSchedulerRule);
+        }
+
+        [Test]
+        public void should_run_the_to_completion()
+        {
+            theTask.IsCompleted.ShouldBeTrue();
+        }
+    }
+
+    [TestFixture]
+    public class when_running_a_job_that_times_out : ScheduledJobExecutionContext
+    {
+        protected override RiggedJob theJobIs()
+        {
+            return new RiggedJob
+            {
+                Exception = null,
+                TimeToRun = theConfiguredTimeout.Add(5.Seconds())
+            };
+        }
+
+        [Test]
+        public void should_fault_with_a_timeout()
+        {
+            theTask.IsFaulted.ShouldBeTrue();
+            theTask.Exception.Flatten().InnerException.ShouldBeOfType<TimeoutException>();
+        }
+
+        [Test]
+        public void should_track_the_job_failure()
+        {
+            var exception = TheJobTracker.GetArgumentsForCallsMadeOn(x => x.Failure(null))
+                [0][0].ShouldBeOfType<AggregateException>();
+
+            exception.Flatten().InnerException.ShouldBeOfType<TimeoutException>();
+        }
+    }
+
+    [TestFixture]
+    public class when_running_a_job_that_fails_before_timing_out : ScheduledJobExecutionContext
+    {
+        protected override RiggedJob theJobIs()
+        {
+            return new RiggedJob
+            {
+                Exception = new DivideByZeroException()
+            };
+        }
+
+        [Test]
+        public void should_fault_with_the_job_exception()
+        {
+            theTask.IsFaulted.ShouldBeTrue();
+            theTask.Exception.Flatten().InnerException.ShouldBeOfType<DivideByZeroException>();
+        }
+
+        [Test]
+        public void should_track_the_job_failure()
+        {
+            var exception = TheJobTracker.GetArgumentsForCallsMadeOn(x => x.Failure(null))
+                [0][0].ShouldBeOfType<AggregateException>();
+
+            exception.Flatten().InnerException.ShouldBeOfType<DivideByZeroException>();
+        }
+    }
+
+
+
+    public class RiggedJob : IJob
+    {
+        public bool WasCancelled;
+        public bool Finished;
+
+        public Exception Exception = null;
+        public TimeSpan TimeToRun = 0.Minutes();
+
+
+        public void Execute(CancellationToken cancellation)
+        {
+            if (Exception != null) throw Exception;
+
+            var ending = DateTime.UtcNow.Add(TimeToRun);
+            while (DateTime.UtcNow <= ending)
+            {
+                Thread.Sleep(100);
+                if (cancellation.IsCancellationRequested)
+                {
+                    WasCancelled = true;
+                    cancellation.ThrowIfCancellationRequested();
+                }
+            }
+
+            Finished = true;
         }
     }
 
