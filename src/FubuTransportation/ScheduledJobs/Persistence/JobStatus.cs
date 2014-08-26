@@ -1,7 +1,7 @@
 using System;
 using FubuCore.Reflection;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class JobStatus 
     {

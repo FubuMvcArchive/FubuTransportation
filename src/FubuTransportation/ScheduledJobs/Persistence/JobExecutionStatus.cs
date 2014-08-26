@@ -1,4 +1,4 @@
-﻿namespace FubuTransportation.ScheduledJobs
+﻿namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public enum JobExecutionStatus
     {

@@ -7,9 +7,10 @@ using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuCore.Util;
+using FubuTransportation.ScheduledJobs.Persistence;
 using Timer = System.Timers.Timer;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     public interface IJobTimer
     {

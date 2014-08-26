@@ -5,6 +5,9 @@ using FubuCore;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.ScheduledJobs.Configuration;
+using FubuTransportation.ScheduledJobs.Execution;
+using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs
 {

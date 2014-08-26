@@ -2,7 +2,7 @@
 using System.Linq;
 using FubuCore.Util;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class InMemorySchedulePersistence : ISchedulePersistence
     {

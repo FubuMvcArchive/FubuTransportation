@@ -3,8 +3,9 @@ using System.Linq.Expressions;
 using FubuCore.Reflection;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
+using FubuTransportation.ScheduledJobs.Execution;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     public class ScheduledJobExpression<T>
     {

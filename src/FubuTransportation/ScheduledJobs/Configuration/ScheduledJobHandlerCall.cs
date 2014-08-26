@@ -2,8 +2,9 @@
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
+using FubuTransportation.ScheduledJobs.Execution;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     public class ScheduledJobHandlerCall<T> : HandlerCall where T : IJob
     {

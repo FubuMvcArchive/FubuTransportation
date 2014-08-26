@@ -1,8 +1,6 @@
-using System;
-using FubuCore;
 using FubuTransportation.Polling;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     public class ExecuteScheduledJob<T> where T : IJob
     {

@@ -7,6 +7,7 @@ using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Configuration;
 
 namespace FubuTransportation
 {

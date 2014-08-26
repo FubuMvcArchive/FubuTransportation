@@ -2,8 +2,9 @@
 using FubuCore;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
+using FubuTransportation.ScheduledJobs.Execution;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     public class ScheduledJobRoutingRule<T> : IRoutingRule where T : IJob
     {

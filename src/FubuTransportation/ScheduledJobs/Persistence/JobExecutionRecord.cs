@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class JobExecutionRecord
     {

@@ -2,8 +2,9 @@ using System;
 using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
+using FubuTransportation.ScheduledJobs.Persistence;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     public abstract class ScheduledJobRecord : LogRecord
     {

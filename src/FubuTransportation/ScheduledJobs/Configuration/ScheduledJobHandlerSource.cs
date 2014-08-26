@@ -5,7 +5,7 @@ using FubuCore;
 using FubuTransportation.Registration;
 using FubuTransportation.Registration.Nodes;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     public class ScheduledJobHandlerSource : IHandlerSource
     {

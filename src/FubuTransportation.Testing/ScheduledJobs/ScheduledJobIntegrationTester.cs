@@ -10,6 +10,8 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Configuration;
+using FubuTransportation.ScheduledJobs.Execution;
 using NUnit.Framework;
 using StructureMap;
 

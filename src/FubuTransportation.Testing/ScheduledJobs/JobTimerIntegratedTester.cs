@@ -6,6 +6,8 @@ using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Execution;
+using FubuTransportation.ScheduledJobs.Persistence;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
