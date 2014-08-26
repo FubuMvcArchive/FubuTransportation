@@ -6,12 +6,13 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.Testing.Async;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
-    public class ScheduledJobRepositoryTester
+    public class ScheduledStatusMonitorTester
     {
         private JobStatusDTO foo1;
         private JobStatusDTO foo2;
@@ -21,6 +22,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         private InMemorySchedulePersistence thePersistence;
         private RecordingLogger theLogger;
         private ScheduleStatusMonitor theStatusMonitor;
+        private ChannelGraph theChannelGraph = new ChannelGraph {Name = "foo"};
 
         [SetUp]
         public void SetUp()
@@ -36,7 +38,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             theLogger = new RecordingLogger();
 
-            theStatusMonitor = new ScheduleStatusMonitor(new ChannelGraph {Name = "foo"}, new ScheduledJobGraph(), thePersistence, theLogger, SystemTime.Default());
+            theStatusMonitor = new ScheduleStatusMonitor(theChannelGraph, new ScheduledJobGraph(), thePersistence, theLogger, SystemTime.Default());
 
         }
 
@@ -53,20 +55,80 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void mark_executing_persistence()
         {
+            foo1.Executor = null;
+
             theStatusMonitor.MarkExecuting<FooJob1>();
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Executing);
+            foo1.Executor.ShouldEqual(theChannelGraph.NodeId);
         }
 
         [Test]
         public void mark_completion_persistence()
         {
-            var record = new JobExecutionRecord();
+            var record = new JobExecutionRecord{Success = true};
             theStatusMonitor.MarkCompletion<FooJob1>(record);
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Completed);
             foo1.LastExecution.ShouldBeTheSameAs(record);
+            foo1.Executor.ShouldBeNull();
+
+            record.Executor.ShouldEqual(theChannelGraph.NodeId);
         }
+
+        [Test]
+        public void track_and_succeed()
+        {
+            var tracker = theStatusMonitor.TrackJob(3, new FooJob1());
+            var next = (DateTimeOffset)DateTime.Today.AddHours(3);
+            
+            tracker.Success(next);
+
+            foo1.Status.ShouldEqual(JobExecutionStatus.Completed);
+            foo1.LastExecution.Executor.ShouldEqual(theChannelGraph.NodeId);
+            foo1.LastExecution.Success.ShouldBeTrue();
+            foo1.LastExecution.Attempts.ShouldEqual(3);
+            foo1.NextTime.ShouldEqual(next);
+            
+            foo1.Executor.ShouldBeNull();
+
+
+        }
+
+        [Test]
+        public void track_and_fail()
+        {
+            var tracker = theStatusMonitor.TrackJob(3, new FooJob1());
+
+            var ex = new NotImplementedException();
+            tracker.Failure(ex);
+
+            foo1.Status.ShouldEqual(JobExecutionStatus.Failed);
+            foo1.LastExecution.Executor.ShouldEqual(theChannelGraph.NodeId);
+            foo1.LastExecution.Success.ShouldBeFalse();
+            foo1.LastExecution.Attempts.ShouldEqual(3);
+            foo1.LastExecution.ExceptionText.ShouldEqual(ex.ToString());
+
+            foo1.Executor.ShouldBeNull();
+        }
+
+        [Test]
+        public void mark_completion_with_failure_persistence()
+        {
+            var record = new JobExecutionRecord
+            {
+                Success = false
+            };
+            theStatusMonitor.MarkCompletion<FooJob1>(record);
+
+            foo1.Status.ShouldEqual(JobExecutionStatus.Failed);
+            foo1.LastExecution.ShouldBeTheSameAs(record);
+            foo1.Executor.ShouldBeNull();
+
+            record.Executor.ShouldEqual(theChannelGraph.NodeId);
+        }
+
+
 
 
         [JobKey("1")]

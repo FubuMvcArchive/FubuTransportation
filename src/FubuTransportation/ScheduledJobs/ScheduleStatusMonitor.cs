@@ -75,14 +75,20 @@ namespace FubuTransportation.ScheduledJobs
         // TODO -- track the starting time in the monitor
         public void MarkExecuting<T>()
         {
-            modifyStatus<T>(_ => { _.Status = JobExecutionStatus.Executing; });
+            modifyStatus<T>(_ => {
+                _.Status = JobExecutionStatus.Executing;
+                _.Executor = _channels.NodeId;
+            });
         }
 
         public void MarkCompletion<T>(JobExecutionRecord record)
         {
+            record.Executor = _channels.NodeId;
+
             modifyStatus<T>(_ => {
-                _.Status = JobExecutionStatus.Completed;
+                _.Status = record.Success ? JobExecutionStatus.Completed : JobExecutionStatus.Failed;
                 _.LastExecution = record;
+                _.Executor = null;
             });
         }
 
@@ -127,7 +133,15 @@ namespace FubuTransportation.ScheduledJobs
 
                 _parent._logger.InfoMessage(() => new ScheduledJobSucceeded(_job));
 
-                _parent.MarkCompletion<T>(record);
+                record.Executor = _parent._channels.NodeId;
+
+                _parent.modifyStatus<T>(_ =>
+                {
+                    _.Status = JobExecutionStatus.Completed;
+                    _.LastExecution = record;
+                    _.NextTime = nextTime;
+                    _.Executor = null;
+                });
             }
 
             public void Failure(Exception ex)

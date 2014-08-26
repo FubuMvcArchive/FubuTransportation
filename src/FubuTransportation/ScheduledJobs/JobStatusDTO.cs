@@ -18,6 +18,7 @@ namespace FubuTransportation.ScheduledJobs
         public JobExecutionRecord LastExecution { get; set; }
         public string NodeName { get; set; }
         public JobExecutionStatus Status { get; set; }
+        public string Executor { get; set; }
 
         protected bool Equals(JobStatusDTO other)
         {
