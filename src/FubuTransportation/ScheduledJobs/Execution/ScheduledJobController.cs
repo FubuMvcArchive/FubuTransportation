@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
+using FubuTransportation.ScheduledJobs.Persistence;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     // TODO -- add LOTS of logging
     // TODO -- more state tracing!

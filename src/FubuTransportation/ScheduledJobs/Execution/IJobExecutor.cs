@@ -1,7 +1,7 @@
 ﻿using System;
 using FubuTransportation.Polling;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     public interface IJobExecutor
     {

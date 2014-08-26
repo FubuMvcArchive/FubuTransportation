@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class JobSchedule : IEnumerable<JobStatus>
     {

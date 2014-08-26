@@ -1,6 +1,7 @@
 ﻿using System;
 using FubuTestingSupport;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Persistence;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs

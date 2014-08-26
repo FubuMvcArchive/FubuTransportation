@@ -4,6 +4,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuTransportation.Runtime;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Execution;
 using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation

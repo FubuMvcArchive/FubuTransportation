@@ -8,8 +8,9 @@ using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
 using FubuTransportation.Polling;
+using FubuTransportation.ScheduledJobs.Execution;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class ScheduleStatusMonitor : IScheduleStatusMonitor
     {

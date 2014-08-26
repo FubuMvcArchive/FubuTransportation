@@ -5,6 +5,7 @@ using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Persistence;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs

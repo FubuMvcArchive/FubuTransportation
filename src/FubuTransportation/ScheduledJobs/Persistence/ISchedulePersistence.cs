@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public interface ISchedulePersistence
     {

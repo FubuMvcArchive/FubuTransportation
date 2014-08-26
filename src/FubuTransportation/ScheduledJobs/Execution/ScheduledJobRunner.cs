@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime;
+using FubuTransportation.ScheduledJobs.Persistence;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Execution
 {
     public class ScheduledJobRunner<T> where T : IJob
     {

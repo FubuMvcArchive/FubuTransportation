@@ -2,6 +2,8 @@
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Execution;
+using FubuTransportation.ScheduledJobs.Persistence;
 using NUnit.Framework;
 using Rhino.Mocks;
 

@@ -5,7 +5,7 @@ using FubuCore;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     // Tested with integration tests only
     public class ApplyScheduledJobRouting : IConfigurationAction

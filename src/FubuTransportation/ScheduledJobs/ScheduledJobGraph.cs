@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Reflection;
 using FubuMVC.Core.Registration;
+using FubuTransportation.ScheduledJobs.Execution;
+using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs
 {

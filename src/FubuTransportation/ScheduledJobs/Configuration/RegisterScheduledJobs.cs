@@ -2,7 +2,7 @@
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.ObjectGraph;
 
-namespace FubuTransportation.ScheduledJobs
+namespace FubuTransportation.ScheduledJobs.Configuration
 {
     public class RegisterScheduledJobs : IConfigurationAction
     {
