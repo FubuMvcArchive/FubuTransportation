@@ -9,79 +9,7 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-    [TestFixture]
-    public class when_rescheduling_a_brand_new_job_that_completes_successfully
-    {
-        private StubJobExecutor theExecutor;
-        private ScheduledJob<AJob> theJob;
-        private JobExecutionRecord theRecord;
 
-        [SetUp]
-        public void SetUp()
-        {
-            theExecutor = new StubJobExecutor().NowIs(DateTime.Today);
-
-            var rule = new StubbedScheduleRule()
-                .ReschedulesTo(DateTime.Today.AddHours(1))
-                .AtTime(theExecutor.Now());
-
-            theJob = new ScheduledJob<AJob>(rule);
-
-            theRecord = new JobExecutionRecord {Success = true};
-            theJob.Reschedule(theRecord, theExecutor);
-        }
-
-        [Test]
-        public void should_just_reschedule()
-        {
-            theExecutor.Scheduled[theJob.JobType]
-                .ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(1));
-        }
-
-
-        [Test]
-        public void should_track_the_last_execution()
-        {
-            theJob.LastExecution.ShouldBeTheSameAs(theRecord);
-        }
-    }
-
-    [TestFixture]
-    public class when_rescheduling_an_existing_job_that_completes_successfully
-    {
-        private StubJobExecutor theExecutor;
-        private ScheduledJob<AJob> theJob;
-        private JobExecutionRecord theRecord;
-
-        [SetUp]
-        public void SetUp()
-        {
-            theExecutor = new StubJobExecutor().NowIs(DateTime.Today);
-
-            var rule = new StubbedScheduleRule()
-                .ReschedulesTo(DateTime.Today.AddHours(1))
-                .AtTime(theExecutor.Now());
-
-            theJob = new ScheduledJob<AJob>(rule);
-            theJob.LastExecution = new JobExecutionRecord();
-
-            theRecord = new JobExecutionRecord {Success = true};
-            theJob.Reschedule(theRecord, theExecutor);
-        }
-
-        [Test]
-        public void should_just_reschedule()
-        {
-            theExecutor.Scheduled[theJob.JobType]
-                .ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(1));
-        }
-
-        [Test]
-        public void should_track_the_last_execution()
-        {
-            theJob.LastExecution.ShouldBeTheSameAs(theRecord);
-        }
-    }
 
     [TestFixture]
     public class when_initializing_a_job
@@ -104,8 +32,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             theRule.ScheduledTimes[now] = next;
 
-            theExecutor = new StubJobExecutor()
-                .NowIs(now);
+            theExecutor = new StubJobExecutor();
 
             theJob = new ScheduledJob<AJob>(theRule);
 
@@ -113,7 +40,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theSchedule.Find(theJob.JobType)
                 .LastExecution = theLastRun;
 
-            theJob.As<IScheduledJob>().Initialize(theExecutor, theSchedule);
+            theJob.As<IScheduledJob>().Initialize(now, theExecutor, theSchedule);
         }
 
         [Test]
@@ -175,10 +102,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class StubJobExecutor : IJobExecutor
     {
-        private DateTimeOffset _now;
 
-
-        public Task<JobExecutionRecord> Execute<T>(TimeSpan timeout) where T : IJob
+        public void Execute<T>(TimeSpan timeout) where T : IJob
         {
             throw new NotImplementedException();
         }
@@ -195,16 +120,5 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
         public readonly Cache<Type, DateTimeOffset> Scheduled = new Cache<Type, DateTimeOffset>();
 
-
-        public StubJobExecutor NowIs(DateTimeOffset now)
-        {
-            _now = now;
-            return this;
-        }
-
-        public DateTimeOffset Now()
-        {
-            return _now;
-        }
     }
 }

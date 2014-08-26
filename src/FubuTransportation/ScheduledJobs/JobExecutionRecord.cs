@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 
 namespace FubuTransportation.ScheduledJobs
 {
@@ -31,6 +34,16 @@ namespace FubuTransportation.ScheduledJobs
                 hashCode = (hashCode*397) ^ Finished.GetHashCode();
                 hashCode = (hashCode*397) ^ Success.GetHashCode();
                 return hashCode;
+            }
+        }
+
+        public void ReadException(Exception exception)
+        {
+            if (exception is AggregateException)
+            {
+                ExceptionText = exception.As<AggregateException>()
+                    .InnerExceptions.Select(x => x.ToString())
+                    .Join("\n-----------------------------\n");
             }
         }
     }

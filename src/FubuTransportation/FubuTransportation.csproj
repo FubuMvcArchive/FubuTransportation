@@ -276,7 +276,7 @@
     <Compile Include="ScheduledJobs\InMemorySchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduledJob.cs" />
     <Compile Include="ScheduledJobs\ISchedulePersistence.cs" />
-    <Compile Include="ScheduledJobs\IScheduleRepository.cs" />
+    <Compile Include="ScheduledJobs\IScheduleStatusMonitor.cs" />
     <Compile Include="ScheduledJobs\IScheduleRule.cs" />
     <Compile Include="ScheduledJobs\JobExecutionRecord.cs" />
     <Compile Include="ScheduledJobs\JobExecutionStatus.cs" />
@@ -287,7 +287,7 @@
     <Compile Include="ScheduledJobs\JobStatusExtensions.cs" />
     <Compile Include="ScheduledJobs\JobTimer.cs" />
     <Compile Include="ScheduledJobs\RegisterScheduledJobs.cs" />
-    <Compile Include="ScheduledJobs\ScheduleRepository.cs" />
+    <Compile Include="ScheduledJobs\ScheduleStatusMonitor.cs" />
     <Compile Include="ScheduledJobs\ScheduledJob.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobExpression.cs" />
     <Compile Include="ScheduledJobs\ScheduledJobGraph.cs" />

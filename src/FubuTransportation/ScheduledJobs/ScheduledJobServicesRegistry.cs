@@ -11,7 +11,7 @@ namespace FubuTransportation.ScheduledJobs
 
             SetServiceIfNone<ISchedulePersistence, InMemorySchedulePersistence>();
 
-            SetServiceIfNone<IScheduleRepository, ScheduleRepository>();
+            SetServiceIfNone<IScheduleStatusMonitor, ScheduleStatusMonitor>();
         }
     }
 }
