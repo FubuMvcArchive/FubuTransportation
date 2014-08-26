@@ -7,6 +7,7 @@ namespace FubuTransportation.ScheduledJobs
 {
     public class JobExecutionRecord
     {
+        public const string ExceptionSeparator = "\n-----------------------------\n";
         public long Duration { get; set; }
         public DateTimeOffset Finished { get; set; }
         public bool Success { get; set; }
@@ -43,7 +44,11 @@ namespace FubuTransportation.ScheduledJobs
             {
                 ExceptionText = exception.As<AggregateException>()
                     .InnerExceptions.Select(x => x.ToString())
-                    .Join("\n-----------------------------\n");
+                    .Join(ExceptionSeparator);
+            }
+            else
+            {
+                ExceptionText = exception.ToString();
             }
         }
     }

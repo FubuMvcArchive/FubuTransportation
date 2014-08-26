@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using FubuTestingSupport;
+using FubuTransportation.ScheduledJobs;
+using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
@@ -8,13 +11,32 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void read_normal_exception()
         {
-            Assert.Fail("Do.");
+            var record = new JobExecutionRecord();
+            var ex = new DivideByZeroException("Only Chuck Norris can do that");
+
+            record.ReadException(ex);
+
+            record.ExceptionText.ShouldEqual(ex.ToString());
         }
 
         [Test]
         public void read_aggregate_exception()
         {
-            Assert.Fail("Do.");
+            var ex1 = new DivideByZeroException("Only Chuck Norris can do that");
+            var ex2 = new RankException("You're last!");
+            var ex3 = new InvalidTimeZoneException("You are in the wrong place!");
+
+            var ex = new AggregateException(ex1, ex2, ex3);
+
+            var record = new JobExecutionRecord();
+            record.ReadException(ex);
+
+            record.ExceptionText.ShouldNotEqual(ex.ToString());
+            record.ExceptionText.ShouldContain(ex1.ToString());
+            record.ExceptionText.ShouldContain(ex2.ToString());
+            record.ExceptionText.ShouldContain(ex3.ToString());
+
+            record.ExceptionText.ShouldContain(JobExecutionRecord.ExceptionSeparator);
         }
     }
 }
