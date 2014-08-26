@@ -1,144 +1,44 @@
-﻿using System;
-using System.Threading;
-using FubuCore;
-using FubuCore.Dates;
-using FubuCore.Logging;
+﻿using System.Threading.Tasks;
 using FubuTestingSupport;
-using FubuTransportation.Polling;
+using FubuTransportation.Runtime;
 using FubuTransportation.ScheduledJobs;
 using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-    public abstract class ScheduledJobRunnerContext
-    {
-        protected RecordingLogger theLogger;
-        protected ISettableClock theClock;
-        protected JobExecutionRecord theRecord;
-        protected IScheduleStatusMonitor TheStatusMonitor;
-
-        [TestFixtureSetUp]
-        public void SetUp()
-        {
-            theLogger = new RecordingLogger();
-            theClock = new SettableClock().LocalNow(DateTime.Today.AddHours(8));
-
-            var job = new AScheduledJob();
-
-            TheStatusMonitor = MockRepository.GenerateMock<IScheduleStatusMonitor>();
-
-            theJobRunsLike(job);
-
-            Assert.Fail("NWO");
-//            theRecord = new ScheduledJobRunner<AScheduledJob>(job, TheStatusMonitor, null)
-//                .Execute(new ExecuteScheduledJob<AScheduledJob>());
-        }
-
-
-        protected abstract void theJobRunsLike(AScheduledJob job);
-    }
-
     [TestFixture]
-    public class when_running_a_scheduled_job_successfully : ScheduledJobRunnerContext
+    public class ScheduledJobRunnerTester : InteractionContext<ScheduledJobRunner<AJob>>
     {
-        protected override void theJobRunsLike(AScheduledJob job)
+        private Envelope theEnvelope;
+        private IJobRunTracker theTracker;
+        private Task<RescheduleRequest<AJob>> theTask;
+
+        protected override void beforeEach()
         {
-            job.Duration = 100;
-            job.Exception = null;
-        }
-
-        [Test]
-        public void should_mark_the_job_as_executing()
-        {
-            Assert.Fail("NWO");
-            //TheStatusMonitor.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
-        }
-
-        [Test]
-        public void should_later_mark_the_job_as_completed()
-        {
-            Assert.Fail("NWO");
-            //TheStatusMonitor.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
-        }
-
-        [Test]
-        public void should_record_the_duration_of_the_job()
-        {
-            theRecord.Duration.ShouldBeGreaterThan(75);
-        }
-
-        [Test]
-        public void records_success()
-        {
-            theRecord.Success.ShouldBeTrue();
-        }
-
-        [Test]
-        public void exception_text_should_be_empty()
-        {
-            theRecord.ExceptionText.IsEmpty().ShouldBeTrue();
-        }
-    }
-
-    [TestFixture]
-    public class when_running_a_scheduled_job_with_a_job_failure : ScheduledJobRunnerContext
-    {
-        private readonly Exception EX = new Exception("You stink!");
-
-        protected override void theJobRunsLike(AScheduledJob job)
-        {
-            job.Duration = 100;
-            job.Exception = EX;
-        }
-
-        [Test]
-        public void should_mark_the_job_as_executing()
-        {
-            Assert.Fail("NWO");
-            //TheStatusMonitor.AssertWasCalled(x => x.MarkExecuting<AScheduledJob>());
-        }
-
-        [Test]
-        public void should_later_mark_the_job_as_completed()
-        {
-            Assert.Fail("NWO");
-            //TheStatusMonitor.AssertWasCalled(x => x.MarkCompletion<AScheduledJob>(theRecord));
-        }
-
-
-        [Test]
-        public void should_record_the_duration_of_the_job()
-        {
-            theRecord.Duration.ShouldBeGreaterThan(75);
-        }
-
-        [Test]
-        public void records_a_failure()
-        {
-            theRecord.Success.ShouldBeFalse();
-        }
-
-        [Test]
-        public void exception_text_should_be_empty()
-        {
-            theRecord.ExceptionText.ShouldEqual(EX.ToString());
-        }
-    }
-
-    public class AScheduledJob : IJob
-    {
-        public Exception Exception = null;
-        public int Duration = 100;
-
-        public void Execute(CancellationToken cancellation)
-        {
-            Thread.Sleep(Duration);
-
-            if (Exception != null)
+            theEnvelope = new Envelope
             {
-                throw Exception;
-            }
+                Attempts = 2
+            };
+
+            Services.Inject(theEnvelope);
+
+            var theJob = MockFor<AJob>();
+            theTracker = MockFor<IJobRunTracker>();
+            MockFor<IScheduleStatusMonitor>().Stub(x => x.TrackJob(theEnvelope.Attempts, theJob))
+                .Return(theTracker);
+
+            theTask = Task.FromResult(new RescheduleRequest<AJob>());
+
+            MockFor<IScheduledJob<AJob>>().Stub(x => x.ToTask(theJob, theTracker))
+                .Return(theTask);
+        }
+
+        [Test]
+        public void coordinates_with_the_monitor_and_scheduled_job()
+        {
+            ClassUnderTest.Execute(new ExecuteScheduledJob<AJob>())
+                .ShouldBeTheSameAs(theTask);
         }
     }
 }
