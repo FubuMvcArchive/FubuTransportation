@@ -29,6 +29,25 @@ namespace FubuTransportation.Configuration
             DefaultContentType = new XmlMessageSerializer().ContentType;
         }
 
+        private string _nodeId;
+
+        public string NodeId
+        {
+            get
+            {
+                if (_nodeId.IsEmpty())
+                {
+                    return this.Name + "@" + Environment.MachineName;
+                }
+
+                return _nodeId;
+            }
+            set
+            {
+                _nodeId = value;
+            }
+        }
+        
 
         /// <summary>
         /// Used to identify the instance of the running FT node

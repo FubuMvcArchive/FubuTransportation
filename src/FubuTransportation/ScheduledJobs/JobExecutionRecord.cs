@@ -13,6 +13,7 @@ namespace FubuTransportation.ScheduledJobs
         public bool Success { get; set; }
         public string ExceptionText { get; set; }
         public int Attempts { get; set; }
+        public string Executor { get; set; }
 
         protected bool Equals(JobExecutionRecord other)
         {

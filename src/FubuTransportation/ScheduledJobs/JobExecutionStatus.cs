@@ -5,6 +5,7 @@
         Scheduled,
         Executing,
         Completed,
-        Inactive
+        Inactive,
+        Failed
     }
 }
