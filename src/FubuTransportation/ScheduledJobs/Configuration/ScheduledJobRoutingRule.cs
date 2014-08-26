@@ -10,7 +10,7 @@ namespace FubuTransportation.ScheduledJobs.Configuration
     {
         public bool Matches(Type type)
         {
-            return type == typeof (ExecuteScheduledJob<T>);
+            return type == typeof (ExecuteScheduledJob<T>) || type == typeof(RescheduleRequest<T>);
         }
 
         public string Describe()

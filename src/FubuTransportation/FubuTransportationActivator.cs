@@ -14,19 +14,26 @@ namespace FubuTransportation
         private readonly TransportActivator _transports;
         private readonly SubscriptionActivator _subscriptions;
         private readonly IScheduledJobController _scheduledJobs;
+        private readonly ScheduledJobGraph _scheduledJobGraph;
 
-        public FubuTransportationActivator(TransportActivator transports, SubscriptionActivator subscriptions, IScheduledJobController scheduledJobs)
+        public FubuTransportationActivator(TransportActivator transports, SubscriptionActivator subscriptions, IScheduledJobController scheduledJobs, ScheduledJobGraph scheduledJobGraph)
         {
             _transports = transports;
             _subscriptions = subscriptions;
             _scheduledJobs = scheduledJobs;
+            _scheduledJobGraph = scheduledJobGraph;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
             _transports.Activate(packages, log);
             _subscriptions.Activate(packages, log);
-            _scheduledJobs.Activate();
+
+            if (_scheduledJobGraph.ActivateOnStartup)
+            {
+                _scheduledJobs.Activate();
+            }
+            
 
         }
 

@@ -273,6 +273,7 @@
     <Compile Include="ScheduledJobs\Execution\EveryDayAtSpecificTime.cs" />
     <Compile Include="ScheduledJobs\Execution\ExecuteScheduledJob.cs" />
     <Compile Include="ScheduledJobs\Execution\IJobExecutor.cs" />
+    <Compile Include="ScheduledJobs\Messages\SchedulingHandler.cs" />
     <Compile Include="ScheduledJobs\Persistence\InMemorySchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduledJob.cs" />
     <Compile Include="ScheduledJobs\Persistence\ISchedulePersistence.cs" />

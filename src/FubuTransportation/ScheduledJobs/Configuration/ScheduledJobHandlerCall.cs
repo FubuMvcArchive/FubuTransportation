@@ -18,4 +18,5 @@ namespace FubuTransportation.ScheduledJobs.Configuration
         {
         }
     }
+
 }

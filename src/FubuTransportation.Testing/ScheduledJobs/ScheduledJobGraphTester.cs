@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
-using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs;
@@ -10,6 +8,16 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
+    [TestFixture]
+    public class ScheduledJobGraphTester
+    {
+        [Test]
+        public void activate_on_startup_is_the_default()
+        {
+            new ScheduledJobGraph().ActivateOnStartup.ShouldBeTrue();
+        }
+    }
+
     [TestFixture]
     public class when_scheduling_jobs
     {
@@ -23,11 +31,11 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             theExecutor = new StubJobExecutor();
 
-            theSchedule = new JobSchedule(new []
+            theSchedule = new JobSchedule(new[]
             {
-                JobStatus.For<AJob>(DateTime.Today), 
-                JobStatus.For<BJob>(DateTime.Today.AddHours(1)), 
-                JobStatus.For<CJob>(DateTime.Today.AddHours(2)), 
+                JobStatus.For<AJob>(DateTime.Today),
+                JobStatus.For<BJob>(DateTime.Today.AddHours(1)),
+                JobStatus.For<CJob>(DateTime.Today.AddHours(2)),
             });
 
             theGraph = new ScheduledJobGraph();
@@ -35,7 +43,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             theGraph.Jobs.Add(new ScheduledJob<CJob>(new DummyScheduleRule(DateTime.Today.AddHours(3))));
             theGraph.Jobs.Add(new ScheduledJob<DJob>(new DummyScheduleRule(DateTime.Today.AddHours(4))));
             theGraph.Jobs.Add(new ScheduledJob<EJob>(new DummyScheduleRule(DateTime.Today.AddHours(5))));
-        
+
             // not that worried about pushing the time around
             theGraph.DetermineSchedule(now, theExecutor, theSchedule);
         }
@@ -43,21 +51,21 @@ namespace FubuTransportation.Testing.ScheduledJobs
         [Test]
         public void changes_the_jobs_that_are_already_scheduled_correcting_where_necessary()
         {
-            theSchedule.Find(typeof (CJob)).NextTime.ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(3));
-            theSchedule.Find(typeof(BJob)).NextTime.ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(1));
+            theSchedule.Find(typeof (CJob)).NextTime.ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(3));
+            theSchedule.Find(typeof (BJob)).NextTime.ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(1));
         }
 
         [Test]
         public void schedules_new_jobs()
         {
-            theSchedule.Find(typeof(DJob)).NextTime.ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(4));
-            theSchedule.Find(typeof(EJob)).NextTime.ShouldEqual((DateTimeOffset)DateTime.Today.AddHours(5));
+            theSchedule.Find(typeof (DJob)).NextTime.ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(4));
+            theSchedule.Find(typeof (EJob)).NextTime.ShouldEqual((DateTimeOffset) DateTime.Today.AddHours(5));
         }
 
         [Test]
         public void removes_obsolete_jobs()
         {
-            theSchedule.Find(typeof(AJob)).Status.ShouldEqual(JobExecutionStatus.Inactive);
+            theSchedule.Find(typeof (AJob)).Status.ShouldEqual(JobExecutionStatus.Inactive);
         }
     }
 

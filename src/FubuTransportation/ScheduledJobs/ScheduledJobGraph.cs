@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Reflection;
 using FubuMVC.Core.Registration;
+using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs.Execution;
 using FubuTransportation.ScheduledJobs.Persistence;
 
@@ -11,7 +12,13 @@ namespace FubuTransportation.ScheduledJobs
     [ApplicationLevel]
     public class ScheduledJobGraph
     {
+        public ScheduledJobGraph()
+        {
+            ActivateOnStartup = true;
+        }
+
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
+        public bool ActivateOnStartup { get; set; }
         public Accessor DefaultChannel { get; set; }
 
         public void DetermineSchedule(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule)
@@ -27,5 +34,10 @@ namespace FubuTransportation.ScheduledJobs
         {
             return Jobs.FirstOrDefault(x => x.JobType == jobType);
         }
+
+        public IScheduledJob<T> FindJob<T>() where T : IJob
+        {
+            return Jobs.OfType<IScheduledJob<T>>().FirstOrDefault();
+        } 
     }
 }

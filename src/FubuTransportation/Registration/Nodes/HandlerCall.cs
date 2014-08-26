@@ -30,6 +30,16 @@ namespace FubuTransportation.Registration.Nodes
             return !hasOutput || !method.ReturnType.IsValueType;
         }
 
+        public static HandlerCall For(Type openType, Type closedType, string methodName)
+        {
+            var fullType = openType.MakeGenericType(closedType);
+            var method = fullType.GetMethod(methodName);
+
+            if (method == null) throw new ArgumentException("Could not find method named '{0}' in type {1}".ToFormat(methodName, fullType.GetFullName()));
+
+            return new HandlerCall(fullType, method);
+        }
+
         public static HandlerCall For<T>(Expression<Action<T>> method)
         {
             return new HandlerCall(typeof(T), ReflectionHelper.GetMethod(method));
