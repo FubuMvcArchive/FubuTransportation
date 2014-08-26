@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Reflection;
@@ -32,17 +33,14 @@ namespace FubuTransportation.ScheduledJobs
                     tracker.Failure(t.Exception);
                     throw t.Exception;
                 }
-                else
+                
+                var nextTime = Scheduler.ScheduleNextTime(tracker.Now());
+                tracker.Success(nextTime);
+
+                return new RescheduleRequest<T>
                 {
-                    var nextTime = Scheduler.ScheduleNextTime(tracker.Now());
-
-                    tracker.Success(nextTime);
-
-                    return new RescheduleRequest<T>
-                    {
-                        NextTime = nextTime
-                    };
-                }
+                    NextTime = nextTime
+                };
             });
         }
 

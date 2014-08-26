@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
 
@@ -79,10 +78,9 @@ namespace FubuTransportation.ScheduledJobs
         public void Schedule<T>(IScheduledJob<T> job, DateTimeOffset nextTime) where T : IJob
         {
             _statusMonitor.MarkScheduled<T>(nextTime);
-            _timer.Schedule(typeof(T), nextTime, () => job.Execute(this));
+            _timer.Schedule(typeof (T), nextTime, () => job.Execute(this));
 
-            _logger.InfoMessage(() => new ScheduledJobScheduled(typeof(T), nextTime));
+            _logger.InfoMessage(() => new ScheduledJobScheduled(typeof (T), nextTime));
         }
-
     }
 }

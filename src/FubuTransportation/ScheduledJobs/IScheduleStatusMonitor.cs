@@ -3,8 +3,6 @@ using FubuTransportation.Polling;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    // TODO -- will have to take in ILogger, do stopwatch,
-    // track the envelope as well
     public interface IScheduleStatusMonitor
     {
         void Persist(Action<JobSchedule> scheduling);
