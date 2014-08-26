@@ -78,5 +78,16 @@ namespace FubuTransportation.ScheduledJobs.Configuration
                 }
             }
         }
+
+        /// <summary>
+        /// Disable the automatic startup of scheduled jobs. Valuable for testing
+        /// </summary>
+        /// <param name="shouldActivate"></param>
+        /// <returns></returns>
+        public ScheduledJobExpression<T> ActivatedOnStartup(bool shouldActivate)
+        {
+            _parent.AlterSettings<ScheduledJobGraph>(x => x.ActivateOnStartup = shouldActivate);
+            return this;
+        }
     }
 }

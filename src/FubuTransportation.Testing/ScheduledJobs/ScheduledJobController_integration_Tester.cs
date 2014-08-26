@@ -117,6 +117,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             Channel(x => x.Upstream).ReadIncoming();
 
+            ScheduledJob.ActivatedOnStartup(false);
             ScheduledJob.DefaultJobChannel(x => x.Upstream);
             ScheduledJob.RunJob<Job1>().ScheduledBy(new AtSecondsAfterTheMinute(3));
             ScheduledJob.RunJob<Job2>().ScheduledBy(new AtSecondsAfterTheMinute(10));

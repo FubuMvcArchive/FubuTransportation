@@ -50,6 +50,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
         private void createNewTimedExecution(Type type, DateTimeOffset time, Action action)
         {
             var interval = time.Subtract(_systemTime.UtcNow()).TotalMilliseconds;
+            if (interval < 0) interval = 0;
 
             Debug.WriteLine("Scheduling an execution of {0} at {1}, current time is {2}, will run in {3} milliseconds", type.Name, time, _systemTime.UtcNow(), interval);
 
