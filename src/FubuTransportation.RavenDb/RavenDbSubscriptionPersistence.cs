@@ -48,9 +48,11 @@ namespace FubuTransportation.RavenDb
             }
         }
 
-        public void Persist(TransportNode node)
+        public void Persist(params TransportNode[] nodes)
         {
-            _transaction.Execute<IDocumentSession>(x => x.Store(node));
+            _transaction.Execute<IDocumentSession>(x => {
+                nodes.Each(node => x.Store(node));
+            });
         }
 
         public IEnumerable<TransportNode> AllNodes()

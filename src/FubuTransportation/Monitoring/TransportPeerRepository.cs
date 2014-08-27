@@ -37,7 +37,12 @@ namespace FubuTransportation.Monitoring
                 .Select(toPeer).ToArray();
         }
 
-        public void AlterThisNode(Action<TransportNode> alteration)
+        public void RecordOwnershipToThisNode(Uri subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
         {
             throw new NotImplementedException();
         }

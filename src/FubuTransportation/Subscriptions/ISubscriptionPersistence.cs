@@ -9,7 +9,7 @@ namespace FubuTransportation.Subscriptions
         void Persist(Subscription subscription);
 
         IEnumerable<TransportNode> NodesForGroup(string name);
-        void Persist(TransportNode node);
+        void Persist(params TransportNode[] nodes);
 
         IEnumerable<TransportNode> AllNodes();
         IEnumerable<Subscription> AllSubscriptions();

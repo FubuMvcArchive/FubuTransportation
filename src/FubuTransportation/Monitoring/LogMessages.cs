@@ -61,6 +61,17 @@ namespace FubuTransportation.Monitoring
         }
     }
 
+    public class TaskActivationFailure : PersistentTaskMessage
+    {
+        public TaskActivationFailure(Uri subject) : base(subject)
+        {
+        }
+
+        public TaskActivationFailure()
+        {
+        }
+    }
+
     public class TookOwnershipOfPersistentTask : PersistentTaskMessage
     {
         public TookOwnershipOfPersistentTask()
@@ -82,4 +93,6 @@ namespace FubuTransportation.Monitoring
         {
         }
     }
+
+    
 }
