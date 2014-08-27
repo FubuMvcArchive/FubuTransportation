@@ -351,6 +351,7 @@
     </Compile>
     <Compile Include="Monitoring\FakePersistentTasks.cs" />
     <Compile Include="Monitoring\PermanentTaskController\when_activating_all_tasks.cs" />
+    <Compile Include="Monitoring\PermanentTaskController\when_checking_status.cs" />
     <Compile Include="Monitoring\PermanentTaskController\when_finding_a_task.cs" />
     <Compile Include="Monitoring\PersistentTaskAgentTester.cs" />
     <Compile Include="Monitoring\PermanentTaskController\PersistentTaskControllerContext.cs" />

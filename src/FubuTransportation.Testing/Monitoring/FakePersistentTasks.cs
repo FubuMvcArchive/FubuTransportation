@@ -97,5 +97,17 @@ namespace FubuTransportation.Testing.Monitoring
         {
             throw new NotImplementedException();
         }
+
+        public void IsFullyFunctionalAndActive()
+        {
+            IsFullyFunctional();
+            IsActive = true;
+        }
+
+        public void IsActiveButNotFunctional(Exception exception)
+        {
+            IsActive = true;
+            AssertAvailableException = exception;
+        }
     }
 }
