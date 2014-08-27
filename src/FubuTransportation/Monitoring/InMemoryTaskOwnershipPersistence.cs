@@ -6,18 +6,18 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
-    public class MemoryTaskOwnershipPersistence : ITaskOwnershipPersistence
+    public class InMemoryTaskOwnershipPersistence : ITaskOwnershipPersistence
     {
-        private readonly Cache<string, NodeTaskOwner> _owners = new Cache<string, NodeTaskOwner>(name => new NodeTaskOwner(name)); 
+        private readonly Cache<string, NodeTaskOwner> _nodes = new Cache<string, NodeTaskOwner>(name => new NodeTaskOwner(name)); 
 
         public IEnumerable<TaskOwner> All(string nodeName)
         {
-            return _owners[nodeName].Owners();
+            return _nodes[nodeName].Owners();
         }
 
         public void PersistOwnership(Uri subject, TransportNode node)
         {
-            _owners[node.NodeName][subject] = node.Id;
+            _nodes[node.NodeName][subject] = node.Id;
         }
 
         public class NodeTaskOwner
@@ -57,6 +57,11 @@ namespace FubuTransportation.Monitoring
             } 
 
             
+        }
+
+        public string FindOwner(string nodeName, Uri theSubject)
+        {
+            return _nodes[nodeName][theSubject];
         }
     }
 }
