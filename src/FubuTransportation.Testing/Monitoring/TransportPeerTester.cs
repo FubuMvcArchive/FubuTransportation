@@ -10,11 +10,35 @@ using NUnit.Framework;
 namespace FubuTransportation.Testing.Monitoring
 {
     [TestFixture]
+    public class when_retrieving_the_list_of_currently_owned_subjects : TransportPeerContext
+    {
+        private readonly Uri task1 = "foo://1".ToUri();
+        private readonly Uri task2 = "foo://2".ToUri();
+        private readonly Uri task3 = "foo://3".ToUri();
+        private readonly Uri task4 = "foo://4".ToUri();
+
+        protected override void theContextIs()
+        {
+            thePersistence.PersistOwnership(task1, theNode);
+            thePersistence.PersistOwnership(task3, theNode);
+            thePersistence.PersistOwnership(task2, new TransportNode{NodeName = theNode.NodeName, Id = "different"});
+            thePersistence.PersistOwnership(task4, new TransportNode{NodeName = theNode.NodeName, Id = "different"});
+        }
+
+        [Test]
+        public void can_fetch_list_of_owned_jobs()
+        {
+            thePeer.CurrentlyOwnedSubjects()
+                .ShouldHaveTheSameElementsAs(task1, task3);
+        }
+    }
+
+    [TestFixture]
     public class when_unsuccessfully_taking_ownership_because_of_exception : TransportPeerContext
     {
         private readonly Uri theSubject = "subject://1".ToUri();
         private OwnershipStatus theStatus;
-        private string theOriginalOwner = "elsewhere";
+        private const string theOriginalOwner = "elsewhere";
 
         protected override void theContextIs()
         {
