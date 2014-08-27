@@ -130,7 +130,7 @@ namespace FubuTransportation.Testing.Subscriptions
         [Test]
         public void save_transport_node_for_the_first_time()
         {
-            theRepository.SaveTransportNode();
+            theRepository.Persist(new TransportNode(channelGraph));
 
             var node = persistence.NodesForGroup(channelGraph.Name)
                 .Single();
@@ -142,17 +142,20 @@ namespace FubuTransportation.Testing.Subscriptions
         [Test]
         public void saving_the_transport_node_is_idempotent()
         {
-            theRepository.SaveTransportNode();
+            theRepository.Persist(new TransportNode(channelGraph));
 
             var id = persistence.NodesForGroup(channelGraph.Name)
                 .Single().Id;
 
-            theRepository.SaveTransportNode();
-            theRepository.SaveTransportNode();
-            theRepository.SaveTransportNode();
-            theRepository.SaveTransportNode();
-            theRepository.SaveTransportNode();
-            theRepository.SaveTransportNode();
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
+            theRepository.Persist(new TransportNode(channelGraph));
 
             persistence.NodesForGroup(channelGraph.Name)
                 .Single().Id.ShouldEqual(id);
