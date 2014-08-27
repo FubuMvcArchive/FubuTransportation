@@ -349,7 +349,10 @@
     <Compile Include="Logging\EventAggregationListenerTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitoring\FakePersistentTasks.cs" />
+    <Compile Include="Monitoring\PermanentTaskController\when_finding_a_task.cs" />
     <Compile Include="Monitoring\PersistentTaskAgentTester.cs" />
+    <Compile Include="Monitoring\PermanentTaskController\PersistentTaskControllerContext.cs" />
     <Compile Include="Monitoring\RiggedServiceBus.cs" />
     <Compile Include="Monitoring\TransportPeerTester.cs" />
     <Compile Include="ObjectMother.cs">
