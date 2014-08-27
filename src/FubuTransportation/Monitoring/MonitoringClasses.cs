@@ -11,18 +11,8 @@ namespace FubuTransportation.Monitoring
 {
     public interface ITransportPeerRepository
     {
-        bool HasAnyPeers();
-
-        ITransportPeer FindOwner(Uri subject);
         IEnumerable<ITransportPeer> AllPeers();
         IEnumerable<ITransportPeer> AllOwners(); 
-    }
-
-    public interface ITaskOwnershipPersistence
-    {
-        IEnumerable<TaskOwner> All(string nodeName);
-        void PersistOwnership(Uri subject, TransportNode node);
-        IEnumerable<Uri> OwnedSubjects(TransportNode node);
     }
 
     public interface ITransportPeer

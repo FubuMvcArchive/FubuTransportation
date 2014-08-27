@@ -40,6 +40,11 @@ namespace FubuTransportation.Subscriptions
             persist(subscriptions, SubscriptionRole.Publishes);
         }
 
+        public void Persist(TransportNode node)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

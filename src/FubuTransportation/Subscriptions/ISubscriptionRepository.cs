@@ -9,5 +9,7 @@ namespace FubuTransportation.Subscriptions
         IEnumerable<TransportNode> FindPeers();
         void SaveTransportNode();
         void PersistPublishing(params Subscription[] subscriptions);
+
+        void Persist(TransportNode node);
     }
 }

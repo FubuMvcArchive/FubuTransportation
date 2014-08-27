@@ -9,13 +9,13 @@ namespace FubuTransportation.Monitoring
     public class TransportPeer : ITransportPeer
     {
         private readonly TransportNode _node;
-        private readonly ITaskOwnershipPersistence _persistence;
+        private readonly ISubscriptionRepository _subscriptions;
         private readonly IServiceBus _serviceBus;
 
-        public TransportPeer(TransportNode node, ITaskOwnershipPersistence persistence, IServiceBus serviceBus)
+        public TransportPeer(TransportNode node, ISubscriptionRepository subscriptions, IServiceBus serviceBus)
         {
             _node = node;
-            _persistence = persistence;
+            _subscriptions = subscriptions;
             _serviceBus = serviceBus;
 
             if (!_node.Addresses.Any())
@@ -34,7 +34,8 @@ namespace FubuTransportation.Monitoring
                     if (ownershipStatus == OwnershipStatus.AlreadyOwned ||
                         ownershipStatus == OwnershipStatus.OwnershipActivated)
                     {
-                        _persistence.PersistOwnership(subject, _node);
+                        _node.AddOwnership(subject);
+                        _subscriptions.Persist(_node);
                     }
 
                     return ownershipStatus;
@@ -57,7 +58,7 @@ namespace FubuTransportation.Monitoring
 
         public IEnumerable<Uri> CurrentlyOwnedSubjects()
         {
-            return _persistence.OwnedSubjects(_node);
+            return _node.OwnedTasks;
         }
 
 
