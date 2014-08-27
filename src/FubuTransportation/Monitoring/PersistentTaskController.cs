@@ -31,9 +31,44 @@ namespace FubuTransportation.Monitoring
             _repository = repository;
             sources.Each(x => _sources[x.Protocol] = x);
 
-            _agents.OnMissing = uri => new PersistentTaskAgent(FindTask(uri));
+            _agents.OnMissing = uri => {
+                var persistentTask = FindTask(uri);
+                if (persistentTask == null) return null;
+
+                return new PersistentTaskAgent(persistentTask);
+            };
 
             _permanentTasks = sources.SelectMany(x => x.PermanentTasks()).ToArray();
+        }
+
+        public Task<HealthStatus> CheckStatus(Uri subject)
+        {
+            var agent = _agents[subject];
+
+            if (agent == null)
+            {
+                return HealthStatus.Unknown.ToCompletionTask();
+            }
+
+            if (agent.IsActive())
+            {
+                return agent.AssertAvailable().ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        // TODO -- log
+                        return HealthStatus.Error;
+                    }
+
+                    return HealthStatus.Active;
+                });
+            }
+
+            return HealthStatus.Inactive.ToCompletionTask();
+
+            // active, inactive, error, unknown
+
+            throw new NotImplementedException();
         }
 
 
@@ -46,6 +81,11 @@ namespace FubuTransportation.Monitoring
 
             return source.CreateTask(subject);
 
+        }
+
+        public Task StopTask(Uri subject)
+        {
+            throw new NotImplementedException();
         }
 
         public void ActivateAllTasks()
@@ -123,34 +163,7 @@ namespace FubuTransportation.Monitoring
             });
         }
 
-        public Task<HealthStatus> CheckStatus(Uri subject)
-        {
-            var agent = _agents[subject];
 
-            if (agent == null)
-            {
-                return HealthStatus.Unknown.ToCompletionTask();
-            }
-
-            if (agent.IsActive())
-            {
-                return agent.AssertAvailable().ContinueWith(t => {
-                    if (t.IsFaulted)
-                    {
-                        // TODO -- log
-                        return HealthStatus.Error;
-                    }
-
-                    return HealthStatus.Active;
-                });
-            }
-            
-            return HealthStatus.Inactive.ToCompletionTask();
-
-            // active, inactive, error, unknown
-
-            throw new NotImplementedException();
-        }
 
         /*
          * TODO
