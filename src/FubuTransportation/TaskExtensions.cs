@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace FubuTransportation
 {
@@ -10,6 +11,14 @@ namespace FubuTransportation
             completion.SetResult(value);
 
             return completion.Task;
-        } 
+        }
+
+        public static Task ToFaultedTask(this Exception ex)
+        {
+            var completion = new TaskCompletionSource<object>();
+            completion.SetException(ex);
+
+            return completion.Task;
+        }
     }
 }

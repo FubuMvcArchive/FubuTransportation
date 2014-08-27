@@ -94,5 +94,25 @@ namespace FubuTransportation.Monitoring
         }
     }
 
-    
+    public class StoppedTask : PersistentTaskMessage
+    {
+        public StoppedTask(Uri subject) : base(subject)
+        {
+        }
+
+        public StoppedTask()
+        {
+        }
+    }
+
+    public class FailedToStopTask : PersistentTaskMessage
+    {
+        public FailedToStopTask(Uri subject) : base(subject)
+        {
+        }
+
+        public FailedToStopTask()
+        {
+        }
+    }
 }
