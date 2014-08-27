@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FubuCore;
 
 namespace FubuTransportation
 {
+    public class RequestOptions
+    {
+        public TimeSpan Timeout = 10.Minutes();
+        public Uri Destination = null;
+    }
+
     public interface IServiceBus
     {
         /// <summary>
         /// Loosely-coupled Request/Reply pattern
         /// </summary>
-        /// <typeparam name="TRequest"></typeparam>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="request"></param>
-        /// <param name="timeout">Timespan to wait for a response before timing out</param>
+        /// <param name="options">Override the timeout and destination</param>
         /// <returns></returns>
-        Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null);
+        Task<TResponse> Request<TResponse>(object request, RequestOptions options = null);
 
         void Send<T>(T message);
+
         /// <summary>
         /// Send to a specific destination rather than running the routing rules
         /// </summary>

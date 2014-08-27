@@ -23,9 +23,10 @@ namespace FubuTransportation
             _systemTime = systemTime;
         }
 
-        public Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null)
+        // The destination override is tested as part of the monitoring integration
+        public Task<TResponse> Request<TResponse>(object request, RequestOptions options = null)
         {
-            timeout = timeout ?? 10.Minutes();
+            options = options ?? new RequestOptions();
 
             var envelope = new Envelope
             {
@@ -33,7 +34,12 @@ namespace FubuTransportation
                 ReplyRequested = typeof(TResponse).Name
             };
 
-            var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId, timeout.Value);
+            if (options.Destination != null)
+            {
+                envelope.Destination = options.Destination;
+            }
+
+            var listener = new ReplyListener<TResponse>(_events, envelope.CorrelationId, options.Timeout);
             _events.AddListener(listener);
 
             _sender.Send(envelope);
