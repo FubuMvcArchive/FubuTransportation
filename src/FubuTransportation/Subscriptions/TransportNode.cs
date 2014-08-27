@@ -33,6 +33,31 @@ namespace FubuTransportation.Subscriptions
         public string MachineName { get; set; }
         public string NodeName { get; set; }
 
+        private readonly IList<Uri> _ownedTasks = new List<Uri>();
+
+        public void AddOwnership(Uri subject)
+        {
+            _ownedTasks.Fill(subject);
+        }
+
+        public void RemoveOwnership(Uri subject)
+        {
+            _ownedTasks.Remove(subject);
+        }
+
+        public Uri[] OwnedTasks
+        {
+            get
+            {
+                return _ownedTasks.ToArray();
+            }
+            set
+            {
+                _ownedTasks.Clear();
+                if (value != null) _ownedTasks.AddRange(value);
+            }
+        }
+
         public Uri[] Addresses
         {
             get

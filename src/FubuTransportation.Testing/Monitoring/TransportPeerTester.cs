@@ -6,32 +6,10 @@ using FubuTestingSupport;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Subscriptions;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Monitoring
 {
-    [TestFixture]
-    public class when_retrieving_the_list_of_currently_owned_subjects : TransportPeerContext
-    {
-        private readonly Uri task1 = "foo://1".ToUri();
-        private readonly Uri task2 = "foo://2".ToUri();
-        private readonly Uri task3 = "foo://3".ToUri();
-        private readonly Uri task4 = "foo://4".ToUri();
-
-        protected override void theContextIs()
-        {
-            thePersistence.PersistOwnership(task1, theNode);
-            thePersistence.PersistOwnership(task3, theNode);
-            thePersistence.PersistOwnership(task2, new TransportNode{NodeName = theNode.NodeName, Id = "different"});
-            thePersistence.PersistOwnership(task4, new TransportNode{NodeName = theNode.NodeName, Id = "different"});
-        }
-
-        [Test]
-        public void can_fetch_list_of_owned_jobs()
-        {
-            thePeer.CurrentlyOwnedSubjects()
-                .ShouldHaveTheSameElementsAs(task1, task3);
-        }
-    }
 
     [TestFixture]
     public class when_unsuccessfully_taking_ownership_because_of_exception : TransportPeerContext
@@ -42,8 +20,6 @@ namespace FubuTransportation.Testing.Monitoring
 
         protected override void theContextIs()
         {
-            thePersistence.PersistOwnership(theSubject, new TransportNode{NodeName = theNode.NodeName, Id = theOriginalOwner});
-
             var request = new TakeOwnershipRequest
             {
                 Subject = theSubject
@@ -64,8 +40,8 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void does_not_persist_the_new_ownership()
         {
-            thePersistence.FindOwner(theNode.NodeName, theSubject)
-                .ShouldEqual(theOriginalOwner);
+            AssertThatTheNodeWas_Not_Persisted();
+            theNode.OwnedTasks.ShouldNotContain(theSubject);
         }
 
         [Test]
@@ -84,8 +60,6 @@ namespace FubuTransportation.Testing.Monitoring
 
         protected override void theContextIs()
         {
-            thePersistence.PersistOwnership(theSubject, new TransportNode { NodeName = theNode.NodeName, Id = theOriginalOwner });
-
             var request = new TakeOwnershipRequest
             {
                 Subject = theSubject
@@ -106,8 +80,8 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void does_not_persist_the_new_ownership()
         {
-            thePersistence.FindOwner(theNode.NodeName, theSubject)
-                .ShouldEqual(theOriginalOwner);
+            AssertThatTheNodeWas_Not_Persisted();
+            theNode.OwnedTasks.ShouldNotContain(theSubject);
         }
 
         [Test]
@@ -145,8 +119,8 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void should_persist_the_ownership()
         {
-            thePersistence.FindOwner(theNode.NodeName, theSubject)
-                .ShouldEqual(theNode.Id);
+            AssertThatTheNodeWasPersisted();
+            theNode.OwnedTasks.ShouldContain(theSubject);
         }
 
         [Test]
@@ -184,8 +158,8 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void should_persist_the_ownership()
         {
-            thePersistence.FindOwner(theNode.NodeName, theSubject)
-                .ShouldEqual(theNode.Id);
+            AssertThatTheNodeWasPersisted();
+            theNode.OwnedTasks.ShouldContain(theSubject);
         }
 
         [Test]
@@ -200,18 +174,28 @@ namespace FubuTransportation.Testing.Monitoring
     {
         protected readonly TransportNode theNode = new TransportNode { Id = "node1", NodeName = "foo", Addresses = new []{"reply://1".ToUri()}};
         protected RiggedServiceBus theServiceBus;
-        protected InMemoryTaskOwnershipPersistence thePersistence;
+        protected ISubscriptionRepository theSubscriptions;
         protected TransportPeer thePeer;
 
         [SetUp]
         public void SetUp()
         {
             theServiceBus = new RiggedServiceBus();
-            thePersistence = new InMemoryTaskOwnershipPersistence();
+            theSubscriptions = MockRepository.GenerateMock<ISubscriptionRepository>();
 
-            thePeer = new TransportPeer(theNode, thePersistence, theServiceBus);
+            thePeer = new TransportPeer(theNode, theSubscriptions, theServiceBus);
 
             theContextIs();
+        }
+
+        protected void AssertThatTheNodeWasPersisted()
+        {
+            theSubscriptions.AssertWasCalled(x => x.Persist(theNode));
+        }
+
+        protected void AssertThatTheNodeWas_Not_Persisted()
+        {
+            theSubscriptions.AssertWasNotCalled(x => x.Persist(theNode));
         }
 
         protected virtual void theContextIs()
