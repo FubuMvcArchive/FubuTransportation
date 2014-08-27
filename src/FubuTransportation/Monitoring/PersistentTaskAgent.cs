@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FubuTransportation.Monitoring
 {
+    // TODO -- add a ton of logging here?
     public class PersistentTaskAgent : IDisposable
     {
         private readonly IPersistentTask _task;
@@ -38,6 +39,7 @@ namespace FubuTransportation.Monitoring
             return Enqueue(t => t.Activate());
         }
 
+        // TODO -- don't allow failures to bubble out
         public Task Deactivate()
         {
             return Enqueue(t => t.Deactivate());
