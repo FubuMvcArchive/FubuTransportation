@@ -70,11 +70,6 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             return peers.Where(x => x.CurrentlyOwnedSubjects().Any());
         }
 
-        void ITransportPeerRepository.AlterThisNode(Action<TransportNode> alteration)
-        {
-            alteration(theCurrentNode);
-        }
-
         public FakePersistentTask Task(string uriString)
         {
             var uri = uriString.ToUri();
@@ -110,6 +105,16 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         protected void ExceptionWasLogged(Exception ex)
         {
             theLogger.ErrorMessages.OfType<ErrorReport>().Any(x => x.ExceptionText.Contains(ex.ToString()));
+        }
+
+        void ITransportPeerRepository.RecordOwnershipToThisNode(Uri subject)
+        {
+            theCurrentNode.AddOwnership(subject);
+        }
+
+        void ITransportPeerRepository.RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
+        {
+            theCurrentNode.AddOwnership(subjects);
         }
     }
 }

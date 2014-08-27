@@ -36,14 +36,18 @@ namespace FubuTransportation.Subscriptions
             return _nodes.Where(x => x.NodeName.EqualsIgnoreCase(name));
         }
 
-        public void Persist(TransportNode node)
+        public void Persist(params TransportNode[] nodes)
         {
-            if (node.Id.IsEmpty())
-            {
-                throw new ArgumentException("An Id string is required", "node");
-            }
+            nodes.Each(node => {
+                if (node.Id.IsEmpty())
+                {
+                    throw new ArgumentException("An Id string is required", "node");
+                }
 
-            _nodes.Fill(node);
+                _nodes.Fill(node);
+            });
+
+
         }
 
         public IEnumerable<TransportNode> AllNodes()

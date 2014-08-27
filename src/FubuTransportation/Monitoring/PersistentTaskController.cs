@@ -107,11 +107,8 @@ namespace FubuTransportation.Monitoring
 
             Task.WaitAll(startupTasks);
 
-            _repository.AlterThisNode(node => {
-                var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
-                node.AddOwnership(newSubjects);
-            });
-
+            var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
+            _repository.RecordOwnershipToThisNode(newSubjects);
             
         }
 
@@ -154,11 +151,14 @@ namespace FubuTransportation.Monitoring
             return agent.Activate().ContinueWith(t => {
                 if (t.IsFaulted)
                 {
-                    // TODO -- log
+                    _logger.Error(subject, "Failed to take ownership of task " + subject, t.Exception);
+                    _logger.InfoMessage(() => new TaskActivationFailure(subject));
+
                     return OwnershipStatus.Exception;
                 }
 
-                // TODO -- persist the ownership
+                _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(subject));
+                _repository.RecordOwnershipToThisNode(subject);
                 return OwnershipStatus.OwnershipActivated;
             });
         }

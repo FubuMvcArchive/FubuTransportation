@@ -40,9 +40,9 @@ namespace FubuTransportation.Subscriptions
             persist(subscriptions, SubscriptionRole.Publishes);
         }
 
-        public void Persist(TransportNode node)
+        public void Persist(params TransportNode[] nodes)
         {
-            _persistence.Persist(node);
+            _persistence.Persist(nodes);
         }
 
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
