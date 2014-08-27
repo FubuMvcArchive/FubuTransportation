@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
+using FubuTestingSupport;
+using FubuTransportation.ErrorHandling;
 using FubuTransportation.Monitoring;
+using FubuTransportation.Subscriptions;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -12,7 +16,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
     [TestFixture]
     public abstract class PersistentTaskControllerContext : ITransportPeerRepository
     {
-        private RecordingLogger theLogger;
+        protected RecordingLogger theLogger;
         private Lazy<PersistentTaskController> _controller; 
 
         protected readonly Cache<string, ITransportPeer> peers =
@@ -21,9 +25,16 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         protected readonly Cache<string, FakePersistentTaskSource> sources = 
             new Cache<string, FakePersistentTaskSource>(protocol => new FakePersistentTaskSource(protocol));
 
+        protected TransportNode theCurrentNode;
+
         [SetUp]
         public void SetUp()
         {
+            theCurrentNode = new TransportNode
+            {
+                
+            };
+
             peers.ClearAll();
             sources.ClearAll();
 
@@ -57,6 +68,48 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         IEnumerable<ITransportPeer> ITransportPeerRepository.AllOwners()
         {
             return peers.Where(x => x.CurrentlyOwnedSubjects().Any());
+        }
+
+        void ITransportPeerRepository.AlterThisNode(Action<TransportNode> alteration)
+        {
+            alteration(theCurrentNode);
+        }
+
+        public FakePersistentTask Task(string uriString)
+        {
+            var uri = uriString.ToUri();
+
+            return sources[uri.Scheme][uri.Host];
+        }
+
+        protected void LoggedMessageForSubject<T>(string uriString) where T : PersistentTaskMessage
+        {
+            var hasIt = theLogger.InfoMessages.OfType<T>().Any(x => x.Subject == uriString.ToUri());
+            if (!hasIt)
+            {
+                Assert.Fail("Did not have expected log message of type {0} for subject {1}".ToFormat(typeof(T).Name, uriString));
+            }
+        }
+
+        protected void AssertTasksAreActive(params string[] uriStrings)
+        {
+            var inactive = uriStrings.Select(Task).Where(x => !x.IsActive).Select(x => x.Subject.ToString());
+
+            if (inactive.Any())
+            {
+                Assert.Fail("Tasks {0} have not been activated", inactive.Join(", "));
+            }
+        }
+
+        protected void TheOwnedTasksByTheCurrentNodeShouldBe(params string[] uriStrings)
+        {
+            theCurrentNode.OwnedTasks.OrderBy(x => x.ToString())
+                .ShouldHaveTheSameElementsAs(uriStrings.OrderBy(x => x).Select(x => x.ToUri()));
+        }
+
+        protected void ExceptionWasLogged(Exception ex)
+        {
+            theLogger.ErrorMessages.OfType<ErrorReport>().Any(x => x.ExceptionText.Contains(ex.ToString()));
         }
     }
 }

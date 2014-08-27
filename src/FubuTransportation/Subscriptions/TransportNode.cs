@@ -40,6 +40,11 @@ namespace FubuTransportation.Subscriptions
             _ownedTasks.Fill(subject);
         }
 
+        public void AddOwnership(IEnumerable<Uri> subjects)
+        {
+            _ownedTasks.Fill(subjects);
+        }
+
         public void RemoveOwnership(Uri subject)
         {
             _ownedTasks.Remove(subject);

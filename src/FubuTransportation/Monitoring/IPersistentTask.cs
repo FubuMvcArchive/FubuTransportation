@@ -9,7 +9,7 @@ namespace FubuTransportation.Monitoring
         void AssertAvailable();
         void Activate();
         void Deactivate();
-        bool IsActive();
+        bool IsActive { get; }
 
         ITransportPeer AssignOwner(IEnumerable<ITransportPeer> peers);
     }

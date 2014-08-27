@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
@@ -6,5 +8,7 @@ namespace FubuTransportation.Monitoring
     {
         IEnumerable<ITransportPeer> AllPeers();
         IEnumerable<ITransportPeer> AllOwners();
+
+        void AlterThisNode(Action<TransportNode> alteration);
     }
 }

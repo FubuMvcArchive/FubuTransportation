@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuTransportation.Subscriptions;
 
@@ -34,6 +35,11 @@ namespace FubuTransportation.Monitoring
         {
             return _subscriptions.FindPeers().Where(x => x.OwnedTasks.Any())
                 .Select(toPeer).ToArray();
+        }
+
+        public void AlterThisNode(Action<TransportNode> alteration)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Logging;
+using FubuTransportation.Monitoring;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Logging
@@ -15,7 +16,7 @@ namespace FubuTransportation.Testing.Logging
         {
             var wrongTypes = typeof (MessageLogRecord).Assembly.GetExportedTypes()
                 .Where(x => x.IsConcreteTypeOf<LogRecord>() && !x.IsConcreteTypeOf<MessageLogRecord>())
-                .Where(x => !x.Name.Contains("Polling") && !x.Name.Contains("ScheduledJob"))
+                .Where(x => !x.Name.Contains("Polling") && !x.Name.Contains("ScheduledJob") && !x.CanBeCastTo<PersistentTaskMessage>())
                 .ToList();
 
             if (wrongTypes.Any())

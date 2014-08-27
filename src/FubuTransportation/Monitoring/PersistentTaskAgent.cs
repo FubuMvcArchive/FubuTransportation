@@ -47,7 +47,7 @@ namespace FubuTransportation.Monitoring
 
         public bool IsActive()
         {
-            return _task.IsActive();
+            return _task.IsActive;
         }
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
