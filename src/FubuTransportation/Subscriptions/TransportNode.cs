@@ -16,11 +16,20 @@ namespace FubuTransportation.Subscriptions
         public TransportNode(ChannelGraph graph)
         {
             NodeName = graph.Name;
+
+
             Addresses = graph.ReplyUriList().ToArray();
+
+            if (!Addresses.Any())
+            {
+                throw new InvalidOperationException("At least one reply channel is required");
+            }
+            
             MachineName = Environment.MachineName;
+            Id = graph.NodeId;
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string MachineName { get; set; }
         public string NodeName { get; set; }
 
