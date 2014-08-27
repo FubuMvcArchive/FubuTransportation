@@ -55,6 +55,7 @@ namespace FubuTransportation.Testing.Monitoring
     {
         public Exception ActivationException = null;
         public Exception AssertAvailableException = null;
+        public Exception DeactivateException = null;
 
         public FakePersistentTask(Uri subject)
         {
@@ -85,6 +86,9 @@ namespace FubuTransportation.Testing.Monitoring
 
         public void Deactivate()
         {
+            Thread.Sleep(10);
+            if (DeactivateException != null) throw DeactivateException;
+
             IsActive = false;
         }
 

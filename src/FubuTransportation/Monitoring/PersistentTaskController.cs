@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Runtime.Invocation;
@@ -85,7 +86,24 @@ namespace FubuTransportation.Monitoring
 
         public Task StopTask(Uri subject)
         {
-            throw new NotImplementedException();
+            var agent = _agents[subject];
+            if (agent == null)
+            {
+                var message = "Task '{0}' is not recognized by this node".ToFormat(subject);
+                return new ArgumentOutOfRangeException("subject", message).ToFaultedTask();
+            }
+
+            return agent.Deactivate().ContinueWith(t => {
+                if (t.IsFaulted)
+                {
+                    _logger.Error(subject, "Failed to stop task " + subject, t.Exception);
+                    _logger.InfoMessage(() => new FailedToStopTask(subject));
+                }
+                else
+                {
+                    _logger.InfoMessage(() => new StoppedTask(subject));
+                }
+            });
         }
 
         public void ActivateAllTasks()
