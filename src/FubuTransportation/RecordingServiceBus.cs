@@ -16,7 +16,7 @@ namespace FubuTransportation
         public readonly IList<DelayedMessage> DelayedSent = new List<DelayedMessage>();
         public readonly IList<SentDirectlyToMessage> SentDirectlyTo = new List<SentDirectlyToMessage>(); 
 
-        public Task<TResponse> Request<TResponse>(object request, TimeSpan? timeout = null)
+        public Task<TResponse> Request<TResponse>(object request, RequestOptions options)
         {
             throw new NotSupportedException();
         }

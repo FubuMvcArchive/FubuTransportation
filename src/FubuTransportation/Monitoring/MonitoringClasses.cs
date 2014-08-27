@@ -18,29 +18,10 @@ namespace FubuTransportation.Monitoring
         IEnumerable<ITransportPeer> AllOwners(); 
     }
 
-    public class TaskOwner
-    {
-        public string Owner { get; set; }
-        public Uri Id { get; set; }
-    }
-
     public interface ITaskOwnershipPersistence
     {
         IEnumerable<TaskOwner> All(string nodeName);
-        void PersistOwnership(Uri subject, string nodeId);
-    }
-
-    public class MemoryTaskOwnershipPersistence : ITaskOwnershipPersistence
-    {
-        public IEnumerable<TaskOwner> All(string nodeName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PersistOwnership(Uri subject, string nodeId)
-        {
-            throw new NotImplementedException();
-        }
+        void PersistOwnership(Uri subject, TransportNode node);
     }
 
     public interface ITransportPeer
@@ -54,11 +35,9 @@ namespace FubuTransportation.Monitoring
 
         string NodeId { get; }
         string MachineName { get; }
-        IPAddress IP { get; }
         IEnumerable<Uri> ReplyAddresses { get; }
     }
 
-    
 
     // Need to or queue up requests by subject? ReaderWriterLock by subject?
     // Use an agent for each subject that uses a producer/consumer task
