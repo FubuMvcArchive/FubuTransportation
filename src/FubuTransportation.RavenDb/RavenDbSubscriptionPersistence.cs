@@ -21,7 +21,9 @@ namespace FubuTransportation.RavenDb
         {
             using (var session = _store.OpenSession())
             {
-                return session.Query<Subscription>().Where(x => x.NodeName == name && x.Role == role);
+                return session.Query<Subscription>()
+                    .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
+                    .Where(x => x.NodeName == name && x.Role == role);
             }
         }
 
@@ -39,7 +41,10 @@ namespace FubuTransportation.RavenDb
         {
             using (var session = _store.OpenSession())
             {
-                return session.Query<TransportNode>().Where(x => x.NodeName == name);
+                return session
+                    .Query<TransportNode>()
+                    .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
+                    .Where(x => x.NodeName == name);
             }
         }
 
@@ -52,7 +57,10 @@ namespace FubuTransportation.RavenDb
         {
             using (var session = _store.OpenSession())
             {
-                return session.Query<TransportNode>().ToArray();
+
+                return session.Query<TransportNode>()
+                    .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
+                    .ToArray();
             }
         }
 
@@ -60,7 +68,9 @@ namespace FubuTransportation.RavenDb
         {
             using (var session = _store.OpenSession())
             {
-                return session.Query<Subscription>().ToArray();
+                return session
+                    .Query<Subscription>()
+                    .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite()).ToArray();
             }
         }
     }
