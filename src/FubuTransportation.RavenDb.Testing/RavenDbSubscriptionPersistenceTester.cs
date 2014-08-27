@@ -70,7 +70,7 @@ namespace FubuTransportation.RavenDb.Testing
         {
             var node1 = new TransportNode
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 MachineName = "Box1",
                 NodeName = "Node1",
                 Addresses = new Uri[] { "memory://1".ToUri(), "memory://2".ToUri() }
@@ -80,7 +80,7 @@ namespace FubuTransportation.RavenDb.Testing
 
             var node2 = new TransportNode
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 MachineName = "Box2",
                 NodeName = "Node2",
                 Addresses = new Uri[] { "memory://3".ToUri(), "memory://4".ToUri() }

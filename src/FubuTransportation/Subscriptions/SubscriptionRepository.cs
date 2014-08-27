@@ -55,7 +55,6 @@ namespace FubuTransportation.Subscriptions
             var node = new TransportNode(_graph);
             if (!FindPeers().Contains(node))
             {
-                node.Id = Guid.NewGuid();
                 _persistence.Persist(node);
             }
         }

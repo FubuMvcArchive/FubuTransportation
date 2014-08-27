@@ -38,9 +38,9 @@ namespace FubuTransportation.Subscriptions
 
         public void Persist(TransportNode node)
         {
-            if (node.Id == Guid.Empty)
+            if (node.Id.IsEmpty())
             {
-                node.Id = Guid.NewGuid();
+                throw new ArgumentException("An Id string is required", "node");
             }
 
             _nodes.Fill(node);
