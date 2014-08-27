@@ -351,6 +351,7 @@
     </Compile>
     <Compile Include="Monitoring\MemoryTaskOwnershipPersistenceTester.cs" />
     <Compile Include="Monitoring\RiggedServiceBus.cs" />
+    <Compile Include="Monitoring\TransportPeerTester.cs" />
     <Compile Include="ObjectMother.cs">
       <SubType>Code</SubType>
     </Compile>

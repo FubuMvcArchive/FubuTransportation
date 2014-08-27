@@ -24,7 +24,7 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void persist_and_load_all_by_node_name()
         {
-            var persistence = new MemoryTaskOwnershipPersistence();
+            var persistence = new InMemoryTaskOwnershipPersistence();
 
             persistence.PersistOwnership(subject1, node1);
             persistence.PersistOwnership(subject2, node1);

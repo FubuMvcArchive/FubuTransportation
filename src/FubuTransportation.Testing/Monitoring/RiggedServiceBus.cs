@@ -17,7 +17,7 @@ namespace FubuTransportation.Testing.Monitoring
             public object Message;
             public object Response;
 
-            public ReturnsExpression From(Uri destination)
+            public ReturnsExpression AtDestination(Uri destination)
             {
                 Destination = destination;
                 return this;
@@ -27,6 +27,13 @@ namespace FubuTransportation.Testing.Monitoring
             {
                 Response = response;
             }
+
+            public void Throws(Exception ex)
+            {
+                Exception = ex;
+            }
+
+            public Exception Exception { get; set; }
         }
 
         public FromExpression ExpectMessage(object message)
@@ -43,24 +50,35 @@ namespace FubuTransportation.Testing.Monitoring
 
         public interface FromExpression
         {
-            ReturnsExpression From(Uri destination);
+            ReturnsExpression AtDestination(Uri destination);
         }
 
         public interface ReturnsExpression
         {
             void Returns(object response);
+            void Throws(Exception ex);
         }
 
         public Task<TResponse> Request<TResponse>(object request, RequestOptions options = null)
         {
             var expectation =
-                _expectations.FirstOrDefault(x => x.Message == request && x.Destination == options.Destination);
+                _expectations.FirstOrDefault(x => x.Message.Equals(request) && x.Destination == options.Destination);
 
             if (expectation == null)
                 Assert.Fail("No expectation for message {0} to destination {1}", request, options.Destination);
 
             var completion = new TaskCompletionSource<TResponse>();
-            completion.SetResult((TResponse) expectation.Response);
+
+            if (expectation.Exception != null)
+            {
+                completion.SetException(expectation.Exception);
+            }
+            else
+            {
+                completion.SetResult((TResponse)expectation.Response);
+            }
+            
+            
 
             return completion.Task;
         }

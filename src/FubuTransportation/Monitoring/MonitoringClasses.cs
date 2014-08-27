@@ -26,7 +26,7 @@ namespace FubuTransportation.Monitoring
 
     public interface ITransportPeer
     {
-        Task<TakeOwnershipResponse> TakeOwnership(IEnumerable<Uri> subject);
+        Task<OwnershipStatus> TakeOwnership(Uri subject);
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
 
         IEnumerable<Uri> CurrentlyOwnedSubjects();

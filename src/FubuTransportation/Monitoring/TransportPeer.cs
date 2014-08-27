@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuTransportation.Subscriptions;
 
@@ -16,11 +17,28 @@ namespace FubuTransportation.Monitoring
             _node = node;
             _persistence = persistence;
             _serviceBus = serviceBus;
+
+            if (!_node.Addresses.Any())
+            {
+                throw new ArgumentOutOfRangeException("node", "The TransportNode must have at least one reply Uri");
+            }
         }
 
-        public Task<TakeOwnershipResponse> TakeOwnership(IEnumerable<Uri> subject)
+        public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
-            throw new NotImplementedException();
+            return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
+                new RequestOptions {Destination = _node.Addresses.FirstOrDefault()})
+                .ContinueWith(t => {
+                    var ownershipStatus = t.Result.Status;
+
+                    if (ownershipStatus == OwnershipStatus.AlreadyOwned ||
+                        ownershipStatus == OwnershipStatus.OwnershipActivated)
+                    {
+                        _persistence.PersistOwnership(subject, _node);
+                    }
+
+                    return ownershipStatus;
+                });
         }
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()

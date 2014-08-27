@@ -158,7 +158,7 @@
     <Compile Include="Logging\MessageLogRecord.cs" />
     <Compile Include="Logging\MessageSuccessful.cs" />
     <Compile Include="Logging\NoHandlerForMessage.cs" />
-    <Compile Include="Monitoring\MemoryTaskOwnershipPersistence.cs" />
+    <Compile Include="Monitoring\InMemoryTaskOwnershipPersistence.cs" />
     <Compile Include="Monitoring\MonitoringClasses.cs" />
     <Compile Include="Monitoring\MonitoringMessages.cs" />
     <Compile Include="Monitoring\TaskOwner.cs" />
