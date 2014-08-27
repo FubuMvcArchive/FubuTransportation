@@ -55,14 +55,13 @@ namespace FubuTransportation.Testing.Monitoring
     {
         public Exception ActivationException = null;
         public Exception AssertAvailableException = null;
-        public bool IsRunning = false;
 
         public FakePersistentTask(Uri subject)
         {
             Subject = subject;
         }
 
-        public void IsFullyFunctioning()
+        public void IsFullyFunctional()
         {
             ActivationException = AssertAvailableException = null;
         }
@@ -81,17 +80,17 @@ namespace FubuTransportation.Testing.Monitoring
             Thread.Sleep(10);
             if (ActivationException != null) throw ActivationException;
 
-            IsRunning = true;
+            IsActive = true;
         }
 
         public void Deactivate()
         {
-            IsRunning = false;
+            IsActive = false;
         }
 
-        public bool IsActive()
+        public bool IsActive
         {
-            return IsRunning;
+            get; set;
         }
 
         public ITransportPeer AssignOwner(IEnumerable<ITransportPeer> peers)

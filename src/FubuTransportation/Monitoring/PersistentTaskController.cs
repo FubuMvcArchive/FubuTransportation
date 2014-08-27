@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FubuCore.Logging;
 using FubuCore.Util;
+using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
@@ -49,12 +50,29 @@ namespace FubuTransportation.Monitoring
 
         public void ActivateAllTasks()
         {
+            var startupTasks = _permanentTasks.Select(uri => {
+                return _agents[uri].Activate().ContinueWith(t => {
+                    if (t.IsFaulted)
+                    {
+                        _logger.InfoMessage(() => new FailedToActivatePersistentTask(uri));
+                        _logger.Error(uri, "Failed to activate task " + uri, t.Exception);
+                        return new {Uri = uri, Success = false};
+                    }
 
-            throw new NotImplementedException();
+                    _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(uri));
 
-            var startupTasks = _permanentTasks.Select(uri => _agents[uri].Activate()).ToArray();
+                    return new {Uri = uri, Success = true};
+                });
+            }).ToArray();
 
             Task.WaitAll(startupTasks);
+
+            _repository.AlterThisNode(node => {
+                var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
+                node.AddOwnership(newSubjects);
+            });
+
+            
         }
 
         public void EnsureTasksHaveOwnership()
