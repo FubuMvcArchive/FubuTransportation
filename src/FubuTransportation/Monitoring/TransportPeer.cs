@@ -43,26 +43,46 @@ namespace FubuTransportation.Monitoring
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
-            throw new NotImplementedException();
+            var request = new TaskHealthRequest
+            {
+                Subjects = CurrentlyOwnedSubjects().ToArray()
+            };
+
+            return _serviceBus.Request<TaskHealthResponse>(request, new RequestOptions
+            {
+                // TODO -- this is smelly. Introduce the idea of a "control" queue?
+                Destination = _node.Addresses.FirstOrDefault()
+            });
         }
 
         public IEnumerable<Uri> CurrentlyOwnedSubjects()
         {
-            throw new NotImplementedException();
+            return _persistence.OwnedSubjects(_node);
         }
 
-        public void RemoveOwnership(IEnumerable<Uri> subjects)
+
+        public string NodeId
         {
-            throw new NotImplementedException();
+            get
+            {
+                return _node.Id;
+            }
         }
 
-        public void RemoveOwnership(Uri subject)
+        public string MachineName
         {
-            throw new NotImplementedException();
+            get
+            {
+                return _node.MachineName;
+            }
         }
 
-        public string NodeId { get; private set; }
-        public string MachineName { get; private set; }
-        public IEnumerable<Uri> ReplyAddresses { get; private set; }
+        public IEnumerable<Uri> ReplyAddresses
+        {
+            get
+            {
+                return _node.Addresses;
+            }
+        }
     }
 }

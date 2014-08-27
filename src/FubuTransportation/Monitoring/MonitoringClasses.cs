@@ -22,6 +22,7 @@ namespace FubuTransportation.Monitoring
     {
         IEnumerable<TaskOwner> All(string nodeName);
         void PersistOwnership(Uri subject, TransportNode node);
+        IEnumerable<Uri> OwnedSubjects(TransportNode node);
     }
 
     public interface ITransportPeer
@@ -30,8 +31,6 @@ namespace FubuTransportation.Monitoring
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
 
         IEnumerable<Uri> CurrentlyOwnedSubjects();
-        void RemoveOwnership(IEnumerable<Uri> subjects);
-        void RemoveOwnership(Uri subject);
 
         string NodeId { get; }
         string MachineName { get; }

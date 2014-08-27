@@ -20,6 +20,12 @@ namespace FubuTransportation.Monitoring
             _nodes[node.NodeName][subject] = node.Id;
         }
 
+        public IEnumerable<Uri> OwnedSubjects(TransportNode node)
+        {
+            return _nodes[node.NodeName].Owners().Where(x => x.Owner == node.Id)
+                .Select(x => x.Id);
+        }
+
         public class NodeTaskOwner
         {
             private readonly Cache<Uri, string> _ownership = new Cache<Uri, string>();
