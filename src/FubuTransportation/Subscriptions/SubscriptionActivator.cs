@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
+using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Subscriptions
@@ -15,20 +16,24 @@ namespace FubuTransportation.Subscriptions
         private readonly IEnvelopeSender _sender;
         private readonly ISubscriptionCache _cache;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
+        private readonly ChannelGraph _graph;
 
-        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements)
+        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements, ChannelGraph graph)
         {
             _repository = repository;
             _sender = sender;
             _cache = cache;
             _requirements = requirements;
+            _graph = graph;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
             log.Trace("Determining subscriptions for node " + _cache.NodeName);
 
-            _repository.SaveTransportNode();
+            // assuming that there are no automaticly persistent tasks
+            // upon startup
+            _repository.Persist(new TransportNode(_graph));
 
             var requirements = determineStaticRequirements(log);
 

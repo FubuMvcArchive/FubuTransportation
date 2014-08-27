@@ -349,6 +349,7 @@
     <Compile Include="Logging\EventAggregationListenerTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitoring\PersistentTaskAgentTester.cs" />
     <Compile Include="Monitoring\RiggedServiceBus.cs" />
     <Compile Include="Monitoring\TransportPeerTester.cs" />
     <Compile Include="ObjectMother.cs">

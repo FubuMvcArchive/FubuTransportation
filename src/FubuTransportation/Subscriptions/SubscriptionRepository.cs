@@ -42,7 +42,7 @@ namespace FubuTransportation.Subscriptions
 
         public void Persist(TransportNode node)
         {
-            throw new NotImplementedException();
+            _persistence.Persist(node);
         }
 
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
@@ -53,15 +53,6 @@ namespace FubuTransportation.Subscriptions
         public IEnumerable<TransportNode> FindPeers()
         {
             return _persistence.NodesForGroup(_graph.Name);
-        }
-
-        public void SaveTransportNode()
-        {
-            var node = new TransportNode(_graph);
-            if (!FindPeers().Contains(node))
-            {
-                _persistence.Persist(node);
-            }
         }
     }
 }

@@ -7,7 +7,6 @@ namespace FubuTransportation.Subscriptions
         void PersistSubscriptions(params Subscription[] requirements);
         IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role);
         IEnumerable<TransportNode> FindPeers();
-        void SaveTransportNode();
         void PersistPublishing(params Subscription[] subscriptions);
 
         void Persist(TransportNode node);
