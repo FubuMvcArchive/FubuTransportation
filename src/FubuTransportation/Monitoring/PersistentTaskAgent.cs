@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FubuTransportation.Monitoring
 {
-    // TODO -- add a ton of logging here?
+    // Error handling and logging is handled in PersistentTaskController
     public class PersistentTaskAgent : IDisposable
     {
         private readonly IPersistentTask _task;
@@ -24,9 +24,9 @@ namespace FubuTransportation.Monitoring
             _background = Task.Factory.StartNew(performActions, _cancellation.Token, TaskCreationOptions.LongRunning);
         }
 
-        public IPersistentTask PersistentTask
+        public Uri Subject
         {
-            get { return _task; }
+            get { return _task.Subject; }
         }
 
         public Task AssertAvailable()
@@ -39,27 +39,39 @@ namespace FubuTransportation.Monitoring
             return Enqueue(t => t.Activate());
         }
 
-        // TODO -- don't allow failures to bubble out
         public Task Deactivate()
         {
             return Enqueue(t => t.Deactivate());
         }
 
-        public bool IsActive()
+        public bool IsActive
         {
-            return _task.IsActive;
+            get { return _task.IsActive; }
         }
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {
-            return Enqueue(t => t.AssignOwner(peers));
+            var task = new TaskCompletionSource<ITransportPeer>();
+
+            Enqueue(persistentTask => persistentTask.SelectOwner(peers).ContinueWith(t => {
+                if (t.IsFaulted)
+                {
+                    task.SetException(t.Exception);
+                }
+                else
+                {
+                    task.SetResult(t.Result);
+                }
+            })
+                );
+
+            return task.Task;
         }
 
         public Task Enqueue(Action<IPersistentTask> action)
         {
             var completion = new TaskCompletionSource<object>();
-            _actions.Add(t =>
-            {
+            _actions.Add(t => {
                 try
                 {
                     action(t);
@@ -77,8 +89,7 @@ namespace FubuTransportation.Monitoring
         public Task<T> Enqueue<T>(Func<IPersistentTask, T> source)
         {
             var completion = new TaskCompletionSource<T>();
-            _actions.Add(t =>
-            {
+            _actions.Add(t => {
                 try
                 {
                     completion.SetResult(source(t));

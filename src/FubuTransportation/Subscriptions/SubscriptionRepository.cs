@@ -45,6 +45,11 @@ namespace FubuTransportation.Subscriptions
             _persistence.Persist(nodes);
         }
 
+        public TransportNode FindLocal()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

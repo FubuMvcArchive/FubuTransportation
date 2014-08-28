@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Util;
 using FubuTransportation.Monitoring;
@@ -97,7 +98,7 @@ namespace FubuTransportation.Testing.Monitoring
             get; set;
         }
 
-        public ITransportPeer AssignOwner(IEnumerable<ITransportPeer> peers)
+        public Task<ITransportPeer> SelectOwner(IEnumerable<ITransportPeer> peers)
         {
             throw new NotImplementedException();
         }

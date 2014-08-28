@@ -6,6 +6,8 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
+
+    // TODO -- add quite a bit of logging throughout this thing
     public class TransportPeer : ITransportPeer
     {
         private readonly TransportNode _node;
@@ -44,6 +46,7 @@ namespace FubuTransportation.Monitoring
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
+            throw new NotImplementedException("Not tested");
             var request = new TaskHealthRequest
             {
                 Subjects = CurrentlyOwnedSubjects().ToArray()

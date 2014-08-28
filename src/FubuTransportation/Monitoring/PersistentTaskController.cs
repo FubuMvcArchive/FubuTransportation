@@ -5,19 +5,23 @@ using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
-using FubuTransportation.Runtime.Invocation;
-using FubuTransportation.Subscriptions;
+using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Monitoring
 {
-    // Need to or queue up requests by subject? ReaderWriterLock by subject?
-    // Use an agent for each subject that uses a producer/consumer task
-    public class PersistentTaskController
+    public interface IPersistentTasks
     {
+        IPersistentTask FindTask(Uri subject);
+    }
+
+    public class PersistentTaskController : ITransportPeer, IPersistentTasks
+    {
+        private readonly ChannelGraph _graph;
         private readonly ILogger _logger;
         private readonly ITransportPeerRepository _repository;
-        private readonly ConcurrentCache<string, IPersistentTaskSource> _sources 
-            = new ConcurrentCache<string, IPersistentTaskSource>(); 
+
+        private readonly ConcurrentCache<string, IPersistentTaskSource> _sources
+            = new ConcurrentCache<string, IPersistentTaskSource>();
 
         private readonly ConcurrentCache<Uri, PersistentTaskAgent> _agents =
             new ConcurrentCache<Uri, PersistentTaskAgent>();
@@ -26,8 +30,10 @@ namespace FubuTransportation.Monitoring
         private readonly Uri[] _permanentTasks;
 
 
-        public PersistentTaskController(ILogger logger, ITransportPeerRepository repository, IEnumerable<IPersistentTaskSource> sources)
+        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerRepository repository,
+            IEnumerable<IPersistentTaskSource> sources)
         {
+            _graph = graph;
             _logger = logger;
             _repository = repository;
             sources.Each(x => _sources[x.Protocol] = x);
@@ -51,13 +57,20 @@ namespace FubuTransportation.Monitoring
                 return HealthStatus.Unknown.ToCompletionTask();
             }
 
-            if (agent.IsActive())
+            return checkStatus(agent);
+        }
+
+        private Task<HealthStatus> checkStatus(PersistentTaskAgent agent)
+        {
+            if (agent.IsActive)
             {
-                return agent.AssertAvailable().ContinueWith(t =>
-                {
+                // TODO -- need to do a timeout here
+                return agent.AssertAvailable().ContinueWith(t => {
                     if (t.IsFaulted)
                     {
-                        // TODO -- log
+                        _logger.Error(agent.Subject, "Availability test failed for " + agent.Subject, t.Exception);
+                        _logger.InfoMessage(() => new TaskAvailabilityFailed(agent.Subject));
+
                         return HealthStatus.Error;
                     }
 
@@ -66,10 +79,6 @@ namespace FubuTransportation.Monitoring
             }
 
             return HealthStatus.Inactive.ToCompletionTask();
-
-            // active, inactive, error, unknown
-
-            throw new NotImplementedException();
         }
 
 
@@ -81,7 +90,6 @@ namespace FubuTransportation.Monitoring
             if (source == null) return null;
 
             return source.CreateTask(subject);
-
         }
 
         public Task StopTask(Uri subject)
@@ -127,11 +135,32 @@ namespace FubuTransportation.Monitoring
 
             var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
             _repository.RecordOwnershipToThisNode(newSubjects);
-            
         }
 
-        public void EnsureTasksHaveOwnership()
+
+        public Task EnsureTasksHaveOwnership()
         {
+            /* STEP 1, categorize into:
+             * 1.) Tasks that I own and are active on me
+             * 2.) Tasks that are active on me but supposedly owned elsewhere
+             * 3.) Tasks that are owned elsewhere
+             * 4.) Tasks with no owner
+             * 5.) Unknown tasks
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             */
+            var ownedTasks = _agents
+                .Where(x => x.IsActive)
+                .Select(checkStatus);
+
+
+            // YAGNI alert -- at this point, I'm only considering *permanent* tasks
+
+            var owners = _repository.AllOwners();
 
 
             // check the health of all owned tasks
@@ -149,9 +178,27 @@ namespace FubuTransportation.Monitoring
 
 
             throw new NotImplementedException();
-            
         }
 
+        // TODO -- need the peer for *this*
+        public Task AssignOwnership(Uri subject, IEnumerable<ITransportPeer> peers)
+        {
+            throw new NotImplementedException();
+            var agent = _agents[subject];
+            if (agent == null)
+                throw new ArgumentOutOfRangeException("subject", "Subject {0} is unknown".ToFormat(subject));
+
+            return agent.AssignOwner(peers);
+        }
+
+        private IEnumerable<ITransportPeer> allPeers()
+        {
+            yield return this;
+            foreach (var peer in _repository.AllPeers())
+            {
+                yield return peer;
+            }
+        } 
 
         public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
@@ -160,12 +207,13 @@ namespace FubuTransportation.Monitoring
             {
                 return OwnershipStatus.UnknownSubject.ToCompletionTask();
             }
-            if (agent.IsActive())
+
+            if (agent.IsActive)
             {
                 return OwnershipStatus.AlreadyOwned.ToCompletionTask();
             }
-            
-            
+
+
             return agent.Activate().ContinueWith(t => {
                 if (t.IsFaulted)
                 {
@@ -181,6 +229,30 @@ namespace FubuTransportation.Monitoring
             });
         }
 
+        Task<TaskHealthResponse> ITransportPeer.CheckStatusOfOwnedTasks()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<Uri> ITransportPeer.CurrentlyOwnedSubjects()
+        {
+            throw new NotImplementedException();
+        }
+
+        string ITransportPeer.NodeId
+        {
+            get { return _graph.NodeId; }
+        }
+
+        string ITransportPeer.MachineName
+        {
+            get { return Environment.MachineName; }
+        }
+
+        IEnumerable<Uri> ITransportPeer.ReplyAddresses
+        {
+            get { return _graph.ReplyUriList(); }
+        }
 
 
         /*
@@ -190,4 +262,6 @@ namespace FubuTransportation.Monitoring
          * 
          */
     }
+
+
 }

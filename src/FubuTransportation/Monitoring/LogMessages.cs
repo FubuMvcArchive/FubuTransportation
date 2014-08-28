@@ -2,6 +2,7 @@
 using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
+using FubuTransportation.ErrorHandling;
 
 namespace FubuTransportation.Monitoring
 {
@@ -112,6 +113,23 @@ namespace FubuTransportation.Monitoring
         }
 
         public FailedToStopTask()
+        {
+        }
+    }
+
+    public class TaskAvailabilityFailed : PersistentTaskMessage
+    {
+
+        public TaskAvailabilityFailed(Uri subject) : base(subject)
+        {
+
+        }
+
+        public string ExceptionText { get; set; }
+
+        public string ExceptionType { get; set; }
+
+        public TaskAvailabilityFailed()
         {
         }
     }
