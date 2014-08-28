@@ -60,8 +60,8 @@ namespace FubuTransportation.Testing.Monitoring
 
             var peer = MockFor<ITransportPeer>();
 
-            MockFor<IPersistentTask>().Stub(x => x.AssignOwner(peers))
-                .Return(peer);
+            MockFor<IPersistentTask>().Stub(x => x.SelectOwner(peers))
+                .Return(peer.ToCompletionTask());
 
             var task = ClassUnderTest.AssignOwner(peers);
             task.Wait();

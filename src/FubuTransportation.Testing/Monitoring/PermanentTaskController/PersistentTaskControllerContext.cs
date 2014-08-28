@@ -5,6 +5,7 @@ using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTestingSupport;
+using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Subscriptions;
@@ -26,6 +27,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             new Cache<string, FakePersistentTaskSource>(protocol => new FakePersistentTaskSource(protocol));
 
         protected TransportNode theCurrentNode;
+        protected ChannelGraph theGraph;
 
         [SetUp]
         public void SetUp()
@@ -38,10 +40,14 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             peers.ClearAll();
             sources.ClearAll();
 
+            theGraph = new ChannelGraph
+            {
+                NodeId = "Test@Local"
+            };
             theLogger = new RecordingLogger();
 
             _controller = new Lazy<PersistentTaskController>(() => {
-                return new PersistentTaskController(theLogger, this, sources);
+                return new PersistentTaskController(theGraph, theLogger, this, sources);
             });
 
             theContextIs();

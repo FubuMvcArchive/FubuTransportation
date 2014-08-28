@@ -2,6 +2,7 @@
 
 namespace FubuTransportation.Subscriptions
 {
+    // TODO -- rename to ITransportNodeRepository
     public interface ISubscriptionRepository
     {
         void PersistSubscriptions(params Subscription[] requirements);
@@ -10,5 +11,7 @@ namespace FubuTransportation.Subscriptions
         void PersistPublishing(params Subscription[] subscriptions);
 
         void Persist(params TransportNode[] nodes);
+
+        TransportNode FindLocal();
     }
 }

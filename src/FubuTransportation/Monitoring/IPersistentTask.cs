@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FubuTransportation.Monitoring
 {
@@ -11,6 +12,6 @@ namespace FubuTransportation.Monitoring
         void Deactivate();
         bool IsActive { get; }
 
-        ITransportPeer AssignOwner(IEnumerable<ITransportPeer> peers);
+        Task<ITransportPeer> SelectOwner(IEnumerable<ITransportPeer> peers);
     }
 }
