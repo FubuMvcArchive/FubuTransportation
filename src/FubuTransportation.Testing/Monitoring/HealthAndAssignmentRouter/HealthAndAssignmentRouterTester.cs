@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
@@ -40,7 +41,7 @@ namespace FubuTransportation.Testing.Monitoring.HealthAndAssignmentRouter
 
             theTasks = new FakePersistentTasks();
             peers = new FakeTransportPeer[] {peer1, peer2, peer3, peer4};
-            theRouter = new FubuTransportation.Monitoring.HealthAndAssignmentRouter(theTasks, peers);
+            theRouter = new FubuTransportation.Monitoring.HealthAndAssignmentRouter(new RecordingLogger(), theTasks, peers);
         }
 
         public void assertPeerAssignments()

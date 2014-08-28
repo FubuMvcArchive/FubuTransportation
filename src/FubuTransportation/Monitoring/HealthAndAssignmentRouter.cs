@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore.Logging;
 
 namespace FubuTransportation.Monitoring
 {
     public class HealthAndAssignmentRouter : IDisposable
     {
+        private readonly ILogger _logger;
         private readonly IPersistentTasks _tasks;
         private readonly IEnumerable<ITransportPeer> _peers;
 
-        public HealthAndAssignmentRouter(IPersistentTasks tasks, IEnumerable<ITransportPeer> peers)
+        public HealthAndAssignmentRouter(ILogger logger, IPersistentTasks tasks, IEnumerable<ITransportPeer> peers)
         {
+            _logger = logger;
             _tasks = tasks;
             _peers = peers;
         }
@@ -35,7 +38,7 @@ namespace FubuTransportation.Monitoring
         {
             if (status.Status == HealthStatus.Active) return;
 
-            // TODO -- log
+            _logger.InfoMessage(() => new ReassigningTask(status.Subject, status.Status));
 
             Reassign(status.Subject);
         }
@@ -46,7 +49,7 @@ namespace FubuTransportation.Monitoring
             var agent = _tasks.FindAgent(subject);
             if (agent == null)
             {
-                // TODO -- do something here. Log obviously
+                _logger.InfoMessage(() => new UnknownTask(subject, "Trying to reassign a persistent task"));
 
                 return Task.Factory.StartNew(() => { });
             }
@@ -54,6 +57,7 @@ namespace FubuTransportation.Monitoring
             var existing = _peers.FirstOrDefault(x => x.CurrentlyOwnedSubjects().Contains(subject));
             if (existing != null)
             {
+                _logger.Debug(() => "Attempting to deactivate persistent task " + subject);
                 existing.Deactivate(subject);
             }
 
@@ -62,12 +66,10 @@ namespace FubuTransportation.Monitoring
 
         public Task StartAssignment(Uri subject)
         {
-            // TODO --log here
-
             var agent = _tasks.FindAgent(subject);
             if (agent == null)
             {
-                // TODO -- do something here. Log obviously
+                _logger.InfoMessage(() => new UnknownTask(subject, "Trying to assign the task owner"));
 
                 return Task.Factory.StartNew(() => { });
             }
@@ -78,11 +80,6 @@ namespace FubuTransportation.Monitoring
                 existing.Deactivate(subject);
             }
 
-
-            // TODO -- assumes that the agent itself activates
-            // the task
-
-            // TODO --log  stuff
             return agent.AssignOwner(_peers);
         }
 
