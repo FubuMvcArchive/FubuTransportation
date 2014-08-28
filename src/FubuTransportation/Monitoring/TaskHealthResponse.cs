@@ -2,6 +2,6 @@
 {
     public class TaskHealthResponse
     {
-        public TaskStatus[] Tasks { get; set; }
+        public PersistentTaskStatus[] Tasks { get; set; }
     }
 }

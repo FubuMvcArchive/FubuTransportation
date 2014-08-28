@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Util;
 using FubuTransportation.Monitoring;
-using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Monitoring
 {
     public class FakePersistentTaskSource : IPersistentTaskSource
     {
-        private readonly Cache<string, FakePersistentTask> _tasks 
-            = new Cache<string, FakePersistentTask>(); 
+        private readonly Cache<string, FakePersistentTask> _tasks
+            = new Cache<string, FakePersistentTask>();
 
         public FakePersistentTaskSource(string protocol)
         {
@@ -21,18 +20,16 @@ namespace FubuTransportation.Testing.Monitoring
             _tasks.OnMissing = name => {
                 var uri = "{0}://{1}".ToFormat(Protocol, name).ToUri();
                 return new FakePersistentTask(uri);
-            }; 
+            };
         }
 
         public FakePersistentTask this[string name]
         {
-            get
-            {
-                return _tasks[name];
-            }
+            get { return _tasks[name]; }
         }
 
         public string Protocol { get; private set; }
+
         public IEnumerable<Uri> PermanentTasks()
         {
             return _tasks.Select(x => x.Subject);
@@ -43,7 +40,6 @@ namespace FubuTransportation.Testing.Monitoring
             var name = uri.Host;
 
             return _tasks.Has(name) ? _tasks[name] : null;
-
         }
 
         public FakePersistentTask AddTask(string key)
@@ -69,12 +65,11 @@ namespace FubuTransportation.Testing.Monitoring
         }
 
         public Uri Subject { get; private set; }
+
         public void AssertAvailable()
         {
             Thread.Sleep(10);
             if (AssertAvailableException != null) throw AssertAvailableException;
-        
-        
         }
 
         public void Activate()
@@ -93,13 +88,11 @@ namespace FubuTransportation.Testing.Monitoring
             IsActive = false;
         }
 
-        public bool IsActive
-        {
-            get; set;
-        }
+        public bool IsActive { get; set; }
 
         public Task<ITransportPeer> SelectOwner(IEnumerable<ITransportPeer> peers)
         {
+            // TODO -- need to make this thing be attached to a parent
             throw new NotImplementedException();
         }
 

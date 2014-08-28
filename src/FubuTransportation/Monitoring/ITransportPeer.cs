@@ -7,12 +7,15 @@ namespace FubuTransportation.Monitoring
     public interface ITransportPeer
     {
         Task<OwnershipStatus> TakeOwnership(Uri subject);
+
+        // TODO -- go to async/await?
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
 
         IEnumerable<Uri> CurrentlyOwnedSubjects();
 
         string NodeId { get; }
         string MachineName { get; }
-        IEnumerable<Uri> ReplyAddresses { get; }
+        Uri ControlChannel { get; }
+        Task Deactivate(Uri subject);
     }
 }

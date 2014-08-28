@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 namespace FubuTransportation.Monitoring
 {
     // Error handling and logging is handled in PersistentTaskController
-    public class PersistentTaskAgent : IDisposable
+    public interface IPersistentTaskAgent
+    {
+        Uri Subject { get; }
+        Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers);
+    }
+
+    public class PersistentTaskAgent : IDisposable, IPersistentTaskAgent
     {
         private readonly IPersistentTask _task;
 
@@ -49,23 +55,10 @@ namespace FubuTransportation.Monitoring
             get { return _task.IsActive; }
         }
 
+        // TODO -- HAS TO, HAS TO, HAS TO BE A CHILD TASK
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {
-            var task = new TaskCompletionSource<ITransportPeer>();
-
-            Enqueue(persistentTask => persistentTask.SelectOwner(peers).ContinueWith(t => {
-                if (t.IsFaulted)
-                {
-                    task.SetException(t.Exception);
-                }
-                else
-                {
-                    task.SetResult(t.Result);
-                }
-            })
-                );
-
-            return task.Task;
+            return _task.SelectOwner(peers);
         }
 
         public Task Enqueue(Action<IPersistentTask> action)

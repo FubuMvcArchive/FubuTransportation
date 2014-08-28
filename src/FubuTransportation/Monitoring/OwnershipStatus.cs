@@ -5,6 +5,7 @@
         OwnershipActivated,
         Exception,
         AlreadyOwned,
-        UnknownSubject
+        UnknownSubject,
+        TimedOut
     }
 }

@@ -46,6 +46,10 @@ namespace FubuTransportation.Monitoring
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
+            // TODO -- ERRORS DO NOT COME OUT OF HERE AT ALL
+            // TODO -- need to timeout
+            // TODO -- if it times out or faults, return
+            // a status saying that it's all bad
             throw new NotImplementedException("Not tested");
             var request = new TaskHealthRequest
             {
@@ -81,12 +85,10 @@ namespace FubuTransportation.Monitoring
             }
         }
 
-        public IEnumerable<Uri> ReplyAddresses
+        public Uri ControlChannel { get; private set; }
+        public Task Deactivate(Uri subject)
         {
-            get
-            {
-                return _node.Addresses;
-            }
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@
         Active,
         Unknown,
         Error,
-        Inactive
+        Inactive,
+        Timedout
     }
 }
