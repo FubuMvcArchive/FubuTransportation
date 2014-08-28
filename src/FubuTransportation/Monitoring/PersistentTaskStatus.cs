@@ -2,7 +2,7 @@
 
 namespace FubuTransportation.Monitoring
 {
-    public class TaskStatus
+    public class PersistentTaskStatus
     {
         public Uri Subject { get; set; }
         public HealthStatus Status { get; set; }

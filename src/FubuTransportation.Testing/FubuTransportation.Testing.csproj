@@ -350,6 +350,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitoring\FakePersistentTasks.cs" />
+    <Compile Include="Monitoring\HealthAndAssignmentRouter\FakeTransportPeer.cs" />
+    <Compile Include="Monitoring\HealthAndAssignmentRouter\HealthAndAssignmentRouterTester.cs" />
     <Compile Include="Monitoring\PermanentTaskController\TakeOwnership_specs.cs" />
     <Compile Include="Monitoring\PermanentTaskController\when_activating_all_tasks.cs" />
     <Compile Include="Monitoring\PermanentTaskController\when_checking_status.cs" />

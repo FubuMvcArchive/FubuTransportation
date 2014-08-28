@@ -174,7 +174,7 @@
     <Compile Include="Monitoring\TakeOwnershipResponse.cs" />
     <Compile Include="Monitoring\TaskHealthResponse.cs" />
     <Compile Include="Monitoring\TaskOwner.cs" />
-    <Compile Include="Monitoring\TaskStatus.cs" />
+    <Compile Include="Monitoring\PersistentTaskStatus.cs" />
     <Compile Include="Monitoring\TransportPeer.cs" />
     <Compile Include="Monitoring\TransportPeerRepository.cs" />
     <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />

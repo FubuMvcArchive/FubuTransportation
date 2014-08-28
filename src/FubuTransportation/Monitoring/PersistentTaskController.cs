@@ -12,6 +12,8 @@ namespace FubuTransportation.Monitoring
     public interface IPersistentTasks
     {
         IPersistentTask FindTask(Uri subject);
+        IPersistentTaskAgent FindAgent(Uri subject);
+        IEnumerable<Uri> PersistentSubjects { get; }
     }
 
     public class PersistentTaskController : ITransportPeer, IPersistentTasks
@@ -92,6 +94,16 @@ namespace FubuTransportation.Monitoring
             return source.CreateTask(subject);
         }
 
+        IPersistentTaskAgent IPersistentTasks.FindAgent(Uri subject)
+        {
+            return _agents[subject];
+        }
+
+        IEnumerable<Uri> IPersistentTasks.PersistentSubjects
+        {
+            get { return _permanentTasks; }
+        }
+
         public Task StopTask(Uri subject)
         {
             var agent = _agents[subject];
@@ -140,56 +152,12 @@ namespace FubuTransportation.Monitoring
 
         public Task EnsureTasksHaveOwnership()
         {
-            /* STEP 1, categorize into:
-             * 1.) Tasks that I own and are active on me
-             * 2.) Tasks that are active on me but supposedly owned elsewhere
-             * 3.) Tasks that are owned elsewhere
-             * 4.) Tasks with no owner
-             * 5.) Unknown tasks
-             * 
-             * 
-             * 
-             * 
-             * 
-             * 
-             */
-            var ownedTasks = _agents
-                .Where(x => x.IsActive)
-                .Select(checkStatus);
-
-
-            // YAGNI alert -- at this point, I'm only considering *permanent* tasks
-
-            var owners = _repository.AllOwners();
-
-
-            // check the health of all owned tasks
-
-            // hit all owners 
-
-            // need to check permanent tasks
-
-
-            // 1., check if there is an owner already
-            // 2., check if this node knows about the task
-            // 3., try to start
-            //    a.) If successful, log ownership
-            //    b.) If failed, send failure
-
-
-            throw new NotImplementedException();
+            using (var router = new HealthAndAssignmentRouter(this, allPeers().ToArray()))
+            {
+                return router.EnsureAllTasksAreAssignedAndRunning();
+            }
         }
 
-        // TODO -- need the peer for *this*
-        public Task AssignOwnership(Uri subject, IEnumerable<ITransportPeer> peers)
-        {
-            throw new NotImplementedException();
-            var agent = _agents[subject];
-            if (agent == null)
-                throw new ArgumentOutOfRangeException("subject", "Subject {0} is unknown".ToFormat(subject));
-
-            return agent.AssignOwner(peers);
-        }
 
         private IEnumerable<ITransportPeer> allPeers()
         {
@@ -231,6 +199,10 @@ namespace FubuTransportation.Monitoring
 
         Task<TaskHealthResponse> ITransportPeer.CheckStatusOfOwnedTasks()
         {
+            // MAke sure that it is keeping track of everything it supposedly
+            // owns
+            // TODO -- errors DO NOT COME OUT OF HERE
+            // Watch timeouts
             throw new NotImplementedException();
         }
 
@@ -249,18 +221,11 @@ namespace FubuTransportation.Monitoring
             get { return Environment.MachineName; }
         }
 
-        IEnumerable<Uri> ITransportPeer.ReplyAddresses
+        public Uri ControlChannel { get; private set; }
+        public Task Deactivate(Uri subject)
         {
-            get { return _graph.ReplyUriList(); }
+            throw new NotImplementedException();
         }
-
-
-        /*
-         * TODO
-         * 1.) start up everything, look for immediate tasks, if owned, check the owner.  If not owned, start the election
-         * 2.) Try to take ownership
-         * 
-         */
     }
 
 
