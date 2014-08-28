@@ -30,6 +30,11 @@ namespace FubuTransportation.Testing.Monitoring
 
         public string Protocol { get; private set; }
 
+        public IEnumerable<FakePersistentTask> FakeTasks()
+        {
+            return _tasks;
+        } 
+
         public IEnumerable<Uri> PermanentTasks()
         {
             return _tasks.Select(x => x.Subject);
@@ -106,6 +111,11 @@ namespace FubuTransportation.Testing.Monitoring
         {
             IsActive = true;
             AssertAvailableException = exception;
+        }
+
+        public void IsNotActive()
+        {
+            IsActive = false;
         }
     }
 }

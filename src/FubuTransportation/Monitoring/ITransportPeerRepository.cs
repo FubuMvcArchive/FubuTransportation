@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
@@ -10,5 +11,6 @@ namespace FubuTransportation.Monitoring
 
         void RecordOwnershipToThisNode(Uri subject);
         void RecordOwnershipToThisNode(IEnumerable<Uri> subjects);
+        TransportNode LocalNode();
     }
 }

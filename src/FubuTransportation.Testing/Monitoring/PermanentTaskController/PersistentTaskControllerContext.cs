@@ -47,7 +47,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theLogger = new RecordingLogger();
 
             _controller = new Lazy<PersistentTaskController>(() => {
-                return new PersistentTaskController(theGraph, theLogger, this, sources);
+                var controller = new PersistentTaskController(theGraph, theLogger, this, sources);
+
+                sources.SelectMany(x => x.FakeTasks()).Select(x => x.Subject)
+                    .Each(subject => controller.FindAgent(subject));
+
+                return controller;
             });
 
             theContextIs();
@@ -121,6 +126,11 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         void ITransportPeerRepository.RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
         {
             theCurrentNode.AddOwnership(subjects);
+        }
+
+        public TransportNode LocalNode()
+        {
+            return theCurrentNode;
         }
     }
 }
