@@ -46,5 +46,10 @@ namespace FubuTransportation.Monitoring
         {
             throw new NotImplementedException();
         }
+
+        public TransportNode LocalNode()
+        {
+            return _subscriptions.FindLocal();
+        }
     }
 }

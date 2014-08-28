@@ -63,11 +63,11 @@ namespace FubuTransportation.Monitoring
             return checkStatus(agent);
         }
 
+        // TODO -- make this thing time out!!!!!!!!!
         private Task<HealthStatus> checkStatus(PersistentTaskAgent agent)
         {
             if (agent.IsActive)
             {
-                // TODO -- need to do a timeout here
                 return agent.AssertAvailable().ContinueWith(t => {
                     if (t.IsFaulted)
                     {
@@ -95,7 +95,7 @@ namespace FubuTransportation.Monitoring
             return source.CreateTask(subject);
         }
 
-        IPersistentTaskAgent IPersistentTasks.FindAgent(Uri subject)
+        public IPersistentTaskAgent FindAgent(Uri subject)
         {
             return _agents[subject];
         }
@@ -198,18 +198,23 @@ namespace FubuTransportation.Monitoring
             });
         }
 
-        Task<TaskHealthResponse> ITransportPeer.CheckStatusOfOwnedTasks()
+        public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
-            // MAke sure that it is keeping track of everything it supposedly
-            // owns
-            // TODO -- errors DO NOT COME OUT OF HERE
-            // Watch timeouts
-            throw new NotImplementedException();
+            var checks = CurrentlyOwnedSubjects()
+                .Select(subject => CheckStatus(subject).ContinueWith(t => new PersistentTaskStatus(subject, t.Result)))
+                .ToArray();
+
+            return Task.Factory.ContinueWhenAll(checks, tasks => new TaskHealthResponse
+            {
+                Tasks = tasks.Select(x => x.Result).ToArray()
+            });
         }
 
-        IEnumerable<Uri> ITransportPeer.CurrentlyOwnedSubjects()
+        public IEnumerable<Uri> CurrentlyOwnedSubjects()
         {
-            throw new NotImplementedException();
+            var activeTasks = _agents.Where(x => x.IsActive).Select(x => x.Subject);
+            return
+                _repository.LocalNode().OwnedTasks.Union(activeTasks).ToArray();
         }
 
         string ITransportPeer.NodeId
