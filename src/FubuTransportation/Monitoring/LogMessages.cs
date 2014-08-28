@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Contexts;
 using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Configuration;
@@ -133,4 +134,47 @@ namespace FubuTransportation.Monitoring
         {
         }
     }
+
+    public class ReassigningTask : PersistentTaskMessage
+    {
+        public ReassigningTask(Uri subject, HealthStatus status) : base(subject)
+        {
+            Status = status;
+        }
+
+        public HealthStatus Status { get; set; }
+
+        public ReassigningTask()
+        {
+        }
+    }
+
+    public class UnknownTask : PersistentTaskMessage
+    {
+        public UnknownTask(Uri subject, string context) : base(subject)
+        {
+            Context = context;
+        }
+
+        public string Context { get; set; }
+
+        public UnknownTask()
+        {
+        }
+    }
+
+    public class TaskAssignment : PersistentTaskMessage
+    {
+        public string AssignedTo { get; set; }
+
+        public TaskAssignment(Uri subject, string assignedTo) : base(subject)
+        {
+            AssignedTo = assignedTo;
+        }
+
+        public TaskAssignment()
+        {
+        }
+    }
+
 }

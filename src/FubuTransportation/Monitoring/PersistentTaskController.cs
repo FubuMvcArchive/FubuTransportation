@@ -14,6 +14,7 @@ namespace FubuTransportation.Monitoring
         IPersistentTask FindTask(Uri subject);
         IPersistentTaskAgent FindAgent(Uri subject);
         IEnumerable<Uri> PersistentSubjects { get; }
+
     }
 
     public class PersistentTaskController : ITransportPeer, IPersistentTasks
@@ -152,7 +153,7 @@ namespace FubuTransportation.Monitoring
 
         public Task EnsureTasksHaveOwnership()
         {
-            using (var router = new HealthAndAssignmentRouter(this, allPeers().ToArray()))
+            using (var router = new HealthAndAssignmentRouter(_logger,this, allPeers().ToArray()))
             {
                 return router.EnsureAllTasksAreAssignedAndRunning();
             }
