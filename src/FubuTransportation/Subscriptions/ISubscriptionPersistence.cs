@@ -13,5 +13,6 @@ namespace FubuTransportation.Subscriptions
 
         IEnumerable<TransportNode> AllNodes();
         IEnumerable<Subscription> AllSubscriptions();
+        TransportNode LoadNode(string nodeId);
     }
 }

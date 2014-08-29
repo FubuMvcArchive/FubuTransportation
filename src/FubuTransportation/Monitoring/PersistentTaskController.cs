@@ -17,7 +17,17 @@ namespace FubuTransportation.Monitoring
 
     }
 
-    public class PersistentTaskController : ITransportPeer, IPersistentTasks
+    public interface IPersistentTaskController
+    {
+        Task<HealthStatus> CheckStatus(Uri subject);
+        Task Deactivate(Uri subject);
+        void ActivateAllTasks();
+        Task EnsureTasksHaveOwnership();
+        Task<OwnershipStatus> TakeOwnership(Uri subject);
+        Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
+    }
+
+    public class PersistentTaskController : ITransportPeer, IPersistentTasks, IPersistentTaskController
     {
         private readonly ChannelGraph _graph;
         private readonly ILogger _logger;

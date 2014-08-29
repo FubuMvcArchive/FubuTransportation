@@ -59,5 +59,10 @@ namespace FubuTransportation.Subscriptions
         {
             return _subscriptions.ToArray();
         }
+
+        public TransportNode LoadNode(string nodeId)
+        {
+            return _nodes.FirstOrDefault(x => x.Id == nodeId);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FubuTransportation.Subscriptions
 {
@@ -13,5 +14,6 @@ namespace FubuTransportation.Subscriptions
         void Persist(params TransportNode[] nodes);
 
         TransportNode FindLocal();
+        TransportNode FindPeer(string nodeId);
     }
 }

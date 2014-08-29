@@ -75,5 +75,10 @@ namespace FubuTransportation.RavenDb
                     .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite()).ToArray();
             }
         }
+
+        public TransportNode LoadNode(string nodeId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

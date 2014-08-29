@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Logging;
 using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
     public class TransportPeerRepository : ITransportPeerRepository
     {
+        private readonly ILogger _logger;
         private readonly IServiceBus _serviceBus;
         private readonly ISubscriptionRepository _subscriptions;
 
-        public TransportPeerRepository(IServiceBus serviceBus, ISubscriptionRepository subscriptions)
+        public TransportPeerRepository(ILogger logger, IServiceBus serviceBus, ISubscriptionRepository subscriptions)
         {
+            _logger = logger;
             _serviceBus = serviceBus;
             _subscriptions = subscriptions;
         }
@@ -23,7 +26,7 @@ namespace FubuTransportation.Monitoring
 
         private TransportPeer toPeer(TransportNode node)
         {
-            return new TransportPeer(node, _subscriptions, _serviceBus);
+            return new TransportPeer(node, _subscriptions, _serviceBus, _logger);
         }
 
         public IEnumerable<ITransportPeer> AllPeers()

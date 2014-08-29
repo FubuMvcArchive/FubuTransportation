@@ -50,6 +50,11 @@ namespace FubuTransportation.Subscriptions
             throw new NotImplementedException();
         }
 
+        public TransportNode FindPeer(string nodeId)
+        {
+            return _persistence.LoadNode(nodeId);
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

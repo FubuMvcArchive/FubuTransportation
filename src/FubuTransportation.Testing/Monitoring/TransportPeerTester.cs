@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Subscriptions;
@@ -170,20 +171,64 @@ namespace FubuTransportation.Testing.Monitoring
     }
 
     [TestFixture]
+    public class when_deactivating_successfully : TransportPeerContext
+    {
+        private readonly Uri theSubject = "foo://1".ToUri();
+
+        protected override void theContextIs()
+        {
+            theNode.AddOwnership(theSubject);
+
+            theServiceBus.ExpectMessage(new TaskDeactivation(theSubject))
+                .AtDestination(theNode.Addresses[0])
+                .Returns(new TaskDeactivationResponse
+                {
+                    Subject = theSubject,
+                    Success = true
+                });
+
+
+            thePeer.Deactivate(theSubject).Wait();
+        }
+
+        [Test]
+        public void should_send_the_deactivation_message_directly_to_the_correct_endpoint()
+        {
+           theServiceBus.AssertThatAllExpectedMessagesWereReceived();
+        }
+
+        [Test]
+        public void should_remove_the_ownership_from_the_node_and_persist()
+        {
+            theSubscriptions.AssertWasCalled(x => x.Persist(theNode));
+        }
+
+        [Test]
+        public void should_have_removed_the_ownership_from_the_node()
+        {
+            theNode.OwnedTasks.ShouldNotContain(theSubject);
+        }
+    }
+
+    [TestFixture]
     public abstract class TransportPeerContext
     {
         protected readonly TransportNode theNode = new TransportNode { Id = "node1", NodeName = "foo", Addresses = new []{"reply://1".ToUri()}};
         protected RiggedServiceBus theServiceBus;
         protected ISubscriptionRepository theSubscriptions;
         protected TransportPeer thePeer;
+        private RecordingLogger theLogger;
 
         [SetUp]
         public void SetUp()
         {
             theServiceBus = new RiggedServiceBus();
             theSubscriptions = MockRepository.GenerateMock<ISubscriptionRepository>();
+            theLogger = new RecordingLogger();
+            thePeer = new TransportPeer(theNode, theSubscriptions, theServiceBus, theLogger);
 
-            thePeer = new TransportPeer(theNode, theSubscriptions, theServiceBus);
+            theSubscriptions.Stub(x => x.FindPeer(theNode.Id))
+                .Return(theNode);
 
             theContextIs();
         }
