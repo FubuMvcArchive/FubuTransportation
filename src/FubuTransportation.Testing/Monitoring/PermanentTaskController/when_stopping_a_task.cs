@@ -47,6 +47,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         }
 
 
+        [Test]
+        public void the_ownership_was_removed_and_persisted()
+        {
+            theCurrentNode.OwnedTasks.ShouldNotContain("running://1".ToUri());
+            
+        }
     }
 
     [TestFixture]

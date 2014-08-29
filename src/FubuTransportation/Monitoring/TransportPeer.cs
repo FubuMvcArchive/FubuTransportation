@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
-using FubuCore.DependencyAnalysis;
 using FubuCore.Logging;
 using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
-
-    // TODO -- add quite a bit of logging throughout this thing
     public class TransportPeer : ITransportPeer
     {
         private readonly TransportNode _node;
@@ -34,38 +31,53 @@ namespace FubuTransportation.Monitoring
         public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
             return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
-                new RequestOptions {Destination = _node.Addresses.FirstOrDefault()})
+                new RequestOptions {Destination = ControlChannel})
                 .ContinueWith(t => {
-                    var ownershipStatus = t.Result.Status;
-
-                    if (ownershipStatus == OwnershipStatus.AlreadyOwned ||
-                        ownershipStatus == OwnershipStatus.OwnershipActivated)
+                    if (t.IsFaulted)
                     {
-                        _node.AddOwnership(subject);
-                        _subscriptions.Persist(_node);
+                        _logger.Error(subject, "Unable to send the TakeOwnership message to node " + _node.NodeName, t.Exception);
+                        return OwnershipStatus.Exception;
                     }
 
-                    return ownershipStatus;
+                    if (!t.IsCompleted)
+                    {
+                        return OwnershipStatus.TimedOut;
+                    }
+
+                    return t.Result.Status;
                 });
         }
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
-            // TODO -- ERRORS DO NOT COME OUT OF HERE AT ALL
-            // TODO -- need to timeout
-            // TODO -- if it times out or faults, return
-            // a status saying that it's all bad
-            // Needs to fill out with subjects that aren't coming from the node
-            throw new NotImplementedException("Not tested");
+            var subjects = CurrentlyOwnedSubjects().ToArray();
             var request = new TaskHealthRequest
             {
-                Subjects = CurrentlyOwnedSubjects().ToArray()
+                Subjects = subjects
             };
 
             return _serviceBus.Request<TaskHealthResponse>(request, new RequestOptions
             {
-                // TODO -- this is smelly. Introduce the idea of a "control" queue?
-                Destination = ControlChannel
+                Destination = ControlChannel,
+                Timeout = 1.Minutes()
+            }).ContinueWith(t => {
+                if (t.IsFaulted)
+                {
+                    _logger.Error(NodeId, "Could not retrieve persistent status checks", t.Exception);
+
+                    return TaskHealthResponse.ErrorFor(subjects);
+                }
+
+                if (t.IsCompleted)
+                {
+                    var response = t.Result;
+                    response.AddMissingSubjects(subjects);
+
+                    return response;
+                }
+
+                _logger.Info(() => "Persistent task health status timedout for node " + NodeId);
+                return TaskHealthResponse.ErrorFor(subjects);
             });
         }
 
@@ -111,16 +123,18 @@ namespace FubuTransportation.Monitoring
                 if (t.IsFaulted)
                 {
                     _logger.Error(subject, "Failed while trying to deactivate a remote task", t.Exception);
+
+                    // Need to force a reload here.
+                    var node = _subscriptions.FindPeer(NodeId);
+                    node.RemoveOwnership(subject);
+                    _subscriptions.Persist(node);
                 }
                 else
                 {
                     _logger.Info(() => "Successfully deactivated task {0} at node {1}".ToFormat(subject, NodeId));
                 }
 
-                // Need to force a reload here.
-                var node = _subscriptions.FindPeer(NodeId);
-                node.RemoveOwnership(subject);
-                _subscriptions.Persist(node);
+
             });
         }
     }

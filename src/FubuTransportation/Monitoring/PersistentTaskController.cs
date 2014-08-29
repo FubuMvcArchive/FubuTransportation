@@ -132,6 +132,7 @@ namespace FubuTransportation.Monitoring
                 }
                 else
                 {
+                    _repository.RemoveOwnershipFromThisNode(subject);
                     _logger.InfoMessage(() => new StoppedTask(subject));
                 }
             });

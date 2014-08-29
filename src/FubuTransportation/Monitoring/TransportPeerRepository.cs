@@ -54,5 +54,10 @@ namespace FubuTransportation.Monitoring
         {
             return _subscriptions.FindLocal();
         }
+
+        public void RemoveOwnershipFromThisNode(Uri subject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
