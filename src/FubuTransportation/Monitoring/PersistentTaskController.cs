@@ -105,7 +105,7 @@ namespace FubuTransportation.Monitoring
             get { return _permanentTasks; }
         }
 
-        public Task StopTask(Uri subject)
+        public Task Deactivate(Uri subject)
         {
             var agent = _agents[subject];
             if (agent == null)
@@ -227,11 +227,15 @@ namespace FubuTransportation.Monitoring
             get { return Environment.MachineName; }
         }
 
-        public Uri ControlChannel { get; private set; }
-        public Task Deactivate(Uri subject)
+        // TODO -- think this should be explicitly set later
+        public Uri ControlChannel
         {
-            throw new NotImplementedException();
+            get
+            {
+                return _graph.ReplyUriList().FirstOrDefault();
+            }
         }
+
     }
 
 

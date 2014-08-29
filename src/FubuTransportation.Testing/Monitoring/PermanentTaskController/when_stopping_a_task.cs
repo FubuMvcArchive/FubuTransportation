@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         public void returns_a_faulted_task()
         {
             Exception<AggregateException>.ShouldBeThrownBy(() => {
-                theController.StopTask("nonexistent://1".ToUri()).Wait();
+                theController.Deactivate("nonexistent://1".ToUri()).Wait();
             }).InnerException.ShouldBeOfType<ArgumentOutOfRangeException>()
             .Message.ShouldContain("Task 'nonexistent://1/' is not recognized by this node");
         }
@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         {
             Task("running://1").IsFullyFunctionalAndActive();
 
-            theTask = theController.StopTask("running://1".ToUri());
+            theTask = theController.Deactivate("running://1".ToUri());
             theTask.Wait();
         }
 
@@ -59,7 +59,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             Task("running://1").IsFullyFunctionalAndActive();
             Task("running://1").DeactivateException = new DivideByZeroException();
 
-            theTask = theController.StopTask("running://1".ToUri());
+            theTask = theController.Deactivate("running://1".ToUri());
             theTask.Wait();
         }
 
