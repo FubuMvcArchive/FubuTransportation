@@ -79,12 +79,22 @@ namespace FubuTransportation.RavenDb
 
         public TransportNode LoadNode(string nodeId)
         {
-            throw new System.NotImplementedException();
+            using (var session = _store.OpenSession())
+            {
+                return session.Load<TransportNode>(nodeId);
+            }
         }
 
         public void Alter(string id, Action<TransportNode> alteration)
         {
-            throw new NotImplementedException();
+            _transaction.Execute<IDocumentSession>(session => {
+                var node = session.Load<TransportNode>(id);
+                if (node != null)
+                {
+                    alteration(node);
+                    session.Store(node);
+                }
+            });
         }
     }
 }

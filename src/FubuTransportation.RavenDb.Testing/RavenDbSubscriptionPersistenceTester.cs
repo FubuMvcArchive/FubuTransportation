@@ -26,8 +26,6 @@ namespace FubuTransportation.RavenDb.Testing
             runtime = FubuTransport.DefaultPolicies().StructureMap().Bootstrap();
             runtime.Factory.Get<IContainer>().UseInMemoryDatastore();
 
-            Debug.WriteLine(runtime.Factory.Get<IContainer>().WhatDoIHave());
-
             persistence = runtime.Factory.Get<RavenDbSubscriptionPersistence>();
         }
 
@@ -93,6 +91,66 @@ namespace FubuTransportation.RavenDb.Testing
 
             persistence.NodesForGroup("Node2").Single()
                 .ShouldEqual(node2);
+        }
+
+        [Test]
+        public void load_a_specific_node()
+        {
+            var node1 = new TransportNode
+            {
+                Id = Guid.NewGuid().ToString(),
+                MachineName = "Box1",
+                NodeName = "Node1",
+                Addresses = new Uri[] { "memory://1".ToUri(), "memory://2".ToUri() }
+            };
+
+
+            var node2 = new TransportNode
+            {
+                Id = Guid.NewGuid().ToString(),
+                MachineName = "Box2",
+                NodeName = "Node2",
+                Addresses = new Uri[] { "memory://3".ToUri(), "memory://4".ToUri() }
+            };
+
+            persistence.Persist(node1, node2);
+
+            persistence.LoadNode(node2.Id)
+                .MachineName.ShouldEqual(node2.MachineName);
+
+            persistence.LoadNode(node1.Id)
+                .MachineName.ShouldEqual(node1.MachineName);
+        }
+
+        [Test]
+        public void alter_a_node()
+        {
+            var node1 = new TransportNode
+            {
+                Id = Guid.NewGuid().ToString(),
+                MachineName = "Box1",
+                NodeName = "Node1",
+                Addresses = new Uri[] { "memory://1".ToUri(), "memory://2".ToUri() }
+            };
+
+
+            var node2 = new TransportNode
+            {
+                Id = Guid.NewGuid().ToString(),
+                MachineName = "Box2",
+                NodeName = "Node2",
+                Addresses = new Uri[] { "memory://3".ToUri(), "memory://4".ToUri() }
+            };
+
+            var subject = "foo://1".ToUri();
+
+            persistence.Persist(node1, node2);
+
+
+            persistence.Alter(node1.Id, x => x.AddOwnership(subject));
+
+            persistence.LoadNode(node1.Id).OwnedTasks
+                .ShouldContain(subject);
         }
     }
 }
