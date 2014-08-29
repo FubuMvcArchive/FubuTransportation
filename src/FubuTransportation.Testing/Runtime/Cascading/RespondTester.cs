@@ -3,7 +3,6 @@ using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Cascading;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Runtime.Cascading

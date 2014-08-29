@@ -5,6 +5,7 @@ using Bottles.Diagnostics;
 using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
+using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Subscriptions;
@@ -96,7 +97,7 @@ namespace FubuTransportation.Testing
             });
 
             var subscriptions = new TransportActivator(graph, null, null,
-                new ITransport[] {new FubuTransportation.InMemory.InMemoryTransport()},
+                new ITransport[] {new InMemoryTransport()},
                 Enumerable.Empty<IFubuTransportActivator>());
 
 

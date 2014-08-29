@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using FubuTestingSupport;

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Subscriptions;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using StructureMap;
 

@@ -32,7 +32,6 @@ namespace FubuTransportation.Polling
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
                     log.MarkFailure(ex);
                 }
             });

@@ -41,22 +41,22 @@ namespace FubuTransportation.ScheduledJobs.Configuration
 
 
 
-            public ChannelExpression<TJob> ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
+            public ChannelExpression ScheduledBy<TScheduler>() where TScheduler : IScheduleRule, new()
             {
                 return ScheduledBy(new TScheduler());
             }
 
-            public ChannelExpression<TJob> ScheduledBy(IScheduleRule rule)
+            public ChannelExpression ScheduledBy(IScheduleRule rule)
             {
                 var job = new ScheduledJob<TJob>(rule);
 
                 _parent._scheduledJobs.JobTypes.Add(typeof(TJob));
                 _parent._parent.AlterSettings<ScheduledJobGraph>(x => x.Jobs.Add(job));
 
-                return new ChannelExpression<TJob>(job);
+                return new ChannelExpression(job);
             }
 
-            public class ChannelExpression<TJob> where TJob : IJob
+            public class ChannelExpression 
             {
                 private readonly ScheduledJob<TJob> _job;
 
@@ -65,13 +65,13 @@ namespace FubuTransportation.ScheduledJobs.Configuration
                     _job = job;
                 }
 
-                public ChannelExpression<TJob> Channel(Expression<Func<T, object>> channel)
+                public ChannelExpression Channel(Expression<Func<T, object>> channel)
                 {
                     _job.Channel = channel.ToAccessor();
                     return this;
                 }
 
-                public ChannelExpression<TJob> Timeout(TimeSpan timeout)
+                public ChannelExpression Timeout(TimeSpan timeout)
                 {
                     _job.Timeout = timeout;
                     return this;

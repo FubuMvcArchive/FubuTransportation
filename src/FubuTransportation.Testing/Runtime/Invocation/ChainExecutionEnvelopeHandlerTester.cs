@@ -6,7 +6,6 @@ using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
 

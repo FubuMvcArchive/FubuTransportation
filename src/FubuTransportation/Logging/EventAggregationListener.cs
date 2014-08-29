@@ -44,15 +44,12 @@ namespace FubuTransportation.Logging
 
         public void Error(string message, Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(message);
-            System.Diagnostics.Debug.WriteLine(ex);
+
         }
 
         public void Error(object correlationId, string message, Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(correlationId);
-            System.Diagnostics.Debug.WriteLine(message);
-            System.Diagnostics.Debug.WriteLine(ex);
+
         }
 
         public bool IsDebugEnabled { get { return _settings.DebugEnabled; } }

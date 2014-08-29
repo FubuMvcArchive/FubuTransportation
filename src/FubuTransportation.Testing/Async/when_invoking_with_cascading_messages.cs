@@ -4,8 +4,6 @@ using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTestingSupport;
 using FubuTransportation.Async;
-using FubuTransportation.Testing.Events;
-using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
 

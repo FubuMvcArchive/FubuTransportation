@@ -26,18 +26,4 @@ namespace DiagnosticsHarness
         }
     }
 
-    public static class TryThings
-    {
-        public static void Go()
-        {
-            using (var runtime = FubuApplication.BootstrapApplication<HarnessApplication>())
-            {
-                var graph = runtime.Factory.Get<BehaviorGraph>();
-
-                var chain = graph.Behaviors.FirstOrDefault(x => x.InputType() == typeof (NumberMessage));
-
-                Debug.WriteLine(chain);
-            }
-        }
-    }
 }

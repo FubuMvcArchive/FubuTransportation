@@ -2,7 +2,6 @@
 using System.Linq;
 using FubuCore;
 using FubuTestingSupport;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing

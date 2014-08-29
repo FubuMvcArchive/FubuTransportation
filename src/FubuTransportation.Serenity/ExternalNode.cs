@@ -95,7 +95,6 @@ namespace FubuTransportation.Serenity
             registry.EnableInMemoryTransport();
             TestNodes.Alterations.Each(x => x(registry));
 
-            Debug.WriteLine("Starting test node for {0} using registry {1}", _name, _registryType);
 
             var container = new Container(x =>
             {
@@ -110,8 +109,6 @@ namespace FubuTransportation.Serenity
             // Wireup the messaging session so the MessageHistory gets notified of messages on this node
             _messageListener = _runtime.Factory.Get<IMessagingSession>();
             Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(_messageListener);
-
-            Debug.WriteLine("Started test node with URI: {0}", Uri);
         }
     }
 }
