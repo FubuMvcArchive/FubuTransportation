@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FubuTransportation.Subscriptions
 {
@@ -14,5 +15,7 @@ namespace FubuTransportation.Subscriptions
         IEnumerable<TransportNode> AllNodes();
         IEnumerable<Subscription> AllSubscriptions();
         TransportNode LoadNode(string nodeId);
+
+        void Alter(string id, Action<TransportNode> alteration);
     }
 }

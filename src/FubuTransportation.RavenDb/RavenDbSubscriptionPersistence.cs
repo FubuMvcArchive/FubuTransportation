@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuPersistence;
 using FubuTransportation.Subscriptions;
@@ -79,6 +80,11 @@ namespace FubuTransportation.RavenDb
         public TransportNode LoadNode(string nodeId)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void Alter(string id, Action<TransportNode> alteration)
+        {
+            throw new NotImplementedException();
         }
     }
 }

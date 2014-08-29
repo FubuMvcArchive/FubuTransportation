@@ -47,7 +47,7 @@ namespace FubuTransportation.Subscriptions
 
         public TransportNode FindLocal()
         {
-            throw new NotImplementedException();
+            return _persistence.LoadNode(_graph.NodeId);
         }
 
         public TransportNode FindPeer(string nodeId)
@@ -55,24 +55,24 @@ namespace FubuTransportation.Subscriptions
             return _persistence.LoadNode(nodeId);
         }
 
-        public void RecordOwnershipToThisNode(Uri subject)
+        public void AddOwnershipToThisNode(Uri subject)
         {
-            throw new NotImplementedException();
+            _persistence.Alter(_graph.NodeId, node => node.AddOwnership(subject));
         }
 
-        public void RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
+        public void AddOwnershipToThisNode(IEnumerable<Uri> subjects)
         {
-            throw new NotImplementedException();
+            _persistence.Alter(_graph.NodeId, node => node.AddOwnership(subjects));
         }
 
         public void RemoveOwnershipFromThisNode(Uri subject)
         {
-            throw new NotImplementedException();
+            _persistence.Alter(_graph.NodeId, node => node.RemoveOwnership(subject));
         }
 
         public void RemoveOwnershipFromNode(string nodeId, Uri subject)
         {
-            throw new NotImplementedException();
+            _persistence.Alter(nodeId, node => node.RemoveOwnership(subject));
         }
 
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
