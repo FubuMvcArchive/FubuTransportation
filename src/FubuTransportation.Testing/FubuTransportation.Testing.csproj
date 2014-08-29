@@ -352,6 +352,7 @@
     <Compile Include="Monitoring\FakePersistentTasks.cs" />
     <Compile Include="Monitoring\HealthAndAssignmentRouter\FakeTransportPeer.cs" />
     <Compile Include="Monitoring\HealthAndAssignmentRouter\HealthAndAssignmentRouterTester.cs" />
+    <Compile Include="Monitoring\Monitoring_handlers_are_registered.cs" />
     <Compile Include="Monitoring\PermanentTaskController\CurrentlyOwnedSubjectsTester.cs" />
     <Compile Include="Monitoring\PermanentTaskController\TakeOwnership_specs.cs" />
     <Compile Include="Monitoring\PermanentTaskController\when_activating_all_tasks.cs" />

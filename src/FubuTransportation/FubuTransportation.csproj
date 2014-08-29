@@ -169,6 +169,7 @@
     <Compile Include="Monitoring\MonitoringControlHandler.cs" />
     <Compile Include="Monitoring\PersistentTaskController.cs" />
     <Compile Include="Monitoring\PersistentTaskAgent.cs" />
+    <Compile Include="Monitoring\TaskDeactivation.cs" />
     <Compile Include="Monitoring\TaskHealthRequest.cs" />
     <Compile Include="Monitoring\OwnershipStatus.cs" />
     <Compile Include="Monitoring\TakeOwnershipRequest.cs" />

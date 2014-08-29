@@ -93,7 +93,7 @@ namespace FubuTransportation.Testing.Monitoring.HealthAndAssignmentRouter
         public string NodeId { get; private set; }
         public string MachineName { get; private set; }
         public Uri ControlChannel { get; private set; }
-        public Task Deactivate(Uri subject)
+        public Task<bool> Deactivate(Uri subject)
         {
             OwnedSubjects.Remove(subject);
 

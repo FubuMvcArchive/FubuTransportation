@@ -4,6 +4,7 @@ using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
+using FubuTransportation.Monitoring;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Subscriptions;
@@ -21,6 +22,12 @@ namespace FubuTransportation
             // across HandlerSource problem.
             handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionRequested())));
             handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionsChanged())));
+
+
+
+            handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TakeOwnershipRequest())));
+            handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TaskHealthRequest())));
+            handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TaskDeactivation())));
             
             handlers.ApplyGeneralizedHandlers();
 

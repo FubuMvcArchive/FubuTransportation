@@ -111,7 +111,7 @@ namespace FubuTransportation.Monitoring
             }
         }
 
-        public Task Deactivate(Uri subject)
+        public Task<bool> Deactivate(Uri subject)
         {
             _logger.Info(() => "Requesting a deactivation of task {0} at node {1}".ToFormat(subject, NodeId));
 
@@ -128,10 +128,14 @@ namespace FubuTransportation.Monitoring
                     var node = _subscriptions.FindPeer(NodeId);
                     node.RemoveOwnership(subject);
                     _subscriptions.Persist(node);
+
+                    return false;
                 }
                 else
                 {
                     _logger.Info(() => "Successfully deactivated task {0} at node {1}".ToFormat(subject, NodeId));
+
+                    return true;
                 }
 
 
