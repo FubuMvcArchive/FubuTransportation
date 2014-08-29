@@ -55,6 +55,26 @@ namespace FubuTransportation.Subscriptions
             return _persistence.LoadNode(nodeId);
         }
 
+        public void RecordOwnershipToThisNode(Uri subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveOwnershipFromThisNode(Uri subject)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveOwnershipFromNode(string nodeId, Uri subject)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

@@ -11,7 +11,9 @@ namespace FubuTransportation.Monitoring
 
         void RecordOwnershipToThisNode(Uri subject);
         void RecordOwnershipToThisNode(IEnumerable<Uri> subjects);
-        TransportNode LocalNode();
         void RemoveOwnershipFromThisNode(Uri subject);
+
+        TransportNode LocalNode();
+        
     }
 }

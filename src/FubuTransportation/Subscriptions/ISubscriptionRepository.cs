@@ -15,5 +15,10 @@ namespace FubuTransportation.Subscriptions
 
         TransportNode FindLocal();
         TransportNode FindPeer(string nodeId);
+
+        void RecordOwnershipToThisNode(Uri subject);
+        void RecordOwnershipToThisNode(IEnumerable<Uri> subjects);
+        void RemoveOwnershipFromThisNode(Uri subject);
+        void RemoveOwnershipFromNode(string nodeId, Uri subject);
     }
 }
