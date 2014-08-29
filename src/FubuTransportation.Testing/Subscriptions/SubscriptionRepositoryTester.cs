@@ -160,5 +160,91 @@ namespace FubuTransportation.Testing.Subscriptions
             persistence.NodesForGroup(channelGraph.Name)
                 .Single().Id.ShouldEqual(id);
         }
+
+        [Test]
+        public void find_local()
+        {
+            var local = new TransportNode(channelGraph);
+
+            theRepository.Persist(local, new TransportNode{Id="Foo"}, new TransportNode{Id = "Bar"});
+
+            theRepository.FindLocal().ShouldBeTheSameAs(local);
+        }
+
+        [Test]
+        public void find_peer()
+        {
+            var local = new TransportNode(channelGraph);
+
+            var fooNode = new TransportNode { Id = "Foo" };
+            theRepository.Persist(local, fooNode, new TransportNode { Id = "Bar" });
+
+            theRepository.FindPeer("Foo")
+                .ShouldBeTheSameAs(fooNode);
+        }
+
+        [Test]
+        public void record_ownership_to_this_node_singular()
+        {
+            var local = new TransportNode(channelGraph);
+
+            var fooNode = new TransportNode { Id = "Foo" };
+            theRepository.Persist(local, fooNode, new TransportNode { Id = "Bar" });
+
+            var subject = "foo://1".ToUri();
+
+            theRepository.AddOwnershipToThisNode(subject);
+
+            local.OwnedTasks.ShouldContain(subject);
+        }
+
+        [Test]
+        public void record_multiple_ownerships_to_this_node()
+        {
+            var subjects = new Uri[] {"foo://1".ToUri(), "foo://2".ToUri(), "bar://1".ToUri()};
+
+            var local = new TransportNode(channelGraph);
+
+            var fooNode = new TransportNode { Id = "Foo" };
+            theRepository.Persist(local, fooNode, new TransportNode { Id = "Bar" });
+
+            theRepository.AddOwnershipToThisNode(subjects);
+
+            local.OwnedTasks.ShouldHaveTheSameElementsAs(subjects);
+        }
+
+        [Test]
+        public void remove_ownership_from_the_current_node()
+        {
+            var local = new TransportNode(channelGraph);
+
+            var fooNode = new TransportNode { Id = "Foo" };
+            theRepository.Persist(local, fooNode, new TransportNode { Id = "Bar" });
+
+            var subject = "foo://1".ToUri();
+            local.AddOwnership(subject);
+
+            theRepository.RemoveOwnershipFromThisNode(subject);
+
+            local.OwnedTasks.ShouldNotContain(subject);
+        }
+
+        [Test]
+        public void remove_ownership_from_a_different_node()
+        {
+            var subject = "foo://1".ToUri();
+            var local = new TransportNode(channelGraph);
+
+            var fooNode = new TransportNode { Id = "Foo" };
+            fooNode.AddOwnership(subject);
+
+            theRepository.Persist(local, fooNode, new TransportNode { Id = "Bar" });
+
+
+            theRepository.RemoveOwnershipFromNode(fooNode.Id, subject);
+
+            fooNode.OwnedTasks.ShouldNotContain(subject);
+
+        }
     }
 }

@@ -42,12 +42,12 @@ namespace FubuTransportation.Monitoring
 
         public void RecordOwnershipToThisNode(Uri subject)
         {
-            _subscriptions.RecordOwnershipToThisNode(subject);
+            _subscriptions.AddOwnershipToThisNode(subject);
         }
 
         public void RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
         {
-            _subscriptions.RecordOwnershipToThisNode(subjects);
+            _subscriptions.AddOwnershipToThisNode(subjects);
         }
 
         public TransportNode LocalNode()

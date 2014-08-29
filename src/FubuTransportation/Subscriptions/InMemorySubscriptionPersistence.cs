@@ -64,5 +64,11 @@ namespace FubuTransportation.Subscriptions
         {
             return _nodes.FirstOrDefault(x => x.Id == nodeId);
         }
+
+        public void Alter(string id, Action<TransportNode> alteration)
+        {
+            var node = LoadNode(id);
+            alteration(node);
+        }
     }
 }
