@@ -25,7 +25,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
             theCurrentNode.OwnedTasks = new[] {"foo://1".ToUri(), "foo://2".ToUri()};
 
-            
+
 
             var task = theController.CheckStatusOfOwnedTasks();
             task.Wait();
