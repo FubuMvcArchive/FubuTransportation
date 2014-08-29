@@ -13,7 +13,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
         [Test]
         public void create_and_send_with_timespan_delayed()
         {
-            var message = new Events.Message1();
+            var message = new Message1();
             var delayed = new FubuTransportation.Runtime.Cascading.DelayedResponse(message, 5.Minutes());
 
             var original = MockRepository.GenerateMock<Envelope>();

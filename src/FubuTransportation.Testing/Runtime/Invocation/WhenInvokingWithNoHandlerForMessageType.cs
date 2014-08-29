@@ -33,11 +33,11 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         public void should_move_message_to_error_queue()
         {
             var envelope = ObjectMother.Envelope();
-            envelope.Message = new Events.Message1();
+            envelope.Message = new Message1();
             ClassUnderTest.Invoke(envelope); // we don't have a handler for this type
 
             envelope.Callback.AssertWasCalled(x => x.MoveToErrors(
-                new ErrorReport(envelope, new NoHandlerException(typeof(Events.Message1)))));
+                new ErrorReport(envelope, new NoHandlerException(typeof(Message1)))));
         }
     }
 }

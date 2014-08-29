@@ -3,7 +3,7 @@ using FubuTransportation.ErrorHandling;
 using FubuTransportation.Runtime;
 using NUnit.Framework;
 using FubuTestingSupport;
-using Message1 = FubuTransportation.Testing.Events.Message1;
+using Message1 = FubuTransportation.Testing.Message1;
 
 namespace FubuTransportation.Testing.ErrorHandling
 {

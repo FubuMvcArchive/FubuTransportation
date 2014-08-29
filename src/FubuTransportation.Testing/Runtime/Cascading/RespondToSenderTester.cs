@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
         [Test]
         public void has_to_set_the_destination_header()
         {
-            var message = new Events.Message1();
+            var message = new Message1();
             var respondToSender = new RespondToSender(message);
 
             var original = MockRepository.GenerateMock<Envelope>();
