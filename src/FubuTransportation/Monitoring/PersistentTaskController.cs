@@ -20,7 +20,7 @@ namespace FubuTransportation.Monitoring
     public interface IPersistentTaskController
     {
         Task<HealthStatus> CheckStatus(Uri subject);
-        Task Deactivate(Uri subject);
+        Task<bool> Deactivate(Uri subject);
         void ActivateAllTasks();
         Task EnsureTasksHaveOwnership();
         Task<OwnershipStatus> TakeOwnership(Uri subject);
@@ -115,13 +115,14 @@ namespace FubuTransportation.Monitoring
             get { return _permanentTasks; }
         }
 
-        public Task Deactivate(Uri subject)
+        public Task<bool> Deactivate(Uri subject)
         {
             var agent = _agents[subject];
             if (agent == null)
             {
-                var message = "Task '{0}' is not recognized by this node".ToFormat(subject);
-                return new ArgumentOutOfRangeException("subject", message).ToFaultedTask();
+                _logger.Info("Task '{0}' is not recognized by this node".ToFormat(subject));
+
+                return false.ToCompletionTask();
             }
 
             return agent.Deactivate().ContinueWith(t => {
@@ -129,12 +130,15 @@ namespace FubuTransportation.Monitoring
                 {
                     _logger.Error(subject, "Failed to stop task " + subject, t.Exception);
                     _logger.InfoMessage(() => new FailedToStopTask(subject));
+
+                    return false;
                 }
-                else
-                {
-                    _repository.RemoveOwnershipFromThisNode(subject);
-                    _logger.InfoMessage(() => new StoppedTask(subject));
-                }
+
+
+                _repository.RemoveOwnershipFromThisNode(subject);
+                _logger.InfoMessage(() => new StoppedTask(subject));
+
+                return true;
             });
         }
 

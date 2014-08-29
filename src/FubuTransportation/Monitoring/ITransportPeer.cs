@@ -16,6 +16,6 @@ namespace FubuTransportation.Monitoring
         string NodeId { get; }
         string MachineName { get; }
         Uri ControlChannel { get; }
-        Task Deactivate(Uri subject);
+        Task<bool> Deactivate(Uri subject);
     }
 }

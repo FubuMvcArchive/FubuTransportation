@@ -53,6 +53,11 @@ namespace FubuTransportation.Configuration
             return _chains.ContainsKey(inputType) ? _chains[inputType] : null;
         }
 
+        public HandlerChain ChainFor<TInputType>()
+        {
+            return ChainFor(typeof (TInputType));
+        }
+
         public IEnumerator<HandlerChain> GetEnumerator()
         {
             return _chains.Values.GetEnumerator();

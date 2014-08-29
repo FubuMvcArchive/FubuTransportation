@@ -198,6 +198,7 @@ namespace FubuTransportation.Testing.Monitoring
     public class when_deactivating_successfully : TransportPeerContext
     {
         private readonly Uri theSubject = "foo://1".ToUri();
+        private Task<bool> theTask;
 
         protected override void theContextIs()
         {
@@ -212,7 +213,8 @@ namespace FubuTransportation.Testing.Monitoring
                 });
 
 
-            thePeer.Deactivate(theSubject).Wait();
+            theTask = thePeer.Deactivate(theSubject);
+            theTask.Wait();
         }
 
         [Test]
@@ -221,12 +223,18 @@ namespace FubuTransportation.Testing.Monitoring
            theServiceBus.AssertThatAllExpectedMessagesWereReceived();
         }
 
+        [Test]
+        public void the_task_returns_true_to_denote_success()
+        {
+            theTask.Result.ShouldBeTrue();
+        }
     }
 
     [TestFixture]
     public class when_deactivating_unsuccessfully : TransportPeerContext
     {
         private readonly Uri theSubject = "foo://1".ToUri();
+        private Task<bool> theTask;
 
         protected override void theContextIs()
         {
@@ -237,7 +245,8 @@ namespace FubuTransportation.Testing.Monitoring
                 .Throws(new DivideByZeroException());
 
 
-            thePeer.Deactivate(theSubject).Wait();
+            theTask = thePeer.Deactivate(theSubject);
+            theTask.Wait();
         }
 
         [Test]
@@ -256,6 +265,12 @@ namespace FubuTransportation.Testing.Monitoring
         public void should_still_have_removed_the_ownership_from_the_node()
         {
             theNode.OwnedTasks.ShouldNotContain(theSubject);
+        }
+
+        [Test]
+        public void the_task_should_denote_failure_by_returning_false()
+        {
+            theTask.Result.ShouldBeFalse();
         }
     }
 

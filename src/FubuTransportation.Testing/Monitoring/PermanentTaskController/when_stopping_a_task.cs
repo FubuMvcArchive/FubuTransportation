@@ -12,19 +12,20 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
     public class when_trying_to_stop_a_task_that_does_not_exist : PersistentTaskControllerContext
     {
         [Test]
-        public void returns_a_faulted_task()
+        public void should_denote_failure()
         {
-            Exception<AggregateException>.ShouldBeThrownBy(() => {
-                theController.Deactivate("nonexistent://1".ToUri()).Wait();
-            }).InnerException.ShouldBeOfType<ArgumentOutOfRangeException>()
-            .Message.ShouldContain("Task 'nonexistent://1/' is not recognized by this node");
+            var task = theController.Deactivate("nonexistent://1".ToUri());
+            task.Wait();
+
+            task.Result.ShouldBeFalse();
+
         }
     }
 
     [TestFixture]
     public class when_stopping_a_task_successfully : PersistentTaskControllerContext
     {
-        private Task theTask;
+        private Task<bool> theTask;
 
         protected override void theContextIs()
         {
@@ -32,6 +33,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
             theTask = theController.Deactivate("running://1".ToUri());
             theTask.Wait();
+        }
+
+        [Test]
+        public void the_task_should_denote_success()
+        {
+            theTask.Result.ShouldBeTrue();
         }
 
         [Test]
@@ -58,7 +65,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
     [TestFixture]
     public class when_stopping_a_task_unsuccessfully : PersistentTaskControllerContext
     {
-        private Task theTask;
+        private Task<bool> theTask;
 
         protected override void theContextIs()
         {
@@ -67,6 +74,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
             theTask = theController.Deactivate("running://1".ToUri());
             theTask.Wait();
+        }
+
+        [Test]
+        public void the_task_should_denote_failure_by_returning_false()
+        {
+            theTask.Result.ShouldBeFalse();
         }
 
         [Test]
