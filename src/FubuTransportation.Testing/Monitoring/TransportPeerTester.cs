@@ -256,15 +256,9 @@ namespace FubuTransportation.Testing.Monitoring
         }
 
         [Test]
-        public void should_still_remove_the_ownership_from_the_node_and_persist()
-        {
-            theSubscriptions.AssertWasCalled(x => x.Persist(theNode));
-        }
-
-        [Test]
         public void should_still_have_removed_the_ownership_from_the_node()
         {
-            theNode.OwnedTasks.ShouldNotContain(theSubject);
+            theSubscriptions.AssertWasCalled(x => x.RemoveOwnershipFromNode(theNode.Id, theSubject));
         }
 
         [Test]

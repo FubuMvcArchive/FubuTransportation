@@ -42,12 +42,12 @@ namespace FubuTransportation.Monitoring
 
         public void RecordOwnershipToThisNode(Uri subject)
         {
-            throw new NotImplementedException();
+            _subscriptions.RecordOwnershipToThisNode(subject);
         }
 
         public void RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
         {
-            throw new NotImplementedException();
+            _subscriptions.RecordOwnershipToThisNode(subjects);
         }
 
         public TransportNode LocalNode()
@@ -57,7 +57,7 @@ namespace FubuTransportation.Monitoring
 
         public void RemoveOwnershipFromThisNode(Uri subject)
         {
-            throw new NotImplementedException();
+            _subscriptions.RemoveOwnershipFromThisNode(subject);
         }
     }
 }

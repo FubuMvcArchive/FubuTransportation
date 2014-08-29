@@ -125,9 +125,7 @@ namespace FubuTransportation.Monitoring
                     _logger.Error(subject, "Failed while trying to deactivate a remote task", t.Exception);
 
                     // Need to force a reload here.
-                    var node = _subscriptions.FindPeer(NodeId);
-                    node.RemoveOwnership(subject);
-                    _subscriptions.Persist(node);
+                    _subscriptions.RemoveOwnershipFromNode(NodeId, subject);
 
                     return false;
                 }
