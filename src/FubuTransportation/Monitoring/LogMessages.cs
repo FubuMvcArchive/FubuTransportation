@@ -19,7 +19,7 @@ namespace FubuTransportation.Monitoring
 
         public bool Matches(Type logType)
         {
-            return logType is PersistentTaskMessage;
+            return logType.CanBeCastTo<PersistentTaskMessage>();
         }
 
         public void Modify(object log)

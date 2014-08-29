@@ -87,9 +87,6 @@
     <Reference Include="Lucene.Net.Contrib.Spatial.NTS">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Lucene.Net.Contrib.Spatial.NTS.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
-      <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net45">
       <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack\lib\net45\Microsoft.CompilerServices.AsyncTargetingPack.Net45.dll</HintPath>
     </Reference>
@@ -133,26 +130,14 @@
     <Reference Include="Raven.Abstractions">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Abstractions-4.5">
-      <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Abstractions-4.5.dll</HintPath>
-    </Reference>
     <Reference Include="Raven.Client.Embedded">
       <HintPath>..\packages\RavenDB.Embedded\lib\net45\Raven.Client.Embedded.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Client.Embedded-4.5">
-      <HintPath>..\packages\RavenDB.Embedded\lib\net45\Raven.Client.Embedded-4.5.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight">
       <HintPath>..\packages\RavenDB.Client\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Client.Lightweight-4.5">
-      <HintPath>..\packages\RavenDB.Client\lib\net45\Raven.Client.Lightweight-4.5.dll</HintPath>
-    </Reference>
     <Reference Include="Raven.Database">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Database.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Database-4.5">
-      <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Database-4.5.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>

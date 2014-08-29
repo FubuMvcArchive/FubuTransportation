@@ -6,7 +6,6 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Subscriptions;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
 using Rhino.Mocks;
 

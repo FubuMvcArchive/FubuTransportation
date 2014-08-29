@@ -1,7 +1,6 @@
 ﻿using FubuTestingSupport;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Polling

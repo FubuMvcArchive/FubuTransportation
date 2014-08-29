@@ -14,7 +14,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
         public void create_and_send_to_correct_destination()
         {
             var destination = new Uri("memory://blah");
-            var message = new Events.Message1();
+            var message = new Message1();
             var sendDirectlyTo = new SendDirectlyTo(destination, message);
 
             var original = MockRepository.GenerateMock<Envelope>();

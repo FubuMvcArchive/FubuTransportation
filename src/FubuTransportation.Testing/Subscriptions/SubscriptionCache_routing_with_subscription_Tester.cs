@@ -7,7 +7,6 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Subscriptions;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using StructureMap;
 

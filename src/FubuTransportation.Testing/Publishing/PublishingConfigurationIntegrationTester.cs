@@ -10,7 +10,6 @@ using FubuMVC.Katana;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Web;
 using NUnit.Framework;
 using Rhino.Mocks;

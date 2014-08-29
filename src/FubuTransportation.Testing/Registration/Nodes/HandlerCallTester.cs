@@ -6,9 +6,7 @@ using FubuMVC.Core.Registration.Nodes;
 using FubuTestingSupport;
 using FubuTransportation.Async;
 using FubuTransportation.Registration.Nodes;
-using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 
@@ -17,11 +15,10 @@ namespace FubuTransportation.Testing.Registration.Nodes
     [TestFixture]
     public class HandlerCallTester
     {
-
         [Test]
         public void handler_call_should_not_match_property_setters()
         {
-            var handlerType = typeof(ITargetHandler);
+            var handlerType = typeof (ITargetHandler);
             var property = handlerType.GetProperty("Message");
             var method = property.GetSetMethod();
             HandlerCall.IsCandidate(method).ShouldBeFalse();
@@ -44,7 +41,7 @@ namespace FubuTransportation.Testing.Registration.Nodes
 
             var objectDef = handler.As<IContainerModel>().ToObjectDef();
 
-            objectDef.Type.ShouldEqual(typeof(SimpleHandlerInvoker<ITargetHandler, Input>));
+            objectDef.Type.ShouldEqual(typeof (SimpleHandlerInvoker<ITargetHandler, Input>));
         }
 
         [Test]
@@ -54,7 +51,7 @@ namespace FubuTransportation.Testing.Registration.Nodes
 
             var objectDef = handler.As<IContainerModel>().ToObjectDef();
 
-            objectDef.Type.ShouldEqual(typeof(AsyncHandlerInvoker<TaskHandler, Message>));
+            objectDef.Type.ShouldEqual(typeof (AsyncHandlerInvoker<TaskHandler, Message>));
         }
 
         [Test]
@@ -64,18 +61,15 @@ namespace FubuTransportation.Testing.Registration.Nodes
 
             var objectDef = handler.As<IContainerModel>().ToObjectDef();
 
-            objectDef.Type.ShouldEqual(typeof(CascadingAsyncHandlerInvoker<TaskHandler, Message, Message1>));
+            objectDef.Type.ShouldEqual(typeof (CascadingAsyncHandlerInvoker<TaskHandler, Message, Message1>));
         }
-
-
 
 
         [Test]
         public void throws_chunks_if_you_try_to_use_a_method_with_no_inputs()
         {
-            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(() => {
-                HandlerCall.For<ITargetHandler>(x => x.ZeroInZeroOut());
-            });
+            Exception<ArgumentOutOfRangeException>.ShouldBeThrownBy(
+                () => { HandlerCall.For<ITargetHandler>(x => x.ZeroInZeroOut()); });
         }
 
         [Test]
@@ -83,15 +77,19 @@ namespace FubuTransportation.Testing.Registration.Nodes
         {
             HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ZeroInZeroOut())).ShouldBeFalse();
             HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.OneInOneOut(null))).ShouldBeTrue();
-            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.OneInZeroOut(null))).ShouldBeTrue();
-            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ManyIn(null, null))).ShouldBeFalse();
-            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsValueType(null))).ShouldBeFalse();
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.OneInZeroOut(null)))
+                .ShouldBeTrue();
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ManyIn(null, null)))
+                .ShouldBeFalse();
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsValueType(null)))
+                .ShouldBeFalse();
         }
 
         [Test]
         public void is_candidate_allows_interface_return_types()
         {
-            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsInterface(null))).ShouldBeTrue();
+            HandlerCall.IsCandidate(ReflectionHelper.GetMethod<ITargetHandler>(x => x.ReturnsInterface(null)))
+                .ShouldBeTrue();
         }
 
         [Test]
@@ -99,21 +97,19 @@ namespace FubuTransportation.Testing.Registration.Nodes
         {
             var handler1 = HandlerCall.For<SomeHandler>(x => x.Interface(null));
             var handler2 = HandlerCall.For<SomeHandler>(x => x.BaseClass(null));
-        
-            handler1.CouldHandleOtherMessageType(typeof(Input1)).ShouldBeTrue();
-            handler2.CouldHandleOtherMessageType(typeof(Input1)).ShouldBeTrue();
-            
-            handler1.CouldHandleOtherMessageType(typeof(Input2)).ShouldBeFalse();
-            handler1.CouldHandleOtherMessageType(typeof(Input2)).ShouldBeFalse();
 
+            handler1.CouldHandleOtherMessageType(typeof (Input1)).ShouldBeTrue();
+            handler2.CouldHandleOtherMessageType(typeof (Input1)).ShouldBeTrue();
 
+            handler1.CouldHandleOtherMessageType(typeof (Input2)).ShouldBeFalse();
+            handler1.CouldHandleOtherMessageType(typeof (Input2)).ShouldBeFalse();
         }
 
         [Test]
         public void could_handle_is_false_for_its_own_input_type()
         {
             var handler = HandlerCall.For<ITargetHandler>(x => x.OneInOneOut(null));
-            handler.CouldHandleOtherMessageType(typeof(Input)).ShouldBeFalse();
+            handler.CouldHandleOtherMessageType(typeof (Input)).ShouldBeFalse();
         }
 
         [Test]
@@ -155,8 +151,4 @@ namespace FubuTransportation.Testing.Registration.Nodes
             }
         }
     }
-
-    
-
-
 }

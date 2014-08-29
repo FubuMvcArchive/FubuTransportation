@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using FubuTestingSupport;
 using FubuTransportation.Subscriptions;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Subscriptions

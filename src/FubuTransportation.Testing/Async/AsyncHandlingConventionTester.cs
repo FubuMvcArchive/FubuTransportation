@@ -4,7 +4,6 @@ using FubuTestingSupport;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 

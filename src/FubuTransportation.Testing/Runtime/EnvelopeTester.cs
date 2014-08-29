@@ -3,7 +3,6 @@ using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Serializers;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuCore;

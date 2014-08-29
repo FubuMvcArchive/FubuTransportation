@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FubuTestingSupport;
 using FubuTransportation.Async;
-using FubuTransportation.Runtime.Invocation;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
-using StructureMap;
 
 namespace FubuTransportation.Testing.Async
 {
@@ -27,14 +23,12 @@ namespace FubuTransportation.Testing.Async
                 list.Add("A");
             });
 
-            var task2 = Task.Factory.StartNew(() =>
-            {
+            var task2 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 list.Add("B");
             });
 
-            var task3 = Task.Factory.StartNew(() =>
-            {
+            var task3 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 list.Add("C");
             });
@@ -54,21 +48,18 @@ namespace FubuTransportation.Testing.Async
             var handling = new AsyncHandling(ObjectMother.InvocationContext());
             var list = new ConcurrentBag<string>();
 
-            var task1 = Task.Factory.StartNew(() =>
-            {
+            var task1 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 list.Add("A");
             });
 
-            var task2 = Task.Factory.StartNew(() =>
-            {
+            var task2 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 list.Add("B");
                 throw new NotSupportedException();
             });
 
-            var task3 = Task.Factory.StartNew(() =>
-            {
+            var task3 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 throw new NotImplementedException();
             });
@@ -77,14 +68,13 @@ namespace FubuTransportation.Testing.Async
             handling.Push(task2);
             handling.Push(task3);
 
-            var inner = Exception<AggregateException>.ShouldBeThrownBy(() => {
-                handling.WaitForAll();
-            }).Flatten().InnerExceptions;
+            var inner =
+                Exception<AggregateException>.ShouldBeThrownBy(() => { handling.WaitForAll(); })
+                    .Flatten()
+                    .InnerExceptions;
 
             inner.Any(x => x is NotSupportedException).ShouldBeTrue();
             inner.Any(x => x is NotImplementedException).ShouldBeTrue();
-
-
         }
 
         [Test]
@@ -95,8 +85,7 @@ namespace FubuTransportation.Testing.Async
 
             var expectedMessage = new Message1();
 
-            var task1 = Task.Factory.StartNew(() =>
-            {
+            var task1 = Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
                 return expectedMessage;
             });
@@ -117,10 +106,7 @@ namespace FubuTransportation.Testing.Async
 
             var expectedMessages = new object[] {new Message1(), new Message2(), new Message3()};
 
-            var task1 = Task.Factory.StartNew(() =>
-            {
-                return expectedMessages;
-            });
+            var task1 = Task.Factory.StartNew(() => { return expectedMessages; });
 
             handling.Push(task1);
 

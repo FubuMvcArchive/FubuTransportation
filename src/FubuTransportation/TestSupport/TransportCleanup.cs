@@ -26,7 +26,6 @@ namespace FubuTransportation.TestSupport
         public void ClearAll()
         {
             _transports.Each(x => {
-                Debug.WriteLine("Clearing up all messages on " + x);
                 x.ClearAll();
             });
             _subscriptions.ClearAll();

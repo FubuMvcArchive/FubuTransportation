@@ -399,9 +399,9 @@ namespace FubuTransportation.Configuration
             /// </summary>
             /// <typeparam name="T"></typeparam>
             /// <returns></returns>
-            public ChannelExpression ModifyWith<T>() where T : IEnvelopeModifier, new()
+            public ChannelExpression ModifyWith<TModifier>() where TModifier : IEnvelopeModifier, new()
             {
-                return ModifyWith(new T());
+                return ModifyWith(new TModifier());
             }
 
             /// <summary>

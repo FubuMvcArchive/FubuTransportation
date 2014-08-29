@@ -1,12 +1,9 @@
-﻿using System;
-using FubuMVC.Core.Ajax;
+﻿using FubuMVC.Core.Ajax;
 using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTestingSupport;
-using FubuTransportation.Testing.Events;
 using FubuTransportation.Web;
 using NUnit.Framework;
-using NUnit.Mocks;
 using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Publishing
@@ -48,6 +45,4 @@ namespace FubuTransportation.Testing.Publishing
             continuation.Success.ShouldBeTrue();
         }
     }
-
-
 }

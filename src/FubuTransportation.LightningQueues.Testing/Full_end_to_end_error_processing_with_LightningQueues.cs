@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using FubuCore;
-using FubuCore.Dates;
 using FubuMVC.Core;
-using FubuMVC.Core.Registration;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Testing;
-using FubuTransportation.Testing.InMemory;
 using FubuTransportation.Testing.ScenarioSupport;
 using LightningQueues;
 using NUnit.Framework;
@@ -44,8 +39,10 @@ namespace FubuTransportation.LightningQueues.Testing
             var container = new Container();
             container.Inject(settings);
 
+            
+
             _runtime = FubuTransport.For<ErrorRegistry>().StructureMap(container)
-                                       .Bootstrap();
+                .Bootstrap();
             _runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
@@ -71,7 +68,6 @@ namespace FubuTransportation.LightningQueues.Testing
             var report = ErrorReport.Deserialize(message.Data);
             message.Headers.Get("ExceptionType").ShouldEqual("System.InvalidOperationException");
             report.RawData.ShouldNotBeNull();
-
         }
 
 
@@ -89,7 +85,9 @@ namespace FubuTransportation.LightningQueues.Testing
         {
             Handlers.DisableDefaultHandlerSource();
             Handlers.Include<ThrowingHandler<OneMessage>>();
-            Channel(x => x.Downstream).ReadIncoming(ByTasks(x => x.DownstreamCount)).AcceptsMessagesInAssemblyContainingType<OneMessage>();
+            Channel(x => x.Downstream)
+                .ReadIncoming(ByTasks(x => x.DownstreamCount))
+                .AcceptsMessagesInAssemblyContainingType<OneMessage>();
             Global.Policy<ErrorPolicy>();
         }
     }

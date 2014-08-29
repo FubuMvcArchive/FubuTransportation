@@ -2,7 +2,6 @@
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Registration.Nodes;
-using FubuTransportation.Testing.Events;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing
