@@ -82,6 +82,9 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         }
     }
 
+
+
+
     [TestFixture]
     public class when_trying_to_take_ownership_of_an_already_active_task : PersistentTaskControllerContext
     {

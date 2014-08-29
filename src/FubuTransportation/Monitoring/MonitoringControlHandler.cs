@@ -25,6 +25,11 @@ namespace FubuTransportation.Monitoring
         {
             throw new NotImplementedException();
         }
+
+        public Task<TakeOwnershipResponse> Handle(TakeOwnershipRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class TaskDeactivation

@@ -362,6 +362,7 @@
     <Compile Include="Monitoring\PersistentTaskAgentTester.cs" />
     <Compile Include="Monitoring\PermanentTaskController\PersistentTaskControllerContext.cs" />
     <Compile Include="Monitoring\RiggedServiceBus.cs" />
+    <Compile Include="Monitoring\TaskHealthResponseTester.cs" />
     <Compile Include="Monitoring\TransportPeerTester.cs" />
     <Compile Include="ObjectMother.cs">
       <SubType>Code</SubType>

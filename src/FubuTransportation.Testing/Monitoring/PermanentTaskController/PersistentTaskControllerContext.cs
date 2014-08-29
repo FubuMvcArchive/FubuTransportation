@@ -132,5 +132,10 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         {
             return theCurrentNode;
         }
+
+        void ITransportPeerRepository.RemoveOwnershipFromThisNode(Uri subject)
+        {
+            theCurrentNode.RemoveOwnership(subject);
+        }
     }
 }
