@@ -10,12 +10,12 @@ using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
 using System.Collections.Generic;
-using Message1 = FubuTransportation.Testing.Events.Message1;
-using Message2 = FubuTransportation.Testing.Events.Message2;
-using Message3 = FubuTransportation.Testing.Events.Message3;
-using Message4 = FubuTransportation.Testing.Events.Message4;
-using Message5 = FubuTransportation.Testing.Events.Message5;
-using Message6 = FubuTransportation.Testing.Events.Message6;
+using Message1 = FubuTransportation.Testing.Message1;
+using Message2 = FubuTransportation.Testing.Message2;
+using Message3 = FubuTransportation.Testing.Message3;
+using Message4 = FubuTransportation.Testing.Message4;
+using Message5 = FubuTransportation.Testing.Message5;
+using Message6 = FubuTransportation.Testing.Message6;
 
 namespace FubuTransportation.Testing
 {

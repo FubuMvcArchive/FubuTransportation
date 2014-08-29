@@ -283,6 +283,7 @@
     <Compile Include="Events\ExpiringListenerCleanupTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TestingSupportClasses.cs" />
     <Compile Include="Extension_importing_tester.cs">
       <SubType>Code</SubType>
     </Compile>

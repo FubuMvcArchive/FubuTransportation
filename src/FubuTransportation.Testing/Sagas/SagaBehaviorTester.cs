@@ -5,7 +5,7 @@ using FubuTestingSupport;
 using FubuTransportation.Sagas;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Message1 = FubuTransportation.Testing.Events.Message1;
+using Message1 = FubuTransportation.Testing.Message1;
 
 namespace FubuTransportation.Testing.Sagas
 {

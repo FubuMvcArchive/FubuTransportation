@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using FubuCore.Logging;
-using FubuMVC.Core.Runtime.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Events;
 using NUnit.Framework;
@@ -54,7 +52,10 @@ namespace FubuTransportation.Testing.Events
             events.SendMessage(message1);
             events.SendMessage(message2);
 
-            Wait.Until(() => listener1.LastMessage != null && listener2.LastMessage != null && listener3.LastMessage != null && listener4.LastMessage != null);
+            Wait.Until(
+                () =>
+                    listener1.LastMessage != null && listener2.LastMessage != null && listener3.LastMessage != null &&
+                    listener4.LastMessage != null);
 
             listener1.LastMessage.ShouldBeTheSameAs(message1);
             listener2.LastMessage.ShouldBeTheSameAs(message1);
@@ -80,15 +81,16 @@ namespace FubuTransportation.Testing.Events
             events.SendMessage(message1);
             events.SendMessage(message2);
 
-            Wait.Until(() => listener1.LastMessage != null && listener2.LastMessage != null && listener3.LastMessage != null && listener4.LastMessage != null);
+            Wait.Until(
+                () =>
+                    listener1.LastMessage != null && listener2.LastMessage != null && listener3.LastMessage != null &&
+                    listener4.LastMessage != null);
 
             listener1.LastMessage.ShouldBeTheSameAs(message1);
             listener2.LastMessage.ShouldBeTheSameAs(message1);
             listener3.LastMessage.ShouldBeTheSameAs(message1);
 
             listener4.LastMessage.ShouldBeTheSameAs(message2);
-
-
         }
 
         [Test]
@@ -101,8 +103,7 @@ namespace FubuTransportation.Testing.Events
 
             events.AddListeners(listener1, listener2, listener3, this, listener4);
 
-            events.Listeners.ShouldHaveTheSameElementsAs(handler,listener1, listener2, listener3, this, listener4);
-
+            events.Listeners.ShouldHaveTheSameElementsAs(handler, listener1, listener2, listener3, this, listener4);
         }
 
         [Test]
@@ -114,7 +115,7 @@ namespace FubuTransportation.Testing.Events
             events.SendMessage<Message1>();
 
             Wait.Until(() => listener1.LastMessage != null);
-            
+
 
             listener1.LastMessage.ShouldBeOfType<Message1>();
         }
@@ -160,7 +161,7 @@ namespace FubuTransportation.Testing.Events
             events.Listeners.ShouldContain(listener2);
             events.Listeners.ShouldContain(listener3);
             events.Listeners.ShouldContain(listener4);
-            
+
             // expired expiring listeners should be removed
             events.Listeners.ShouldNotContain(listener5);
             events.Listeners.ShouldNotContain(listener6);
@@ -179,9 +180,9 @@ namespace FubuTransportation.Testing.Events
             var listener3 = new StubListener<Message1>();
             var listener4 = new StubListener<Message2>();
 
-            var listener5 = new ExpiringListener { ExpiresAt = now.AddMinutes(-1)};
-            var listener6 = new ExpiringListener { ExpiresAt = now.AddMinutes(-1) };
-            var listener7 = new ExpiringListener { ExpiresAt = now.AddMinutes(1)};
+            var listener5 = new ExpiringListener {ExpiresAt = now.AddMinutes(-1)};
+            var listener6 = new ExpiringListener {ExpiresAt = now.AddMinutes(-1)};
+            var listener7 = new ExpiringListener {ExpiresAt = now.AddMinutes(1)};
 
             events.AddListeners(listener1, listener2, listener3, listener4, listener5, listener6, listener7);
 
@@ -198,99 +199,9 @@ namespace FubuTransportation.Testing.Events
             events.Listeners.ShouldNotContain(listener6);
 
             // not-expired expiring listener should not be removed
-            
+
             listener7.IsExpired(now).ShouldBeFalse();
             events.Listeners.ShouldContain(listener7);
         }
-    }
-
-    public class StubListener<T> : IListener<T>
-    {
-        public T LastMessage { get; set; }
-
-        #region IListener<T> Members
-
-        public void Handle(T message)
-        {
-            LastMessage = message;
-        }
-
-        #endregion
-    }
-
-    public class ErrorCausingHandler : IListener<Message1>
-    {
-        public void Handle(Message1 message)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public class ExpiringListener : IExpiringListener
-    {
-        public bool IsExpired { get; set; }
-        public DateTime? ExpiresAt { get; set; }
-    }
-
-    public class TaskHandler
-    {
-        public Task AsyncHandle(Message1 message)
-        {
-            return null;
-        }
-
-        public Task<Message2> AsyncReturn(Message1 message)
-        {
-            return null;
-        }
-    }
-
-    public class Message1
-    {
-    }
-
-    public class Message2
-    {
-    }
-
-    public class Message3
-    {
-    }
-
-    public class Message4
-    {
-    }
-
-    public class Message5
-    {
-    }
-
-    public class Message6
-    {
-    }
-
-    public interface IMessageHandler1
-    {
-        void HandleMessage(Message1 message);
-    }
-
-    public interface IMessageHandler2
-    {
-        void HandleMessage(Message2 message);
-    }
-
-
-    public class StubMessage1Handler : IListener<Message1>
-    {
-        public Message1 Message { get; set; }
-
-        #region IListener<Message1> Members
-
-        public void Handle(Message1 message)
-        {
-            Message = message;
-        }
-
-        #endregion
     }
 }

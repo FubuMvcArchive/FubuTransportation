@@ -8,7 +8,6 @@ using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.Testing;
-using FubuTransportation.Testing.InMemory;
 using FubuTransportation.Testing.ScenarioSupport;
 using NUnit.Framework;
 using StructureMap;
@@ -92,6 +91,22 @@ namespace FubuTransportation.LightningQueues.Testing
         {
             FubuTransport.Reset();
             _runtime.Dispose();
+        }
+    }
+
+    public class DelayedRegistry : FubuTransportRegistry<BusSettings>
+    {
+        public DelayedRegistry()
+        {
+            Handlers.DisableDefaultHandlerSource();
+            EnableInMemoryTransport();
+
+            // Need this to be fast for the tests
+            AlterSettings<TransportSettings>(x => x.DelayMessagePolling = 100);
+
+            Services(x => x.ReplaceService<ISystemTime>(new SettableClock()));
+            Handlers.Include<SimpleHandler<OneMessage>>();
+            Channel(x => x.Downstream).ReadIncoming().AcceptsMessagesInAssemblyContainingType<OneMessage>();
         }
     }
 }
