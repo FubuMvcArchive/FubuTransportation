@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Monitoring
@@ -34,6 +35,13 @@ namespace FubuTransportation.Testing.Monitoring
             }
 
             public Exception Exception { get; set; }
+
+            public bool WasCalled { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("Expected message {0} to Destination: {1}", Message, Destination);
+            }
         }
 
         public FromExpression ExpectMessage(object message)
@@ -77,10 +85,22 @@ namespace FubuTransportation.Testing.Monitoring
             {
                 completion.SetResult((TResponse)expectation.Response);
             }
-            
+
+            expectation.WasCalled = true;
             
 
             return completion.Task;
+        }
+
+        public void AssertThatAllExpectedMessagesWereReceived()
+        {
+            var missing = _expectations.Where(x => !x.WasCalled);
+
+            if (missing.Any())
+            {
+                var message = missing.Select(x => x.ToString()).Join("\n");
+                Assert.Fail(message);
+            }
         }
 
         public void Send<T>(T message)
