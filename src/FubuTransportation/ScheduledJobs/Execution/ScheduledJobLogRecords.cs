@@ -33,6 +33,8 @@ namespace FubuTransportation.ScheduledJobs.Execution
         }
     }
 
+
+
     public class ScheduledJobStarted : ScheduledJobRecord
     {
         public ScheduledJobStarted(IJob job) : base(job)
