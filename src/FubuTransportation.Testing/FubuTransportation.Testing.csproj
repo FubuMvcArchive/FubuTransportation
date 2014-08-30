@@ -347,6 +347,7 @@
     <Compile Include="Monitoring\Monitoring_handlers_are_registered.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitoring\Monitoring_health_polling_job_is_registered.cs" />
     <Compile Include="Monitoring\PermanentTaskController\CurrentlyOwnedSubjectsTester.cs">
       <SubType>Code</SubType>
     </Compile>
