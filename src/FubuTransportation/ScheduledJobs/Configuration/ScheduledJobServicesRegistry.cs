@@ -1,4 +1,5 @@
 ﻿using FubuMVC.Core.Registration;
+using FubuTransportation.Monitoring;
 using FubuTransportation.ScheduledJobs.Execution;
 using FubuTransportation.ScheduledJobs.Persistence;
 
@@ -14,6 +15,8 @@ namespace FubuTransportation.ScheduledJobs.Configuration
             SetServiceIfNone<ISchedulePersistence, InMemorySchedulePersistence>();
 
             SetServiceIfNone<IScheduleStatusMonitor, ScheduleStatusMonitor>();
+
+            AddService<IPersistentTaskSource, ScheduledJobPersistentTask>();
         }
     }
 }

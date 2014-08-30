@@ -41,5 +41,17 @@ namespace FubuTransportation.Testing.Monitoring
             services.ServicesFor<ILogModifier>().Any(x => x.Type == typeof(PersistentTaskMessageModifier))
                 .ShouldBeTrue();
         }
+
+        [Test]
+        public void controller_is_registered()
+        {
+            registeredTypeIs<IPersistentTaskController, PersistentTaskController>();
+        }
+
+        [Test]
+        public void transport_peer_repository()
+        {
+            registeredTypeIs<ITransportPeerRepository, TransportPeerRepository>();
+        }
     }
 }
