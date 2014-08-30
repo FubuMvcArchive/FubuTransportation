@@ -16,6 +16,18 @@ namespace FubuTransportation.Polling
 
         public bool Enabled { get; private set; }
 
+        public double Interval
+        {
+            get
+            {
+                return _timer.Interval;
+            }
+            set
+            {
+                _timer.Interval = value;
+            }
+        }
+
         public void Start(Action callback, double interval)
         {
             _callback = callback;

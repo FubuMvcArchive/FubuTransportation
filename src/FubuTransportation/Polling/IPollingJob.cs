@@ -8,6 +8,5 @@ namespace FubuTransportation.Polling
         void Start();
         void RunNow();
         void Stop();
-        void ResetInterval(double interval);
     }
 }

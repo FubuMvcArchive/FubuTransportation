@@ -9,5 +9,6 @@ namespace FubuTransportation.Polling
         void Stop();
 
         bool Enabled { get; }
+        double Interval { get; set; }
     }
 }

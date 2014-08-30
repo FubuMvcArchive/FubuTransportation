@@ -10,30 +10,32 @@ namespace FubuTransportation.Polling
     {
         private readonly IServiceBus _bus;
         private readonly IPollingJobLogger _logger;
+        private readonly TSettings _settings;
         private readonly ITimer _timer;
         private readonly Expression<Func<TSettings, double>> _intervalSource;
         private readonly ScheduledExecution _scheduledExecution;
         private readonly PollingJobLatch _latch;
-        private double _interval;
+        private readonly Func<TSettings, double> _intervalFunc; 
 
         public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings,
             PollingJobDefinition definition, PollingJobLatch latch)
         {
             _bus = bus;
             _logger = logger;
+            _settings = settings;
             _timer = new DefaultTimer();
             _intervalSource = (Expression<Func<TSettings, double>>)definition.IntervalSource;
             _scheduledExecution = definition.ScheduledExecution;
             _latch = latch;
 
-            _interval = _intervalSource.Compile()(settings);
+            _intervalFunc = _intervalSource.Compile();
         }
 
         public void Describe(Description description)
         {
             description.Title = "Polling Job for " + typeof(TJob).Name;
             typeof(TJob).ForAttribute<DescriptionAttribute>(att => description.ShortDescription = att.Description);
-            description.Properties["Interval"] = _interval.ToString() + " ms";
+            description.Properties["Interval"] = _intervalFunc(_settings) + " ms";
             description.Properties["Config"] = _intervalSource.ToString();
             description.Properties["Scheduled Execution"] = _scheduledExecution.ToString();
         }
@@ -50,7 +52,7 @@ namespace FubuTransportation.Polling
                 RunNow();
             }
 
-            _timer.Start(RunNow, _interval);
+            _timer.Start(RunNow, _intervalFunc(_settings));
         }
 
         public void RunNow()
@@ -72,6 +74,10 @@ namespace FubuTransportation.Polling
                     _logger.FailedToSchedule(typeof(TJob), e);
                 }
             }
+            finally
+            {
+                _timer.Interval = _intervalFunc(_settings);
+            }
         }
 
         public void Stop()
@@ -86,15 +92,5 @@ namespace FubuTransportation.Polling
             _timer.Dispose();
         }
 
-        public void ResetInterval(double interval)
-        {
-            _interval = interval;
-            
-            if (_timer.Enabled)
-            {
-                Stop();
-                Start();
-            }
-        }
     }
 }
