@@ -322,6 +322,7 @@
     <Compile Include="ScheduledJobs\Execution\ScheduledJobRunner.cs" />
     <Compile Include="ScheduledJobs\Configuration\ScheduledJobServicesRegistry.cs" />
     <Compile Include="ScheduledJobs\Execution\ScheduledJobController.cs" />
+    <Compile Include="ScheduledJobs\ScheduledJobPersistentTask.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />
     <Compile Include="Scheduling\TaskScheduler.cs" />
     <Compile Include="Scheduling\ThreadScheduler.cs" />

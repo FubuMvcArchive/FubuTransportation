@@ -14,6 +14,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
         bool IsActive();
         void Deactivate();
         void Reschedule<T>(RescheduleRequest<T> request) where T : IJob;
+        void PerformHealthChecks();
     }
 
     public class ScheduledJobController : IDisposable, IJobExecutor, IScheduledJobController
@@ -72,6 +73,11 @@ namespace FubuTransportation.ScheduledJobs.Execution
             {
                 Schedule(job, request.NextTime);
             }
+        }
+
+        public void PerformHealthChecks()
+        {
+            throw new NotImplementedException();
         }
 
         public void Dispose()
