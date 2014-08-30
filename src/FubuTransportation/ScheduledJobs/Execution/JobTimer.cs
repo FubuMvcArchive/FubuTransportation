@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using FubuCore;
@@ -17,6 +16,8 @@ namespace FubuTransportation.ScheduledJobs.Execution
         void Schedule(Type type, DateTimeOffset time, Action action);
         void ClearAll();
         IEnumerable<ITimedExecution> Status();
+
+        ITimedExecution StatusFor(Type jobType);
 
         DateTimeOffset Now();
     }
@@ -77,6 +78,11 @@ namespace FubuTransportation.ScheduledJobs.Execution
             return _executions;
         }
 
+        public ITimedExecution StatusFor(Type jobType)
+        {
+            return _executions.FirstOrDefault(x => x.Type == jobType);
+        }
+
         public DateTimeOffset Now()
         {
             return _systemTime.UtcNow();
@@ -127,7 +133,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
                 {
                     logger.Error("Trying to execute Scheduled job " + type.GetFullName(), e);
                 }
-                Status = JobExecutionStatus.Completed;
+
                 _finished.Set();
             };
 

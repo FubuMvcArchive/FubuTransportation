@@ -396,9 +396,6 @@
     <Compile Include="Polling\EnvelopeToken_is_polling_job_related_Tester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Polling\JobRunnerTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Polling\JobTimeoutTester.cs">
       <SubType>Code</SubType>
     </Compile>

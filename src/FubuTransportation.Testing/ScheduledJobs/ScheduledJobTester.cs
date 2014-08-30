@@ -14,6 +14,130 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.ScheduledJobs
 {
     [TestFixture]
+    public class when_deciding_whether_or_not_to_reschedule_a_job : InteractionContext<ScheduledJob<AJob>>
+    {
+        private StubTimedExecution theExecution;
+        DateTimeOffset expected = DateTime.Today.AddHours(1);
+        DateTimeOffset now = DateTime.Today;
+        private IJobTimer theTimer;
+
+
+        protected override void beforeEach()
+        {
+            theExecution = new StubTimedExecution();
+
+            MockFor<IScheduleRule>().Stub(x => x.ScheduleNextTime(now)).Return(expected);
+
+            theTimer = MockFor<IJobTimer>();
+        }
+
+        private void timedExecutionIsActive()
+        {
+            theTimer.Stub(x => x.StatusFor(typeof (AJob))).Return(theExecution);
+        }
+
+        private void noTimedExecutionIsActive()
+        {
+            //nothing
+        }
+
+        private void shouldBeRescheduled()
+        {
+            ClassUnderTest.ShouldReschedule(now, MockFor<IJobTimer>())
+                .ShouldBeTrue();
+        }
+
+        private void shouldNotBeRescheduled()
+        {
+            ClassUnderTest.ShouldReschedule(now, MockFor<IJobTimer>())
+                .ShouldBeFalse();
+        }
+
+        [Test]
+        public void should_reschedule_if_there_is_no_timed_execution()
+        {
+            noTimedExecutionIsActive();
+            shouldBeRescheduled();
+        }
+        
+        [Test]
+        public void does_not_need_to_reschedule_if_the_execution_is_scheduled_correctly()
+        {
+            theExecution.ExpectedTime = expected;
+            theExecution.Status = JobExecutionStatus.Scheduled;
+
+            timedExecutionIsActive();
+
+            shouldNotBeRescheduled();
+
+        }
+
+        [Test]
+        public void does_not_need_to_reschedule_if_the_schedule_time_is_just_flat_out_wrong()
+        {
+            theExecution.ExpectedTime = expected.AddHours(3);
+            theExecution.Status = JobExecutionStatus.Scheduled;
+
+            timedExecutionIsActive();
+
+            // Working under the assumption that the schedule
+            // is manually set
+            shouldNotBeRescheduled();
+        }
+
+        [Test]
+        public void does_not_need_to_reschedule_if_executing_within_the_time_limit()
+        {
+            theExecution.ExpectedTime = expected;
+            theExecution.Status = JobExecutionStatus.Executing;
+
+           timedExecutionIsActive();
+
+            ClassUnderTest.ShouldReschedule(expected.AddMinutes(3), MockFor<IJobTimer>())
+                .ShouldBeFalse();
+        }
+
+        [Test]
+        public void does_need_to_reschedule_if_executing_past_the_time_limit()
+        {
+            theExecution.ExpectedTime = expected;
+            theExecution.Status = JobExecutionStatus.Executing;
+
+            timedExecutionIsActive();
+
+            ClassUnderTest.ShouldReschedule(expected.Add(ClassUnderTest.MaximumTimeBeforeRescheduling).AddMinutes(1), MockFor<IJobTimer>())
+                .ShouldBeTrue();
+        }
+
+
+    }
+
+    public class StubTimedExecution : ITimedExecution
+    {
+        public JobExecutionStatus Status { get; set; }
+        public Type Type { get; set; }
+        public DateTimeOffset ExpectedTime { get; set; }
+    }
+
+    [TestFixture]
+    public class ScheduledJob_defaults
+    {
+        [Test]
+        public void default_timeout_is_5_minutes()
+        {
+            new ScheduledJob<AJob>(null)
+                .Timeout.ShouldEqual(5.Minutes());
+        }
+
+        [Test]
+        public void default_maximum_execution_time_should_be_15_minutes()
+        {
+            new ScheduledJob<AJob>(null)
+                .MaximumTimeBeforeRescheduling.ShouldEqual(15.Minutes());
+        }
+    }
+
+    [TestFixture]
     public class when_initializing_a_job
     {
         private JobSchedule theSchedule;
