@@ -80,7 +80,17 @@ namespace FubuTransportation.Monitoring
                 existing.Deactivate(subject);
             }
 
-            return agent.AssignOwner(_peers);
+            return agent.AssignOwner(_peers).ContinueWith(t => {
+                if (t.IsCompleted && t.Result == null)
+                {
+                    _logger.InfoMessage(() => new UnableToAssignOwnership(subject));
+                }
+
+                if (t.IsFaulted)
+                {
+                    _logger.Error(subject, "Failed while trying to assign ownership", t.Exception);
+                }
+            });
         }
 
         public void Dispose()
