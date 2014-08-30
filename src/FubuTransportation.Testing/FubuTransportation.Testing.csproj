@@ -335,10 +335,13 @@
     <Compile Include="Logging\EventAggregationListenerTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitoring\FakePersistentTasks.cs">
+    <Compile Include="Monitoring\FakePersistentTask.cs" />
+    <Compile Include="Monitoring\FakePersistentTaskAgent.cs" />
+    <Compile Include="Monitoring\FakePersistentTasks.cs" />
+    <Compile Include="Monitoring\FakePersistentTaskSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitoring\HealthAndAssignmentRouter\FakeTransportPeer.cs">
+    <Compile Include="Monitoring\FakeTransportPeer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitoring\HealthAndAssignmentRouter\HealthAndAssignmentRouterTester.cs">
@@ -348,6 +351,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitoring\Monitoring_health_polling_job_is_registered.cs" />
+    <Compile Include="Monitoring\OrderedAssignmentTester.cs" />
     <Compile Include="Monitoring\PermanentTaskController\CurrentlyOwnedSubjectsTester.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,32 +1,11 @@
 ﻿using System;
 using System.Runtime.Remoting.Contexts;
-using FubuCore;
 using FubuCore.Logging;
-using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
 
 namespace FubuTransportation.Monitoring
 {
     // TODO -- UT and register this thing
-    public class PersistentTaskMessageModifier : ILogModifier
-    {
-        private readonly ChannelGraph _graph;
-
-        public PersistentTaskMessageModifier(ChannelGraph graph)
-        {
-            _graph = graph;
-        }
-
-        public bool Matches(Type logType)
-        {
-            return logType.CanBeCastTo<PersistentTaskMessage>();
-        }
-
-        public void Modify(object log)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     [Serializable]
     public abstract class PersistentTaskMessage : LogRecord
@@ -177,4 +156,14 @@ namespace FubuTransportation.Monitoring
         }
     }
 
+    public class UnableToAssignOwnership : PersistentTaskMessage
+    {
+        public UnableToAssignOwnership(Uri subject) : base(subject)
+        {
+        }
+
+        public UnableToAssignOwnership()
+        {
+        }
+    }
 }

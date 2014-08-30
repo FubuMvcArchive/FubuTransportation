@@ -2,50 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FubuCore;
 using FubuCore.Util;
 using FubuTransportation.Monitoring;
 
-namespace FubuTransportation.Testing.Monitoring.HealthAndAssignmentRouter
+namespace FubuTransportation.Testing.Monitoring
 {
-    public class FakePersistentTasks : IPersistentTasks
-    {
-        public readonly Cache<Uri, FakePersistentTaskAgent> Agents =
-            new Cache<Uri, FakePersistentTaskAgent>(_ => new FakePersistentTaskAgent(_));
-
-        public IPersistentTask FindTask(Uri subject)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IPersistentTaskAgent FindAgent(Uri subject)
-        {
-            return Agents[subject];
-        }
-
-
-        public IEnumerable<Uri> PersistentSubjects { get; set; }
-    }
-
-    public class FakePersistentTaskAgent : IPersistentTaskAgent
-    {
-        public FakePersistentTaskAgent(Uri subject)
-        {
-            Subject = subject;
-        }
-
-        public Uri Subject { get; private set; }
-
-        public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
-        {
-            SelectedPeer = peers.FirstOrDefault(x => x.NodeId == PeerIdToSelect);
-            return SelectedPeer.TakeOwnership(Subject).ContinueWith(t => SelectedPeer);
-        }
-
-        public string PeerIdToSelect;
-        public ITransportPeer SelectedPeer;
-    }
-
     public class FakeTransportPeer : ITransportPeer
     {
         public FakeTransportPeer(string nodeId, string machineName, Uri controlChannel)
@@ -66,7 +27,6 @@ namespace FubuTransportation.Testing.Monitoring.HealthAndAssignmentRouter
             OwnedSubjects.Fill(subject);
             return OwnershipResults[subject].ToCompletionTask();
         }
-
 
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
@@ -93,6 +53,7 @@ namespace FubuTransportation.Testing.Monitoring.HealthAndAssignmentRouter
         public string NodeId { get; private set; }
         public string MachineName { get; private set; }
         public Uri ControlChannel { get; private set; }
+
         public Task<bool> Deactivate(Uri subject)
         {
             OwnedSubjects.Remove(subject);

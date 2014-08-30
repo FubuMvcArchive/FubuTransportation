@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuTransportation.Monitoring;
@@ -70,7 +71,10 @@ namespace FubuTransportation.ScheduledJobs
 
         public Task<ITransportPeer> SelectOwner(IEnumerable<ITransportPeer> peers)
         {
-            throw new NotImplementedException();
+            var ordered = peers.OrderBy(x => x.ControlChannel.ToString());
+            var completion = new OrderedAssignment(Uri, ordered);
+
+            return completion.SelectOwner();
         }
     }
 }
