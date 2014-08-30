@@ -379,9 +379,11 @@
     <Compile Include="Monitoring\PersistentTaskAgentTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitoring\PersistentTaskMessageModifierTester.cs" />
     <Compile Include="Monitoring\RiggedServiceBus.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Monitoring\Service_registration_specs.cs" />
     <Compile Include="Monitoring\TaskHealthResponseTester.cs">
       <SubType>Code</SubType>
     </Compile>

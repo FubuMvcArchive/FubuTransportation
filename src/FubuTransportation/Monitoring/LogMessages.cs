@@ -5,8 +5,6 @@ using FubuTransportation.ErrorHandling;
 
 namespace FubuTransportation.Monitoring
 {
-    // TODO -- UT and register this thing
-
     [Serializable]
     public abstract class PersistentTaskMessage : LogRecord
     {

@@ -168,6 +168,7 @@
     <Compile Include="Monitoring\ITransportPeerRepository.cs" />
     <Compile Include="Monitoring\LogMessages.cs" />
     <Compile Include="Monitoring\MonitoringControlHandler.cs" />
+    <Compile Include="Monitoring\MonitoringServiceRegistry.cs" />
     <Compile Include="Monitoring\OrderedAssignment.cs" />
     <Compile Include="Monitoring\PersistentTaskController.cs" />
     <Compile Include="Monitoring\PersistentTaskAgent.cs" />
