@@ -15,6 +15,7 @@ namespace FubuTransportation.ScheduledJobs
         Accessor Channel { get; }
         TimeSpan Timeout { get;}
         IRoutingRule ToRoutingRule();
+        bool ShouldReschedule(DateTimeOffset now, IJobTimer timer);
     }
 
     public interface IScheduledJob<T> where T : IJob

@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
 using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs.Execution
 {
-    // TODO -- add LOTS of logging
-    // TODO -- more state tracing!
-    public interface IScheduledJobController
-    {
-        void Activate();
-        bool IsActive();
-        void Deactivate();
-        void Reschedule<T>(RescheduleRequest<T> request) where T : IJob;
-        void PerformHealthChecks();
-    }
-
     public class ScheduledJobController : IDisposable, IJobExecutor, IScheduledJobController
     {
         private readonly ScheduledJobGraph _jobs;
@@ -42,6 +33,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public void Activate()
         {
+            _logger.Info(() => "Activating all scheduled jobs");
             _timer.ClearAll();
 
             _statusMonitor.Persist(schedule => {
@@ -77,7 +69,18 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public void PerformHealthChecks()
         {
-            throw new NotImplementedException();
+            var jobsToReschedule = _jobs.Jobs.Where(x => x.ShouldReschedule(_timer.Now(), _timer)).ToArray();
+            if (jobsToReschedule.Any())
+            {
+                _statusMonitor.Persist(schedule =>
+                {
+                    jobsToReschedule.Each(job =>
+                    {
+                        _logger.Info(() => "Forcing a re-schedule of job " + job.JobType.GetFullName());
+                        job.Initialize(_timer.Now(), this, schedule);
+                    });
+                });
+            }
         }
 
         public void Dispose()
