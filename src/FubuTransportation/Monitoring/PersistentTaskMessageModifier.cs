@@ -21,7 +21,10 @@ namespace FubuTransportation.Monitoring
 
         public void Modify(object log)
         {
-            throw new NotImplementedException();
+            var message = log.As<PersistentTaskMessage>();
+
+            message.Machine = Environment.MachineName;
+            message.NodeId = _graph.NodeId;
         }
     }
 }

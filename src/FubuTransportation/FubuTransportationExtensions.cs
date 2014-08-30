@@ -3,6 +3,7 @@ using FubuMVC.Core.Registration.Conventions;
 using FubuTransportation.Async;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
+using FubuTransportation.Monitoring;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
@@ -20,6 +21,7 @@ namespace FubuTransportation
             registry.Services<FubuTransportServiceRegistry>();
             registry.Services<PollingServicesRegistry>();
             registry.Services<ScheduledJobServicesRegistry>();
+            registry.Services<MonitoringServiceRegistry>();
             registry.Policies.Add<RegisterPollingJobs>();
             registry.Policies.Add<RegisterScheduledJobs>();
             registry.Policies.Add<StatefulSagaConvention>();
