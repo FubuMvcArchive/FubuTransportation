@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using FubuCore.Descriptions;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
@@ -7,6 +8,14 @@ using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Polling
 {
+    public class APollingJob : IJob
+    {
+        public void Execute(CancellationToken cancellation)
+        {
+            
+        }
+    }
+
     [TestFixture]
     public class PollingJobTester : InteractionContext<PollingJob<APollingJob, PollingJobSettings>>
     {

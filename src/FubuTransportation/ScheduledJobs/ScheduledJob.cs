@@ -17,7 +17,10 @@ namespace FubuTransportation.ScheduledJobs
         {
             Scheduler = scheduler;
             Timeout = 5.Minutes();
+            MaximumTimeBeforeRescheduling = 15.Minutes();
         }
+
+        public TimeSpan MaximumTimeBeforeRescheduling { get; set; }
 
         // TODO -- add timeouts?
         // This will be completely tested through integration
@@ -73,6 +76,20 @@ namespace FubuTransportation.ScheduledJobs
             schedule.Schedule(JobType, next);
 
             executor.Schedule(this, next);
+        }
+
+        public bool ShouldReschedule(DateTimeOffset now, IJobTimer timer)
+        {
+            var execution = timer.StatusFor(typeof (T));
+            if (execution == null) return true;
+
+            if (execution.Status == JobExecutionStatus.Scheduled)
+            {
+                return false;
+            }
+
+            var age = now.Subtract(execution.ExpectedTime);
+            return age > MaximumTimeBeforeRescheduling;
         }
     }
 }
