@@ -16,16 +16,18 @@ namespace FubuTransportation.Polling
 
         public void Run(JobRequest<T> request)
         {
-            _logger.Starting(_job);
+            var id = Guid.NewGuid();
+
+            _logger.Starting(id, _job);
 
             try
             {
                 _job.Execute(new CancellationToken());
-                _logger.Successful(_job);
+                _logger.Successful(id, _job);
             }
             catch (Exception e)
             {
-                _logger.Failed(_job, e);
+                _logger.Failed(id, _job, e);
                 // TODO -- apply retry rules!
             }
         }

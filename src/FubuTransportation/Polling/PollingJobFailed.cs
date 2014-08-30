@@ -7,5 +7,6 @@ namespace FubuTransportation.Polling
     {
         public string Description { get; set; }
         public Exception Exception { get; set; }
+        public Guid JobRun { get; set; }
     }
 }

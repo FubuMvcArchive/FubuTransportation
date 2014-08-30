@@ -1,10 +1,12 @@
-﻿using FubuCore.Logging;
+﻿using System;
+using FubuCore.Logging;
 
 namespace FubuTransportation.Polling
 {
     public class PollingJobSuccess : LogRecord
     {
         public string Description { get; set; }
+        public Guid JobRun { get; set; }
 
         protected bool Equals(PollingJobSuccess other)
         {

@@ -147,17 +147,17 @@ namespace FubuTransportation.Testing.Polling
             Stopped.Add(jobType);
         }
 
-        public void Starting(IJob job)
+        public void Starting(Guid id, IJob job)
         {
             Started.Add(job);
         }
 
-        public void Successful(IJob job)
+        public void Successful(Guid id, IJob job)
         {
             Succeeded.Add(job);
         }
 
-        public void Failed(IJob job, Exception ex)
+        public void Failed(Guid id, IJob job, Exception ex)
         {
             Assert.Fail("Got an exception for {0}\n{1}", job, ex);
         }
