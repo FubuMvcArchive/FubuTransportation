@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Bottles;
 using Bottles.Diagnostics;
+using FubuTransportation.Polling;
 using FubuTransportation.Runtime;
-using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Execution;
 using FubuTransportation.Subscriptions;
 
@@ -14,27 +13,22 @@ namespace FubuTransportation
         private readonly TransportActivator _transports;
         private readonly SubscriptionActivator _subscriptions;
         private readonly IScheduledJobController _scheduledJobs;
-        private readonly ScheduledJobGraph _scheduledJobGraph;
+        private readonly PollingJobActivator _pollingJobs;
 
-        public FubuTransportationActivator(TransportActivator transports, SubscriptionActivator subscriptions, IScheduledJobController scheduledJobs, ScheduledJobGraph scheduledJobGraph)
+        public FubuTransportationActivator(TransportActivator transports, SubscriptionActivator subscriptions,
+            IScheduledJobController scheduledJobs, PollingJobActivator pollingJobs)
         {
             _transports = transports;
             _subscriptions = subscriptions;
             _scheduledJobs = scheduledJobs;
-            _scheduledJobGraph = scheduledJobGraph;
+            _pollingJobs = pollingJobs;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
             _transports.Activate(packages, log);
             _subscriptions.Activate(packages, log);
-
-            if (_scheduledJobGraph.ActivateOnStartup)
-            {
-                _scheduledJobs.Activate();
-            }
-            
-
+            _pollingJobs.Activate(packages, log);
         }
 
         public void Deactivate(IPackageLog log)
