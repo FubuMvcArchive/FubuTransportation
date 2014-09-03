@@ -32,7 +32,7 @@ namespace FubuTransportation.LightningQueues.Testing
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
             {
-                Downstream = "lq.tcp://localhost:2026/downstream".ToUri()
+                Downstream = "lq.tcp://localhost:2040/downstream".ToUri()
             };
             var lightningUri = settings.Downstream.ToLightningUri();
 
@@ -43,7 +43,7 @@ namespace FubuTransportation.LightningQueues.Testing
 
             _runtime = FubuTransport.For<ErrorRegistry>().StructureMap(container)
                 .Bootstrap();
-            _runtime.Factory.Get<IPersistentQueues>().ClearAll();
+            //_runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
 

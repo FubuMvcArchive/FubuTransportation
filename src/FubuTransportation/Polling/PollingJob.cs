@@ -31,6 +31,11 @@ namespace FubuTransportation.Polling
             _intervalFunc = _intervalSource.Compile();
         }
 
+        public ScheduledExecution ScheduledExecution
+        {
+            get { return _scheduledExecution; }
+        }
+
         public void Describe(Description description)
         {
             description.Title = "Polling Job for " + typeof(TJob).Name;
@@ -84,6 +89,14 @@ namespace FubuTransportation.Polling
         {
             _logger.Stopping(typeof(TJob));
             _timer.Stop();
+        }
+
+        public Type JobType
+        {
+            get
+            {
+                return typeof (TJob);
+            }
         }
 
         public void Dispose()

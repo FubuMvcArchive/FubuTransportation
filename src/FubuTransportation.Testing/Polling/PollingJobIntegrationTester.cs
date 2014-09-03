@@ -58,7 +58,7 @@ namespace FubuTransportation.Testing.Polling
             var pollingJobs = container.GetInstance<IPollingJobs>();
 
             pollingJobs.Count()
-                     .ShouldEqual(6);
+                     .ShouldEqual(7);
 
         }
 
@@ -76,6 +76,38 @@ namespace FubuTransportation.Testing.Polling
             OneJob.Executed.ShouldBeGreaterThan(TwoJob.Executed);
             TwoJob.Executed.ShouldBeGreaterThan(ThreeJob.Executed);
         }
+
+        [Test]
+        public void jobs_that_are_not_disabled_should_be_active()
+        {
+            var pollingJobs = theRuntime.Factory.Get<IPollingJobs>();
+            pollingJobs.IsActive<TwoJob>().ShouldBeTrue();
+            pollingJobs.IsActive<ThreeJob>().ShouldBeTrue();
+        }
+
+        [Test]
+        public void disabled_job_should_not_be_active()
+        {
+            var pollingJobs = theRuntime.Factory.Get<IPollingJobs>();
+            pollingJobs
+                .IsActive<DisabledJob>().ShouldBeFalse();
+        }
+
+        [Test]
+        public void nonexistent_job_is_not_active()
+        {
+            var pollingJobs = theRuntime.Factory.Get<IPollingJobs>();
+            pollingJobs
+                .IsActive<MissingJob>().ShouldBeFalse();
+        }
+    }
+
+    public class MissingJob : IJob
+    {
+        public void Execute(CancellationToken cancellation)
+        {
+            
+        }
     }
 
     public class PollingRegistry : FubuTransportRegistry
@@ -88,6 +120,8 @@ namespace FubuTransportation.Testing.Polling
             Polling.RunJob<TwoJob>().ScheduledAtInterval<PollingSettings>(x => x.TwoInterval);
             Polling.RunJob<ThreeJob>().ScheduledAtInterval<PollingSettings>(x => x.ThreeInterval).RunImmediately();
 
+            Polling.RunJob<DisabledJob>().ScheduledAtInterval<PollingSettings>(x => x.DisabledInterval).Disabled();
+
             Services(x => x.ReplaceService<IPollingJobLogger, RecordingPollingJobLogger>());
         }
     }
@@ -99,11 +133,13 @@ namespace FubuTransportation.Testing.Polling
             OneInterval = 100;
             TwoInterval = 200;
             ThreeInterval = 300;
+            DisabledInterval = 400;
         }
 
         public double OneInterval { get; set; }
         public double TwoInterval { get; set; }
         public double ThreeInterval { get; set; }
+        public double DisabledInterval { get; set; }
     }
 
     public class OneJob : IJob
@@ -127,6 +163,16 @@ namespace FubuTransportation.Testing.Polling
     }
 
     public class ThreeJob : IJob
+    {
+        public static int Executed = 0;
+
+        public void Execute(CancellationToken cancellation)
+        {
+            Executed++;
+        }
+    }
+
+    public class DisabledJob : IJob
     {
         public static int Executed = 0;
 
