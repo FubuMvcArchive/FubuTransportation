@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using FubuCore.Descriptions;
 using FubuCore.Reflection;
 
@@ -16,6 +21,8 @@ namespace FubuTransportation.Polling
         private readonly ScheduledExecution _scheduledExecution;
         private readonly PollingJobLatch _latch;
         private readonly Func<TSettings, double> _intervalFunc; 
+        private readonly IList<TaskCompletionSource<object>> _waiters = new List<TaskCompletionSource<object>>(); 
+        private readonly object _waiterLock = new object();
 
         public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings,
             PollingJobDefinition definition, PollingJobLatch latch)
@@ -34,6 +41,16 @@ namespace FubuTransportation.Polling
         public ScheduledExecution ScheduledExecution
         {
             get { return _scheduledExecution; }
+        }
+
+        public Task WaitForJobToExecute()
+        {
+            lock (_waiterLock)
+            {
+                var source = new TaskCompletionSource<object>();
+                _waiters.Add(source);
+                return source.Task;
+            }
         }
 
         public void Describe(Description description)
@@ -64,12 +81,23 @@ namespace FubuTransportation.Polling
         {
             if (_latch.Latched) return;
 
+            TaskCompletionSource<object>[] waiters = null;
+
+            lock (_waiterLock)
+            {
+                waiters = _waiters.ToArray();
+                 _waiters.Clear();
+            }
+
             try
             {
                 _bus.Consume(new JobRequest<TJob>());
+                waiters.Each(x => x.SetResult(new object()));
             }
             catch (Exception e)
             {
+                _waiters.Each(x => x.SetException(e));
+
                 // VERY unhappy with the code below, but I cannot determine
                 // why the latching doesn't work cleanly in the NUnit console runner
                 if (_latch.Latched || e.Message.Contains("Could not find an Instance named")) return;

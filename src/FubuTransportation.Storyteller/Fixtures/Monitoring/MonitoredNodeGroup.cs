@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Util;
@@ -13,7 +13,6 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         private readonly Cache<string, MonitoredNode> _nodes = new Cache<string, MonitoredNode>();
         private readonly InMemorySubscriptionPersistence _persistence = new InMemorySubscriptionPersistence();
         private readonly IList<Action<MonitoredNode>> _configurations = new List<Action<MonitoredNode>>();
-        private readonly Cache<Uri, string> _initialAssignments = new Cache<Uri, string>(); 
 
         public void Add(string nodeId, Uri incoming)
         {
@@ -25,20 +24,24 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         {
             _configurations.Add(node => node.AddTask(subject, preferredNodes));
 
-            if (!initialNode.EqualsIgnoreCase("none"))
-            {
-                _initialAssignments[subject] = initialNode;
-            }
-
+            _nodes[initialNode].AddInitialTask(subject);
         }
 
         public bool MonitoringEnabled { get; set; }
 
+        public MonitoredNode NodeFor(string id)
+        {
+            return _nodes[id];
+        }
+
         public Task Startup()
         {
-            // startup each node
-            // remember to do the initial assignments
-            throw new NotImplementedException();      
+            var tasks = _nodes.Select(node => {
+                _configurations.Each(x => x(node));
+                return node.Startup(MonitoringEnabled, _persistence);
+            });
+
+            return Task.WhenAll(tasks);
         }
 
         public void Dispose()
@@ -54,13 +57,28 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public IEnumerable<TaskState> AssignedTasks()
         {
-            throw new NotImplementedException();
+            return _nodes.SelectMany(x => x.AssignedTasks());
         }
 
         public IEnumerable<TaskState> PersistedTasks()
         {
-            throw new NotImplementedException();
-        } 
+            return
+                _persistence.AllNodes()
+                    .SelectMany(
+                        node => { return node.OwnedTasks.Select(x => new TaskState {Node = node.Id, Task = x}); });
+        }
+
+        public void WaitForAllHealthChecks()
+        {
+            var tasks = _nodes.Select(x => x.WaitForHealthCheck());
+            Task.WaitAll(tasks.ToArray());
+        }
+
+        public void ShutdownNode(string node)
+        {
+            _nodes[node].Shutdown();
+            _nodes.Remove(node);
+        }
     }
 
     public class TaskState

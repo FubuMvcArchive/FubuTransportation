@@ -25,6 +25,7 @@ namespace FubuTransportation.Monitoring
         Task EnsureTasksHaveOwnership();
         Task<OwnershipStatus> TakeOwnership(Uri subject);
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
+        IEnumerable<Uri> ActiveTasks();
     }
 
     public class PersistentTaskController : ITransportPeer, IPersistentTasks, IPersistentTaskController
@@ -223,6 +224,11 @@ namespace FubuTransportation.Monitoring
             {
                 Tasks = tasks.Select(x => x.Result).ToArray()
             });
+        }
+
+        public IEnumerable<Uri> ActiveTasks()
+        {
+            return _agents.Where(x => x.IsActive).Select(x => x.Subject).ToArray();
         }
 
         public IEnumerable<Uri> CurrentlyOwnedSubjects()

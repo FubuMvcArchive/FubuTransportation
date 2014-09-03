@@ -40,13 +40,13 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         [FormatAs("After the health checks run on all nodes")]
         public void AfterTheHealthChecksRunOnAllNodes()
         {
-            throw new NotImplementedException();
+            _nodes.WaitForAllHealthChecks();
         }
 
         [FormatAs("Node {Node} drops offline")]
         public void NodeDropsOffline(string Node)
         {
-            throw new NotImplementedException();
+            _nodes.ShutdownNode(Node);
         }
 
         public IGrammar TheTaskAssignmentsShouldBe()
