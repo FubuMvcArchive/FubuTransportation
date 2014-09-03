@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FubuMVC.Core;
@@ -19,7 +21,7 @@ namespace FubuTransportation.Testing.Async
         [Test]
         public void ordered_the_way_we_expect_it_to_be()
         {
-            AsyncWatcher.Messages.Clear();
+            AsyncWatcher.Clear();
 
             using (var runtime = FubuTransport.For<AsyncRegistry>().StructureMap().Bootstrap())
             {
@@ -28,11 +30,12 @@ namespace FubuTransportation.Testing.Async
 
                 invoker.InvokeNow(message);
 
-                Wait.Until(() => AsyncWatcher.Messages.Count == 4);
-                AsyncWatcher.Messages[0].ShouldEqual("wrapper:start");
-                AsyncWatcher.Messages[1].ShouldEndWith("Buck Rogers");
-                AsyncWatcher.Messages[2].ShouldEndWith("Buck Rogers");
-                AsyncWatcher.Messages[3].ShouldEndWith("wrapper:finish");
+                AsyncWatcher.Messages.ToArray().Each(x => Debug.WriteLine(x));
+
+                AsyncWatcher.Messages.ElementAt(0).ShouldEqual("wrapper:start");
+                AsyncWatcher.Messages.ElementAt(1).ShouldEndWith("Buck Rogers");
+                AsyncWatcher.Messages.ElementAt(2).ShouldEndWith("Buck Rogers");
+                AsyncWatcher.Messages.ElementAt(3).ShouldEndWith("wrapper:finish");
             }
         }
     }
@@ -43,7 +46,7 @@ namespace FubuTransportation.Testing.Async
         {
             EnableInMemoryTransport();
 
-            Global.WrapWith<FooWrapper>();
+            Local.WrapWith<FooWrapper>();
         }
     }
 
@@ -51,7 +54,7 @@ namespace FubuTransportation.Testing.Async
     {
         private readonly static object _locker = new object();
 
-        public static IList<string> Messages
+        public static IEnumerable<string> Messages
         {
             get { return _messages; }
         }
@@ -64,7 +67,12 @@ namespace FubuTransportation.Testing.Async
             }
         }
 
-        private static IList<string> _messages = new List<string>();
+        private static readonly IList<string> _messages = new List<string>();
+
+        public static void Clear()
+        {
+            _messages.Clear();
+        }
     }
 
     public class Foo
@@ -76,9 +84,9 @@ namespace FubuTransportation.Testing.Async
     {
         protected override void invoke(Action action)
         {
-            AsyncWatcher.Messages.Add("wrapper:start");
+            AsyncWatcher.Write("wrapper:start");
             action();
-            AsyncWatcher.Messages.Add("wrapper:finish");
+            AsyncWatcher.Write("wrapper:finish");
         }
     }
 
@@ -88,7 +96,7 @@ namespace FubuTransportation.Testing.Async
         {
             return Task.Factory.StartNew(() => {
                 Thread.Sleep(100);
-                AsyncWatcher.Messages.Add("go:" + foo.Name);
+                AsyncWatcher.Write("go:" + foo.Name);
             });
         }
 
@@ -97,7 +105,7 @@ namespace FubuTransportation.Testing.Async
             return Task.Factory.StartNew(() =>
             {
                 Thread.Sleep(100);
-                AsyncWatcher.Messages.Add("other:" + foo.Name);
+                AsyncWatcher.Write("other:" + foo.Name);
             });
         }
     }
