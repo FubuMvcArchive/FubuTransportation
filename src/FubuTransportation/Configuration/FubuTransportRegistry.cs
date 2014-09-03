@@ -141,6 +141,19 @@ namespace FubuTransportation.Configuration
             }
         }
 
+        /// <summary>
+        /// A shortcut to programmatically set the NodeId
+        /// Useful for testing or running multiples of the same
+        /// configured Node on one box
+        /// </summary>
+        public string NodeId
+        {
+            set
+            {
+                AlterSettings<ChannelGraph>(x => x.NodeId = value);
+            }
+        }
+
         internal Action<ChannelGraph> channel
         {
             set { _channelAlterations.Add(value); }
@@ -307,7 +320,15 @@ namespace FubuTransportation.Configuration
             get
             {
                 return
-                    new PoliciesExpression(policy => { AlterSettings<HandlerPolicies>(x => x.AddGlobal(policy, this)); });
+                    new PoliciesExpression(policy => AlterSettings<HandlerPolicies>(x => x.AddGlobal(policy, this)));
+            }
+        }
+
+        public bool HealthMonitoringEnabled
+        {
+            set
+            {
+                throw new NotImplementedException("Not done yet");
             }
         }
 

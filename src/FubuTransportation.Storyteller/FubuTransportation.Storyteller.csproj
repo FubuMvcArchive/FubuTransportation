@@ -137,6 +137,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixtures\BatchMessageFixture.cs" />
+    <Compile Include="Fixtures\Monitoring\FakePersistentTask.cs" />
+    <Compile Include="Fixtures\Monitoring\FakePersistentTaskSource.cs" />
+    <Compile Include="Fixtures\Monitoring\MonitoredNode.cs" />
+    <Compile Include="Fixtures\Monitoring\MonitoredNodeGroup.cs" />
+    <Compile Include="Fixtures\Monitoring\MonitoringFixture.cs" />
+    <Compile Include="Fixtures\Monitoring\MonitoringSettings.cs" />
+    <Compile Include="Fixtures\Monitoring\MonitoringSetupFixture.cs" />
     <Compile Include="Fixtures\Subscriptions\HasGlobalSubscriptionsRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\HasLocalSubscriptionsRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\PublishingRegistry.cs" />

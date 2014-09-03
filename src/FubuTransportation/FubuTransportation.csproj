@@ -159,6 +159,7 @@
     <Compile Include="Logging\MessageSuccessful.cs" />
     <Compile Include="Logging\NoHandlerForMessage.cs" />
     <Compile Include="Monitoring\HealthAndAssignmentRouter.cs" />
+    <Compile Include="Monitoring\HealthMonitoringSettings.cs" />
     <Compile Include="Monitoring\HealthMonitorPollingJob.cs" />
     <Compile Include="Monitoring\HealthStatus.cs" />
     <Compile Include="Monitoring\IPersistentTask.cs" />
