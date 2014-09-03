@@ -1,6 +1,5 @@
 ﻿using FubuCore.Logging;
 using FubuMVC.Core.Registration;
-using FubuTransportation.ScheduledJobs;
 
 namespace FubuTransportation.Monitoring
 {
@@ -11,7 +10,6 @@ namespace FubuTransportation.Monitoring
             AddService<ILogModifier, PersistentTaskMessageModifier>();
             SetServiceIfNone<IPersistentTaskController, PersistentTaskController>(def => def.AsSingleton());
             SetServiceIfNone<ITransportPeerRepository, TransportPeerRepository>();
-            
         }
     }
 }
