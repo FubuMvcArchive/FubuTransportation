@@ -12,13 +12,8 @@ namespace FubuTransportation.ScheduledJobs
     [ApplicationLevel]
     public class ScheduledJobGraph
     {
-        public ScheduledJobGraph()
-        {
-            ActivateOnStartup = true;
-        }
 
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
-        public bool ActivateOnStartup { get; set; }
         public Accessor DefaultChannel { get; set; }
 
         public void DetermineSchedule(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule)

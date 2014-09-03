@@ -10,7 +10,6 @@ namespace FubuTransportation.Polling
         {
             // NEED MORE.
             SetServiceIfNone<ITimer, DefaultTimer>();
-            AddService<IActivator, PollingJobActivator>();
             AddService<IDeactivator, PollingJobDeactivator>();
             SetServiceIfNone<IPollingJobLogger, PollingJobLogger>();
 

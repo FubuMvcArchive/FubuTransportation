@@ -86,7 +86,7 @@ namespace FubuTransportation.ScheduledJobs.Configuration
         /// <returns></returns>
         public ScheduledJobExpression<T> ActivatedOnStartup(bool shouldActivate)
         {
-            _parent.AlterSettings<ScheduledJobGraph>(x => x.ActivateOnStartup = shouldActivate);
+            _parent.HealthMonitoring.ScheduledExecution(shouldActivate ? ScheduledExecution.RunImmediately : ScheduledExecution.Disabled);
             return this;
         }
     }

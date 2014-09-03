@@ -8,15 +8,6 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.ScheduledJobs
 {
-    [TestFixture]
-    public class ScheduledJobGraphTester
-    {
-        [Test]
-        public void activate_on_startup_is_the_default()
-        {
-            new ScheduledJobGraph().ActivateOnStartup.ShouldBeTrue();
-        }
-    }
 
     [TestFixture]
     public class when_scheduling_jobs
