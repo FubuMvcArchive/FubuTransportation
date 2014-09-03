@@ -25,7 +25,7 @@ namespace FubuTransportation.LightningQueues.Testing
         {
             graph = new ChannelGraph();
             node = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
-            node.Uri = new Uri("lq.tcp://localhost:2020/upstream");
+            node.Uri = new Uri("lq.tcp://localhost:2032/upstream");
             node.Incoming = true;
 
             var delayedCache = new DelayedMessageCache<MessageId>();

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
@@ -17,11 +18,10 @@ namespace FubuTransportation.Testing.Polling
         [TestFixtureSetUp]
         public void SetUp()
         {
-            ImmediateJob.Executed = DelayJob.Executed = 0;
+            ImmediateJob.Executed = DelayJob.Executed = DisabledJob.Executed = 0;
 
-            var container = new Container();
             theRuntime = FubuTransport.For<PollingImmediateRegistry>()
-                                      .StructureMap(container)
+                                      .StructureMap()
                                       .Bootstrap();
         }
 
@@ -39,6 +39,15 @@ namespace FubuTransportation.Testing.Polling
 
             Wait.Until(() => ImmediateJob.Executed > 1, timeoutInMilliseconds: 6000);
             ImmediateJob.Executed.ShouldBeGreaterThan(1);
+        }
+
+        [Test]
+        public void disabled_jobs_are_not_executed_or_started()
+        {
+            DisabledJob.Executed.ShouldEqual(0);
+            theRuntime.Factory.Get<IPollingJobs>().IsActive<DisabledJob>()
+                .ShouldBeFalse();
+
         }
     }
 
@@ -65,6 +74,8 @@ namespace FubuTransportation.Testing.Polling
         public double ImmediateInterval { get; set; }
         public double DelayInterval { get; set; }
     }
+
+
 
     public class ImmediateJob : IJob
     {

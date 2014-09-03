@@ -8,5 +8,8 @@ namespace FubuTransportation.Polling
         void Start();
         void RunNow();
         void Stop();
+
+        Type JobType { get; }
+        ScheduledExecution ScheduledExecution { get; }
     }
 }

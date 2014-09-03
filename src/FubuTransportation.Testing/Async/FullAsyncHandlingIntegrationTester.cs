@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing.Async
 
                 invoker.InvokeNow(message);
 
-                AsyncWatcher.Messages.ToArray().Each(x => Debug.WriteLine(x));
+                Wait.Until(() => AsyncWatcher.Messages.Count() == 4);
 
                 AsyncWatcher.Messages.ElementAt(0).ShouldEqual("wrapper:start");
                 AsyncWatcher.Messages.ElementAt(1).ShouldEndWith("Buck Rogers");

@@ -38,6 +38,7 @@ namespace FubuTransportation.Polling
     public enum ScheduledExecution
     {
         WaitUntilInterval,
-        RunImmediately
+        RunImmediately,
+        Disabled
     }
 }

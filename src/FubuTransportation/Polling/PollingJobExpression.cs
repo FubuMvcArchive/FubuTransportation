@@ -30,31 +30,49 @@ namespace FubuTransportation.Polling
             public ScheduledExecutionExpression ScheduledAtInterval<TSettings>(
                 Expression<Func<TSettings, double>> intervalInMillisecondsProperty)
             {
-                var definition = new PollingJobDefinition
-                {
-                    JobType = typeof(TJob),
-                    SettingType = typeof(TSettings),
-                    IntervalSource = intervalInMillisecondsProperty
-                };
 
                 _parent._parent._pollingJobs.AddJobType(typeof(TJob));
-                _parent._parent.AlterSettings<PollingJobSettings>(x => x.Jobs.Add(definition));
 
-                return new ScheduledExecutionExpression(definition);
+
+                _parent._parent.AlterSettings<PollingJobSettings>(x => {
+                    var job = x.JobFor<TJob>();
+                    job.SettingType = typeof (TSettings);
+                    job.IntervalSource = intervalInMillisecondsProperty;
+                });
+
+                return new ScheduledExecutionExpression(_parent._parent);
             }
 
             public class ScheduledExecutionExpression
             {
-                private readonly PollingJobDefinition _definition;
+                private readonly FubuTransportRegistry _registry;
 
-                public ScheduledExecutionExpression(PollingJobDefinition definition)
+                public ScheduledExecutionExpression(FubuTransportRegistry registry)
                 {
-                    _definition = definition;
+                    _registry = registry;
+                }
+
+                private ScheduledExecution schedule
+                {
+                    set
+                    {
+                        _registry.AlterSettings<PollingJobSettings>(x => x.JobFor<TJob>().ScheduledExecution = value);
+                    }
                 }
 
                 public void RunImmediately()
                 {
-                    _definition.ScheduledExecution = ScheduledExecution.RunImmediately;
+                    schedule = ScheduledExecution.RunImmediately;
+                }
+
+                public void Disabled()
+                {
+                    schedule = ScheduledExecution.Disabled;
+                }
+
+                public void WaitForFirstInterval()
+                {
+                    schedule = ScheduledExecution.WaitUntilInterval;
                 }
             }
         }

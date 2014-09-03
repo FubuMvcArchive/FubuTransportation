@@ -50,7 +50,7 @@ namespace FubuTransportation.LightningQueues.Testing
     {
         public TransportDiagnosticsSettings()
         {
-            Endpoint = new Uri("lq.tcp://localhost:2020/diagnostics");
+            Endpoint = new Uri("lq.tcp://localhost:2031/diagnostics");
         }
 
         public Uri Endpoint { get; set; }

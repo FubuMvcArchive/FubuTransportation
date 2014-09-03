@@ -33,7 +33,7 @@ namespace FubuTransportation.LightningQueues.Testing
             // Need to do something about this.  Little ridiculous
             var settings = new BusSettings
             {
-                Downstream = "lq.tcp://localhost:2020/downstream".ToUri()
+                Downstream = "lq.tcp://localhost:2050/downstream".ToUri()
             };
 
 
@@ -44,7 +44,7 @@ namespace FubuTransportation.LightningQueues.Testing
                                        .Bootstrap();
 
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
-            _runtime.Factory.Get<IPersistentQueues>().ClearAll();
+            //_runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
             theClock = _runtime.Factory.Get<ISystemTime>().As<SettableClock>();
 
@@ -89,8 +89,9 @@ namespace FubuTransportation.LightningQueues.Testing
         [TestFixtureTearDown]
         public void TearDown()
         {
-            FubuTransport.Reset();
             _runtime.Dispose();
+            FubuTransport.Reset();
+            
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuCore.Descriptions;
@@ -17,7 +18,7 @@ namespace FubuTransportation.Polling
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            _jobs.Each(x => {
+            _jobs.Where(x => x.ScheduledExecution != ScheduledExecution.Disabled).Each(x => {
                 try
                 {
                     log.Trace("Starting " + Description.For(x).Title);
