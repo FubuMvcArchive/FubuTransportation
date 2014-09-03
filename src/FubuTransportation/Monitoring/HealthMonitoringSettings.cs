@@ -6,7 +6,7 @@ namespace FubuTransportation.Monitoring
     {
         public int Seed
         {
-            set { Random = new Random(value); }
+            set { Random = new Random(value * 1000); }
         }
 
         public Random Random = new Random(60000);

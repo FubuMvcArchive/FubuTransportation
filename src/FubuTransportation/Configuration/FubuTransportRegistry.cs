@@ -324,14 +324,14 @@ namespace FubuTransportation.Configuration
             }
         }
 
-        public bool HealthMonitoringEnabled
+
+        public HealthMonitoringExpression HealthMonitoring
         {
-            set
+            get
             {
-                throw new NotImplementedException("Not done yet");
+                return new HealthMonitoringExpression(this);
             }
         }
-
 
         /// <summary>
         ///   Configures the <see cref = "IServiceRegistry" /> to specify dependencies. 

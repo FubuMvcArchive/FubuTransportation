@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace FubuTransportation.Polling
 {
@@ -11,5 +12,6 @@ namespace FubuTransportation.Polling
 
         Type JobType { get; }
         ScheduledExecution ScheduledExecution { get; }
+        Task WaitForJobToExecute();
     }
 }

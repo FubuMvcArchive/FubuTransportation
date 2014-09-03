@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using FubuCore;
 
 namespace FubuTransportation.Polling
 {
@@ -49,6 +51,24 @@ namespace FubuTransportation.Polling
         {
             var job = For(type);
             if (job != null) job.Start();
+        }
+
+        public Task WaitForJobToExecute<T>() where T : IJob
+        {
+            var job = For(typeof(T));
+            if (job == null) throw new ArgumentOutOfRangeException("T", "Unknown job type " + typeof(T).GetFullName());
+
+            return job.WaitForJobToExecute();
+        }
+
+        public Task ExecuteJob<T>() where T : IJob
+        {
+            var job = For(typeof(T));
+            if (job == null) throw new ArgumentOutOfRangeException("T", "Unknown job type " + typeof(T).GetFullName());
+
+            return Task.Factory.StartNew(() => {
+                job.RunNow();
+            });
         }
     }
 }
