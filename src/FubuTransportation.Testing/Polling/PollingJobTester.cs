@@ -8,6 +8,7 @@ using Rhino.Mocks;
 
 namespace FubuTransportation.Testing.Polling
 {
+    [System.ComponentModel.Description("A polling job just for testing purposes")]
     public class APollingJob : IJob
     {
         public void Execute(CancellationToken cancellation)

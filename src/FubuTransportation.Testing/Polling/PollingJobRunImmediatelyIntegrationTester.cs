@@ -1,4 +1,5 @@
-﻿using FubuMVC.Core;
+﻿using System.Threading;
+using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -69,7 +70,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public static int Executed = 0;
 
-        public void Execute()
+        public void Execute(CancellationToken token)
         {
             Executed++;
         }
@@ -79,7 +80,7 @@ namespace FubuTransportation.Testing.Polling
     {
         public static int Executed = 0;
 
-        public void Execute()
+        public void Execute(CancellationToken token)
         {
             Executed++;
         }
