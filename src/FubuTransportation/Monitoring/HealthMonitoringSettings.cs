@@ -4,6 +4,8 @@ namespace FubuTransportation.Monitoring
 {
     public class HealthMonitoringSettings
     {
+        private bool _initial = true;
+
         public int Seed
         {
             set { Random = new Random(value * 1000); }
@@ -13,7 +15,16 @@ namespace FubuTransportation.Monitoring
 
         public double Interval
         {
-            get { return Random.NextDouble(); }
+            get
+            {
+                if (_initial)
+                {
+                    _initial = false;
+                    return 100;
+                }
+                
+                return Random.NextDouble();
+            }
         }
     }
 }

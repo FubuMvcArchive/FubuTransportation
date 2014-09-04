@@ -144,6 +144,7 @@
     <Compile Include="Fixtures\Monitoring\MonitoringFixture.cs" />
     <Compile Include="Fixtures\Monitoring\MonitoringSettings.cs" />
     <Compile Include="Fixtures\Monitoring\MonitoringSetupFixture.cs" />
+    <Compile Include="Fixtures\Monitoring\PersistentTaskMessageListener.cs" />
     <Compile Include="Fixtures\Subscriptions\HasGlobalSubscriptionsRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\HasLocalSubscriptionsRegistry.cs" />
     <Compile Include="Fixtures\Subscriptions\PublishingRegistry.cs" />

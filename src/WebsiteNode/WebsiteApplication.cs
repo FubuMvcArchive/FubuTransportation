@@ -2,6 +2,7 @@
 using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
+using FubuTransportation.Polling;
 using ServiceNode;
 using StructureMap;
 
@@ -26,7 +27,7 @@ namespace WebsiteNode
             Channel(x => x.Website).ReadIncoming();
             Channel(x => x.Service).AcceptsMessagesInAssemblyContainingType<ServiceApplication>();
 
-
+            HealthMonitoring.ScheduledExecution(ScheduledExecution.Disabled);
         }
     }
 

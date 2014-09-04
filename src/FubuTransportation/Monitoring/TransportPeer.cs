@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
@@ -30,6 +31,8 @@ namespace FubuTransportation.Monitoring
 
         public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
+            _logger.InfoMessage(() => new TryingToAssignOwnership(subject, NodeId));
+
             return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
                 new RequestOptions {Destination = ControlChannel})
                 .ContinueWith(t => {
@@ -41,9 +44,12 @@ namespace FubuTransportation.Monitoring
 
                     if (!t.IsCompleted)
                     {
+                        Debug.WriteLine("TakeOwnership message for task {0} to node {1} timed out.", subject, _node.Id);
                         return OwnershipStatus.TimedOut;
                     }
 
+
+                    Debug.WriteLine("TakeOwnership message for task {0} to node {1} returned status {2}", subject, _node.Id, t.Result.Status);
                     return t.Result.Status;
                 });
         }

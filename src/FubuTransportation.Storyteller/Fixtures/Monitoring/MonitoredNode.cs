@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Logging;
 using FubuCore.Util;
 using FubuMVC.Core;
 using FubuMVC.Diagnostics.Model;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
+using FubuTransportation.LightningQueues;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Polling;
 using FubuTransportation.Subscriptions;
@@ -18,6 +21,8 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 {
     public class MonitoredNode : FubuTransportRegistry<MonitoringSettings>, IDisposable
     {
+        public static readonly Random Random = new Random(100);
+
         public const string HealthyAndFunctional = "Healthy and Functional";
         public const string TimesOutOnStartupOrHealthCheck = "Times out on startup or health check";
         public const string ThrowsExceptionOnStartupOrHealthCheck = "Throws exception on startup or health check";
@@ -29,7 +34,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         private readonly IList<Uri> _initialTasks = new List<Uri>();
         private readonly Cache<string, FakePersistentTaskSource> _sources = new Cache<string, FakePersistentTaskSource>(scheme => new FakePersistentTaskSource(scheme)); 
             
-        public MonitoredNode(string nodeId, Uri incoming)
+        public MonitoredNode(string nodeId, Uri incoming, PersistentTaskMessageListener listener)
         {
             AlterSettings<MonitoringSettings>(x => x.Incoming = incoming);
             NodeName = "Monitoring";
@@ -37,7 +42,9 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
             _nodeId = nodeId;
 
+            EnableInMemoryTransport(incoming);
 
+            Services(_ => _.AddService<ILogListener>(listener));
         }
 
         public FakePersistentTask TaskFor(string uriString)
@@ -55,30 +62,32 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             get { return _nodeId; }
         }
 
-        public Task<FubuRuntime> Startup(bool monitoringEnabled, ISubscriptionPersistence persistence)
+        public void Startup(bool monitoringEnabled, ISubscriptionPersistence persistence)
         {
+            
+
+            AlterSettings<LightningQueueSettings>(x => x.DisableIfNoChannels = true);
+
             Services(_ => _sources.Each(_.AddService<IPersistentTaskSource>));
             Services(_ => _.ReplaceService(persistence));
             HealthMonitoring
                 .ScheduledExecution(monitoringEnabled ? ScheduledExecution.WaitUntilInterval : ScheduledExecution.Disabled)
                 .IntervalSeed(3);
 
-            return Task.Factory.StartNew(() => FubuTransport.For(this).StructureMap().Bootstrap()).ContinueWith(t => {
-                _runtime = t.Result;
-
-                var controller = _runtime.Factory.Get<IPersistentTaskController>();
-                _initialTasks.Each(subject => {
-                    controller.TakeOwnership(subject).ContinueWith(t1 => {
-                        if (t1.Result != OwnershipStatus.OwnershipActivated)
-                        {
-                            throw new Exception("Unable to activate {0} on node {1}".ToFormat(subject, Id));
-                        }
-                    });
-
+            _runtime = FubuTransport.For(this).StructureMap().Bootstrap();
+            var controller = _runtime.Factory.Get<IPersistentTaskController>();
+            _initialTasks.Each(subject =>
+            {
+                controller.TakeOwnership(subject).ContinueWith(t1 =>
+                {
+                    if (t1.Result != OwnershipStatus.OwnershipActivated)
+                    {
+                        throw new Exception("Unable to activate {0} on node {1}".ToFormat(subject, Id));
+                    }
                 });
 
-                return t.Result;
             });
+
         }
 
         void IDisposable.Dispose()
@@ -114,10 +123,9 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             {
                 return jobs.WaitForJobToExecute<HealthMonitorPollingJob>();
             }
-            else
-            {
-                return jobs.ExecuteJob<HealthMonitorPollingJob>();
-            }
+
+            return jobs.ExecuteJob<HealthMonitorPollingJob>();
+
         }
 
         public void Shutdown()

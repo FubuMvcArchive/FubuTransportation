@@ -1,23 +1,32 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using FubuCore.Logging;
 using FubuTransportation.Configuration;
+using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Monitoring
 {
     // Mostly tested through PersistentTaskController and/or integration tests
     public class MonitoringControlHandler
     {
+        private readonly ILogger _logger;
+        private readonly Envelope _envelope;
         private readonly ChannelGraph _graph;
         private readonly IPersistentTaskController _controller;
 
-        public MonitoringControlHandler(ChannelGraph graph, IPersistentTaskController controller)
+        public MonitoringControlHandler(ILogger logger, Envelope envelope, ChannelGraph graph, IPersistentTaskController controller)
         {
+            _logger = logger;
+            _envelope = envelope;
             _graph = graph;
             _controller = controller;
         }
 
         public Task<TaskHealthResponse> Handle(TaskHealthRequest request)
         {
+            Debug.WriteLine("Received message {0} from {1}", request, _envelope.ReplyUri);
+
             return _controller.CheckStatusOfOwnedTasks().ContinueWith(t => {
                 if (t.IsFaulted)
                 {
@@ -26,6 +35,8 @@ namespace FubuTransportation.Monitoring
 
                 var response = t.Result;
                 response.AddMissingSubjects(request.Subjects);
+
+                Debug.WriteLine("Responding with {0} on node {1} from health request from {2}", request, _graph.NodeId, _envelope.ReplyUri);
 
                 return response;
             });
@@ -50,6 +61,15 @@ namespace FubuTransportation.Monitoring
                 NodeId = _graph.NodeId,
                 Status = t.Result,
                 Subject = request.Subject
+            }).ContinueWith(t => {
+                _logger.InfoMessage(() => {
+                    var @event = new TakeOwnershipRequestReceived(request.Subject, _envelope.ReplyUri);
+                    if (t.Result != null) @event.Status = t.Result.Status;
+
+                    return @event;
+                });
+
+                return t.Result;
             });
         }
     }

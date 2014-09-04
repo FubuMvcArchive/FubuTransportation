@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore.Logging;
@@ -29,16 +30,16 @@ namespace FubuTransportation.Monitoring
 
             var healthTasks =_peers.Select(
                     peer => peer.CheckStatusOfOwnedTasks()
-                        .ContinueWith(t => t.Result.Tasks.Each(ReassignIfNecessary)));
+                        .ContinueWith(t => t.Result.Tasks.Each(x => ReassignIfNecessary(peer, x))));
 
             return Task.Factory.ContinueWhenAll(healthTasks.Union(assignments).ToArray(), _ => { });
         }
 
-        public void ReassignIfNecessary(PersistentTaskStatus status)
+        public void ReassignIfNecessary(ITransportPeer peer, PersistentTaskStatus status)
         {
             if (status.Status == HealthStatus.Active) return;
 
-            _logger.InfoMessage(() => new ReassigningTask(status.Subject, status.Status));
+            _logger.InfoMessage(() => new ReassigningTask(status.Subject, status.Status, peer.NodeId));
 
             Reassign(status.Subject);
         }

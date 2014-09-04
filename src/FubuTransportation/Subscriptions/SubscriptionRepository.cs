@@ -82,7 +82,7 @@ namespace FubuTransportation.Subscriptions
 
         public IEnumerable<TransportNode> FindPeers()
         {
-            return _persistence.NodesForGroup(_graph.Name);
+            return _persistence.NodesForGroup(_graph.Name).Where(x => x.Id != _graph.NodeId);
         }
     }
 }

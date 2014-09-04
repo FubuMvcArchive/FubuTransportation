@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using FubuCore.Binding;
 using FubuMVC.Core;
 using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
 using FubuTransportation.TestSupport;
 using Serenity;
-using StoryTeller.Engine;
 
 namespace FubuTransportation.Serenity
 {
@@ -14,14 +11,12 @@ namespace FubuTransportation.Serenity
     {
         public FubuTransportSystem() : this(DetermineSettings())
         {
-
         }
 
         public FubuTransportSystem(string parallelDirectory = null, string physicalPath = null)
             : this(DetermineSettings(parallelDirectory, physicalPath))
         {
-            
-        } 
+        }
 
         public FubuTransportSystem(ApplicationSettings settings) : base(settings)
         {
@@ -29,23 +24,17 @@ namespace FubuTransportation.Serenity
 
             AddContextualProvider<MessageContextualInfoProvider>();
 
-            OnStartup<IMessagingSession>(x =>
-            {
-                Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(x);
-            });
+            OnStartup<IMessagingSession>(x => Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(x));
 
             // Clean up all the existing queue state to prevent test pollution
-            OnContextCreation<TransportCleanup>(cleanup =>
-            {
+            OnContextCreation<TransportCleanup>(cleanup => {
                 cleanup.ClearAll();
 
                 RemoteSubSystems.Each(x => x.Runner.SendRemotely(new ClearAllTransports()));
             });
 
-            OnContextCreation<IMessagingSession>(x =>
-            {
-                RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x));
-            });
+            OnContextCreation<IMessagingSession>(
+                x => RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x)));
 
             OnContextCreation(TestNodes.Reset);
         }

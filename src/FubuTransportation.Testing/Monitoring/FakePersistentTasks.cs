@@ -22,5 +22,13 @@ namespace FubuTransportation.Testing.Monitoring
 
 
         public IEnumerable<Uri> PersistentSubjects { get; set; }
+
+        public string NodeId
+        {
+            get
+            {
+                return "FakeNode";
+            }
+        }
     }
 }

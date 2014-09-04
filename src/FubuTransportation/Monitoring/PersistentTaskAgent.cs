@@ -55,15 +55,15 @@ namespace FubuTransportation.Monitoring
             get { return _task.IsActive; }
         }
 
-        // TODO -- HAS TO, HAS TO, HAS TO BE A CHILD TASK
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {
-            return _task.SelectOwner(peers);
+            return Enqueue(task => task.SelectOwner(peers)).Unwrap();
+
         }
 
         public Task Enqueue(Action<IPersistentTask> action)
         {
-            var completion = new TaskCompletionSource<object>();
+            var completion = new TaskCompletionSource<object>(TaskCreationOptions.AttachedToParent);
             _actions.Add(t => {
                 try
                 {
