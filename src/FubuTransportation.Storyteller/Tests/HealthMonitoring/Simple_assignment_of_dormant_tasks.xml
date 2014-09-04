@@ -15,11 +15,9 @@
         <TheTasksAre isStep="True">
           <table>
             <row isStep="True" task="foo://1" node="NONE" nodes="Node1, Node2, Node3, Node4" />
-			<!--
             <row isStep="True" task="foo://2" node="NONE" nodes="Node2, Node1, Node3, Node4" />
             <row isStep="True" task="foo://3" node="NONE" nodes="Node3, Node1, Node2, Node4" />
             <row isStep="True" task="foo://4" node="NONE" nodes="Node4, Node1, Node2, Node3" />
-			-->
           </table>
         </TheTasksAre>
       </MonitoringSetup>
@@ -36,21 +34,17 @@
     <TheTaskAssignmentsShouldBe isStep="True">
       <rows>
         <row isStep="True" Task="foo://1" Node="Node1" />
-		<!--
         <row isStep="True" Task="foo://2" Node="Node2" />
         <row isStep="True" Task="foo://3" Node="Node3" />
         <row isStep="True" Task="foo://4" Node="Node4" />
-		-->
       </rows>
     </TheTaskAssignmentsShouldBe>
     <ThePersistedAssignmentsShouldBe isStep="True">
       <rows>
         <row isStep="True" Task="foo://1" Node="Node1" />
-		<!--
         <row isStep="True" Task="foo://2" Node="Node2" />
         <row isStep="True" Task="foo://3" Node="Node3" />
         <row isStep="True" Task="foo://4" Node="Node4" />
-		-->
       </rows>
     </ThePersistedAssignmentsShouldBe>
   </Monitoring>
