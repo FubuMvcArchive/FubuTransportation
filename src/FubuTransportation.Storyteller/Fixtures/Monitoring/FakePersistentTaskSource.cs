@@ -15,11 +15,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         public FakePersistentTaskSource(string protocol)
         {
             Protocol = protocol;
-            _tasks.OnMissing = name =>
-            {
-                var uri = "{0}://{1}".ToFormat(Protocol, name).ToUri();
-                return new FakePersistentTask(uri);
-            };
+            _tasks.OnMissing = uri => new FakePersistentTask(uri);
         }
 
         public FakePersistentTask this[string name]

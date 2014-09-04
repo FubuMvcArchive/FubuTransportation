@@ -1,6 +1,7 @@
 ﻿using FubuMVC.Core;
 using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
+using FubuTransportation.Polling;
 
 namespace ServiceNode
 {
@@ -17,6 +18,7 @@ namespace ServiceNode
         public ServiceRegistry()
         {
             Channel(x => x.Service).ReadIncoming();
+            HealthMonitoring.ScheduledExecution(ScheduledExecution.Disabled);
         }
     }
 }

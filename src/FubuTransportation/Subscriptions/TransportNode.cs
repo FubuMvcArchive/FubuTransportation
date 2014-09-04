@@ -75,10 +75,19 @@ namespace FubuTransportation.Subscriptions
                 if (value != null) _addresses.AddRange(value);
             }
         }
+        
+        // TODO -- make this an explictly configure thing some day
+        public Uri ControlChannel
+        {
+            get
+            {
+                return _addresses.FirstOrDefault();
+            }
+        }
 
         protected bool Equals(TransportNode other)
         {
-            return _addresses.OrderBy(x => x.ToString()).SequenceEqual(other._addresses.OrderBy(x => x.ToString()));
+            return string.Equals(Id, other.Id);
         }
 
         public override bool Equals(object obj)
@@ -91,7 +100,7 @@ namespace FubuTransportation.Subscriptions
 
         public override int GetHashCode()
         {
-            return (_addresses != null ? _addresses.GetHashCode() : 0);
+            return (Id != null ? Id.GetHashCode() : 0);
         }
     }
 }

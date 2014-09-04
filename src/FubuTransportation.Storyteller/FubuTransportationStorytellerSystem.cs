@@ -14,6 +14,8 @@ namespace FubuTransportation.Storyteller
                 x.Setup.ShadowCopyFiles = false.ToString();
             });
 
+            
+
             OnContextCreation(TextFileWriter.Clear);
 
             OnContextCreation<MessageRecorder>(x => x.Messages.Clear());

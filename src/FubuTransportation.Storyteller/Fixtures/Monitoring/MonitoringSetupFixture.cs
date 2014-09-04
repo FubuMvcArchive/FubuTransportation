@@ -21,7 +21,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public override void TearDown()
         {
-            _nodes.Startup().Wait(15.Seconds());
+            _nodes.Startup();
         }
 
         [FormatAs("The Health Monitoring job is enabled in all nodes")]

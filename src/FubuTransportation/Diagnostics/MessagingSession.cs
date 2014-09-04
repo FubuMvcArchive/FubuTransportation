@@ -35,7 +35,7 @@ namespace FubuTransportation.Diagnostics
             // Important, don't override what's already there
             if (record.Node.IsEmpty())
             {
-                record.Node = _graph.Name;
+                record.Node = _graph.NodeId;
             }
 
             // Letting the remote AppDomain's know about it.

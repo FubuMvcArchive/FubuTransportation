@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
@@ -14,7 +15,7 @@ namespace FubuTransportation.Monitoring
         IPersistentTask FindTask(Uri subject);
         IPersistentTaskAgent FindAgent(Uri subject);
         IEnumerable<Uri> PersistentSubjects { get; }
-
+        string NodeId { get; }
     }
 
     public interface IPersistentTaskController
@@ -187,9 +188,12 @@ namespace FubuTransportation.Monitoring
 
         public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
+            _logger.InfoMessage(() => new TryingToAssignOwnership(subject, NodeId));
+
             var agent = _agents[subject];
             if (agent == null)
             {
+                
                 return OwnershipStatus.UnknownSubject.ToCompletionTask();
             }
 
@@ -238,7 +242,7 @@ namespace FubuTransportation.Monitoring
                 _repository.LocalNode().OwnedTasks.Union(activeTasks).ToArray();
         }
 
-        string ITransportPeer.NodeId
+        public string NodeId
         {
             get { return _graph.NodeId; }
         }

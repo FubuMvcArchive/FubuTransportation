@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace FubuTransportation.Monitoring
             _peers = peers.ToArray();
             _index = 0;
 
-            _completion = new TaskCompletionSource<ITransportPeer>();
+            _completion = new TaskCompletionSource<ITransportPeer>(TaskCreationOptions.AttachedToParent);
         }
 
         public Task<ITransportPeer> SelectOwner()

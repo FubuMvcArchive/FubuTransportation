@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using FubuCore;
 using FubuTransportation.Events;
 using FubuTransportation.Logging;
 

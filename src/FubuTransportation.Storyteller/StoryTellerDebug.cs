@@ -1,27 +1,27 @@
 using FubuCore;
+using FubuMVC.Core.Packaging;
 using StoryTeller.Execution;
-using StoryTeller.Workspace;
+using StoryTeller.ProjectUtils.Loaders;
+using FileSystem = FubuCore.FileSystem;
 
 namespace StoryTellerTestHarness
 {
-
-    public class Debugging
+    public class Template
     {
-        public void SendAndAwait_Happy_Path()
-        {
-            var project = new Project
-            {
-                ProjectFolder = ".".ToFullPath().ParentDirectory().ParentDirectory(),
-                TimeoutInSeconds = 240
-            };
+        private ProjectTestRunner runner;
 
+
+        public void Go()
+        {
+            var loader = new ProjectDirectoryLoader(new FileSystem());
+            var project = loader.Load(FubuMvcPackageFacility.GetApplicationPath());
+            project.TimeoutInSeconds = 240;
             using (var runner = new ProjectTestRunner(project))
             {
-                runner.RunAndAssertTest("LightningQueues/Batch Messages/All messages in a batch are processed");
+
+                runner.RunAndAssertTest("HealthMonitoring/Simple assignment of dormant tasks");
             }
-
-            
         }
-    }
 
+    }
 }

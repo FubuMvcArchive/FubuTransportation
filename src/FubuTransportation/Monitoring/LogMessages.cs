@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Remoting.Contexts;
+using FubuCore;
 using FubuCore.Logging;
 using FubuTransportation.ErrorHandling;
 
@@ -51,6 +52,49 @@ namespace FubuTransportation.Monitoring
         }
     }
 
+    public class TryingToAssignOwnership : PersistentTaskMessage
+    {
+        public TryingToAssignOwnership(Uri subject, string toNode) : base(subject)
+        {
+            ToNode = toNode;
+        }
+
+        public TryingToAssignOwnership()
+        {
+        }
+
+        public string ToNode { get; set; }
+
+        public override string ToString()
+        {
+            return "Trying to assign ownership of task {0} to node {1} from node {2}"
+                .ToFormat(Subject, ToNode, NodeId);
+        }
+    }
+
+    public class TakeOwnershipRequestReceived : PersistentTaskMessage
+    {
+        public TakeOwnershipRequestReceived(Uri subject, Uri @from) : base(subject)
+        {
+            From = @from;
+        }
+
+        public TakeOwnershipRequestReceived()
+        {
+
+        }
+
+        public Uri From { get; set; }
+        public OwnershipStatus Status { get; set; }
+        
+
+        public override string ToString()
+        {
+            return "Received a request to take ownership of {0} from {1} on node {2} finished with a response of {3}"
+                .ToFormat(Subject, From, NodeId, Status);
+        }
+    }
+
     public class TookOwnershipOfPersistentTask : PersistentTaskMessage
     {
         public TookOwnershipOfPersistentTask()
@@ -59,6 +103,11 @@ namespace FubuTransportation.Monitoring
 
         public TookOwnershipOfPersistentTask(Uri subject) : base(subject)
         {
+        }
+
+        public override string ToString()
+        {
+            return "Took ownership of task {0} on node {1}".ToFormat(Subject, NodeId);
         }
     }
 
@@ -81,6 +130,11 @@ namespace FubuTransportation.Monitoring
 
         public StoppedTask()
         {
+        }
+
+        public override string ToString()
+        {
+            return "Stopping task {0} on node {1}".ToFormat(Subject, NodeId);
         }
     }
 
@@ -114,15 +168,23 @@ namespace FubuTransportation.Monitoring
 
     public class ReassigningTask : PersistentTaskMessage
     {
-        public ReassigningTask(Uri subject, HealthStatus status) : base(subject)
+        public ReassigningTask(Uri subject, HealthStatus status, string currentNode) : base(subject)
         {
             Status = status;
+            CurrentNode = currentNode;
         }
 
         public HealthStatus Status { get; set; }
+        public string CurrentNode { get; set; }
 
         public ReassigningTask()
         {
+        }
+
+        public override string ToString()
+        {
+            return "Re-assigning task {0} from node {1}, was on node {2} with status {3}"
+                .ToFormat(Subject, CurrentNode, NodeId, Status);
         }
     }
 
