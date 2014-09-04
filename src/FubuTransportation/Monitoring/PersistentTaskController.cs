@@ -220,7 +220,14 @@ namespace FubuTransportation.Monitoring
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
-            var checks = CurrentlyOwnedSubjects()
+            var subjects = CurrentlyOwnedSubjects();
+
+            if (!subjects.Any())
+            {
+                return TaskHealthResponse.Empty().ToCompletionTask();
+            }
+
+            var checks = subjects
                 .Select(subject => CheckStatus(subject).ContinueWith(t => new PersistentTaskStatus(subject, t.Result)))
                 .ToArray();
 

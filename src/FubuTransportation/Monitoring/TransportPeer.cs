@@ -33,8 +33,9 @@ namespace FubuTransportation.Monitoring
         {
             _logger.InfoMessage(() => new TryingToAssignOwnership(subject, NodeId));
 
+            // TODO -- make the timeout configurable
             return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
-                new RequestOptions {Destination = ControlChannel})
+                new RequestOptions {Destination = ControlChannel, Timeout = 1.Seconds()})
                 .ContinueWith(t => {
                     if (t.IsFaulted)
                     {
@@ -57,19 +58,28 @@ namespace FubuTransportation.Monitoring
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()
         {
             var subjects = CurrentlyOwnedSubjects().ToArray();
+
+            if (!subjects.Any())
+            {
+                return Task.FromResult(TaskHealthResponse.Empty());
+            }
+
             var request = new TaskHealthRequest
             {
                 Subjects = subjects
             };
 
+            // TODO -- better make the timeout be configurable here
             return _serviceBus.Request<TaskHealthResponse>(request, new RequestOptions
             {
                 Destination = ControlChannel,
-                Timeout = 1.Minutes()
+                Timeout = 1.Seconds()
             }).ContinueWith(t => {
                 if (t.IsFaulted)
                 {
                     _logger.Error(NodeId, "Could not retrieve persistent status checks", t.Exception);
+
+                    t.Exception.Handle(e => e is TimeoutException);
 
                     return TaskHealthResponse.ErrorFor(subjects);
                 }
@@ -121,10 +131,11 @@ namespace FubuTransportation.Monitoring
         {
             _logger.Info(() => "Requesting a deactivation of task {0} at node {1}".ToFormat(subject, NodeId));
 
+            // TODO -- make the timeout configurable
             return _serviceBus.Request<TaskDeactivationResponse>(new TaskDeactivation(subject), new RequestOptions
             {
                 Destination = ControlChannel,
-                Timeout = 1.Minutes()
+                Timeout = 1.Seconds()
             }).ContinueWith(t => {
                 if (t.IsFaulted)
                 {

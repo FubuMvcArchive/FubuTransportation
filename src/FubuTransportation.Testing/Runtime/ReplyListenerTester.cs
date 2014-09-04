@@ -61,7 +61,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void the_listener_should_set_a_failure_on_the_task()
         {
-            theListener.Task.Exception
+            theListener.Completion.Exception
                 .Flatten()
                 .InnerExceptions.Single()
                 .ShouldBeOfType<ReplyFailureException>()
@@ -121,8 +121,8 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void the_listener_should_not_complete_the_task_in_any_way()
         {
-            theListener.Task.IsCompleted.ShouldBeFalse();
-            theListener.Task.IsFaulted.ShouldBeFalse();
+            theListener.Completion.IsCompleted.ShouldBeFalse();
+            theListener.Completion.IsFaulted.ShouldBeFalse();
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace FubuTransportation.Testing.Runtime
         [Test]
         public void should_set_the_completion_value()
         {
-            theListener.Task.Result.ShouldBeTheSameAs(theMessage);
+            theListener.Completion.Result.ShouldBeTheSameAs(theMessage);
         }
 
         [Test]

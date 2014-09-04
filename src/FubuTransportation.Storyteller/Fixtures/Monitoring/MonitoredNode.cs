@@ -76,16 +76,10 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
             _runtime = FubuTransport.For(this).StructureMap().Bootstrap();
             var controller = _runtime.Factory.Get<IPersistentTaskController>();
-            _initialTasks.Each(subject =>
-            {
-                controller.TakeOwnership(subject).ContinueWith(t1 =>
-                {
-                    if (t1.Result != OwnershipStatus.OwnershipActivated)
-                    {
-                        throw new Exception("Unable to activate {0} on node {1}".ToFormat(subject, Id));
-                    }
-                });
 
+            _initialTasks.Each(subject => {
+                controller.TakeOwnership(subject).Wait(1.Seconds());
+                //TaskFor(subject).SetState(HealthyAndFunctional, persistence, Id);
             });
 
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FubuTransportation.Monitoring;
+using FubuTransportation.Subscriptions;
 using StoryTeller.Assertions;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
@@ -86,12 +87,14 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             IsActive = false;
         }
 
-        public void SetState(string state)
+        public void SetState(string state, ISubscriptionPersistence persistence, string nodeId)
         {
             switch (state)
             {
                 case MonitoredNode.HealthyAndFunctional:
-                    throw new NotImplementedException();
+                    IsFullyFunctionalAndActive();
+                    persistence.Alter(nodeId, node => node.AddOwnership(Subject));
+
                     break;
 
                 case MonitoredNode.ThrowsExceptionOnStartupOrHealthCheck:

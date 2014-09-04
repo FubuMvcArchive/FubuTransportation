@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.ModelBinding;
 using FubuCore;
+using FubuTransportation.Monitoring;
 using FubuTransportation.Serenity;
 using FubuTransportation.Subscriptions;
 using HtmlTags;
 using StoryTeller;
+using StoryTeller.Assertions;
 using StoryTeller.Engine;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
@@ -73,6 +75,20 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             _nodes.WaitForAllHealthChecks();
 
             waitForTheMessageProcessingToFinish();
+        }
+
+        [FormatAs("Task {task} was not reassigned")]
+        public bool TaskWasNotReassigned(Uri task)
+        {
+            var events = _nodes.LoggedEvents().OfType<ReassigningTask>()
+                .Where(x => x.Subject == task);
+
+            if (events.Any())
+            {
+                StoryTellerAssert.Fail("Task {0} was reassigned: " + events.Select(x => x.ToString()).Join("\n"));
+            }
+
+            return true;
         }
 
         [FormatAs("After the health checks run on node {node}")]

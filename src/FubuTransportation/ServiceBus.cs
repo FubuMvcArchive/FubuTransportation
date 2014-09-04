@@ -44,7 +44,7 @@ namespace FubuTransportation
 
             _sender.Send(envelope);
 
-            return listener.Task;
+            return listener.Completion;
         }
 
         public void Send<T>(T message)
@@ -89,7 +89,7 @@ namespace FubuTransportation
 
             _sender.Send(envelope);
 
-            return listener.Task;
+            return listener.Completion;
         }
     }
 }
