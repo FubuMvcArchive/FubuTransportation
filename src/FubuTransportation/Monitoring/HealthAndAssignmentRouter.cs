@@ -27,10 +27,10 @@ namespace FubuTransportation.Monitoring
                 .Where(x => !assigned.Contains(x))
                 .Select(StartAssignment).ToArray();
 
-
-            var healthTasks =_peers.Select(
+            // TODO -- prolly better make the timeout configurable
+            var healthTasks = _peers.Select(
                     peer => peer.CheckStatusOfOwnedTasks()
-                        .ContinueWith(t => t.Result.Tasks.Each(x => ReassignIfNecessary(peer, x))));
+                        .ContinueWith(t => t.Result.Tasks.Each(x => ReassignIfNecessary(peer, x)))).ToArray();
 
             return Task.Factory.ContinueWhenAll(healthTasks.Union(assignments).ToArray(), _ => { });
         }
@@ -60,6 +60,7 @@ namespace FubuTransportation.Monitoring
             {
                 _logger.Debug(() => "Attempting to deactivate persistent task " + subject);
                 existing.Deactivate(subject);
+                
             }
 
             return StartAssignment(subject);

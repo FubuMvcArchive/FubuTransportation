@@ -62,7 +62,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         public void SetTaskState(Uri subject, string node, string state)
         {
             var task = _nodes[node].TaskFor(subject);
-            task.SetState(state);
+            task.SetState(state, _persistence, node);
         }
 
         public IEnumerable<TaskState> AssignedTasks()

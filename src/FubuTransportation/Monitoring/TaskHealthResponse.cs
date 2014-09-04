@@ -25,5 +25,13 @@ namespace FubuTransportation.Monitoring
                 Tasks = enumerable.Select(x => new PersistentTaskStatus(x, HealthStatus.Error)).ToArray()
             };
         }
+
+        public static TaskHealthResponse Empty()
+        {
+            return new TaskHealthResponse
+            {
+                Tasks = new PersistentTaskStatus[0]
+            };
+        }
     }
 }

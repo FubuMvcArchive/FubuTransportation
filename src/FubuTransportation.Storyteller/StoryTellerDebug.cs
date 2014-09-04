@@ -19,7 +19,7 @@ namespace StoryTellerTestHarness
             using (var runner = new ProjectTestRunner(project))
             {
 
-                runner.RunAndAssertTest("HealthMonitoring/Simple assignment of dormant tasks");
+                runner.RunAndAssertTest("HealthMonitoring/Node goes down and its jobs get reassigned");
             }
         }
 

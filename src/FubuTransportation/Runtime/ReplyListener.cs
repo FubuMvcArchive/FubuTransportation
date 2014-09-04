@@ -11,7 +11,8 @@ namespace FubuTransportation.Runtime
         private readonly IEventAggregator _events;
         private readonly TaskCompletionSource<T> _completion;
         private readonly string _originalId;
-        
+        private Task _timeout;
+
         public ReplyListener(IEventAggregator events, string originalId, TimeSpan timeout)
         {
             _events = events;
@@ -20,10 +21,18 @@ namespace FubuTransportation.Runtime
             _originalId = originalId;
 
             var listener = this;
+
+            _timeout = Task.Delay(timeout).ContinueWith(t => {
+                if (!_completion.Task.IsCompleted && !_completion.Task.IsFaulted)
+                {
+                    _completion.SetException(new TimeoutException());
+                }
+            });
+
             _completion.Task.ContinueWith(x => _events.RemoveListener(listener));
         }
 
-        public Task<T> Task
+        public Task<T> Completion
         {
             get { return _completion.Task; }
         }
