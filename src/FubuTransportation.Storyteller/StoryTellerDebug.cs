@@ -23,5 +23,13 @@ namespace StoryTellerTestHarness
             }
         }
 
+        public void TryFiveTimes()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                Go();
+            }
+        }
+
     }
 }
