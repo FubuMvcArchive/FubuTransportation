@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.UI;
 using FubuCore.Logging;
 
 namespace FubuTransportation.Monitoring
@@ -23,16 +24,23 @@ namespace FubuTransportation.Monitoring
         public Task EnsureAllTasksAreAssignedAndRunning()
         {
             var assigned = _peers.SelectMany(x => x.CurrentlyOwnedSubjects()).ToArray();
+
+
+            var multiples = assigned.GroupBy(x => x).Where(x => x.Count() > 1).Select(x => x.Key).ToArray();
+            assigned = assigned.Where(x => !multiples.Contains(x)).ToArray();
+
             var assignments = _tasks.PersistentSubjects
                 .Where(x => !assigned.Contains(x))
                 .Select(StartAssignment).ToArray();
+
+            var reassignments = multiples.Select(Reassign);
 
             // TODO -- prolly better make the timeout configurable
             var healthTasks = _peers.Select(
                     peer => peer.CheckStatusOfOwnedTasks()
                         .ContinueWith(t => t.Result.Tasks.Each(x => ReassignIfNecessary(peer, x)))).ToArray();
 
-            return Task.Factory.ContinueWhenAll(healthTasks.Union(assignments).ToArray(), _ => { });
+            return Task.Factory.ContinueWhenAll(healthTasks.Union(assignments).Union(reassignments).ToArray(), _ => { });
         }
 
         public void ReassignIfNecessary(ITransportPeer peer, PersistentTaskStatus status)
@@ -55,17 +63,10 @@ namespace FubuTransportation.Monitoring
                 return Task.Factory.StartNew(() => { });
             }
 
-            Task deactivate = Task.FromResult(true);
+            Task[] deactivate = _peers.Where(x => x.CurrentlyOwnedSubjects().Contains(subject))
+                .Select(x => x.Deactivate(subject)).ToArray();
 
-            var existing = _peers.FirstOrDefault(x => x.CurrentlyOwnedSubjects().Contains(subject));
-            if (existing != null)
-            {
-                deactivate = existing.Deactivate(subject);
-                
-            }
-
-            var assignment = StartAssignment(subject);
-            return Task.WhenAll(deactivate, assignment);
+            return Task.WhenAll(deactivate).ContinueWith(_ => StartAssignment(subject)).Unwrap();
         }
 
         public Task StartAssignment(Uri subject)

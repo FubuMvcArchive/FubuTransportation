@@ -38,7 +38,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public IEnumerable<PersistentTaskMessage> LoggedEvents()
         {
-            return _listener.LoggedEvents();
+            return _listener.LoggedEvents().Where(x => x.Subject.Scheme != "scheduled").ToArray();
         } 
 
         public MonitoredNode NodeFor(string id)
