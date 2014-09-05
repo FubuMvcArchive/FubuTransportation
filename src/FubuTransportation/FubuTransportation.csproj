@@ -185,6 +185,7 @@
     <Compile Include="Monitoring\PersistentTaskStatus.cs" />
     <Compile Include="Monitoring\TransportPeer.cs" />
     <Compile Include="Monitoring\TransportPeerRepository.cs" />
+    <Compile Include="NotHandlerAttribute.cs" />
     <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\IJob.cs" />
