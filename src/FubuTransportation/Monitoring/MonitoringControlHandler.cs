@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FubuCore.Logging;
@@ -36,7 +37,7 @@ namespace FubuTransportation.Monitoring
                 var response = t.Result;
                 response.AddMissingSubjects(request.Subjects);
 
-                Debug.WriteLine("Responding with {0} on node {1} from health request from {2}", request, _graph.NodeId, _envelope.ReplyUri);
+                Debug.WriteLine("Responding with {0} on node {1} from health request from {2}", response, _graph.NodeId, _envelope.ReplyUri);
 
                 return response;
             });

@@ -55,15 +55,17 @@ namespace FubuTransportation.Monitoring
                 return Task.Factory.StartNew(() => { });
             }
 
+            Task deactivate = Task.FromResult(true);
+
             var existing = _peers.FirstOrDefault(x => x.CurrentlyOwnedSubjects().Contains(subject));
             if (existing != null)
             {
-                _logger.Debug(() => "Attempting to deactivate persistent task " + subject);
-                existing.Deactivate(subject);
+                deactivate = existing.Deactivate(subject);
                 
             }
 
-            return StartAssignment(subject);
+            var assignment = StartAssignment(subject);
+            return Task.WhenAll(deactivate, assignment);
         }
 
         public Task StartAssignment(Uri subject)

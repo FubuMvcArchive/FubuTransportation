@@ -184,7 +184,7 @@ namespace FubuTransportation.Monitoring
         public override string ToString()
         {
             return "Re-assigning task {0} from node {1}, was on node {2} with status {3}"
-                .ToFormat(Subject, CurrentNode, NodeId, Status);
+                .ToFormat(Subject, NodeId, CurrentNode, Status);
         }
     }
 

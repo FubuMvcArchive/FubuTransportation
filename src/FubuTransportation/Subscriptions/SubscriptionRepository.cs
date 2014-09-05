@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FubuTransportation.Configuration;
 
@@ -67,6 +68,8 @@ namespace FubuTransportation.Subscriptions
 
         public void RemoveOwnershipFromThisNode(Uri subject)
         {
+            Debug.WriteLine("Removing persisted ownership of {0} from node {1}", subject, _graph.NodeId);
+
             _persistence.Alter(_graph.NodeId, node => node.RemoveOwnership(subject));
         }
 

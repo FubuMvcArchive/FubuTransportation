@@ -35,7 +35,7 @@ namespace FubuTransportation.Monitoring
 
             // TODO -- make the timeout configurable
             return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
-                new RequestOptions {Destination = ControlChannel, Timeout = 1.Seconds()})
+                new RequestOptions {Destination = ControlChannel, Timeout = 3.Seconds()})
                 .ContinueWith(t => {
                     if (t.IsFaulted)
                     {
@@ -73,7 +73,7 @@ namespace FubuTransportation.Monitoring
             return _serviceBus.Request<TaskHealthResponse>(request, new RequestOptions
             {
                 Destination = ControlChannel,
-                Timeout = 1.Seconds()
+                Timeout = 3.Seconds()
             }).ContinueWith(t => {
                 if (t.IsFaulted)
                 {
@@ -135,10 +135,12 @@ namespace FubuTransportation.Monitoring
             return _serviceBus.Request<TaskDeactivationResponse>(new TaskDeactivation(subject), new RequestOptions
             {
                 Destination = ControlChannel,
-                Timeout = 1.Seconds()
+                Timeout = 3.Seconds()
             }).ContinueWith(t => {
                 if (t.IsFaulted)
                 {
+                    t.Exception.Handle(e => true);
+
                     _logger.Error(subject, "Failed while trying to deactivate a remote task", t.Exception);
 
                     // Need to force a reload here.
@@ -148,7 +150,7 @@ namespace FubuTransportation.Monitoring
                 }
                 else
                 {
-                    _logger.Info(() => "Successfully deactivated task {0} at node {1}".ToFormat(subject, NodeId));
+                    _subscriptions.RemoveOwnershipFromNode(NodeId, subject);
 
                     return true;
                 }

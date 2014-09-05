@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Subscriptions;
+using OpenQA.Selenium.Safari.Internal;
 using StoryTeller.Assertions;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
@@ -23,6 +26,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public void IsFullyFunctional()
         {
+            Timesout = false;
             ActivationException = AssertAvailableException = null;
         }
 
@@ -36,6 +40,11 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public void AssertAvailable()
         {
+            if (Timesout)
+            {
+                Debug.WriteLine("Trying to timeout task " + Subject);
+                Thread.Sleep(1.Minutes());
+            }
             Thread.Sleep(10);
             if (AssertAvailableException != null) throw AssertAvailableException;
         }
@@ -43,6 +52,10 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         public void Activate()
         {
             Thread.Sleep(10);
+            if (Timesout)
+            {
+                Thread.Sleep(1.Minutes());
+            }
             if (ActivationException != null) throw ActivationException;
 
             IsActive = true;
@@ -50,7 +63,6 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public void Deactivate()
         {
-            Thread.Sleep(10);
             if (DeactivateException != null) throw DeactivateException;
 
             IsActive = false;
@@ -89,6 +101,8 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
         public void SetState(string state, ISubscriptionPersistence persistence, string nodeId)
         {
+            Timesout = false;
+
             switch (state)
             {
                 case MonitoredNode.HealthyAndFunctional:
@@ -98,17 +112,21 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
                     break;
 
                 case MonitoredNode.ThrowsExceptionOnStartupOrHealthCheck:
-                    throw new NotImplementedException();
+                    ActivationException = new DivideByZeroException();
+                    AssertAvailableException = new HandshakeException();
                     break;
 
                 case MonitoredNode.TimesOutOnStartupOrHealthCheck:
-                    throw new NotImplementedException();
+                    Timesout = true;
                     break;
 
                 case MonitoredNode.IsInactive:
-                    throw new NotImplementedException();
+                    IsFullyFunctional();
+                    IsActive = false;
                     break;
             }
         }
+
+        public bool Timesout { get; set; }
     }
 }

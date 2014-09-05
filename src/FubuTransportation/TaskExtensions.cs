@@ -26,6 +26,7 @@ namespace FubuTransportation
         {
             var cancellation = new CancellationTokenSource();
             var delayed = Task.Delay(millisecondsTimeout, cancellation.Token);
+
             if (task == await Task.WhenAny(task, delayed))
             {
                 cancellation.Cancel();
