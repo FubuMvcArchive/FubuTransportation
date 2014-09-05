@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore;
 using FubuCore.Descriptions;
+using FubuCore.Reflection;
 using FubuCore.Util;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
@@ -28,6 +29,7 @@ namespace FubuTransportation.Registration
             _description.WriteLine("Public methods that follow the 1 in/1 out, 0 in/ 1 out, or 1 in/ 0 out pattern");
 
             _methodFilters = new ActionMethodFilter();
+            _methodFilters.Excludes += m => m.HasAttribute<NotHandlerAttribute>();
         }
 
         public void UseAssembly(Assembly assembly)

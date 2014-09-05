@@ -118,6 +118,9 @@ namespace FubuTransportation.Testing.Registration
         public void M1(M1 input){}
         public void M2(M2 input){}
         public void M3(M3 input){}
+
+        [NotHandler]
+        public void ShouldBeIgnored(M3 input){}
     }
 
     public class MyOtherConsumer

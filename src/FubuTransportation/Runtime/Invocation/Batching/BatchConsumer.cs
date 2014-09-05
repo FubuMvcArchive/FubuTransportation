@@ -21,7 +21,10 @@ namespace FubuTransportation.Runtime.Invocation.Batching
             BatchFinish(batch);
         }
 
+        [NotHandler]
         public virtual void BatchStart(T batch){}
+
+        [NotHandler]
         public virtual void BatchFinish(T batch){}
     }
 

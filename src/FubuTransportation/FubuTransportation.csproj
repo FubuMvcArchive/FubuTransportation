@@ -158,6 +158,7 @@
     <Compile Include="Logging\MessageLogRecord.cs" />
     <Compile Include="Logging\MessageSuccessful.cs" />
     <Compile Include="Logging\NoHandlerForMessage.cs" />
+    <Compile Include="NotHandlerAttribute.cs" />
     <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />
     <Compile Include="Polling\DefaultTimer.cs" />
     <Compile Include="Polling\IJob.cs" />

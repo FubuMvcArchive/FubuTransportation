@@ -17,7 +17,7 @@ namespace StoryTellerTestHarness
 
             using (var runner = new ProjectTestRunner(project))
             {
-                runner.RunAndAssertTest("Subscriptions/Simple global subscriptions from one node to another");
+                runner.RunAndAssertTest("LightningQueues/Batch Messages/All messages in a batch are processed");
             }
 
             
