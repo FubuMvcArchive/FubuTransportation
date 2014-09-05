@@ -80,9 +80,12 @@ namespace FubuTransportation.Monitoring
         {
             if (agent.IsActive)
             {
-                return agent.AssertAvailable().ContinueWith(t => {
+                // TODO -- make the timeout configurable
+                return agent.AssertAvailable().TimeoutAfter(1000).ContinueWith(t => {
                     if (t.IsFaulted)
                     {
+                        t.Exception.Handle(_ => true);
+
                         _logger.Error(agent.Subject, "Availability test failed for " + agent.Subject, t.Exception);
                         _logger.InfoMessage(() => new TaskAvailabilityFailed(agent.Subject));
 

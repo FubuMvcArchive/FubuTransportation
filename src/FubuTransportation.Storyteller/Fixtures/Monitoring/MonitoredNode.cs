@@ -79,7 +79,6 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 
             _initialTasks.Each(subject => {
                 controller.TakeOwnership(subject).Wait(1.Seconds());
-                //TaskFor(subject).SetState(HealthyAndFunctional, persistence, Id);
             });
 
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 
 namespace FubuTransportation.Monitoring
 {
@@ -32,6 +33,11 @@ namespace FubuTransportation.Monitoring
             {
                 Tasks = new PersistentTaskStatus[0]
             };
+        }
+
+        public override string ToString()
+        {
+            return "Health Check " + Tasks.Select(x => "{0}: {1}".ToFormat(x.Subject, x.Status)).Join(", ");
         }
     }
 }
