@@ -8,6 +8,7 @@ namespace FubuTransportation.Monitoring
     public class TaskHealthResponse
     {
         public PersistentTaskStatus[] Tasks { get; set; }
+        public bool ResponseFailed { get; set; }
 
         public void AddMissingSubjects(IEnumerable<Uri> subjects)
         {
@@ -23,7 +24,8 @@ namespace FubuTransportation.Monitoring
         {
             return new TaskHealthResponse
             {
-                Tasks = enumerable.Select(x => new PersistentTaskStatus(x, HealthStatus.Error)).ToArray()
+                Tasks = enumerable.Select(x => new PersistentTaskStatus(x, HealthStatus.Error)).ToArray(),
+                ResponseFailed = true
             };
         }
 
@@ -39,5 +41,6 @@ namespace FubuTransportation.Monitoring
         {
             return "Health Check " + Tasks.Select(x => "{0}: {1}".ToFormat(x.Subject, x.Status)).Join(", ");
         }
+
     }
 }

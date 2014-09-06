@@ -352,7 +352,7 @@ namespace FubuTransportation.Testing.Monitoring
     }
 
     [TestFixture]
-    public class when_requesting_the_task_health_and_the_remote_message_fails : TransportPeerContext
+    public class when_requesting_the_task_health_and_the_remote_message_returns_missing_tasks : TransportPeerContext
     {
         private readonly Uri subject1 = "foo://1".ToUri();
         private readonly Uri subject2 = "foo://2".ToUri();
@@ -383,6 +383,7 @@ namespace FubuTransportation.Testing.Monitoring
 
         }
 
+
         [Test]
         public void the_response_should_be_filled_with_inactive_for_the_missing_tasks()
         {
@@ -394,6 +395,52 @@ namespace FubuTransportation.Testing.Monitoring
             response.Tasks.ShouldContain(new PersistentTaskStatus(subject4, HealthStatus.Inactive));
         }
     }
+
+    [TestFixture]
+    public class when_requesting_the_task_health_and_the_remote_message_fails : TransportPeerContext
+    {
+        private readonly Uri subject1 = "foo://1".ToUri();
+        private readonly Uri subject2 = "foo://2".ToUri();
+        private readonly Uri subject3 = "foo://3".ToUri();
+        private readonly Uri subject4 = "foo://4".ToUri();
+        private Task<TaskHealthResponse> theReturnedTask;
+
+        protected override void theContextIs()
+        {
+            var subjects = new Uri[] { subject1, subject2, subject3, subject4 };
+
+            theNode.OwnedTasks = subjects;
+
+
+            theServiceBus.ExpectMessage(new TaskHealthRequest { Subjects = subjects })
+                .AtDestination(theNode.Addresses.First())
+                .Throws(new DivideByZeroException());
+
+            theReturnedTask = thePeer.CheckStatusOfOwnedTasks();
+            theReturnedTask.Wait();
+
+
+        }
+
+        [Test]
+        public void the_response_should_be_marked_as_a_failure()
+        {
+            theReturnedTask.Result.ResponseFailed.ShouldBeTrue();
+        }
+
+
+        [Test]
+        public void the_response_should_be_filled_with_inactive_for_the_missing_tasks()
+        {
+            var response = theReturnedTask.Result;
+
+            response.Tasks.ShouldContain(new PersistentTaskStatus(subject1, HealthStatus.Error));
+            response.Tasks.ShouldContain(new PersistentTaskStatus(subject2, HealthStatus.Error));
+            response.Tasks.ShouldContain(new PersistentTaskStatus(subject3, HealthStatus.Error));
+            response.Tasks.ShouldContain(new PersistentTaskStatus(subject4, HealthStatus.Error));
+        }
+    }
+
 
     [TestFixture]
     public abstract class TransportPeerContext

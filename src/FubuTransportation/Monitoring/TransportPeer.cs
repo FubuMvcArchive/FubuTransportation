@@ -70,7 +70,6 @@ namespace FubuTransportation.Monitoring
                 Subjects = subjects
             };
 
-            // TODO -- better make the timeout be configurable here
             return _serviceBus.Request<TaskHealthResponse>(request, new RequestOptions
             {
                 Destination = ControlChannel,
@@ -80,7 +79,7 @@ namespace FubuTransportation.Monitoring
                 {
                     _logger.Error(NodeId, "Could not retrieve persistent status checks", t.Exception);
 
-                    t.Exception.Handle(e => e is TimeoutException);
+                    t.Exception.Handle(e => true);
 
                     return TaskHealthResponse.ErrorFor(subjects);
                 }

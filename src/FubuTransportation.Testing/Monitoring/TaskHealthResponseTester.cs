@@ -67,7 +67,10 @@ namespace FubuTransportation.Testing.Monitoring
                 new PersistentTaskStatus(subject4, HealthStatus.Error)
                 
                 );
+
+            response.ResponseFailed.ShouldBeTrue();
         
         }
+
     }
 }
