@@ -15,6 +15,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         protected override void theContextIs()
         {
             Task(theSubjectUriString).IsFullyFunctional();
+            Task(theSubjectUriString).Timesout = false;
 
             theTask = theController.TakeOwnership(theSubjectUriString.ToUri());
 

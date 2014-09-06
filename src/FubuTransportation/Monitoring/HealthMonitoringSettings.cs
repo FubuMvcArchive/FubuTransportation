@@ -23,6 +23,7 @@ namespace FubuTransportation.Monitoring
         public TimeSpan HealthCheckMessageTimeout = 30.Seconds();
         public TimeSpan DeactivationMessageTimeout = 30.Seconds();
         public TimeSpan TaskAvailabilityCheckTimeout = 10.Seconds();
+        public TimeSpan TaskActivationTimeout = 30.Seconds();
 
         public double Interval
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FubuCore.Logging;
+using FubuTransportation.Subscriptions;
 using HtmlTags.Conventions;
 
 namespace FubuTransportation.Monitoring
@@ -19,13 +20,15 @@ namespace FubuTransportation.Monitoring
         private readonly IPersistentTask _task;
         private readonly HealthMonitoringSettings _settings;
         private readonly ILogger _logger;
+        private readonly ISubscriptionRepository _repository;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        public PersistentTaskAgent(IPersistentTask task, HealthMonitoringSettings settings, ILogger logger)
+        public PersistentTaskAgent(IPersistentTask task, HealthMonitoringSettings settings, ILogger logger, ISubscriptionRepository repository)
         {
             _task = task;
             _settings = settings;
             _logger = logger;
+            _repository = repository;
         }
 
         public Uri Subject
@@ -57,20 +60,64 @@ namespace FubuTransportation.Monitoring
             }, TaskCreationOptions.AttachedToParent);
         }
 
-        public Task Activate()
+        public Task<OwnershipStatus> Activate()
         {
             return Task.Factory.StartNew(
-                () => _lock.Write(() => _task.Activate()),
+                () => activate(),
                 TaskCreationOptions.AttachedToParent
                 );
         }
 
-        public Task Deactivate()
+        private OwnershipStatus activate()
+        {
+            Action activation = () => _lock.Write(() => _task.Activate());
+
+            var status = TimeoutRunner.Run(_settings.TaskActivationTimeout, activation, ex => {
+                _logger.Error(Subject, "Failed to take ownership of task " + Subject, ex);
+                _logger.InfoMessage(() => new TaskActivationFailure(Subject));
+            });
+
+            switch (status)
+            {
+                 case Completion.Success:
+                    _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(Subject));
+                    _repository.AddOwnershipToThisNode(Subject);
+                    return OwnershipStatus.OwnershipActivated;
+            
+                case Completion.Timedout:
+                    _logger.InfoMessage(() => new TaskActivationTimeoutFailure(Subject));
+                    return OwnershipStatus.TimedOut;
+
+                default:
+                    return OwnershipStatus.Exception;
+            }
+        }
+
+        public Task<bool> Deactivate()
         {
             return Task.Factory.StartNew(
-                () => _lock.Write(() => _task.Deactivate()),
-                TaskCreationOptions.AttachedToParent
-                );
+                () => deactivate(),
+                TaskCreationOptions.AttachedToParent);
+        }
+
+        private bool deactivate()
+        {
+            try
+            {
+                _lock.Write(() => _task.Deactivate());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(Subject, "Failed to stop task " + Subject, ex);
+                _logger.InfoMessage(() => new FailedToStopTask(Subject));
+
+                return false;
+            }
+            finally
+            {
+                _repository.RemoveOwnershipFromThisNode(Subject);
+            }
         }
 
         public bool IsActive

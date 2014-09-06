@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
@@ -23,7 +22,6 @@ namespace FubuTransportation.Monitoring
     {
         Task<HealthStatus> CheckStatus(Uri subject);
         Task<bool> Deactivate(Uri subject);
-        void ActivateAllTasks();
         Task EnsureTasksHaveOwnership();
         Task<OwnershipStatus> TakeOwnership(Uri subject);
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
@@ -61,7 +59,7 @@ namespace FubuTransportation.Monitoring
                 var persistentTask = FindTask(uri);
                 if (persistentTask == null) return null;
 
-                return new PersistentTaskAgent(persistentTask, _settings, _logger);
+                return new PersistentTaskAgent(persistentTask, _settings, _logger, _repository);
             };
 
             _permanentTasks = sources.SelectMany(x => x.PermanentTasks()).ToArray();
@@ -115,45 +113,9 @@ namespace FubuTransportation.Monitoring
                 return false.ToCompletionTask();
             }
 
-            return agent.Deactivate().ContinueWith(t => {
-                if (t.IsFaulted)
-                {
-                    _logger.Error(subject, "Failed to stop task " + subject, t.Exception);
-                    _logger.InfoMessage(() => new FailedToStopTask(subject));
-
-                    return false;
-                }
-
-                _repository.RemoveOwnershipFromThisNode(subject);
-                _logger.InfoMessage(() => new StoppedTask(subject));
-
-                return true;
-            });
+            return agent.Deactivate();
         }
 
-        public void ActivateAllTasks()
-        {
-            var startupTasks = _permanentTasks.Select(uri => {
-                return _agents[uri].Activate().ContinueWith(t => {
-                    if (t.IsFaulted)
-                    {
-                        _logger.InfoMessage(() => new FailedToActivatePersistentTask(uri));
-                        _logger.Error(uri, "Failed to activate task " + uri, t.Exception);
-                        return new {Uri = uri, Success = false};
-                    }
-
-                    _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(uri));
-
-                    return new {Uri = uri, Success = true};
-                });
-            }).ToArray();
-
-            Task.WaitAll(startupTasks);
-
-            var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
-            
-            _repository.AddOwnershipToThisNode(newSubjects);
-        }
 
 
         public Task EnsureTasksHaveOwnership()
@@ -191,20 +153,7 @@ namespace FubuTransportation.Monitoring
             }
 
 
-            return agent.Activate().ContinueWith(t => {
-                if (t.IsFaulted)
-                {
-                    _logger.Error(subject, "Failed to take ownership of task " + subject, t.Exception);
-                    _logger.InfoMessage(() => new TaskActivationFailure(subject));
-
-                    return OwnershipStatus.Exception;
-                }
-
-                _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(subject));
-                
-                _repository.AddOwnershipToThisNode(subject);
-                return OwnershipStatus.OwnershipActivated;
-            });
+            return agent.Activate();
         }
 
         public Task<TaskHealthResponse> CheckStatusOfOwnedTasks()

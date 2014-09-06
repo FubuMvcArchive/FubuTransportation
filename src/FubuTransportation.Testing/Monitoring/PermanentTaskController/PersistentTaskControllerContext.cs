@@ -51,10 +51,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theSubscriptions.Persist(theCurrentNode);
 
             _controller = new Lazy<PersistentTaskController>(() => {
-                var controller = new PersistentTaskController(theGraph, theLogger, this, sources, new HealthMonitoringSettings
+                var settings = new HealthMonitoringSettings
                 {
-                    TaskAvailabilityCheckTimeout = 5.Seconds()
-                }, theSubscriptions);
+                    TaskAvailabilityCheckTimeout = 5.Seconds(),
+
+                };
+                var controller = new PersistentTaskController(theGraph, theLogger, this, sources, settings, theSubscriptions);
 
                 sources.SelectMany(x => x.FakeTasks()).Select(x => x.Subject)
                     .Each(subject => controller.FindAgent(subject));

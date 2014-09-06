@@ -47,12 +47,6 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             Task("running://1").IsActive.ShouldBeFalse();
         }
 
-        [Test]
-        public void should_log_the_successful_stop()
-        {
-            LoggedMessageForSubject<StoppedTask>("running://1");
-        }
-
 
         [Test]
         public void the_ownership_was_removed_and_persisted()

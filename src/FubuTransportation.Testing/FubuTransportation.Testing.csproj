@@ -361,9 +361,6 @@
     <Compile Include="Monitoring\PermanentTaskController\TakeOwnership_specs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitoring\PermanentTaskController\when_activating_all_tasks.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Monitoring\PermanentTaskController\when_checking_status.cs">
       <SubType>Code</SubType>
     </Compile>

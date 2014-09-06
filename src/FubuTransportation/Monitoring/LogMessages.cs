@@ -52,6 +52,17 @@ namespace FubuTransportation.Monitoring
         }
     }
 
+    public class TaskActivationTimeoutFailure : PersistentTaskMessage
+    {
+        public TaskActivationTimeoutFailure(Uri subject) : base(subject)
+        {
+        }
+
+        public TaskActivationTimeoutFailure()
+        {
+        }
+    }
+
     public class TryingToAssignOwnership : PersistentTaskMessage
     {
         public TryingToAssignOwnership(Uri subject, string toNode) : base(subject)
