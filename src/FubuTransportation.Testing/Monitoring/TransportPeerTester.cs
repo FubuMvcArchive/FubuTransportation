@@ -410,7 +410,7 @@ namespace FubuTransportation.Testing.Monitoring
             theServiceBus = new RiggedServiceBus();
             theSubscriptions = MockRepository.GenerateMock<ISubscriptionRepository>();
             theLogger = new RecordingLogger();
-            thePeer = new TransportPeer(theNode, theSubscriptions, theServiceBus, theLogger);
+            thePeer = new TransportPeer(new HealthMonitoringSettings(), theNode, theSubscriptions, theServiceBus, theLogger);
 
             theSubscriptions.Stub(x => x.FindPeer(theNode.Id))
                 .Return(theNode);

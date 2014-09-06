@@ -22,10 +22,10 @@ namespace FubuTransportation
             return completion.Task;
         }
 
-        public static async Task TimeoutAfter(this Task task, int millisecondsTimeout)
+        public static async Task TimeoutAfter(this Task task, TimeSpan timeout)
         {
             var cancellation = new CancellationTokenSource();
-            var delayed = Task.Delay(millisecondsTimeout, cancellation.Token);
+            var delayed = Task.Delay(timeout, cancellation.Token);
 
             if (task == await Task.WhenAny(task, delayed))
             {

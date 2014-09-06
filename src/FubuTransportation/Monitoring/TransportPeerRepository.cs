@@ -6,14 +6,18 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
+    // TODO -- kill this and fold its builder functionality
+    // into PersistentTaskController
     public class TransportPeerRepository : ITransportPeerRepository
     {
+        private readonly HealthMonitoringSettings _settings;
         private readonly ILogger _logger;
         private readonly IServiceBus _serviceBus;
         private readonly ISubscriptionRepository _subscriptions;
 
-        public TransportPeerRepository(ILogger logger, IServiceBus serviceBus, ISubscriptionRepository subscriptions)
+        public TransportPeerRepository(HealthMonitoringSettings settings, ILogger logger, IServiceBus serviceBus, ISubscriptionRepository subscriptions)
         {
+            _settings = settings;
             _logger = logger;
             _serviceBus = serviceBus;
             _subscriptions = subscriptions;
@@ -26,7 +30,7 @@ namespace FubuTransportation.Monitoring
 
         private TransportPeer toPeer(TransportNode node)
         {
-            return new TransportPeer(node, _subscriptions, _serviceBus, _logger);
+            return new TransportPeer(_settings, node, _subscriptions, _serviceBus, _logger);
         }
 
         public IEnumerable<ITransportPeer> AllPeers()

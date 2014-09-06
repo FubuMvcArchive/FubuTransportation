@@ -34,6 +34,7 @@ namespace FubuTransportation.Monitoring
         private readonly ChannelGraph _graph;
         private readonly ILogger _logger;
         private readonly ITransportPeerRepository _repository;
+        private readonly HealthMonitoringSettings _settings;
 
         private readonly ConcurrentCache<string, IPersistentTaskSource> _sources
             = new ConcurrentCache<string, IPersistentTaskSource>();
@@ -45,12 +46,12 @@ namespace FubuTransportation.Monitoring
         private readonly Uri[] _permanentTasks;
 
 
-        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerRepository repository,
-            IEnumerable<IPersistentTaskSource> sources)
+        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerRepository repository, IEnumerable<IPersistentTaskSource> sources, HealthMonitoringSettings settings)
         {
             _graph = graph;
             _logger = logger;
             _repository = repository;
+            _settings = settings;
             sources.Each(x => _sources[x.Protocol] = x);
 
             _agents.OnMissing = uri => {
@@ -81,7 +82,7 @@ namespace FubuTransportation.Monitoring
             if (agent.IsActive)
             {
                 // TODO -- make the timeout configurable
-                return agent.AssertAvailable().TimeoutAfter(1000).ContinueWith(t => {
+                return agent.AssertAvailable().TimeoutAfter(_settings.TaskAvailabilityCheckTimeout).ContinueWith(t => {
                     if (t.IsFaulted)
                     {
                         t.Exception.Handle(_ => true);

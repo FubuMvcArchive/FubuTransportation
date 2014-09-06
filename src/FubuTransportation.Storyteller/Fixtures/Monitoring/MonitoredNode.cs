@@ -45,6 +45,13 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             EnableInMemoryTransport(incoming);
 
             Services(_ => _.AddService<ILogListener>(listener));
+
+            AlterSettings<HealthMonitoringSettings>(_ => {
+                _.TakeOwnershipMessageTimeout = 3.Seconds();
+                _.HealthCheckMessageTimeout = 1.Seconds();
+                _.DeactivationMessageTimeout = 3.Seconds();
+                _.TaskAvailabilityCheckTimeout = 5.Seconds();
+            });
         }
 
         public FakePersistentTask TaskFor(string uriString)

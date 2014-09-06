@@ -47,7 +47,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theLogger = new RecordingLogger();
 
             _controller = new Lazy<PersistentTaskController>(() => {
-                var controller = new PersistentTaskController(theGraph, theLogger, this, sources);
+                var controller = new PersistentTaskController(theGraph, theLogger, this, sources, new HealthMonitoringSettings());
 
                 sources.SelectMany(x => x.FakeTasks()).Select(x => x.Subject)
                     .Each(subject => controller.FindAgent(subject));

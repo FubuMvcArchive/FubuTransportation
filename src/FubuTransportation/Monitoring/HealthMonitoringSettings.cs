@@ -1,7 +1,10 @@
 ﻿using System;
+using FubuCore;
+using FubuMVC.Core.Registration;
 
 namespace FubuTransportation.Monitoring
 {
+    [ApplicationLevel]
     public class HealthMonitoringSettings
     {
         private bool _initial = true;
@@ -13,6 +16,14 @@ namespace FubuTransportation.Monitoring
 
         public Random Random = new Random(60000);
 
+        public int MinSeconds = 30;
+        public int MaxSeconds = 60;
+
+        public TimeSpan TakeOwnershipMessageTimeout = 30.Seconds();
+        public TimeSpan HealthCheckMessageTimeout = 30.Seconds();
+        public TimeSpan DeactivationMessageTimeout = 30.Seconds();
+        public TimeSpan TaskAvailabilityCheckTimeout = 10.Seconds();
+
         public double Interval
         {
             get
@@ -23,7 +34,7 @@ namespace FubuTransportation.Monitoring
                     return 100;
                 }
                 
-                return Random.NextDouble();
+                return Random.Next(MinSeconds, MaxSeconds) * 1000;
             }
         }
     }
