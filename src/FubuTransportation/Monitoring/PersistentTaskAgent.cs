@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FubuCore.Logging;
+using HtmlTags.Conventions;
 
 namespace FubuTransportation.Monitoring
 {
@@ -13,21 +14,18 @@ namespace FubuTransportation.Monitoring
         Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers);
     }
 
-    public class PersistentTaskAgent : IDisposable, IPersistentTaskAgent
+    public class PersistentTaskAgent : IPersistentTaskAgent
     {
         private readonly IPersistentTask _task;
+        private readonly HealthMonitoringSettings _settings;
+        private readonly ILogger _logger;
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        private readonly BlockingCollection<Action<IPersistentTask>> _actions
-            = new BlockingCollection<Action<IPersistentTask>>(new ConcurrentBag<Action<IPersistentTask>>());
-
-        private readonly Task _background;
-        private readonly CancellationTokenSource _cancellation;
-
-        public PersistentTaskAgent(IPersistentTask task)
+        public PersistentTaskAgent(IPersistentTask task, HealthMonitoringSettings settings, ILogger logger)
         {
-            _cancellation = new CancellationTokenSource();
             _task = task;
-            _background = Task.Factory.StartNew(performActions, _cancellation.Token, TaskCreationOptions.LongRunning);
+            _settings = settings;
+            _logger = logger;
         }
 
         public Uri Subject
@@ -35,80 +33,55 @@ namespace FubuTransportation.Monitoring
             get { return _task.Subject; }
         }
 
-        public Task AssertAvailable()
+        public Task<HealthStatus> AssertAvailable()
         {
-            return Enqueue(t => t.AssertAvailable());
+            return Task.Factory.StartNew(() => {
+                var status =
+                    _lock.Read(
+                        () => TimeoutRunner.Run(_settings.TaskAvailabilityCheckTimeout, () => _task.AssertAvailable(),
+                            ex => _logger.Error(Subject, "Availability test failed for " + Subject, ex)));
+
+                switch (status)
+                {
+                    case Completion.Exception:
+                        _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject));
+                        return HealthStatus.Error;
+
+                    case Completion.Success:
+                        return HealthStatus.Active;
+
+                    default:
+                        _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject));
+                        return HealthStatus.Timedout;
+                }
+            }, TaskCreationOptions.AttachedToParent);
         }
 
         public Task Activate()
         {
-            return Enqueue(t => t.Activate());
+            return Task.Factory.StartNew(
+                () => _lock.Write(() => _task.Activate()),
+                TaskCreationOptions.AttachedToParent
+                );
         }
 
         public Task Deactivate()
         {
-            return Enqueue(t => t.Deactivate());
+            return Task.Factory.StartNew(
+                () => _lock.Write(() => _task.Deactivate()),
+                TaskCreationOptions.AttachedToParent
+                );
         }
 
         public bool IsActive
         {
-            get { return _task.IsActive; }
+            get { return _lock.Read(() => _task.IsActive); }
         }
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {
-            return Enqueue(task => task.SelectOwner(peers)).Unwrap();
-
-        }
-
-        public Task Enqueue(Action<IPersistentTask> action)
-        {
-            var completion = new TaskCompletionSource<object>(TaskCreationOptions.AttachedToParent);
-            _actions.Add(t => {
-                try
-                {
-                    action(t);
-                    completion.SetResult(new object());
-                }
-                catch (Exception ex)
-                {
-                    completion.SetException(ex);
-                }
-            });
-
-            return completion.Task;
-        }
-
-        public Task<T> Enqueue<T>(Func<IPersistentTask, T> source)
-        {
-            var completion = new TaskCompletionSource<T>();
-            _actions.Add(t => {
-                try
-                {
-                    completion.SetResult(source(t));
-                }
-                catch (Exception ex)
-                {
-                    completion.SetException(ex);
-                }
-            });
-
-            return completion.Task;
-        }
-
-        private void performActions(object state)
-        {
-            foreach (var action in _actions.GetConsumingEnumerable())
-            {
-                if (!_cancellation.IsCancellationRequested) action(_task);
-            }
-        }
-
-        public void Dispose()
-        {
-            _cancellation.Cancel();
-            _actions.CompleteAdding();
-            _background.Dispose();
+            // TODO -- do some filtering here.
+            return _task.SelectOwner(peers);
         }
     }
 }

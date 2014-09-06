@@ -58,7 +58,7 @@ namespace FubuTransportation.Monitoring
                 var persistentTask = FindTask(uri);
                 if (persistentTask == null) return null;
 
-                return new PersistentTaskAgent(persistentTask);
+                return new PersistentTaskAgent(persistentTask, _settings, _logger);
             };
 
             _permanentTasks = sources.SelectMany(x => x.PermanentTasks()).ToArray();
@@ -76,28 +76,9 @@ namespace FubuTransportation.Monitoring
             return checkStatus(agent);
         }
 
-        // TODO -- make this thing time out!!!!!!!!!
         private Task<HealthStatus> checkStatus(PersistentTaskAgent agent)
         {
-            if (agent.IsActive)
-            {
-                // TODO -- make the timeout configurable
-                return agent.AssertAvailable().TimeoutAfter(_settings.TaskAvailabilityCheckTimeout).ContinueWith(t => {
-                    if (t.IsFaulted)
-                    {
-                        t.Exception.Handle(_ => true);
-
-                        _logger.Error(agent.Subject, "Availability test failed for " + agent.Subject, t.Exception);
-                        _logger.InfoMessage(() => new TaskAvailabilityFailed(agent.Subject));
-
-                        return HealthStatus.Error;
-                    }
-
-                    return HealthStatus.Active;
-                });
-            }
-
-            return HealthStatus.Inactive.ToCompletionTask();
+            return agent.IsActive ? agent.AssertAvailable() : HealthStatus.Inactive.ToCompletionTask();
         }
 
 

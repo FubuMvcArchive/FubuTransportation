@@ -13,6 +13,8 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             Task("running://1").IsFullyFunctionalAndActive();
             Task("stopped://1").IsActive = false;
             Task("error://1").IsActiveButNotFunctional(new DivideByZeroException());
+            Task("timeout://1").IsFullyFunctionalAndActive();
+            Task("timeout://1").Timesout = true;
         }
 
         private HealthStatus findStatus(string uriString)
@@ -22,6 +24,12 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             task.Wait();
 
             return task.Result;
+        }
+
+        [Test]
+        public void check_the_status_of_a_task_that_times_out_in_its_availibility_check()
+        {
+            findStatus("timeout://1").ShouldEqual(HealthStatus.Timedout);
         }
 
         [Test]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTransportation.Monitoring;
 
 namespace FubuTransportation.Testing.Monitoring
@@ -26,6 +27,8 @@ namespace FubuTransportation.Testing.Monitoring
 
         public void AssertAvailable()
         {
+            if (Timesout) Thread.Sleep(1.Minutes());
+
             Thread.Sleep(10);
             if (AssertAvailableException != null) throw AssertAvailableException;
         }
@@ -70,5 +73,7 @@ namespace FubuTransportation.Testing.Monitoring
         {
             IsActive = false;
         }
+
+        public bool Timesout { get; set; }
     }
 }

@@ -28,15 +28,11 @@ namespace FubuTransportation.Testing.Monitoring
 
             var task = ClassUnderTest.AssertAvailable();
 
-            Exception<AggregateException>.ShouldBeThrownBy(() => {
                 task.Wait();
-            });
-            
-            
 
-            task.IsFaulted.ShouldBeTrue();
-            task.Exception.InnerExceptions.Single()
-                .ShouldBeTheSameAs(ex);
+
+
+            task.Result.ShouldEqual(HealthStatus.Error);
         }
 
         [Test]
