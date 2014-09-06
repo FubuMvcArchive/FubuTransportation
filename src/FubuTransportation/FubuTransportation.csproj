@@ -167,7 +167,7 @@
     <Compile Include="Monitoring\IPersistentTaskSource.cs" />
     <Compile Include="Monitoring\ITaskRouter.cs" />
     <Compile Include="Monitoring\ITransportPeer.cs" />
-    <Compile Include="Monitoring\ITransportPeerFactory.cs" />
+    <Compile Include="Monitoring\ITaskMonitoringSource.cs" />
     <Compile Include="Monitoring\LogMessages.cs" />
     <Compile Include="Monitoring\MonitoringControlHandler.cs" />
     <Compile Include="Monitoring\MonitoringServiceRegistry.cs" />
@@ -184,7 +184,7 @@
     <Compile Include="Monitoring\TaskOwner.cs" />
     <Compile Include="Monitoring\PersistentTaskStatus.cs" />
     <Compile Include="Monitoring\TransportPeer.cs" />
-    <Compile Include="Monitoring\TransportPeerFactory.cs" />
+    <Compile Include="Monitoring\TaskMonitoringSource.cs" />
     <Compile Include="NotHandlerAttribute.cs" />
     <Compile Include="Polling\BuiltInPollingJobRegistry.cs" />
     <Compile Include="Polling\DefaultTimer.cs" />

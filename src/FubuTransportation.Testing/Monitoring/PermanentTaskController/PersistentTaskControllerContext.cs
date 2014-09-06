@@ -15,7 +15,7 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 {
     [TestFixture]
-    public abstract class PersistentTaskControllerContext : ITransportPeerFactory
+    public abstract class PersistentTaskControllerContext : ITaskMonitoringSource
     {
         protected RecordingLogger theLogger;
         private Lazy<PersistentTaskController> _controller; 
@@ -28,7 +28,8 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
         protected TransportNode theCurrentNode;
         protected ChannelGraph theGraph;
-        protected ISubscriptionRepository theSubscriptions; 
+        protected ISubscriptionRepository theSubscriptions;
+        private HealthMonitoringSettings settings;
 
         [SetUp]
         public void SetUp()
@@ -50,13 +51,15 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theSubscriptions = new SubscriptionRepository(theGraph, new InMemorySubscriptionPersistence());
             theSubscriptions.Persist(theCurrentNode);
 
-            _controller = new Lazy<PersistentTaskController>(() => {
-                var settings = new HealthMonitoringSettings
-                {
-                    TaskAvailabilityCheckTimeout = 5.Seconds(),
+            settings = new HealthMonitoringSettings
+            {
+                TaskAvailabilityCheckTimeout = 5.Seconds(),
 
-                };
-                var controller = new PersistentTaskController(theGraph, theLogger, this, sources, settings, theSubscriptions);
+            };
+
+            _controller = new Lazy<PersistentTaskController>(() => {
+
+                var controller = new PersistentTaskController(theGraph, theLogger, this, sources);
 
                 sources.SelectMany(x => x.FakeTasks()).Select(x => x.Subject)
                     .Each(subject => controller.FindAgent(subject));
@@ -80,9 +83,19 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             
         }
 
-        IEnumerable<ITransportPeer> ITransportPeerFactory.BuildPeers()
+        IEnumerable<ITransportPeer> ITaskMonitoringSource.BuildPeers()
         {
             return peers;
+        }
+
+        IEnumerable<Uri> ITaskMonitoringSource.LocallyOwnedTasksAccordingToPersistence()
+        {
+            return theCurrentNode.OwnedTasks;
+        }
+
+        public IPersistentTaskAgent BuildAgentFor(IPersistentTask task)
+        {
+            return new PersistentTaskAgent(task, settings, theLogger, theSubscriptions);
         }
 
 

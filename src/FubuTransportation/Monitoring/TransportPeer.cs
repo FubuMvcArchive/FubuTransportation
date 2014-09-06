@@ -35,7 +35,6 @@ namespace FubuTransportation.Monitoring
         {
             _logger.InfoMessage(() => new TryingToAssignOwnership(subject, NodeId));
 
-            // TODO -- make the timeout configurable
             return _serviceBus.Request<TakeOwnershipResponse>(new TakeOwnershipRequest(subject),
                 new RequestOptions {Destination = ControlChannel, Timeout = _settings.TakeOwnershipMessageTimeout})
                 .ContinueWith(t => {

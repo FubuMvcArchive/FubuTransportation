@@ -14,6 +14,21 @@ namespace FubuTransportation.Testing.Monitoring
         }
 
         public Uri Subject { get; private set; }
+        public bool IsActive { get; private set; }
+        public Task<HealthStatus> AssertAvailable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<OwnershipStatus> Activate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Deactivate()
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {

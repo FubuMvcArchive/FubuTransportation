@@ -12,6 +12,10 @@ namespace FubuTransportation.Monitoring
     public interface IPersistentTaskAgent
     {
         Uri Subject { get; }
+        bool IsActive { get; }
+        Task<HealthStatus> AssertAvailable();
+        Task<OwnershipStatus> Activate();
+        Task<bool> Deactivate();
         Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers);
     }
 

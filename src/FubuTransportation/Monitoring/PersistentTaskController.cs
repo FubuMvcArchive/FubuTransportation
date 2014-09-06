@@ -6,7 +6,6 @@ using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
-using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
@@ -32,34 +31,31 @@ namespace FubuTransportation.Monitoring
     {
         private readonly ChannelGraph _graph;
         private readonly ILogger _logger;
-        private readonly ITransportPeerFactory _factory;
-        private readonly HealthMonitoringSettings _settings;
-        private readonly ISubscriptionRepository _repository;
+        private readonly ITaskMonitoringSource _factory;
 
         private readonly ConcurrentCache<string, IPersistentTaskSource> _sources
             = new ConcurrentCache<string, IPersistentTaskSource>();
 
-        private readonly ConcurrentCache<Uri, PersistentTaskAgent> _agents =
-            new ConcurrentCache<Uri, PersistentTaskAgent>();
+        private readonly ConcurrentCache<Uri, IPersistentTaskAgent> _agents =
+            new ConcurrentCache<Uri, IPersistentTaskAgent>();
 
 
         private readonly Uri[] _permanentTasks;
 
 
-        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerFactory factory, IEnumerable<IPersistentTaskSource> sources, HealthMonitoringSettings settings, ISubscriptionRepository repository)
+        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITaskMonitoringSource factory,
+            IEnumerable<IPersistentTaskSource> sources)
         {
             _graph = graph;
             _logger = logger;
             _factory = factory;
-            _settings = settings;
-            _repository = repository;
             sources.Each(x => _sources[x.Protocol] = x);
 
             _agents.OnMissing = uri => {
                 var persistentTask = FindTask(uri);
                 if (persistentTask == null) return null;
 
-                return new PersistentTaskAgent(persistentTask, _settings, _logger, _repository);
+                return _factory.BuildAgentFor(persistentTask);
             };
 
             _permanentTasks = sources.SelectMany(x => x.PermanentTasks()).ToArray();
@@ -77,7 +73,7 @@ namespace FubuTransportation.Monitoring
             return checkStatus(agent);
         }
 
-        private Task<HealthStatus> checkStatus(PersistentTaskAgent agent)
+        private Task<HealthStatus> checkStatus(IPersistentTaskAgent agent)
         {
             return agent.IsActive ? agent.AssertAvailable() : HealthStatus.Inactive.ToCompletionTask();
         }
@@ -117,10 +113,9 @@ namespace FubuTransportation.Monitoring
         }
 
 
-
         public Task EnsureTasksHaveOwnership()
         {
-            using (var router = new HealthAndAssignmentRouter(_logger,this, allPeers().ToArray()))
+            using (var router = new HealthAndAssignmentRouter(_logger, this, allPeers().ToArray()))
             {
                 return router.EnsureAllTasksAreAssignedAndRunning();
             }
@@ -134,7 +129,7 @@ namespace FubuTransportation.Monitoring
             {
                 yield return peer;
             }
-        } 
+        }
 
         public Task<OwnershipStatus> TakeOwnership(Uri subject)
         {
@@ -143,7 +138,6 @@ namespace FubuTransportation.Monitoring
             var agent = _agents[subject];
             if (agent == null)
             {
-                
                 return OwnershipStatus.UnknownSubject.ToCompletionTask();
             }
 
@@ -184,7 +178,7 @@ namespace FubuTransportation.Monitoring
         {
             var activeTasks = _agents.Where(x => x.IsActive).Select(x => x.Subject);
             return
-                _repository.FindLocal().OwnedTasks.Union(activeTasks).ToArray();
+                _factory.LocallyOwnedTasksAccordingToPersistence().Union(activeTasks).ToArray();
         }
 
         public string NodeId
@@ -200,13 +194,7 @@ namespace FubuTransportation.Monitoring
         // TODO -- think this should be explicitly set later
         public Uri ControlChannel
         {
-            get
-            {
-                return _graph.ReplyUriList().FirstOrDefault();
-            }
+            get { return _graph.ReplyUriList().FirstOrDefault(); }
         }
-
     }
-
-
 }
