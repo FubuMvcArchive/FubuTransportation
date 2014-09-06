@@ -25,7 +25,7 @@ namespace FubuTransportation
                     reset.Set();
                     returnValue = Completion.Success;
                 }
-                catch (ThreadAbortException e)
+                catch (ThreadAbortException)
                 {
                     // nothing
                 }

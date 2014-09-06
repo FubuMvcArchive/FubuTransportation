@@ -15,7 +15,7 @@ using Rhino.Mocks;
 namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 {
     [TestFixture]
-    public abstract class PersistentTaskControllerContext : ITransportPeerRepository
+    public abstract class PersistentTaskControllerContext : ITransportPeerFactory
     {
         protected RecordingLogger theLogger;
         private Lazy<PersistentTaskController> _controller; 
@@ -28,15 +28,11 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
         protected TransportNode theCurrentNode;
         protected ChannelGraph theGraph;
+        protected ISubscriptionRepository theSubscriptions; 
 
         [SetUp]
         public void SetUp()
         {
-            theCurrentNode = new TransportNode
-            {
-                
-            };
-
             peers.ClearAll();
             sources.ClearAll();
 
@@ -44,13 +40,21 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             {
                 NodeId = "Test@Local"
             };
+
+            theGraph.AddReplyChannel("memory", "memory://1".ToUri());
+
+            theCurrentNode = new TransportNode(theGraph);
+
             theLogger = new RecordingLogger();
+
+            theSubscriptions = new SubscriptionRepository(theGraph, new InMemorySubscriptionPersistence());
+            theSubscriptions.Persist(theCurrentNode);
 
             _controller = new Lazy<PersistentTaskController>(() => {
                 var controller = new PersistentTaskController(theGraph, theLogger, this, sources, new HealthMonitoringSettings
                 {
                     TaskAvailabilityCheckTimeout = 5.Seconds()
-                });
+                }, theSubscriptions);
 
                 sources.SelectMany(x => x.FakeTasks()).Select(x => x.Subject)
                     .Each(subject => controller.FindAgent(subject));
@@ -74,15 +78,11 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             
         }
 
-        IEnumerable<ITransportPeer> ITransportPeerRepository.AllPeers()
+        IEnumerable<ITransportPeer> ITransportPeerFactory.BuildPeers()
         {
             return peers;
         }
 
-        IEnumerable<ITransportPeer> ITransportPeerRepository.AllOwners()
-        {
-            return peers.Where(x => x.CurrentlyOwnedSubjects().Any());
-        }
 
         public FakePersistentTask Task(string uriString)
         {
@@ -121,24 +121,5 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theLogger.ErrorMessages.OfType<ErrorReport>().Any(x => x.ExceptionText.Contains(ex.ToString()));
         }
 
-        void ITransportPeerRepository.RecordOwnershipToThisNode(Uri subject)
-        {
-            theCurrentNode.AddOwnership(subject);
-        }
-
-        void ITransportPeerRepository.RecordOwnershipToThisNode(IEnumerable<Uri> subjects)
-        {
-            theCurrentNode.AddOwnership(subjects);
-        }
-
-        public TransportNode LocalNode()
-        {
-            return theCurrentNode;
-        }
-
-        void ITransportPeerRepository.RemoveOwnershipFromThisNode(Uri subject)
-        {
-            theCurrentNode.RemoveOwnership(subject);
-        }
     }
 }

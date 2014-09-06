@@ -9,7 +9,7 @@ namespace FubuTransportation.Monitoring
         {
             AddService<ILogModifier, PersistentTaskMessageModifier>();
             SetServiceIfNone<IPersistentTaskController, PersistentTaskController>(def => def.AsSingleton());
-            SetServiceIfNone<ITransportPeerRepository, TransportPeerRepository>();
+            SetServiceIfNone<ITransportPeerFactory, TransportPeerFactory>();
         }
     }
 }

@@ -7,6 +7,7 @@ using FubuCore;
 using FubuCore.Logging;
 using FubuCore.Util;
 using FubuTransportation.Configuration;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Monitoring
 {
@@ -33,8 +34,9 @@ namespace FubuTransportation.Monitoring
     {
         private readonly ChannelGraph _graph;
         private readonly ILogger _logger;
-        private readonly ITransportPeerRepository _repository;
+        private readonly ITransportPeerFactory _factory;
         private readonly HealthMonitoringSettings _settings;
+        private readonly ISubscriptionRepository _repository;
 
         private readonly ConcurrentCache<string, IPersistentTaskSource> _sources
             = new ConcurrentCache<string, IPersistentTaskSource>();
@@ -46,12 +48,13 @@ namespace FubuTransportation.Monitoring
         private readonly Uri[] _permanentTasks;
 
 
-        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerRepository repository, IEnumerable<IPersistentTaskSource> sources, HealthMonitoringSettings settings)
+        public PersistentTaskController(ChannelGraph graph, ILogger logger, ITransportPeerFactory factory, IEnumerable<IPersistentTaskSource> sources, HealthMonitoringSettings settings, ISubscriptionRepository repository)
         {
             _graph = graph;
             _logger = logger;
-            _repository = repository;
+            _factory = factory;
             _settings = settings;
+            _repository = repository;
             sources.Each(x => _sources[x.Protocol] = x);
 
             _agents.OnMissing = uri => {
@@ -121,7 +124,6 @@ namespace FubuTransportation.Monitoring
                     return false;
                 }
 
-
                 _repository.RemoveOwnershipFromThisNode(subject);
                 _logger.InfoMessage(() => new StoppedTask(subject));
 
@@ -149,7 +151,8 @@ namespace FubuTransportation.Monitoring
             Task.WaitAll(startupTasks);
 
             var newSubjects = startupTasks.Select(x => x.Result).Where(x => x.Success).Select(x => x.Uri);
-            _repository.RecordOwnershipToThisNode(newSubjects);
+            
+            _repository.AddOwnershipToThisNode(newSubjects);
         }
 
 
@@ -165,7 +168,7 @@ namespace FubuTransportation.Monitoring
         private IEnumerable<ITransportPeer> allPeers()
         {
             yield return this;
-            foreach (var peer in _repository.AllPeers())
+            foreach (var peer in _factory.BuildPeers())
             {
                 yield return peer;
             }
@@ -198,7 +201,8 @@ namespace FubuTransportation.Monitoring
                 }
 
                 _logger.InfoMessage(() => new TookOwnershipOfPersistentTask(subject));
-                _repository.RecordOwnershipToThisNode(subject);
+                
+                _repository.AddOwnershipToThisNode(subject);
                 return OwnershipStatus.OwnershipActivated;
             });
         }
@@ -231,7 +235,7 @@ namespace FubuTransportation.Monitoring
         {
             var activeTasks = _agents.Where(x => x.IsActive).Select(x => x.Subject);
             return
-                _repository.LocalNode().OwnedTasks.Union(activeTasks).ToArray();
+                _repository.FindLocal().OwnedTasks.Union(activeTasks).ToArray();
         }
 
         public string NodeId

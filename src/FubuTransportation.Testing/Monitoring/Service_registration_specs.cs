@@ -51,7 +51,7 @@ namespace FubuTransportation.Testing.Monitoring
         [Test]
         public void transport_peer_repository()
         {
-            registeredTypeIs<ITransportPeerRepository, TransportPeerRepository>();
+            registeredTypeIs<ITransportPeerFactory, TransportPeerFactory>();
         }
     }
 }
