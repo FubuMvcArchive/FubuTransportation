@@ -358,6 +358,7 @@
     <Compile Include="TestSupport\MessageWatcher.cs" />
     <Compile Include="TestSupport\TransportCleanup.cs" />
     <Compile Include="TestSupport\TransportCleanupActivator.cs" />
+    <Compile Include="TimeoutRunner.cs" />
     <Compile Include="TransportSettings.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="Web\ISendMessages.cs" />

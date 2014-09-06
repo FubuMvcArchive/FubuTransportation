@@ -831,6 +831,7 @@
     <Compile Include="TestSupport\MessageWatcherTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TimeoutRunnerTester.cs" />
     <Compile Include="TransportActivatorTester.cs">
       <SubType>Code</SubType>
     </Compile>
