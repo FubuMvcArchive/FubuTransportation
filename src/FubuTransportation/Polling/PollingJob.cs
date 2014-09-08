@@ -12,15 +12,18 @@ namespace FubuTransportation.Polling
         private readonly IPollingJobLogger _logger;
         private readonly ITimer _timer;
         private readonly Expression<Func<TSettings, double>> _intervalSource;
+        private readonly ScheduledExecution _scheduledExecution;
         private readonly PollingJobLatch _latch;
         private double _interval;
 
-        public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings, Expression<Func<TSettings, double>> intervalSource, PollingJobLatch latch)
+        public PollingJob(IServiceBus bus, IPollingJobLogger logger, TSettings settings,
+            PollingJobDefinition definition, PollingJobLatch latch)
         {
             _bus = bus;
             _logger = logger;
             _timer = new DefaultTimer();
-            _intervalSource = intervalSource;
+            _intervalSource = (Expression<Func<TSettings, double>>)definition.IntervalSource;
+            _scheduledExecution = definition.ScheduledExecution;
             _latch = latch;
 
             _interval = _intervalSource.Compile()(settings);
@@ -28,10 +31,11 @@ namespace FubuTransportation.Polling
 
         public void Describe(Description description)
         {
-            description.Title = "Polling Job for " + typeof (TJob).Name;
+            description.Title = "Polling Job for " + typeof(TJob).Name;
             typeof(TJob).ForAttribute<DescriptionAttribute>(att => description.ShortDescription = att.Description);
             description.Properties["Interval"] = _interval.ToString() + " ms";
             description.Properties["Config"] = _intervalSource.ToString();
+            description.Properties["Scheduled Execution"] = _scheduledExecution.ToString();
         }
 
         public bool IsRunning()
@@ -41,6 +45,11 @@ namespace FubuTransportation.Polling
 
         public void Start()
         {
+            if (_scheduledExecution == ScheduledExecution.RunImmediately)
+            {
+                RunNow();
+            }
+
             _timer.Start(RunNow, _interval);
         }
 
@@ -60,7 +69,7 @@ namespace FubuTransportation.Polling
 
                 if (!_latch.Latched)
                 {
-                    _logger.FailedToSchedule(typeof (TJob), e);
+                    _logger.FailedToSchedule(typeof(TJob), e);
                 }
             }
         }
@@ -87,6 +96,5 @@ namespace FubuTransportation.Polling
                 Start();
             }
         }
-
     }
 }

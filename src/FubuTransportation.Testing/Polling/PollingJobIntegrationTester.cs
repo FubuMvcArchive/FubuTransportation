@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using FubuCore;
-using FubuCore.Logging;
 using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
@@ -27,14 +25,12 @@ namespace FubuTransportation.Testing.Polling
         {
             OneJob.Executed = TwoJob.Executed = ThreeJob.Executed = 0;
 
-            
             container = new Container();
-                
-            theRuntime = FubuTransport.For<PollingRegistry>().StructureMap(container)
-                                       .Bootstrap();
+            theRuntime = FubuTransport.For<PollingRegistry>()
+                                      .StructureMap(container)
+                                      .Bootstrap();
 
-
-            Wait.Until(() => ThreeJob.Executed > 10, timeoutInMilliseconds:60000);
+            Wait.Until(() => ThreeJob.Executed > 10, timeoutInMilliseconds: 6000);
         }
 
         [TestFixtureTearDown]
@@ -47,11 +43,9 @@ namespace FubuTransportation.Testing.Polling
         public void the_polling_job_chains_are_tagged_for_no_tracing()
         {
             var graph = theRuntime.Factory.Get<BehaviorGraph>();
-            var chains = graph.Behaviors.Where(x => x.InputType() != null && x.InputType().Closes(typeof (JobRequest<>)));
+            var chains = graph.Behaviors.Where(x => x.InputType() != null && x.InputType().Closes(typeof(JobRequest<>)));
 
-            chains.Each(x => {
-                x.IsTagged(BehaviorChain.NoTracing).ShouldBeTrue();
-            });
+            chains.Each(x => x.IsTagged(BehaviorChain.NoTracing).ShouldBeTrue());
         }
 
         [Test]
@@ -59,17 +53,14 @@ namespace FubuTransportation.Testing.Polling
         {
             // The polling job for delayed messages & one for the expired listeners are registered by default.
             var pollingJobs = container.GetInstance<IPollingJobs>();
-            pollingJobs.Count()
-                     .ShouldEqual(5);
+            pollingJobs.ShouldHaveCount(5);
         }
 
         [Test]
         public void should_have_executed_all_the_jobs_several_times()
         {
             OneJob.Executed.ShouldBeGreaterThan(10);
-
             TwoJob.Executed.ShouldBeGreaterThan(10);
-
             ThreeJob.Executed.ShouldBeGreaterThan(10);
         }
 
@@ -89,7 +80,7 @@ namespace FubuTransportation.Testing.Polling
 
             Polling.RunJob<OneJob>().ScheduledAtInterval<PollingSettings>(x => x.OneInterval);
             Polling.RunJob<TwoJob>().ScheduledAtInterval<PollingSettings>(x => x.TwoInterval);
-            Polling.RunJob<ThreeJob>().ScheduledAtInterval<PollingSettings>(x => x.ThreeInterval);
+            Polling.RunJob<ThreeJob>().ScheduledAtInterval<PollingSettings>(x => x.ThreeInterval).RunImmediately();
 
             Services(x => x.ReplaceService<IPollingJobLogger, RecordingPollingJobLogger>());
         }
