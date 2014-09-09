@@ -16,15 +16,17 @@ namespace FubuTransportation.LightningQueues
     {
         private readonly ILogger _logger;
         private readonly IDelayedMessageCache<MessageId> _delayedMessages;
+        private readonly QueueManagerConfiguration _queueManagerConfiguration;
         public const string EsentPath = "fubutransportation.esent";
 
         private readonly Cache<int, QueueManager> _queueManagers;
 
-        public PersistentQueues(ILogger logger, IDelayedMessageCache<MessageId> delayedMessages)
+        public PersistentQueues(ILogger logger, IDelayedMessageCache<MessageId> delayedMessages, LightningQueueSettings settings)
         {
             _logger = logger;
             _delayedMessages = delayedMessages;
-            _queueManagers = new Cache<int, QueueManager>(port => new QueueManager(new IPEndPoint(IPAddress.Any, port), EsentPath + "." + port, new QueueManagerConfiguration()));
+            _queueManagerConfiguration = settings.ToConfiguration();
+            _queueManagers = new Cache<int, QueueManager>(port => new QueueManager(new IPEndPoint(IPAddress.Any, port), EsentPath + "." + port, _queueManagerConfiguration));
         }
 
         public void Dispose()

@@ -127,5 +127,19 @@ namespace FubuTransportation.LightningQueues
             //data.CorrelationId = id.MessageIdentifier;
             sendingScope.Commit();
         }
+
+        public static QueueManagerConfiguration ToConfiguration(this LightningQueueSettings settings)
+        {
+            return new QueueManagerConfiguration
+            {
+                EnableOutgoingMessageHistory = settings.EnableOutgoingMessageHistory,
+                EnableProcessedMessageHistory = settings.EnableProcessedMessageHistory,
+                NumberOfMessagesToKeepInOutgoingHistory = settings.NumberOfMessagesToKeepInOutgoingHistory,
+                NumberOfMessagesToKeepInProcessedHistory = settings.NumberOfMessagesToKeepInProcessedHistory,
+                NumberOfReceivedMessageIdsToKeep = settings.NumberOfReceivedMessageIdsToKeep,
+                OldestMessageInOutgoingHistory = settings.OldestMessageInOutgoingHistory,
+                OldestMessageInProcessedHistory = settings.OldestMessageInProcessedHistory,
+            };
+        }
     }
 }
