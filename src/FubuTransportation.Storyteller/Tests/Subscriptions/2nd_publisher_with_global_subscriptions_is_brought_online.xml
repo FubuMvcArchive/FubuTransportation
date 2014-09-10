@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Test name="2nd publisher with global subscriptions is brought online" lifecycle="Regression">
+<Test name="2nd publisher with global subscriptions is brought online" lifecycle="Acceptance">
   <Subscriptions>
     <LoadNode isStep="True" Key="Publisher" Registry="PublishingRegistry" ReplyUri="memory://publisher1" />
     <LoadNode isStep="True" Key="Subscriber" Registry="HasGlobalSubscriptionsRegistry" ReplyUri="memory://subscriber1" />
