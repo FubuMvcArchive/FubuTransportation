@@ -109,6 +109,11 @@ namespace FubuTransportation.Testing.Monitoring
             throw new NotImplementedException();
         }
 
+        public void RemoveOwnershipFromNode(IEnumerable<Uri> subjects)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Uri> CurrentlyOwnedSubjects()
         {
             throw new NotImplementedException();

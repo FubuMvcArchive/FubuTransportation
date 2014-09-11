@@ -42,5 +42,9 @@ namespace FubuTransportation.Monitoring
             return "Health Check " + Tasks.Select(x => "{0}: {1}".ToFormat(x.Subject, x.Status)).Join(", ");
         }
 
+        public IEnumerable<Uri> AllSubjects()
+        {
+            return (Tasks ?? new PersistentTaskStatus[0]).Select(x => x.Subject);
+        }
     }
 }

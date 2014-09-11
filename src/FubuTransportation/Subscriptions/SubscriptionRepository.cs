@@ -78,6 +78,16 @@ namespace FubuTransportation.Subscriptions
             _persistence.Alter(nodeId, node => node.RemoveOwnership(subject));
         }
 
+        public void RemoveOwnershipFromNode(string nodeId, IEnumerable<Uri> subjects)
+        {
+            _persistence.Alter(nodeId, node => subjects.Each(node.RemoveOwnership));
+        }
+
+        public void RemoveOwnershipFromThisNode(IEnumerable<Uri> subjects)
+        {
+            _persistence.Alter(_graph.NodeId, node => subjects.Each(node.RemoveOwnership));
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

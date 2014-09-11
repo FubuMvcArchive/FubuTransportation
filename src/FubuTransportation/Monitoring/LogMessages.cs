@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Runtime.Remoting.Contexts;
+using System.Collections.Generic;
+using System.Linq;
 using FubuCore;
 using FubuCore.Logging;
-using FubuTransportation.ErrorHandling;
 
 namespace FubuTransportation.Monitoring
 {
@@ -92,12 +92,11 @@ namespace FubuTransportation.Monitoring
 
         public TakeOwnershipRequestReceived()
         {
-
         }
 
         public Uri From { get; set; }
         public OwnershipStatus Status { get; set; }
-        
+
 
         public override string ToString()
         {
@@ -162,10 +161,8 @@ namespace FubuTransportation.Monitoring
 
     public class TaskAvailabilityFailed : PersistentTaskMessage
     {
-
         public TaskAvailabilityFailed(Uri subject) : base(subject)
         {
-
         }
 
         public string ExceptionText { get; set; }
@@ -179,14 +176,12 @@ namespace FubuTransportation.Monitoring
 
     public class ReassigningTask : PersistentTaskMessage
     {
-        public ReassigningTask(Uri subject, HealthStatus status, string currentNode) : base(subject)
+        public ReassigningTask(Uri subject, IEnumerable<ITransportPeer> deactivations) : base(subject)
         {
-            Status = status;
-            CurrentNode = currentNode;
+            CurrentNodes = deactivations.Select(x => x.NodeId).ToArray();
         }
 
-        public HealthStatus Status { get; set; }
-        public string CurrentNode { get; set; }
+        public string[] CurrentNodes { get; set; }
 
         public ReassigningTask()
         {
@@ -194,10 +189,16 @@ namespace FubuTransportation.Monitoring
 
         public override string ToString()
         {
-            return "Re-assigning task {0} from node {1}, was on node {2} with status {3}"
-                .ToFormat(Subject, NodeId, CurrentNode, Status);
+            if (CurrentNodes.Any())
+            {
+                return "Re-assigning task {0} from node {1}, was on node(s) {2}"
+                    .ToFormat(Subject, NodeId, CurrentNodes.Join(", "));
+            }
+
+            return "Assigning task {0} from node {1}".ToFormat(Subject, NodeId);
         }
     }
+
 
     public class UnknownTask : PersistentTaskMessage
     {

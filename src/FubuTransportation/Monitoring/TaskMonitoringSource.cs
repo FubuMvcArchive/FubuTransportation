@@ -46,5 +46,10 @@ namespace FubuTransportation.Monitoring
         {
             return new PersistentTaskAgent(task, _settings, _logger, _repository);
         }
+
+        public void RemoveOwnershipFromThisNode(IEnumerable<Uri> subjects)
+        {
+            _repository.RemoveOwnershipFromThisNode(subjects);
+        }
     }
 }

@@ -159,7 +159,6 @@
     <Compile Include="Logging\MessageLogRecord.cs" />
     <Compile Include="Logging\MessageSuccessful.cs" />
     <Compile Include="Logging\NoHandlerForMessage.cs" />
-    <Compile Include="Monitoring\HealthAndAssignmentRouter.cs" />
     <Compile Include="Monitoring\HealthMonitoringSettings.cs" />
     <Compile Include="Monitoring\HealthMonitorPollingJob.cs" />
     <Compile Include="Monitoring\HealthStatus.cs" />
@@ -176,6 +175,7 @@
     <Compile Include="Monitoring\PersistentTaskAgent.cs" />
     <Compile Include="Monitoring\PersistentTaskMessageModifier.cs" />
     <Compile Include="Monitoring\TaskDeactivation.cs" />
+    <Compile Include="Monitoring\TaskHealthAssignmentPlanner.cs" />
     <Compile Include="Monitoring\TaskHealthRequest.cs" />
     <Compile Include="Monitoring\OwnershipStatus.cs" />
     <Compile Include="Monitoring\TakeOwnershipRequest.cs" />

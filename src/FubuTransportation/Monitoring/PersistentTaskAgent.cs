@@ -131,7 +131,7 @@ namespace FubuTransportation.Monitoring
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
         {
-            // TODO -- do some filtering here.
+            // TODO -- do some logging here!
             return _task.SelectOwner(peers);
         }
     }

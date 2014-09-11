@@ -11,5 +11,7 @@ namespace FubuTransportation.Monitoring
         IEnumerable<Uri> LocallyOwnedTasksAccordingToPersistence();
 
         IPersistentTaskAgent BuildAgentFor(IPersistentTask task);
+
+        void RemoveOwnershipFromThisNode(IEnumerable<Uri> subjects);
     }
 }

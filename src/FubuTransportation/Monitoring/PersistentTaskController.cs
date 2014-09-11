@@ -9,12 +9,15 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Monitoring
 {
+    // TODO -- clean this up
     public interface IPersistentTasks
     {
         IPersistentTask FindTask(Uri subject);
         IPersistentTaskAgent FindAgent(Uri subject);
         IEnumerable<Uri> PersistentSubjects { get; }
         string NodeId { get; }
+
+        Task Reassign(Uri subject, IEnumerable<ITransportPeer> availablePeers, IEnumerable<ITransportPeer> deactivations);
     }
 
     public interface IPersistentTaskController
@@ -115,10 +118,18 @@ namespace FubuTransportation.Monitoring
 
         public Task EnsureTasksHaveOwnership()
         {
-            using (var router = new HealthAndAssignmentRouter(_logger, this, allPeers().ToArray()))
-            {
-                return router.EnsureAllTasksAreAssignedAndRunning();
-            }
+            var healthChecks = allPeers().Select(x => x.CheckStatusOfOwnedTasks().ContinueWith(_ => {
+                return new {Peer = x, Response = _.Result};
+            }));
+
+            return Task.WhenAll(healthChecks).ContinueWith(checks => {
+                var planner = new TaskHealthAssignmentPlanner(_permanentTasks);
+                checks.Result.Each(_ => planner.Add(_.Peer, _.Response));
+
+                var corrections = planner.ToCorrectionTasks(this);
+
+                return true.ToCompletionTask();
+            }, TaskContinuationOptions.AttachedToParent);
         }
 
 
@@ -169,6 +180,11 @@ namespace FubuTransportation.Monitoring
             });
         }
 
+        public void RemoveOwnershipFromNode(IEnumerable<Uri> subjects)
+        {
+            _factory.RemoveOwnershipFromThisNode(subjects);
+        }
+
         public IEnumerable<Uri> ActiveTasks()
         {
             return _agents.Where(x => x.IsActive).Select(x => x.Subject).ToArray();
@@ -184,6 +200,38 @@ namespace FubuTransportation.Monitoring
         public string NodeId
         {
             get { return _graph.NodeId; }
+        }
+
+        public Task Reassign(Uri subject, IEnumerable<ITransportPeer> availablePeers, IEnumerable<ITransportPeer> deactivations)
+        {
+            deactivations = deactivations.ToArray();
+            return Task.WhenAll(deactivations.Select(x => x.Deactivate(subject)))
+                .ContinueWith(_ => {
+                    _logger.InfoMessage(() => new ReassigningTask(subject, deactivations));
+
+                    var agent = _agents[subject];
+                    if (agent == null)
+                    {
+                        _logger.InfoMessage(() => new UnknownTask(subject, "Trying to reassign a persistent task"));
+                        return true.ToCompletionTask();
+                    }
+                    else
+                    {
+                        return agent.AssignOwner(availablePeers).ContinueWith(t => {
+                            if (t.IsCompleted && t.Result == null)
+                            {
+                                _logger.InfoMessage(() => new UnableToAssignOwnership(subject));
+                            }
+
+                            if (t.IsFaulted)
+                            {
+                                _logger.Error(subject, "Failed while trying to assign ownership", t.Exception);
+                            }
+                        });
+                    }
+
+                    return _;
+                }, TaskContinuationOptions.AttachedToParent);
         }
 
         string ITransportPeer.MachineName

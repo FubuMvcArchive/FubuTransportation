@@ -344,9 +344,6 @@
     <Compile Include="Monitoring\FakeTransportPeer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitoring\HealthAndAssignmentRouter\HealthAndAssignmentRouterTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Monitoring\Monitoring_handlers_are_registered.cs">
       <SubType>Code</SubType>
     </Compile>

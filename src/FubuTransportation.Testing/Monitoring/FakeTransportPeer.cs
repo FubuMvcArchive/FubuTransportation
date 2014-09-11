@@ -43,6 +43,11 @@ namespace FubuTransportation.Testing.Monitoring
             return response.ToCompletionTask();
         }
 
+        public void RemoveOwnershipFromNode(IEnumerable<Uri> subjects)
+        {
+            throw new NotImplementedException();
+        }
+
         public IList<Uri> OwnedSubjects = new List<Uri>();
 
         public IEnumerable<Uri> CurrentlyOwnedSubjects()

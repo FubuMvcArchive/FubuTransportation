@@ -97,6 +97,11 @@ namespace FubuTransportation.Monitoring
             });
         }
 
+        public void RemoveOwnershipFromNode(IEnumerable<Uri> subjects)
+        {
+            _subscriptions.RemoveOwnershipFromNode(NodeId, subjects);
+        }
+
         public IEnumerable<Uri> CurrentlyOwnedSubjects()
         {
             return _node.OwnedTasks;

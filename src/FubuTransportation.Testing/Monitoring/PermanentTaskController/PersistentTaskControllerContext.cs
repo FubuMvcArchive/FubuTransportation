@@ -98,6 +98,11 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             return new PersistentTaskAgent(task, settings, theLogger, theSubscriptions);
         }
 
+        public void RemoveOwnershipFromThisNode(IEnumerable<Uri> subjects)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public FakePersistentTask Task(string uriString)
         {

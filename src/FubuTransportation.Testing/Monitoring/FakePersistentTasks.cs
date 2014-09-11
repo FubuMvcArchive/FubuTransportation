@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FubuCore.Util;
 using FubuTransportation.Monitoring;
 
@@ -29,6 +30,16 @@ namespace FubuTransportation.Testing.Monitoring
             {
                 return "FakeNode";
             }
+        }
+
+        public Task Reassign(Uri subject, IEnumerable<ITransportPeer> availablePeers, IEnumerable<ITransportPeer> deactivations)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Reassign(Uri subject, IEnumerable<ITransportPeer> availablePeers)
+        {
+            throw new NotImplementedException();
         }
     }
 }

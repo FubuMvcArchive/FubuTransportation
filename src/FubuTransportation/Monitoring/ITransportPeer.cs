@@ -4,12 +4,18 @@ using System.Threading.Tasks;
 
 namespace FubuTransportation.Monitoring
 {
+
+    // TODO -- try to clean up unused members
+    // Rename?
+
     public interface ITransportPeer
     {
         Task<OwnershipStatus> TakeOwnership(Uri subject);
 
         // TODO -- go to async/await?
         Task<TaskHealthResponse> CheckStatusOfOwnedTasks();
+
+        void RemoveOwnershipFromNode(IEnumerable<Uri> subjects);
 
         IEnumerable<Uri> CurrentlyOwnedSubjects();
 

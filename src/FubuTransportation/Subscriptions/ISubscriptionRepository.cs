@@ -20,5 +20,7 @@ namespace FubuTransportation.Subscriptions
         void AddOwnershipToThisNode(IEnumerable<Uri> subjects);
         void RemoveOwnershipFromThisNode(Uri subject);
         void RemoveOwnershipFromNode(string nodeId, Uri subject);
+        void RemoveOwnershipFromNode(string nodeId, IEnumerable<Uri> subjects);
+        void RemoveOwnershipFromThisNode(IEnumerable<Uri> subjects);
     }
 }
