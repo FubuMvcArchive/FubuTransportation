@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Descriptions;
 using FubuCore.Reflection;
 using FubuTransportation.Polling;
 using FubuTransportation.Runtime.Routing;
@@ -11,7 +13,7 @@ using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJob<T> : IScheduledJob, IScheduledJob<T> where T : IJob
+    public class ScheduledJob<T> : IScheduledJob, IScheduledJob<T>, DescribesItself where T : IJob
     {
         public ScheduledJob(IScheduleRule scheduler)
         {
@@ -89,6 +91,19 @@ namespace FubuTransportation.ScheduledJobs
 
             var age = now.Subtract(execution.ExpectedTime);
             return age > MaximumTimeBeforeRescheduling;
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "Job Type: " + typeof (T).GetFullName();
+            description.ShortDescription = typeof (T).GetFullName();
+            typeof(T).ForAttribute<DescriptionAttribute>(_ => {
+                description.ShortDescription = _.Description;
+            });
+
+            if (Channel != null) description.Properties["Channel"] = Channel.Name;
+            description.Properties["Maximum Time Before Rescheduling"] = MaximumTimeBeforeRescheduling.ToString();
+            description.AddChild("Scheduler", Scheduler);
         }
     }
 }

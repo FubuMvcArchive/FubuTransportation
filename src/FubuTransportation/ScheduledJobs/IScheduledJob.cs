@@ -12,7 +12,7 @@ namespace FubuTransportation.ScheduledJobs
     {
         Type JobType { get; }
         void Initialize(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule);
-        Accessor Channel { get; }
+        Accessor Channel { get; set; }
         TimeSpan Timeout { get;}
         IRoutingRule ToRoutingRule();
         bool ShouldReschedule(DateTimeOffset now, IJobTimer timer);

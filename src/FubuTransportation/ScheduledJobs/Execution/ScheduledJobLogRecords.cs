@@ -14,6 +14,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
         }
 
         public string JobKey { get; set; }
+        public string NodeId { get; set; }
     }
 
     public class ScheduledJobScheduled : LogRecord
@@ -29,7 +30,8 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public override string ToString()
         {
-            return "Scheduled job {0} Scheduled to start at {1}".ToFormat(JobKey, ScheduledTime.ToLocalTime());
+            return "Scheduled job {0} Scheduled to start at {1}"
+                .ToFormat(JobKey, ScheduledTime.ToLocalTime());
         }
     }
 
@@ -43,7 +45,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public override string ToString()
         {
-            return "Scheduled job {0} started".ToFormat(JobKey);
+            return "Scheduled job {0} started on node {1} at {2}".ToFormat(JobKey, NodeId, Time.ToLocalTime());
         }
     }
 
@@ -55,7 +57,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public override string ToString()
         {
-            return "Scheduled job {0} succeeded".ToFormat(JobKey);
+            return "Scheduled job {0} succeeded on Node {1} at {2}".ToFormat(JobKey, NodeId, Time.ToLocalTime());
         }
     }
 
@@ -70,7 +72,8 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public override string ToString()
         {
-            return "Scheduled job {0} failed with exception {1}".ToFormat(JobKey, Exception);
+            return "Scheduled job {0} failed with exception {1} on node {2} at {3}"
+                .ToFormat(JobKey, Exception, NodeId, Time.ToLocalTime());
         }
     }
 
@@ -85,7 +88,8 @@ namespace FubuTransportation.ScheduledJobs.Execution
 
         public override string ToString()
         {
-            return "Scheduled job {0} finished in {1} ms".ToFormat(JobKey, Duration);
+            return "Scheduled job {0} finished in {1} ms on node {2} at {3}"
+                .ToFormat(JobKey, Duration, NodeId, Time.ToLocalTime());
         }
     }
 }

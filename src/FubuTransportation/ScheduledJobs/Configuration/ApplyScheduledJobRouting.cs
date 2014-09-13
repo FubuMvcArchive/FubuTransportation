@@ -25,6 +25,8 @@ namespace FubuTransportation.ScheduledJobs.Configuration
                 throw new InvalidOperationException(message);
             }
 
+            jobs.Jobs.Where(x => x.Channel == null).Each(x => x.Channel = jobs.DefaultChannel);
+
             jobs.Jobs.Each(job => {
                 var accessor = job.Channel ?? jobs.DefaultChannel;
                 var channel = channels.ChannelFor(accessor);

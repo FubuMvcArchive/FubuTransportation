@@ -42,7 +42,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 
             scheduling(schedule);
 
-            _persistence.Persist(schedule.Select(x => x.ToDTO(_channels.Name)));
+            _persistence.Persist(schedule.Select(x => x.ToDTO(_channels.Name)).ToArray());
         }
 
         public JobStatus ToStatus(JobStatusDTO dto)

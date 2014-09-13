@@ -303,6 +303,7 @@
     <Compile Include="ScheduledJobs\Execution\ExecuteScheduledJob.cs" />
     <Compile Include="ScheduledJobs\Execution\IJobExecutor.cs" />
     <Compile Include="ScheduledJobs\Execution\IScheduledJobController.cs" />
+    <Compile Include="ScheduledJobs\Execution\ScheduledJobRecordModifier.cs" />
     <Compile Include="ScheduledJobs\Messages\SchedulingHandler.cs" />
     <Compile Include="ScheduledJobs\Persistence\InMemorySchedulePersistence.cs" />
     <Compile Include="ScheduledJobs\IScheduledJob.cs" />

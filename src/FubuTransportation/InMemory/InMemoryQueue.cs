@@ -125,9 +125,14 @@ namespace FubuTransportation.InMemory
             InMemoryQueueManager.AddToDelayedQueue(_token);
         }
 
+        // TODO -- make it fancier later and copy envelope headers
         public void MoveToErrors(ErrorReport report)
         {
-            throw new NotImplementedException();
+            var uri = (_parent.Uri.ToString() + "errors").ToUri();
+            InMemoryQueueManager.QueueFor(uri).Enqueue(new EnvelopeToken
+            {
+                Message = report
+            });
         }
 
         public void Requeue()

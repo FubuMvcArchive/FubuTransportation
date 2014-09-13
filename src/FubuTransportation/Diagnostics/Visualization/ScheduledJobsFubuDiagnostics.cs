@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
+using FubuCore.Descriptions;
 using FubuMVC.Core.Urls;
 using FubuTransportation.Configuration;
+using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Persistence;
 using HtmlTags;
 
@@ -15,12 +17,14 @@ namespace FubuTransportation.Diagnostics.Visualization
         private readonly IUrlRegistry _urls;
         private readonly ISchedulePersistence _persistence;
         private readonly ChannelGraph _graph;
+        private readonly ScheduledJobGraph _jobs;
 
-        public ScheduledJobsFubuDiagnostics(IUrlRegistry urls, ISchedulePersistence persistence, ChannelGraph graph)
+        public ScheduledJobsFubuDiagnostics(IUrlRegistry urls, ISchedulePersistence persistence, ChannelGraph graph, ScheduledJobGraph jobs)
         {
             _urls = urls;
             _persistence = persistence;
             _graph = graph;
+            _jobs = jobs;
         }
 
         [System.ComponentModel.Description("Schedules:Scheduled Job Monitor")]
@@ -36,12 +40,23 @@ namespace FubuTransportation.Diagnostics.Visualization
             return tag;
         }
 
-        public HtmlTag get_scheduled_job_history_Job(ScheduledJobRequest request)
+        [System.ComponentModel.Description("Scheduled Job History")]
+        public HtmlTag get_job_details_Job(ScheduledJobRequest request)
         {
             var schedule = _persistence.Find(_graph.Name, request.Job);
 
             var tag = new HtmlTag("div");
             tag.Add("h2").Text("Recent Execution History for " + request.Job);
+
+            var job = _jobs.Jobs.FirstOrDefault(x => JobStatus.GetKey(x.JobType) == request.Job);
+            if (job != null)
+            {
+                var descriptionTag = new DescriptionBodyTag(Description.For(job));
+                tag.Append(descriptionTag);
+                tag.Append("hr");
+                tag.Append("h4").Text("History");
+            }
+
             tag.Append(new ScheduledJobHistoryTable(schedule.History));
 
             return tag;

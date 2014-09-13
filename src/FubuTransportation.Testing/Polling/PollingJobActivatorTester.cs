@@ -3,6 +3,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuTestingSupport;
 using FubuTransportation.Polling;
+using FubuTransportation.Testing.ScheduledJobs;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace FubuTransportation.Testing.Polling
             thePackages = new IPackageInfo[0];
 
             theJobs = Services.CreateMockArrayFor<IPollingJob>(5);
+            foreach (var pollingJob in theJobs)
+            {
+                pollingJob.Stub(_ => _.JobType).Return(typeof (AJob));
+            }
+
             Services.Inject<IPollingJobs>(new PollingJobs(theJobs));
 
             ex1 = new NotImplementedException();

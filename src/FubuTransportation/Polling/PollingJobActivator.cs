@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bottles;
 using Bottles.Diagnostics;
+using FubuCore;
 using FubuCore.Descriptions;
 
 namespace FubuTransportation.Polling
@@ -21,7 +22,7 @@ namespace FubuTransportation.Polling
             _jobs.Where(x => x.ScheduledExecution != ScheduledExecution.Disabled).Each(x => {
                 try
                 {
-                    log.Trace("Starting " + Description.For(x).Title);
+                    log.Trace("Starting " + x.JobType.GetFullName());
                     x.Start();
                 }
                 catch (Exception ex)
