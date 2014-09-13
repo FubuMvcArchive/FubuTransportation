@@ -22,7 +22,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 
             theTask = theController.TakeOwnership(theSubjectUriString.ToUri());
 
-            settings.TakeOwnershipMessageTimeout = 45.Seconds();
+            settings.TakeOwnershipMessageTimeout = 2.Minutes();
 
             theTask.Wait();
 

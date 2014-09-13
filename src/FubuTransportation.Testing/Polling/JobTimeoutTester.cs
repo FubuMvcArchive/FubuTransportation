@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing.Polling
         public void run_over_the_allowed_time()
         {
             var timeout = new JobTimeout(1.Seconds());
-            var job = new FakeJob(2.Seconds());
+            var job = new FakeJob(10.Seconds());
 
             var task = timeout.Execute(job);
 

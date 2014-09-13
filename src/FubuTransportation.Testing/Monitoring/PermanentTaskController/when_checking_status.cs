@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
 using NUnit.Framework;
@@ -15,6 +16,9 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             Task("error://1").IsActiveButNotFunctional(new DivideByZeroException());
             Task("timeout://1").IsFullyFunctionalAndActive();
             Task("timeout://1").Timesout = true;
+
+            settings.TakeOwnershipMessageTimeout = 45.Seconds();
+            settings.TaskAvailabilityCheckTimeout = 45.Seconds();
         }
 
         private HealthStatus findStatus(string uriString)
@@ -29,6 +33,9 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         [Test]
         public void check_the_status_of_a_task_that_times_out_in_its_availibility_check()
         {
+            settings.TakeOwnershipMessageTimeout = 2.Seconds();
+            settings.TaskAvailabilityCheckTimeout = 2.Seconds();
+
             findStatus("timeout://1").ShouldEqual(HealthStatus.Timedout);
         }
 
