@@ -61,6 +61,11 @@ namespace FubuTransportation.Monitoring
         public TaskActivationTimeoutFailure()
         {
         }
+
+        public override string ToString()
+        {
+            return "Task Activation for {0} timed out on node {1}".ToFormat(Subject, NodeId);
+        }
     }
 
     public class TryingToAssignOwnership : PersistentTaskMessage
@@ -130,6 +135,11 @@ namespace FubuTransportation.Monitoring
         public FailedToActivatePersistentTask()
         {
         }
+
+        public override string ToString()
+        {
+            return "Failed to activate task {0} on node {1}".ToFormat(Subject, NodeId);
+        }
     }
 
     public class StoppedTask : PersistentTaskMessage
@@ -171,6 +181,12 @@ namespace FubuTransportation.Monitoring
 
         public TaskAvailabilityFailed()
         {
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Task availability failed for {0} on node {1} with exception type {2}", Subject, NodeId,
+                ExceptionType);
         }
     }
 

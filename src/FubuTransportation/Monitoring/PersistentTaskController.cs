@@ -128,7 +128,11 @@ namespace FubuTransportation.Monitoring
 
                 var corrections = planner.ToCorrectionTasks(this);
 
-                return true.ToCompletionTask();
+                return Task.WhenAll(corrections).ContinueWith(_ => {
+
+                    _logger.Info(() => "Finished running task health monitoring on node " + NodeId);
+
+                }, TaskContinuationOptions.AttachedToParent);
             }, TaskContinuationOptions.AttachedToParent);
         }
 

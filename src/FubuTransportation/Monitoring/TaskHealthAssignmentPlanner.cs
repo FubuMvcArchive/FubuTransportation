@@ -65,7 +65,7 @@ namespace FubuTransportation.Monitoring
             return
                 Task.Factory.StartNew(
                     () => {
-                        _removals.Each((node, subjects) => { node.RemoveOwnershipFromNode(subjects); });
+                        _removals.Each((node, subjects) => node.RemoveOwnershipFromNode(subjects));
                     });
         }
 

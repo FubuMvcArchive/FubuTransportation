@@ -39,7 +39,5 @@
         <row isStep="True" Task="foo://4" Node="Node4" />
       </rows>
     </TheTaskAssignmentsShouldBe>
-    <TaskWasNotReassigned isStep="True" task="foo://4" />
-    <TaskWasNotReassigned isStep="True" task="foo://3" />
   </Monitoring>
 </Test>

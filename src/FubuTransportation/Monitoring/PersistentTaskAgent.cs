@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using FubuCore.Logging;
@@ -46,19 +47,26 @@ namespace FubuTransportation.Monitoring
                 var status =
                     _lock.Read(
                         () => TimeoutRunner.Run(_settings.TaskAvailabilityCheckTimeout, () => _task.AssertAvailable(),
-                            ex => _logger.Error(Subject, "Availability test failed for " + Subject, ex)));
+                            ex => {
+                                _logger.Error(Subject, "Availability test failed for " + Subject, ex);
+                                _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject)
+                                {
+                                    ExceptionText = ex.ToString(),
+                                    ExceptionType = ex.GetType().Name
+                                });
+                            }));
 
                 switch (status)
                 {
                     case Completion.Exception:
-                        _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject));
+                        
                         return HealthStatus.Error;
 
                     case Completion.Success:
                         return HealthStatus.Active;
 
                     default:
-                        _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject));
+                        _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject){ExceptionType = "Timedout"});
                         return HealthStatus.Timedout;
                 }
             }, TaskCreationOptions.AttachedToParent);
@@ -74,7 +82,15 @@ namespace FubuTransportation.Monitoring
 
         private OwnershipStatus activate()
         {
-            Action activation = () => _lock.Write(() => _task.Activate());
+            Action activation = () => {
+                _lock.Write(() => _task.Activate());
+            };
+                
+                
+                
+
+
+
 
             var status = TimeoutRunner.Run(_settings.TaskActivationTimeout, activation, ex => {
                 _logger.Error(Subject, "Failed to take ownership of task " + Subject, ex);
