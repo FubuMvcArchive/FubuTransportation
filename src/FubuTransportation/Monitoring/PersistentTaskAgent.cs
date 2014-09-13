@@ -26,7 +26,7 @@ namespace FubuTransportation.Monitoring
         private readonly HealthMonitoringSettings _settings;
         private readonly ILogger _logger;
         private readonly ISubscriptionRepository _repository;
-        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        //private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public PersistentTaskAgent(IPersistentTask task, HealthMonitoringSettings settings, ILogger logger, ISubscriptionRepository repository)
         {
@@ -45,8 +45,8 @@ namespace FubuTransportation.Monitoring
         {
             return Task.Factory.StartNew(() => {
                 var status =
-                    _lock.Read(
-                        () => TimeoutRunner.Run(_settings.TaskAvailabilityCheckTimeout, () => _task.AssertAvailable(),
+                    //_lock.Read(() => 
+                        TimeoutRunner.Run(_settings.TaskAvailabilityCheckTimeout, () => _task.AssertAvailable(),
                             ex => {
                                 _logger.Error(Subject, "Availability test failed for " + Subject, ex);
                                 _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject)
@@ -54,7 +54,8 @@ namespace FubuTransportation.Monitoring
                                     ExceptionText = ex.ToString(),
                                     ExceptionType = ex.GetType().Name
                                 });
-                            }));
+                            });
+                      //      }));
 
                 switch (status)
                 {
@@ -82,9 +83,12 @@ namespace FubuTransportation.Monitoring
 
         private OwnershipStatus activate()
         {
-            Action activation = () => {
-                _lock.Write(() => _task.Activate());
-            };
+            Action activation = _task.Activate;
+                
+                
+//                () => {
+//                _lock.Write(() => _task.Activate());
+//            };
                 
                 
                 
@@ -124,7 +128,8 @@ namespace FubuTransportation.Monitoring
         {
             try
             {
-                _lock.Write(() => _task.Deactivate());
+                _task.Deactivate();
+                //_lock.Write(() => _task.Deactivate());
                 return true;
             }
             catch (Exception ex)
@@ -142,7 +147,11 @@ namespace FubuTransportation.Monitoring
 
         public bool IsActive
         {
-            get { return _lock.Read(() => _task.IsActive); }
+            get
+            {
+                return _task.IsActive;
+                //return _lock.Read(() => _task.IsActive);
+            }
         }
 
         public Task<ITransportPeer> AssignOwner(IEnumerable<ITransportPeer> peers)
