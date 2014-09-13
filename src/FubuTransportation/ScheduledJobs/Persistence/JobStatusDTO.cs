@@ -4,13 +4,18 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class JobStatusDTO
     {
+        public static string ToId(string node, string jobKey)
+        {
+            return node + "/" + jobKey;
+        }
+
         public string JobKey { get; set; }
 
         public string Id
         {
             get
             {
-                return NodeName + "/" + JobKey;
+                return ToId(NodeName, JobKey);
             }
         }
 

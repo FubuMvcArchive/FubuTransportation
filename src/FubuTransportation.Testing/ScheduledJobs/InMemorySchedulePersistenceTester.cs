@@ -30,6 +30,23 @@ namespace FubuTransportation.Testing.ScheduledJobs
         }
 
         [Test]
+        public void store_history()
+        {
+            var record1 = new JobExecutionRecord();
+            var record2 = new JobExecutionRecord();
+            var record3 = new JobExecutionRecord();
+            var record4 = new JobExecutionRecord();
+        
+            thePersistence.RecordHistory("foo", "1", record1);
+            thePersistence.RecordHistory("foo", "1", record2);
+            thePersistence.RecordHistory("foo", "2", record3);
+            thePersistence.RecordHistory("foo", "2", record4);
+
+            thePersistence.FindHistory("foo", "1").ShouldHaveTheSameElementsAs(record1, record2);
+            thePersistence.FindHistory("foo", "2").ShouldHaveTheSameElementsAs(record3, record4);
+        }
+
+        [Test]
         public void find_all_for_node()
         {
             thePersistence.FindAll("foo")
