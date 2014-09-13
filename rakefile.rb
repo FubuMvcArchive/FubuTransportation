@@ -6,7 +6,7 @@ solution = FubuRake::Solution.new do |sln|
 		:copyright => 'Copyright 2013. All rights reserved.'
 	}
 	
-	sln.ci_steps = ["st:run"]
+	#sln.ci_steps = ["st:run"]
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
