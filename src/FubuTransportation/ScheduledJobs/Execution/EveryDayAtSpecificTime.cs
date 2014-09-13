@@ -1,4 +1,5 @@
 using System;
+using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs.Execution
 {
@@ -13,7 +14,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
             _minute = minute;
         }
 
-        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
+        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime, JobExecutionRecord lastExecution)
         {
             var localTime = currentTime.ToLocalTime();
             var oneAmToday = new DateTime(localTime.Year, localTime.Month, localTime.Day, _hour, _minute, 0, 0, DateTimeKind.Local);

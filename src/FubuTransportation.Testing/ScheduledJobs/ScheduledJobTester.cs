@@ -26,7 +26,9 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             theExecution = new StubTimedExecution();
 
-            MockFor<IScheduleRule>().Stub(x => x.ScheduleNextTime(now)).Return(expected);
+            ClassUnderTest.LastExecution = new JobExecutionRecord();
+
+            MockFor<IScheduleRule>().Stub(x => x.ScheduleNextTime(now, ClassUnderTest.LastExecution)).Return(expected);
 
             theTimer = MockFor<IJobTimer>();
         }
@@ -349,7 +351,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         public readonly Cache<DateTimeOffset, DateTimeOffset> ScheduledTimes
             = new Cache<DateTimeOffset, DateTimeOffset>();
 
-        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
+        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime, JobExecutionRecord lastExecution)
         {
             return ScheduledTimes[currentTime];
         }

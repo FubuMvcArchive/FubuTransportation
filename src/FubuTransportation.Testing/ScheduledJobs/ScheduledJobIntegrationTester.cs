@@ -12,6 +12,7 @@ using FubuTransportation.Runtime.Routing;
 using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Configuration;
 using FubuTransportation.ScheduledJobs.Execution;
+using FubuTransportation.ScheduledJobs.Persistence;
 using NUnit.Framework;
 using StructureMap;
 
@@ -163,7 +164,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             _nextTime = nextTime;
         }
 
-        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
+        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime, JobExecutionRecord lastExecution)
         {
             return _nextTime;
         }

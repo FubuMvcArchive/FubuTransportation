@@ -172,7 +172,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             _seconds = seconds;
         }
 
-        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime)
+        public DateTimeOffset ScheduleNextTime(DateTimeOffset currentTime, JobExecutionRecord lastExecution)
         {
             var next = currentTime.Subtract(new TimeSpan(0, 0, 0, currentTime.Second, currentTime.Millisecond));
 

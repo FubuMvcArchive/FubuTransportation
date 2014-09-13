@@ -40,7 +40,7 @@ namespace FubuTransportation.ScheduledJobs
                     throw t.Exception;
                 }
                 
-                var nextTime = Scheduler.ScheduleNextTime(tracker.Now());
+                var nextTime = Scheduler.ScheduleNextTime(tracker.Now(), LastExecution);
                 tracker.Success(nextTime);
 
                 return new RescheduleRequest<T>
@@ -71,7 +71,7 @@ namespace FubuTransportation.ScheduledJobs
             var status = schedule.Find(JobType);
             LastExecution = status.LastExecution;
 
-            var next = Scheduler.ScheduleNextTime(now);
+            var next = Scheduler.ScheduleNextTime(now, LastExecution);
 
             schedule.Schedule(JobType, next);
 

@@ -15,7 +15,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             Container.Inject(new EveryDayAtSpecificTime(hour: 06, minute: 00)); // 6am
             LocalSystemTime = DateTime.Today.AddHours(7); // 7am
-            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime);
+            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime, null);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             Container.Inject(new EveryDayAtSpecificTime(hour: 08, minute: 00)); // 8am
             LocalSystemTime = DateTime.Today.AddHours(7); // 7am
-            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime);
+            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime, null);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         {
             Container.Inject(new EveryDayAtSpecificTime(hour: 07, minute: 33)); // 7:33am
             LocalSystemTime = DateTime.Today.AddHours(7).AddMinutes(33); // 7:33am
-            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime);
+            nextScheduledTime = ClassUnderTest.ScheduleNextTime(LocalSystemTime, null);
         }
 
         [Test]
