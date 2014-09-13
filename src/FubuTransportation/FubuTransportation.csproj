@@ -104,6 +104,7 @@
     <Compile Include="Diagnostics\Visualization\HandlersTableTag.cs" />
     <Compile Include="Diagnostics\Visualization\HtmlTagExtensions.cs" />
     <Compile Include="Diagnostics\Visualization\MessagesFubuDiagnostics.cs" />
+    <Compile Include="Diagnostics\Visualization\ScheduledJobsFubuDiagnostics.cs" />
     <Compile Include="Diagnostics\Visualization\SubscriptionsFubuDiagnostics.cs" />
     <Compile Include="Diagnostics\Visualization\SubscriptionsTableTag.cs" />
     <Compile Include="Diagnostics\Visualization\TransportsTag.cs" />

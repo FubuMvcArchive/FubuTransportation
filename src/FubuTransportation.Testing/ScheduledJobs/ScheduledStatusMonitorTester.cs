@@ -97,7 +97,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             
             foo1.Executor.ShouldBeNull();
 
-            foo1.LastExecution.NodeId.ShouldEqual(theChannelGraph.NodeId);
+            foo1.LastExecution.Executor.ShouldEqual(theChannelGraph.NodeId);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             thePersistence.FindHistory(foo1.NodeName, foo1.JobKey)
                 .Single().ShouldBeTheSameAs(foo1.LastExecution);
 
-            foo1.LastExecution.NodeId.ShouldEqual(theChannelGraph.NodeId);
+            foo1.LastExecution.Executor.ShouldEqual(theChannelGraph.NodeId);
         }
 
         [Test]

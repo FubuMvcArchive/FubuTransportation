@@ -22,7 +22,6 @@ namespace FubuTransportation
     {
         public FubuTransportServiceRegistry()
         {
-            // TODO -- this is awful.  Convenience method in 
             var eventAggregatorDef = FubuTransport.UseSynchronousLogging 
                 ? ObjectDef.ForType<SynchronousEventAggregator>() 
                 : ObjectDef.ForType<EventAggregator>();

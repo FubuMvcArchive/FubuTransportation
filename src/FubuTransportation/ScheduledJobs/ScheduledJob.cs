@@ -22,7 +22,6 @@ namespace FubuTransportation.ScheduledJobs
 
         public TimeSpan MaximumTimeBeforeRescheduling { get; set; }
 
-        // TODO -- add timeouts?
         // This will be completely tested through integration
         // tests only
         void IScheduledJob<T>.Execute(IJobExecutor executor)

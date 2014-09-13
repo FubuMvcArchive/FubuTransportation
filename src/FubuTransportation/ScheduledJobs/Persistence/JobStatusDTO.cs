@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore;
 
 namespace FubuTransportation.ScheduledJobs.Persistence
 {
@@ -31,6 +32,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         public string Executor { get; set; }
 
         public ScheduledRunHistory History { get; set; }
+        public DateTimeOffset? Started { get; set; }
 
         protected bool Equals(JobStatusDTO other)
         {
@@ -51,6 +53,20 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             {
                 return ((NodeName != null ? NodeName.GetHashCode() : 0)*397) ^ (JobKey != null ? JobKey.GetHashCode() : 0);
             }
+        }
+
+        public string GetStatusDescription()
+        {
+            if (Executor.IsNotEmpty()) return "{0} on Node '{1}'".ToFormat(Status, Executor);
+
+            return Status.ToString();
+        }
+
+        public string GetLastExecutionDescription()
+        {
+            if (LastExecution == null) return "None";
+
+            return LastExecution.ToString();
         }
     }
 }

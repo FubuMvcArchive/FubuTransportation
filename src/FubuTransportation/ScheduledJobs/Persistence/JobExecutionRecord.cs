@@ -14,7 +14,19 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         public string ExceptionText { get; set; }
         public int Attempts { get; set; }
         public string Executor { get; set; }
-        public string NodeId { get; set; }
+
+
+        public override string ToString()
+        {
+            if (Success)
+            {
+                return "Succeeded at {0} on node '{1}' in {2} milliseconds"
+                    .ToFormat(Finished.ToLocalTime(), Executor, Duration);
+            }
+
+            return "Failed at {0} on node {1} in {2} milliseconds"
+                .ToFormat(Finished.ToLocalTime(), Executor, Duration);
+        }
 
         protected bool Equals(JobExecutionRecord other)
         {

@@ -59,6 +59,8 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         {
             var jobKey = JobStatus.GetKey(typeof (T));
             var status = _persistence.Find(_channels.Name, jobKey);
+            status.Started = null;
+
             var current = status.LastExecution;
 
             change(status);
@@ -79,10 +81,10 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             });
         }
 
-        // TODO -- track the starting time in the monitor
         public void MarkExecuting<T>()
         {
             modifyStatus<T>(_ => {
+                _.Started = _systemTime.UtcNow();
                 _.Status = JobExecutionStatus.Executing;
                 _.Executor = _channels.NodeId;
             });
@@ -131,7 +133,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 
                 return new JobExecutionRecord
                 {
-                    NodeId = _nodeId,
+                    Executor = _nodeId,
                     Attempts = _attempts,
                     Duration = _stopwatch.ElapsedMilliseconds,
                     Finished = _parent._systemTime.UtcNow()
@@ -144,8 +146,6 @@ namespace FubuTransportation.ScheduledJobs.Persistence
                 record.Success = true;
 
                 _parent._logger.InfoMessage(() => new ScheduledJobSucceeded(_job));
-
-                record.Executor = _parent._channels.NodeId;
 
                 _parent.modifyStatus<T>(_ =>
                 {

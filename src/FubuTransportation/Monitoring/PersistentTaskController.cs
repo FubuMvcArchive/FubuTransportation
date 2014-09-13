@@ -9,12 +9,10 @@ using FubuTransportation.Configuration;
 
 namespace FubuTransportation.Monitoring
 {
-    // TODO -- clean this up
     public interface IPersistentTasks
     {
         IPersistentTask FindTask(Uri subject);
         IPersistentTaskAgent FindAgent(Uri subject);
-        IEnumerable<Uri> PersistentSubjects { get; }
         string NodeId { get; }
 
         Task Reassign(Uri subject, IEnumerable<ITransportPeer> availablePeers, IEnumerable<ITransportPeer> deactivations);
@@ -95,11 +93,6 @@ namespace FubuTransportation.Monitoring
         public IPersistentTaskAgent FindAgent(Uri subject)
         {
             return _agents[subject];
-        }
-
-        IEnumerable<Uri> IPersistentTasks.PersistentSubjects
-        {
-            get { return _permanentTasks; }
         }
 
         public Task<bool> Deactivate(Uri subject)

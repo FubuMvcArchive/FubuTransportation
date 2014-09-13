@@ -5,7 +5,6 @@ using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs.Execution
 {
-    // TODO -- log this puppy
     public class ScheduledJobRunner<T> where T : IJob
     {
         private readonly T _job;

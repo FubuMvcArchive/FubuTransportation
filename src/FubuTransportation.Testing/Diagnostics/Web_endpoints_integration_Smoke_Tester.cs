@@ -62,6 +62,18 @@ namespace FubuTransportation.Testing.Diagnostics
 
             InMemoryQueueManager.ClearAll();
         }
+
+        [Test]
+        public void the_scheduled_job_visualization_can_be_shown()
+        {
+            using (var server = EmbeddedFubuMvcServer.For<DiagnosticApplication>(appPath))
+            {
+                server.Endpoints.Get<ScheduledJobsFubuDiagnostics>(x => x.get_scheduled_jobs())
+                    .StatusCode.ShouldEqual(HttpStatusCode.OK);
+            }
+
+            InMemoryQueueManager.ClearAll();
+        }
     }
 
     public class DiagnosticApplication : FubuTransportRegistry, IApplicationSource

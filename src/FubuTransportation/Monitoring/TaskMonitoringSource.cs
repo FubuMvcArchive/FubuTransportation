@@ -31,7 +31,6 @@ namespace FubuTransportation.Monitoring
             return new TransportPeer(_settings, node, _repository, _serviceBus, _logger);
         }
 
-        // TODO -- this needs to be a Task
         public IEnumerable<ITransportPeer> BuildPeers()
         {
             return _repository.FindPeers().Select(toPeer).ToArray();
