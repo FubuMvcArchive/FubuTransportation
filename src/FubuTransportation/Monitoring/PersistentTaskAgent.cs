@@ -26,7 +26,7 @@ namespace FubuTransportation.Monitoring
         private readonly HealthMonitoringSettings _settings;
         private readonly ILogger _logger;
         private readonly ISubscriptionRepository _repository;
-        //private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public PersistentTaskAgent(IPersistentTask task, HealthMonitoringSettings settings, ILogger logger, ISubscriptionRepository repository)
         {
@@ -83,18 +83,7 @@ namespace FubuTransportation.Monitoring
 
         private OwnershipStatus activate()
         {
-            Action activation = _task.Activate;
-                
-                
-//                () => {
-//                _lock.Write(() => _task.Activate());
-//            };
-                
-                
-                
-
-
-
+            Action activation = () => _lock.Write(() => _task.Activate());
 
             var status = TimeoutRunner.Run(_settings.TaskActivationTimeout, activation, ex => {
                 _logger.Error(Subject, "Failed to take ownership of task " + Subject, ex);
@@ -128,8 +117,7 @@ namespace FubuTransportation.Monitoring
         {
             try
             {
-                _task.Deactivate();
-                //_lock.Write(() => _task.Deactivate());
+                _lock.Write(() => _task.Deactivate());
                 return true;
             }
             catch (Exception ex)
@@ -149,8 +137,7 @@ namespace FubuTransportation.Monitoring
         {
             get
             {
-                return _task.IsActive;
-                //return _lock.Read(() => _task.IsActive);
+                return _lock.Read(() => _task.IsActive);
             }
         }
 
