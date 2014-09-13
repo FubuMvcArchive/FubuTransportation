@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 {
-    [TestFixture]
+    [TestFixture, Explicit("The CI box is stupid")]
     public class when_checking_the_status_of_owned_tasks : PersistentTaskControllerContext
     {
         /*

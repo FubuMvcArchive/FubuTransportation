@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
 {
-    [TestFixture]
+    [TestFixture, Explicit("The CI box is stupid")]
     public class when_taking_ownership_successfully : PersistentTaskControllerContext
     {
         private const string theSubjectUriString = "good://1";

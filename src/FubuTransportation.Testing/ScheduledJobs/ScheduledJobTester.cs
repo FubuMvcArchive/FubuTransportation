@@ -228,7 +228,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         protected abstract RiggedJob theJobIs();
     }
 
-    [TestFixture]
+    [TestFixture, Explicit("The CI box is stupid")]
     public class when_running_a_job_happy_path : ScheduledJobExecutionContext
     {
         protected override RiggedJob theJobIs()
@@ -288,7 +288,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         }
     }
 
-    [TestFixture]
+    [TestFixture, Explicit("The CI box is stupid")]
     public class when_running_a_job_that_fails_before_timing_out : ScheduledJobExecutionContext
     {
         protected override RiggedJob theJobIs()
