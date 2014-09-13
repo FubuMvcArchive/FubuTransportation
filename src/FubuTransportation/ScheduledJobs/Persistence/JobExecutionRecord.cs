@@ -14,6 +14,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         public string ExceptionText { get; set; }
         public int Attempts { get; set; }
         public string Executor { get; set; }
+        public string NodeId { get; set; }
 
         protected bool Equals(JobExecutionRecord other)
         {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
@@ -20,6 +22,13 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             theTask = theController.TakeOwnership(theSubjectUriString.ToUri());
 
             theTask.Wait();
+
+            var timeouts = theLogger.InfoMessages.OfType<TaskActivationTimeoutFailure>();
+
+            if (timeouts.Any())
+            {
+                Assert.Fail("Has timeouts somehow!\n" + timeouts.Select(x => x.ToString()).Join("\n"));
+            }
         }
 
         [Test]

@@ -4,6 +4,11 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 {
     public class JobStatusDTO
     {
+        public JobStatusDTO()
+        {
+            History = new ScheduledRunHistory();
+        }
+
         public static string ToId(string node, string jobKey)
         {
             return node + "/" + jobKey;
@@ -24,6 +29,8 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         public string NodeName { get; set; }
         public JobExecutionStatus Status { get; set; }
         public string Executor { get; set; }
+
+        public ScheduledRunHistory History { get; set; }
 
         protected bool Equals(JobStatusDTO other)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using FubuCore.Dates;
 using FubuCore.Logging;
@@ -61,6 +62,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
             foo1.Status.ShouldEqual(JobExecutionStatus.Executing);
             foo1.Executor.ShouldEqual(theChannelGraph.NodeId);
+
         }
 
         [Test]
@@ -74,6 +76,9 @@ namespace FubuTransportation.Testing.ScheduledJobs
             foo1.Executor.ShouldBeNull();
 
             record.Executor.ShouldEqual(theChannelGraph.NodeId);
+
+            thePersistence.FindHistory(foo1.NodeName, foo1.JobKey)
+                .ShouldHaveTheSameElementsAs(record);
         }
 
         [Test]
@@ -92,7 +97,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
             
             foo1.Executor.ShouldBeNull();
 
-
+            foo1.LastExecution.NodeId.ShouldEqual(theChannelGraph.NodeId);
         }
 
         [Test]
@@ -110,6 +115,11 @@ namespace FubuTransportation.Testing.ScheduledJobs
             foo1.LastExecution.ExceptionText.ShouldEqual(ex.ToString());
 
             foo1.Executor.ShouldBeNull();
+
+            thePersistence.FindHistory(foo1.NodeName, foo1.JobKey)
+                .Single().ShouldBeTheSameAs(foo1.LastExecution);
+
+            foo1.LastExecution.NodeId.ShouldEqual(theChannelGraph.NodeId);
         }
 
         [Test]

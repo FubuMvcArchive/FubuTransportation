@@ -141,6 +141,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RavenDbSchedulePersistence.cs" />
     <Compile Include="RavenDbSubscriptionPersistence.cs" />
   </ItemGroup>
   <ItemGroup>

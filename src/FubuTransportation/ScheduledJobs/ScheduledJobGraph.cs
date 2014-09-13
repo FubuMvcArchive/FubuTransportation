@@ -12,9 +12,16 @@ namespace FubuTransportation.ScheduledJobs
     [ApplicationLevel]
     public class ScheduledJobGraph
     {
+        public ScheduledJobGraph()
+        {
+            MaxJobExecutionRecordsToKeepInHistory = 50;
+        }
+
 
         public readonly IList<IScheduledJob> Jobs = new List<IScheduledJob>();
         public Accessor DefaultChannel { get; set; }
+
+        public int MaxJobExecutionRecordsToKeepInHistory { get; set; }
 
         public void DetermineSchedule(DateTimeOffset now, IJobExecutor executor, JobSchedule schedule)
         {

@@ -59,10 +59,16 @@ namespace FubuTransportation.ScheduledJobs.Persistence
         {
             var jobKey = JobStatus.GetKey(typeof (T));
             var status = _persistence.Find(_channels.Name, jobKey);
+            var current = status.LastExecution;
 
             change(status);
 
             _persistence.Persist(status);
+
+            if (status.LastExecution != null && !ReferenceEquals(current, status.LastExecution))
+            {
+                _persistence.RecordHistory(_channels.Name, jobKey, status.LastExecution);
+            }
         }
 
         public void MarkScheduled<T>(DateTimeOffset nextTime)
@@ -93,22 +99,26 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             });
         }
 
+        
+
         public IJobRunTracker TrackJob<T>(int attempts, T job) where T : IJob
         {
             _logger.InfoMessage(() => new ScheduledJobStarted(job));
 
-            return new JobRunTracker<T>(this, job, attempts);
+            return new JobRunTracker<T>(_channels.NodeId, this, job, attempts);
         }
 
         public class JobRunTracker<T> : IJobRunTracker where T : IJob
         {
+            private readonly string _nodeId;
             private readonly ScheduleStatusMonitor _parent;
             private readonly T _job;
             private readonly int _attempts;
             private readonly Stopwatch _stopwatch = new Stopwatch();
 
-            public JobRunTracker(ScheduleStatusMonitor parent, T job, int attempts)
+            public JobRunTracker(string nodeId, ScheduleStatusMonitor parent, T job, int attempts)
             {
+                _nodeId = nodeId;
                 _parent = parent;
                 _job = job;
                 _attempts = attempts;
@@ -121,6 +131,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 
                 return new JobExecutionRecord
                 {
+                    NodeId = _nodeId,
                     Attempts = _attempts,
                     Duration = _stopwatch.ElapsedMilliseconds,
                     Finished = _parent._systemTime.UtcNow()

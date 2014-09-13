@@ -162,6 +162,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RavenDbSchedulePersistenceTester.cs" />
     <Compile Include="RavenDbSubscriptionPersistenceTester.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
