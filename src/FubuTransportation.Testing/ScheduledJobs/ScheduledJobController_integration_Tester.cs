@@ -188,6 +188,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
 
     public class JobHistory
     {
+
+
         private readonly Cache<Type, Expectation> _expectations = new Cache<Type, Expectation>(t => new Expectation(t));
 
         public void Expect(Type type, DateTimeOffset expected)

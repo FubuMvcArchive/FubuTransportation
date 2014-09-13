@@ -29,7 +29,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         protected TransportNode theCurrentNode;
         protected ChannelGraph theGraph;
         protected ISubscriptionRepository theSubscriptions;
-        private HealthMonitoringSettings settings;
+        protected HealthMonitoringSettings settings;
 
         [SetUp]
         public void SetUp()

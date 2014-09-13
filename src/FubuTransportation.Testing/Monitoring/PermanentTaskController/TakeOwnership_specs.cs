@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
 using NUnit.Framework;
@@ -20,6 +21,8 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
             Task(theSubjectUriString).Timesout = false;
 
             theTask = theController.TakeOwnership(theSubjectUriString.ToUri());
+
+            settings.TakeOwnershipMessageTimeout = 45.Seconds();
 
             theTask.Wait();
 

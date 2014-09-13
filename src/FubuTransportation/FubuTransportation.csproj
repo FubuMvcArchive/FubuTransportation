@@ -107,6 +107,7 @@
     <Compile Include="Diagnostics\Visualization\ScheduledJobsFubuDiagnostics.cs" />
     <Compile Include="Diagnostics\Visualization\SubscriptionsFubuDiagnostics.cs" />
     <Compile Include="Diagnostics\Visualization\SubscriptionsTableTag.cs" />
+    <Compile Include="Diagnostics\Visualization\TasksFubuDiagnostics.cs" />
     <Compile Include="Diagnostics\Visualization\TransportsTag.cs" />
     <Compile Include="ErrorHandling\Always.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuation.cs" />
@@ -319,6 +320,7 @@
     <Compile Include="ScheduledJobs\Persistence\JobStatusExtensions.cs" />
     <Compile Include="ScheduledJobs\Execution\JobTimer.cs" />
     <Compile Include="ScheduledJobs\Configuration\RegisterScheduledJobs.cs" />
+    <Compile Include="ScheduledJobs\Persistence\ScheduledRunHistory.cs" />
     <Compile Include="ScheduledJobs\RescheduleRequest.cs" />
     <Compile Include="ScheduledJobs\Persistence\ScheduleStatusMonitor.cs" />
     <Compile Include="ScheduledJobs\ScheduledJob.cs" />

@@ -20,6 +20,7 @@ namespace FubuTransportation.Testing.Monitoring
 
         public void IsFullyFunctional()
         {
+            Timesout = false;
             ActivationException = AssertAvailableException = null;
         }
 
@@ -61,12 +62,14 @@ namespace FubuTransportation.Testing.Monitoring
         {
             IsFullyFunctional();
             IsActive = true;
+            Timesout = false;
         }
 
         public void IsActiveButNotFunctional(Exception exception)
         {
             IsActive = true;
             AssertAvailableException = exception;
+            Timesout = false;
         }
 
         public void IsNotActive()

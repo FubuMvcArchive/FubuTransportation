@@ -57,7 +57,8 @@ namespace FubuTransportation.Diagnostics.Visualization
                 tag.Append("h4").Text("History");
             }
 
-            tag.Append(new ScheduledJobHistoryTable(schedule.History));
+            var history = _persistence.FindHistory(_graph.Name, request.Job);
+            tag.Append(new ScheduledJobHistoryTable(history));
 
             return tag;
         }
@@ -70,7 +71,7 @@ namespace FubuTransportation.Diagnostics.Visualization
 
     public class ScheduledJobHistoryTable : TableTag
     {
-        public ScheduledJobHistoryTable(ScheduledRunHistory history)
+        public ScheduledJobHistoryTable(IEnumerable<JobExecutionRecord> records)
         {
             AddClass("table");
 
@@ -83,7 +84,7 @@ namespace FubuTransportation.Diagnostics.Visualization
                 row.Header("Exception");
             });
 
-            history.Records.OrderByDescending(x => x.Finished).Each(record => {
+            records.OrderByDescending(x => x.Finished).Each(record => {
                 AddBodyRow(row => addRecord(record, row));
             });  
         }

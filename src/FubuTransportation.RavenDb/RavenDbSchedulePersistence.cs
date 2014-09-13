@@ -3,7 +3,6 @@ using System.Linq;
 using FubuPersistence;
 using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Persistence;
-using Lucene.Net.Documents;
 using Raven.Client;
 
 namespace FubuTransportation.RavenDb
@@ -12,7 +11,7 @@ namespace FubuTransportation.RavenDb
     {
         private readonly ITransaction _transaction;
         private readonly IDocumentStore _store;
-        private int _maxHistory;
+        private readonly int _maxHistory;
 
         public RavenDbSchedulePersistence(ITransaction transaction, IDocumentStore store, ScheduledJobGraph jobs)
         {
@@ -48,17 +47,12 @@ namespace FubuTransportation.RavenDb
 
         public void Persist(IEnumerable<JobStatusDTO> statuses)
         {
-            _transaction.Execute<IDocumentSession>(session => {
-                statuses.Each(x => session.Store(x));
-            });
+            _transaction.Execute<IDocumentSession>(session => { statuses.Each(x => session.Store(x)); });
         }
 
         public void Persist(JobStatusDTO status)
         {
-            _transaction.Execute<IDocumentSession>(session =>
-            {
-                session.Store(status);
-            });
+            _transaction.Execute<IDocumentSession>(session => { session.Store(status); });
         }
 
         public JobStatusDTO Find(string nodeName, string jobKey)
@@ -73,25 +67,24 @@ namespace FubuTransportation.RavenDb
 
         public void RecordHistory(string nodeName, string jobKey, JobExecutionRecord record)
         {
-            var id = JobStatusDTO.ToId(nodeName, jobKey);
+            var id = ScheduledRunHistory.ToId(nodeName, jobKey);
 
             _transaction.Execute<IDocumentSession>(session => {
-                var status = session.Load<JobStatusDTO>(id);
-                if (status != null)
-                {
-                    status.History.Append(record, _maxHistory);
-                    session.Store(status);
-                }
+                var history = session.Load<ScheduledRunHistory>(id)
+                    ?? new ScheduledRunHistory{JobKey = jobKey, NodeName = nodeName};
+
+                history.Append(record, _maxHistory);
+                session.Store(history);
             });
         }
 
         public IEnumerable<JobExecutionRecord> FindHistory(string nodeName, string jobKey)
         {
-            var id = JobStatusDTO.ToId(nodeName, jobKey);
+            var id = ScheduledRunHistory.ToId(nodeName, jobKey);
             using (var session = _store.OpenSession())
             {
-                var status = session.Load<JobStatusDTO>(id);
-                return status == null ? new JobExecutionRecord[0] : status.History.Records.ToArray();
+                var history = session.Load<ScheduledRunHistory>(id);
+                return history == null ? new JobExecutionRecord[0] : history.Records.ToArray();
             }
         }
     }

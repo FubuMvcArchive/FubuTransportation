@@ -77,19 +77,4 @@ namespace FubuTransportation.ScheduledJobs.Execution
         }
     }
 
-    public class ScheduledJobFinished : ScheduledJobRecord
-    {
-        public ScheduledJobFinished(IJob job, long duration) : base(job)
-        {
-            Duration = duration;
-        }
-
-        public long Duration { get; set; }
-
-        public override string ToString()
-        {
-            return "Scheduled job {0} finished in {1} ms on node {2} at {3}"
-                .ToFormat(JobKey, Duration, NodeId, Time.ToLocalTime());
-        }
-    }
 }

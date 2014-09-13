@@ -1,4 +1,5 @@
 ﻿using System;
+using FubuCore;
 using FubuTestingSupport;
 using FubuTransportation.Monitoring;
 using NUnit.Framework;
@@ -15,6 +16,11 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
          * an active job that isn't reflected in ownership
          * inactive
          */
+
+        protected override void theContextIs()
+        {
+            settings.TakeOwnershipMessageTimeout = 2.Minutes();
+        }
 
         [Test]
         public void happy_path_checks_all_subjects()

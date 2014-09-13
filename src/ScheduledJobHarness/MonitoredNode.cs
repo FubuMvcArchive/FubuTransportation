@@ -49,7 +49,10 @@ namespace ScheduledJobHarness
         {
             Local.Policy<ErrorHandlingPolicy>();
 
-            AlterSettings<MonitoringSettings>(x => x.Incoming = incoming);
+            AlterSettings<MonitoringSettings>(x => x.Incoming = "memory://jobs".ToUri());
+
+            Channel(x => x.Incoming).ReadIncoming();
+
             NodeName = "Monitoring";
             NodeId = nodeId;
 
@@ -66,10 +69,10 @@ namespace ScheduledJobHarness
 
 
             ScheduledJob.DefaultJobChannel(x => x.Incoming);
-            ScheduledJob.RunJob<AlwaysGoodJob>().ScheduledBy<FiveMinuteIncrements>();
-            ScheduledJob.RunJob<FailsFirstTwoTimes>().ScheduledBy<ThreeMinuteIncrements>();
-            ScheduledJob.RunJob<FailsSometimes>().ScheduledBy<SevenMinuteIncrements>();
-            ScheduledJob.RunJob<TimesOutSometimes>().ScheduledBy<TenMinuteIncrements>();
+            ScheduledJob.RunJob<AlwaysGoodJob>().ScheduledBy<TenMinuteIncrements>();
+            ScheduledJob.RunJob<FailsFirstTwoTimes>().ScheduledBy<SevenMinuteIncrements>();
+            ScheduledJob.RunJob<FailsSometimes>().ScheduledBy<FiveMinuteIncrements>();
+            ScheduledJob.RunJob<TimesOutSometimes>().ScheduledBy<ThreeMinuteIncrements>().Timeout(10.Seconds());
 
         }
 

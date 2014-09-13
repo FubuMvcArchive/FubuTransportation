@@ -11,6 +11,8 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             return new JobStatusDTO {JobKey = parts.Last(), NodeName = parts.First()};
         }); 
 
+        private readonly Cache<string, ScheduledRunHistory> _history = new Cache<string, ScheduledRunHistory>(id => new ScheduledRunHistory()); 
+
         public IEnumerable<JobStatusDTO> FindAllActive(string nodeName)
         {
             return _statusCache.Where(x => x.NodeName == nodeName && x.Status != JobExecutionStatus.Inactive);
@@ -45,12 +47,15 @@ namespace FubuTransportation.ScheduledJobs.Persistence
 
         public void RecordHistory(string nodeName, string jobKey, JobExecutionRecord record)
         {
-            Find(nodeName, jobKey).History.Append(record, 100);
+            var id = ScheduledRunHistory.ToId(nodeName, jobKey);
+            _history[id].Append(record, 100);
+
         }
 
         public IEnumerable<JobExecutionRecord> FindHistory(string nodeName, string jobKey)
         {
-            return Find(nodeName, jobKey).History.Records;
+            var id = ScheduledRunHistory.ToId(nodeName, jobKey);
+            return _history[id].Records;
         }
 
     }
