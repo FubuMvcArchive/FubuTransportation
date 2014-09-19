@@ -248,6 +248,7 @@
     <Compile Include="envelope_handlers_are_registered_in_the_right_order.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ErrorHandling\CompositeContinuation_integration_testing.cs" />
     <Compile Include="ErrorHandling\DelayedRetryContinuationTester.cs">
       <SubType>Code</SubType>
     </Compile>
