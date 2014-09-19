@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using FubuCore;
 using FubuCore.Descriptions;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -15,7 +17,16 @@ namespace FubuTransportation.Runtime.Invocation
 
         public void Execute(Envelope envelope, ContinuationContext context)
         {
-            _continuations.Each(x => x.Execute(envelope, context));
+            _continuations.Each(x => {
+                try
+                {
+                    x.Execute(envelope, context);
+                }
+                catch (Exception e)
+                {
+                    context.Logger.Error("Failed trying to run continuation {0} as part of error handling".ToFormat(x), e);
+                }
+            });
         }
 
         public void Add(IContinuation child)

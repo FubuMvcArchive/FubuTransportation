@@ -55,21 +55,35 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             };
         }
 
-        private void modifyStatus<T>(Action<JobStatusDTO> change)
+        private void modifyStatus<T>(Action<JobStatusDTO> change, string failureMessage)
         {
             var jobKey = JobStatus.GetKey(typeof (T));
-            var status = _persistence.Find(_channels.Name, jobKey);
-            status.Started = null;
-
-            var current = status.LastExecution;
-
-            change(status);
-
-            _persistence.Persist(status);
-
-            if (status.LastExecution != null && !ReferenceEquals(current, status.LastExecution))
+            try
             {
-                _persistence.RecordHistory(_channels.Name, jobKey, status.LastExecution);
+                var status = _persistence.Find(_channels.Name, jobKey);
+                if (status == null)
+                {
+                    _logger.Info(() => "Unable to find a persisted record of Job {0} on channel {1}, creating a new one".ToFormat(jobKey, _channels.Name));
+                    status = new JobStatusDTO {NodeName = _channels.Name, JobKey = jobKey};
+                }
+
+                status.Started = null;
+
+                var current = status.LastExecution;
+
+                change(status);
+
+                _persistence.Persist(status);
+
+                if (status.LastExecution != null && !ReferenceEquals(current, status.LastExecution))
+                {
+                    _persistence.RecordHistory(_channels.Name, jobKey, status.LastExecution);
+                }
+            }
+            catch (Exception e)
+            {
+                var id = JobStatusDTO.ToId(_channels.Name, jobKey);
+                _logger.Error(id, failureMessage, e);
             }
         }
 
@@ -78,7 +92,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
             modifyStatus<T>(_ => {
                 _.Status = JobExecutionStatus.Scheduled;
                 _.NextTime = nextTime;
-            });
+            }, "Trying to mark a scheduled job as scheduled");
         }
 
         public void MarkExecuting<T>()
@@ -87,7 +101,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
                 _.Started = _systemTime.UtcNow();
                 _.Status = JobExecutionStatus.Executing;
                 _.Executor = _channels.NodeId;
-            });
+            }, "Trying to mark a scheduled job as executing");
         }
 
         public void MarkCompletion<T>(JobExecutionRecord record)
@@ -98,7 +112,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
                 _.Status = record.Success ? JobExecutionStatus.Completed : JobExecutionStatus.Failed;
                 _.LastExecution = record;
                 _.Executor = null;
-            });
+            }, "Trying to mark a scheduled job as completed");
         }
 
         
@@ -153,7 +167,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
                     _.LastExecution = record;
                     _.NextTime = nextTime;
                     _.Executor = null;
-                });
+                }, "Trying to mark a scheduled job as completed");
             }
 
             public void Failure(Exception ex)

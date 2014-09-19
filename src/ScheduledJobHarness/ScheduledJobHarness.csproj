@@ -77,6 +77,9 @@
     <Reference Include="FubuMVC.OwinHost">
       <HintPath>..\packages\FubuMVC.OwinHost\lib\net40\FubuMVC.OwinHost.dll</HintPath>
     </Reference>
+    <Reference Include="FubuMVC.RavenDb">
+      <HintPath>..\packages\FubuMVC.RavenDb\lib\net40\FubuMVC.RavenDb.dll</HintPath>
+    </Reference>
     <Reference Include="FubuMVC.Spark">
       <HintPath>..\packages\FubuMVC.Spark\lib\net40\FubuMVC.Spark.dll</HintPath>
     </Reference>
@@ -85,6 +88,9 @@
     </Reference>
     <Reference Include="FubuMVC.TwitterBootstrap">
       <HintPath>..\packages\FubuMVC.TwitterBootstrap\lib\net40\FubuMVC.TwitterBootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="FubuPersistence">
+      <HintPath>..\packages\FubuPersistence\lib\net40\FubuPersistence.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\packages\RavenDB.Database\lib\net45\GeoAPI.dll</HintPath>
@@ -132,6 +138,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -149,6 +158,12 @@
     </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Embedded">
+      <HintPath>..\packages\RavenDB.Embedded\lib\net45\Raven.Client.Embedded.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\packages\RavenDB.Client\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Database">
       <HintPath>..\packages\RavenDB.Database\lib\net45\Raven.Database.dll</HintPath>

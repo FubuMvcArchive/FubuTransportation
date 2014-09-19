@@ -8,6 +8,9 @@ using FubuMVC.Core.UI;
 using FubuMVC.Core.Urls;
 using FubuTransportation;
 using FubuTransportation.Diagnostics.Visualization;
+using FubuTransportation.RavenDb;
+using FubuTransportation.ScheduledJobs.Persistence;
+using FubuTransportation.Subscriptions;
 using HtmlTags;
 using Process = System.Diagnostics.Process;
 

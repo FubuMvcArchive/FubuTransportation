@@ -13,7 +13,7 @@ namespace FubuTransportation.ScheduledJobs.Configuration
             SetServiceIfNone<IScheduledJobController, ScheduledJobController>(x => x.AsSingleton());
             SetServiceIfNone<IJobTimer, JobTimer>(x => x.AsSingleton());
 
-            SetServiceIfNone<ISchedulePersistence, InMemorySchedulePersistence>();
+            SetServiceIfNone<ISchedulePersistence>(new InMemorySchedulePersistence());
 
             SetServiceIfNone<IScheduleStatusMonitor, ScheduleStatusMonitor>();
 

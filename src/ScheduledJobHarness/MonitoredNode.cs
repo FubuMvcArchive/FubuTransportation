@@ -17,6 +17,7 @@ using FubuTransportation.RavenDb;
 using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Persistence;
 using FubuTransportation.Subscriptions;
+using Raven.Client;
 
 namespace ScheduledJobHarness
 {
@@ -45,7 +46,7 @@ namespace ScheduledJobHarness
         private readonly string _nodeId;
         private FubuRuntime _runtime;
 
-        public MonitoredNode(string nodeId, Uri incoming)
+        public MonitoredNode(string nodeId, Uri incoming, IDocumentStore store)
         {
             Local.Policy<ErrorHandlingPolicy>();
 
@@ -63,6 +64,7 @@ namespace ScheduledJobHarness
             Services(_ => {
                 _.ReplaceService<ISubscriptionPersistence, RavenDbSubscriptionPersistence>();
                 _.ReplaceService<ISchedulePersistence, RavenDbSchedulePersistence>();
+                _.ReplaceService<IDocumentStore>(store);
 
                 _.AddService<ILogListener, ScheduledJobListener>();
             });
