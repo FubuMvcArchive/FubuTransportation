@@ -21,6 +21,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         {
             settings.TakeOwnershipMessageTimeout = 2.Minutes();
             settings.TaskActivationTimeout = 2.Minutes();
+            settings.TaskAvailabilityCheckTimeout = 1.Minutes();
         }
 
         [Test]

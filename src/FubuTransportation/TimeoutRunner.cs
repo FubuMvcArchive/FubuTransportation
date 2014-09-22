@@ -15,7 +15,7 @@ namespace FubuTransportation
     {
         public static Completion Run(TimeSpan timeout, Action action, Action<Exception> onError)
         {
-            var returnValue = Completion.Timedout;
+            var returnValue = Completion.Success;
 
             var reset = new ManualResetEvent(false);
             var started = new ManualResetEvent(false);

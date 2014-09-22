@@ -56,8 +56,11 @@ namespace FubuTransportation.Testing.Diagnostics
         {
             using (var server = EmbeddedFubuMvcServer.For<DiagnosticApplication>(appPath))
             {
-                server.Endpoints.Get<SubscriptionsFubuDiagnostics>(x => x.get_subscriptions())
-                    .StatusCode.ShouldEqual(HttpStatusCode.OK);
+                var httpResponse = server.Endpoints.Get<SubscriptionsFubuDiagnostics>(x => x.get_subscriptions());
+                if (httpResponse.StatusCode != HttpStatusCode.OK)
+                {
+                    Assert.Fail(httpResponse.ReadAsText());
+                }
             }
 
             InMemoryQueueManager.ClearAll();

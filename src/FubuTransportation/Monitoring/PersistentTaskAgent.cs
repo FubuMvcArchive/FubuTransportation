@@ -45,7 +45,6 @@ namespace FubuTransportation.Monitoring
         {
             return Task.Factory.StartNew(() => {
                 var status =
-                    //_lock.Read(() => 
                         TimeoutRunner.Run(_settings.TaskAvailabilityCheckTimeout, () => _task.AssertAvailable(),
                             ex => {
                                 _logger.Error(Subject, "Availability test failed for " + Subject, ex);
@@ -55,7 +54,6 @@ namespace FubuTransportation.Monitoring
                                     ExceptionType = ex.GetType().Name
                                 });
                             });
-                      //      }));
 
                 switch (status)
                 {
@@ -66,9 +64,12 @@ namespace FubuTransportation.Monitoring
                     case Completion.Success:
                         return HealthStatus.Active;
 
-                    default:
+                    case Completion.Timedout:
                         _logger.InfoMessage(() => new TaskAvailabilityFailed(Subject){ExceptionType = "Timedout"});
                         return HealthStatus.Timedout;
+
+                    default:
+                        throw new ArgumentOutOfRangeException("status", "Status " + status + " should not be possible here");
                 }
             }, TaskCreationOptions.AttachedToParent);
         }
