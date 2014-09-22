@@ -6,7 +6,7 @@ namespace FubuTransportation.ScheduledJobs.Persistence
     {
         public static string ToId(string node, string job)
         {
-            return "History:" + JobStatusDTO.ToId(node, job);
+            return "History-" + JobStatusDTO.ToId(node, job);
         }
 
         public string JobKey { get; set; }
