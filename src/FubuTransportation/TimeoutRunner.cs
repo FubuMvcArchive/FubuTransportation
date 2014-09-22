@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using FubuCore;
 
 namespace FubuTransportation
 {
@@ -17,10 +18,12 @@ namespace FubuTransportation
             var returnValue = Completion.Timedout;
 
             var reset = new ManualResetEvent(false);
+            var started = new ManualResetEvent(false);
 
             var thread = new Thread(() => {
                 try
                 {
+                    started.Set();
                     action();
                     reset.Set();
                     returnValue = Completion.Success;
@@ -39,6 +42,8 @@ namespace FubuTransportation
             });
 
             thread.Start();
+            started.WaitOne(1.Minutes()); // This is for making tests more reliable
+
             if (!reset.WaitOne(timeout))
             {
                 thread.Abort();

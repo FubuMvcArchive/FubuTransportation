@@ -20,6 +20,7 @@ namespace FubuTransportation.Testing.Monitoring.PermanentTaskController
         protected override void theContextIs()
         {
             settings.TakeOwnershipMessageTimeout = 2.Minutes();
+            settings.TaskActivationTimeout = 2.Minutes();
         }
 
         [Test]
