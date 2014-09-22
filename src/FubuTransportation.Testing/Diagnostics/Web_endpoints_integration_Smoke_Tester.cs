@@ -51,7 +51,7 @@ namespace FubuTransportation.Testing.Diagnostics
             InMemoryQueueManager.ClearAll();
         }
 
-        [Test, Explicit("Does work, but stupid pathing is defeating me here")]
+        [Test]
         public void the_subscriptions_visualization_can_be_shown()
         {
             using (var server = EmbeddedFubuMvcServer.For<DiagnosticApplication>(appPath))

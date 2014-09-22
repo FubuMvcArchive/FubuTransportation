@@ -31,29 +31,8 @@ namespace FubuTransportation.Testing.ScheduledJobs
             executed.ShouldBeTrue();
         }
 
-        [Test, Explicit]
-        public void TimedExecution_status_tracking()
-        {
-            var started = new ManualResetEvent(false);
 
-            var execution = new TimedExecution(new RecordingLogger(), GetType(), DateTime.Today, 15, () => {
-
-                started.WaitOne();
-
-            });
-
-            execution.Status.ShouldEqual(JobExecutionStatus.Scheduled);
-
-            Thread.Sleep(20);
-            execution.Status.ShouldEqual(JobExecutionStatus.Executing);
-            started.Set();
-
-            Thread.Sleep(50);
-
-            execution.Status.ShouldEqual(JobExecutionStatus.Completed);
-        }
-
-        [Test, Explicit]
+        [Test, Explicit("It's too slow to be in CI")]
         public void smoke_test_of_JobTimer_execution()
         {
             var now = DateTimeOffset.UtcNow;
