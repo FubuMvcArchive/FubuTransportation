@@ -5,10 +5,12 @@ using FubuCore.Logging;
 using FubuMVC.Core.Registration;
 using FubuTransportation.Configuration;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Scheduling;
 using FubuTransportation.Subscriptions;
+using FubuTransportation.Testing.ErrorHandling;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Collections.Generic;
@@ -99,16 +101,34 @@ namespace FubuTransportation.Testing.Configuration
                 node3.Incoming = true;
                 node4.Incoming = false;
 
-                graph.Each(x => x.Channel = MockRepository.GenerateMock<IChannel>());
+                graph.Each(x => x.Channel = new FakeChannel());
 
                 graph.StartReceiving(MockRepository.GenerateMock<IHandlerPipeline>());
 
-                node1.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
-                node2.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
-                node3.Channel.AssertWasCalled(x => x.Receive(null), x => x.IgnoreArguments());
-                node4.Channel.AssertWasNotCalled(x => x.Receive(null), x => x.IgnoreArguments());
+                node1.Channel.As<FakeChannel>().ReceivedCount.ShouldBeGreaterThan(0);
+                node2.Channel.As<FakeChannel>().ReceivedCount.ShouldEqual(0);
+                node3.Channel.As<FakeChannel>().ReceivedCount.ShouldBeGreaterThan(0);
+                node4.Channel.As<FakeChannel>().ReceivedCount.ShouldEqual(0);
+            }
+        }
 
-                
+        public class FakeChannel : IChannel
+        {
+            public void Dispose()
+            {
+            }
+
+            public Uri Address { get; private set; }
+            public ReceivingState Receive(IReceiver receiver)
+            {
+                ReceivedCount++;
+                return ReceivingState.CanContinueReceiving;
+            }
+
+            public int ReceivedCount { get; set; }
+
+            public void Send(byte[] data, IHeaders headers)
+            {
             }
         }
 

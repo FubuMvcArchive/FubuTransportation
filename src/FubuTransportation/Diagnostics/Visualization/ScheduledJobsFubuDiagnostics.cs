@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuCore.Descriptions;
+using FubuMVC.Core.Continuations;
 using FubuMVC.Core.Urls;
 using FubuTransportation.Configuration;
 using FubuTransportation.ScheduledJobs;
+using FubuTransportation.ScheduledJobs.Execution;
 using FubuTransportation.ScheduledJobs.Persistence;
 using HtmlTags;
 
@@ -18,13 +20,16 @@ namespace FubuTransportation.Diagnostics.Visualization
         private readonly ISchedulePersistence _persistence;
         private readonly ChannelGraph _graph;
         private readonly ScheduledJobGraph _jobs;
+        private readonly IScheduledJobController _controller;
+        private readonly IServiceBus _bus;
 
-        public ScheduledJobsFubuDiagnostics(IUrlRegistry urls, ISchedulePersistence persistence, ChannelGraph graph, ScheduledJobGraph jobs)
+        public ScheduledJobsFubuDiagnostics(IUrlRegistry urls, ISchedulePersistence persistence, ChannelGraph graph, ScheduledJobGraph jobs, IScheduledJobController controller)
         {
             _urls = urls;
             _persistence = persistence;
             _graph = graph;
             _jobs = jobs;
+            _controller = controller;
         }
 
         [System.ComponentModel.Description("Schedules:Scheduled Job Monitor")]
@@ -62,6 +67,22 @@ namespace FubuTransportation.Diagnostics.Visualization
 
             return tag;
         }
+
+        public FubuContinuation get_jobs_execute_Name(RunJobRequest request)
+        {
+            var job = _jobs.Jobs.FirstOrDefault(x => x.JobType.Name.EqualsIgnoreCase(request.Name));
+            if (job != null)
+            {
+                _controller.ExecuteNow(job);
+            }
+
+            return FubuContinuation.RedirectTo<ScheduledJobsFubuDiagnostics>(_ => _.get_scheduled_jobs());
+        }
+    }
+
+    public class RunJobRequest
+    {
+        public string Name { get; set; }
     }
 
     public class ScheduledJobRequest
@@ -71,6 +92,10 @@ namespace FubuTransportation.Diagnostics.Visualization
 
     public class ScheduledJobHistoryTable : TableTag
     {
+        public readonly string Script = @"
+
+";
+
         public ScheduledJobHistoryTable(IEnumerable<JobExecutionRecord> records)
         {
             AddClass("table");
@@ -118,6 +143,7 @@ namespace FubuTransportation.Diagnostics.Visualization
                 row.Header("Next Time (Estimate)");
                 row.Header("Status"); // show on node
                 row.Header("Last Execution");
+                row.Header("Execute");
             });
 
 
@@ -134,7 +160,9 @@ namespace FubuTransportation.Diagnostics.Visualization
             row.Cell(job.GetStatusDescription());
             row.Cell(job.GetLastExecutionDescription());
 
+            var url = urls.UrlFor(new RunJobRequest {Name = job.JobKey});
 
+            row.Cell().Add("button").Text("Execute").Attr("data-url", url).AddClass("button").AddClass("executor").Attr("onclick", "if (window.confirm('Ok to run this job?')) window.location='" + url + "'");
         }
     }
 }

@@ -16,11 +16,12 @@ namespace FubuTransportation.ScheduledJobs
         TimeSpan Timeout { get;}
         IRoutingRule ToRoutingRule();
         bool ShouldReschedule(DateTimeOffset now, IJobTimer timer);
+
+        void Execute(IJobExecutor executor);
     }
 
-    public interface IScheduledJob<T> where T : IJob
+    public interface IScheduledJob<T> : IScheduledJob where T : IJob
     {
-        void Execute(IJobExecutor executor);
         Task<RescheduleRequest<T>> ToTask(IJob job, IJobRunTracker tracker);
     }
 }

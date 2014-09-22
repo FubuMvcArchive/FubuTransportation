@@ -9,5 +9,7 @@ namespace FubuTransportation.ScheduledJobs.Execution
         void Deactivate();
         void Reschedule<T>(RescheduleRequest<T> request) where T : IJob;
         void PerformHealthChecks();
+
+        void ExecuteNow(IScheduledJob job);
     }
 }

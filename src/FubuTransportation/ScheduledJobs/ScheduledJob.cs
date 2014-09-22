@@ -13,7 +13,7 @@ using FubuTransportation.ScheduledJobs.Persistence;
 
 namespace FubuTransportation.ScheduledJobs
 {
-    public class ScheduledJob<T> : IScheduledJob, IScheduledJob<T>, DescribesItself where T : IJob
+    public class ScheduledJob<T> : IScheduledJob<T>, DescribesItself where T : IJob
     {
         public ScheduledJob(IScheduleRule scheduler)
         {
@@ -26,7 +26,7 @@ namespace FubuTransportation.ScheduledJobs
 
         // This will be completely tested through integration
         // tests only
-        void IScheduledJob<T>.Execute(IJobExecutor executor)
+        void IScheduledJob.Execute(IJobExecutor executor)
         {
             executor.Execute<T>(Timeout);
         }

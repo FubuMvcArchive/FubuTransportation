@@ -83,6 +83,11 @@ namespace FubuTransportation.ScheduledJobs.Execution
             }
         }
 
+        public void ExecuteNow(IScheduledJob job)
+        {
+            job.Execute(this);
+        }
+
         public void Dispose()
         {
             _active = false;
