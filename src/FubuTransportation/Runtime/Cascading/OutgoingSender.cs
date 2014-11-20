@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FubuCore;
+using FubuCore.Logging;
 
 namespace FubuTransportation.Runtime.Cascading
 {
     public class OutgoingSender : IOutgoingSender
     {
         private readonly IEnvelopeSender _sender;
+        private readonly ILogger _logger;
 
-        public OutgoingSender(IEnvelopeSender sender)
+        public OutgoingSender(IEnvelopeSender sender, ILogger logger)
         {
             _sender = sender;
+            _logger = logger;
         }
 
         public void SendOutgoingMessages(Envelope original, IEnumerable<object> cascadingMessages)
@@ -38,13 +42,21 @@ namespace FubuTransportation.Runtime.Cascading
                     }
                 };
 
-                _sender.Send(envelope);
+                Send(envelope);
             }
         }
 
         public void Send(Envelope envelope)
         {
-            _sender.Send(envelope);
+            try
+            {
+                _sender.Send(envelope);
+            }
+            catch (Exception e)
+            {
+                // TODO -- we really, really have to do something here
+                _logger.Error(envelope.OriginalId, "Failure while trying to send a cascading message", e);
+            }
         }
 
         private void sendAcknowledgement(Envelope original)
@@ -57,7 +69,7 @@ namespace FubuTransportation.Runtime.Cascading
                 Message = new Acknowledgement {CorrelationId = original.CorrelationId}
             };
 
-            _sender.Send(envelope);
+            Send(envelope);
         }
 
         public void SendOutgoingMessage(Envelope original, object o)
@@ -66,7 +78,7 @@ namespace FubuTransportation.Runtime.Cascading
                 ? o.As<ISendMyself>().CreateEnvelope(original)
                 : original.ForResponse(o);
 
-            _sender.Send(cascadingEnvelope);
+            Send(cascadingEnvelope);
         }
     }
 }

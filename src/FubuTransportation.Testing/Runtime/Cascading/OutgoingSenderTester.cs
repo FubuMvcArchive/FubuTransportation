@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTestingSupport;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Cascading;
@@ -13,6 +14,20 @@ namespace FubuTransportation.Testing.Runtime.Cascading
     [TestFixture]
     public class OutgoingSenderTester : InteractionContext<OutgoingSender>
     {
+        [Test]
+        public void swallows_and_logs_exceptions_on_send()
+        {
+            // ONLY FOR NOW
+            var ex = new NotImplementedException();
+            var envelope = new Envelope();
+
+            MockFor<IEnvelopeSender>().Stub(x => x.Send(envelope)).Throw(ex);
+
+            ClassUnderTest.Send(envelope);
+
+            MockFor<ILogger>().AssertWasCalled(x => x.Error(envelope.OriginalId, "Failure while trying to send a cascading message", ex));
+        }
+
         [Test]
         public void use_envelope_from_the_original_if_not_ISendMyself()
         {
@@ -91,7 +106,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             };
 
             var recordingSender = new RecordingEnvelopeSender();
-            new OutgoingSender(recordingSender)
+            new OutgoingSender(recordingSender, new RecordingLogger())
                 .SendFailureAcknowledgement(original, "you stink");
 
             recordingSender.Outgoing.Any()
@@ -119,7 +134,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             };
 
             var recordingSender = new RecordingEnvelopeSender();
-            new OutgoingSender(recordingSender)
+            new OutgoingSender(recordingSender, new RecordingLogger())
                 .SendFailureAcknowledgement(original, "you stink");
 
             theSentEnvelope = recordingSender.Sent.Single();
@@ -183,7 +198,7 @@ namespace FubuTransportation.Testing.Runtime.Cascading
             };
 
             var recordingSender = new RecordingEnvelopeSender();
-            new OutgoingSender(recordingSender)
+            new OutgoingSender(recordingSender, new RecordingLogger())
                 .SendFailureAcknowledgement(original, "you stink");
 
             theSentEnvelope = recordingSender.Sent.Single();
