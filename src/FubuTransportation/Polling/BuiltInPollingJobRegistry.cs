@@ -2,6 +2,7 @@
 using FubuTransportation.Events;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Runtime.Delayed;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Polling
 {
@@ -18,6 +19,9 @@ namespace FubuTransportation.Polling
 
             Polling.RunJob<HealthMonitorPollingJob>()
                 .ScheduledAtInterval<HealthMonitoringSettings>(x => x.Interval);
+
+            Polling.RunJob<SubscriptionRefreshJob>()
+                .ScheduledAtInterval<TransportSettings>(x => x.SubscriptionRefreshPolling);
         }
     }
 }
