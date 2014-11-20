@@ -198,7 +198,7 @@ namespace FubuTransportation.Testing.ScheduledJobs
         protected readonly DateTimeOffset theNextTimeAccordingToTheSchedulerRule = DateTime.Today.AddHours(4);
         protected readonly IJobRunTracker TheJobTracker = MockRepository.GenerateMock<IJobRunTracker>();
         protected Task<RescheduleRequest<RiggedJob>> theTask;
-        protected readonly TimeSpan theConfiguredTimeout = 1.Seconds();
+        protected readonly TimeSpan theConfiguredTimeout = 3.Seconds();
 
         [TestFixtureSetUp]
         public void SetUp()
