@@ -47,6 +47,7 @@ namespace FubuTransportation.Runtime
                 catch (Exception e)
                 {
                     _logger.Error(envelope.CorrelationId, "Failed trying to send message {0} to channel {1}".ToFormat(envelope, x.Uri), e);
+                    throw;
                 }
             });
 
