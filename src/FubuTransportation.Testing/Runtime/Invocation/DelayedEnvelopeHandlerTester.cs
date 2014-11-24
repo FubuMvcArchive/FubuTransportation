@@ -1,6 +1,5 @@
 ﻿using System;
 using FubuCore.Dates;
-using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Delayed;
 using FubuTransportation.Runtime.Invocation;
@@ -79,7 +78,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
 
             new DelayedEnvelopeHandler(SystemTime.Default()).Execute(envelope, context);
 
-            envelope.Callback.AssertWasCalled(x => x.MarkFailed());
+            envelope.Callback.AssertWasCalled(x => x.MarkFailed(exception));
 
 
             var report = context.RecordedLogs.ErrorMessages.Single().ShouldBeOfType<FubuCore.Logging.ExceptionReport>();

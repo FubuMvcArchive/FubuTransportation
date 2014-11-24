@@ -1,5 +1,4 @@
 ﻿using System;
-using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
@@ -37,7 +36,7 @@ namespace FubuTransportation.Testing.Runtime.Invocation
         {
             // TODO -- should this be going to the error or dead letter queue instead?
         
-            theEnvelope.Callback.AssertWasCalled(x => x.MarkFailed());
+            theEnvelope.Callback.AssertWasCalled(x => x.MarkFailed(theException));
         }
 
         [Test]
