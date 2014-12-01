@@ -6,7 +6,7 @@ namespace FubuTransportation.Runtime.Invocation
     public interface IMessageCallback
     {
         void MarkSuccessful();
-        void MarkFailed();
+        void MarkFailed(Exception ex);
 
         void MoveToDelayedUntil(DateTime time);
         void MoveToErrors(ErrorReport report);

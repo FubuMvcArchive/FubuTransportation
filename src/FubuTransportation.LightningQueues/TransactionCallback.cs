@@ -25,7 +25,7 @@ namespace FubuTransportation.LightningQueues
             _transaction.Commit();
         }
 
-        public void MarkFailed()
+        public void MarkFailed(Exception ex)
         {
             _transaction.Rollback();
         }

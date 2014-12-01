@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using FubuCore.Descriptions;
 using FubuTransportation.Logging;
 
@@ -17,7 +16,7 @@ namespace FubuTransportation.Runtime.Invocation
         public void Execute(Envelope envelope, ContinuationContext context)
         {
             context.SendFailureAcknowledgement(envelope, "Chain execution failed");
-            envelope.Callback.MarkFailed();
+            envelope.Callback.MarkFailed(_exception);
             context.Logger.InfoMessage(() => new MessageFailed {Envelope = envelope.ToToken(), Exception = _exception});
             if (envelope.Message == null)
             {

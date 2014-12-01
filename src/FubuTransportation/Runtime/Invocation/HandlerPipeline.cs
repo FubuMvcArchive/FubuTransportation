@@ -68,7 +68,7 @@ namespace FubuTransportation.Runtime.Invocation
             }
             catch (Exception e)
             {
-                envelope.Callback.MarkFailed(); // TODO -- watch this one.
+                envelope.Callback.MarkFailed(e); // TODO -- watch this one.
                 _context.Logger.Error(envelope.CorrelationId,
                     "Failed while invoking message {0} with continuation {1}".ToFormat(envelope.Message ?? envelope,
                         (object)continuation ?? "could not find continuation"),

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Logging;
-using FubuMVC.Core.Behaviors;
 using FubuMVC.Core.Runtime;
 using FubuTransportation.Configuration;
 using FubuTransportation.ErrorHandling;
@@ -91,9 +91,9 @@ namespace FubuTransportation.Runtime.Invocation
         {
         }
 
-        public void MarkFailed()
+        public void MarkFailed(Exception ex)
         {
-
+            throw new InlineMessageException("Failed while invoking an inline message", ex);
         }
 
         public void MoveToDelayedUntil(DateTime time)
@@ -116,6 +116,17 @@ namespace FubuTransportation.Runtime.Invocation
             {
                 Message = _message
             });
+        }
+    }
+
+    public class InlineMessageException : Exception
+    {
+        public InlineMessageException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected InlineMessageException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

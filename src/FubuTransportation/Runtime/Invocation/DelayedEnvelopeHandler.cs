@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using FubuCore.Dates;
-using FubuCore.Logging;
 using FubuTransportation.Runtime.Delayed;
 
 namespace FubuTransportation.Runtime.Invocation
@@ -30,7 +29,7 @@ namespace FubuTransportation.Runtime.Invocation
             }
             catch (Exception e)
             {
-                envelope.Callback.MarkFailed();
+                envelope.Callback.MarkFailed(e);
                 context.Logger.Error(envelope.CorrelationId, "Failed to move delayed message to the delayed message queue", e);
             }
         }

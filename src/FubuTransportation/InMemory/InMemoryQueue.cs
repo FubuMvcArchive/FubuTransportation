@@ -113,7 +113,7 @@ namespace FubuTransportation.InMemory
             // nothing
         }
 
-        public void MarkFailed()
+        public void MarkFailed(Exception ex)
         {
             Debug.WriteLine("Message was marked as failed!");
         }
