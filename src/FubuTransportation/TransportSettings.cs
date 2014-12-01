@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuMVC.Core.Registration;
-using FubuMVC.Core.Registration.ObjectGraph;
 using FubuTransportation.Sagas;
 
 namespace FubuTransportation
@@ -18,11 +17,13 @@ namespace FubuTransportation
             DebugEnabled = false;
             DelayMessagePolling = 5000;
             ListenerCleanupPolling = 60000;
+            SubscriptionRefreshPolling = 60000;
         }
 
         public bool EnableInMemoryTransport { get; set; }
         public bool DebugEnabled { get; set; }
         public double DelayMessagePolling { get; set; }
         public double ListenerCleanupPolling { get; set; }
+        public double SubscriptionRefreshPolling { get; set; }
     }
 }

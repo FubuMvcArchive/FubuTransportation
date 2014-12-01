@@ -15,8 +15,8 @@ namespace FubuTransportation.Subscriptions
         private readonly IEnumerable<ITransport> _transports;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         private readonly IDictionary<Type, IList<ChannelNode>> _routes = new Dictionary<Type, IList<ChannelNode>>();
-        private readonly Cache<Uri, ChannelNode> _volatileNodes; 
-        private readonly IList<Subscription> _subscriptions = new List<Subscription>(); 
+        private readonly Cache<Uri, ChannelNode> _volatileNodes;
+        private readonly IList<Subscription> _subscriptions = new List<Subscription>();
 
         public SubscriptionCache(ChannelGraph graph, IEnumerable<ITransport> transports)
         {
@@ -29,7 +29,8 @@ namespace FubuTransportation.Subscriptions
             _graph = graph;
             _transports = transports;
 
-            _volatileNodes = new Cache<Uri, ChannelNode>(uri => {
+            _volatileNodes = new Cache<Uri, ChannelNode>(uri =>
+            {
                 var transport = _transports.FirstOrDefault(x => x.Protocol == uri.Scheme);
                 if (transport == null)
                 {
@@ -62,14 +63,17 @@ namespace FubuTransportation.Subscriptions
                 var uri = envelope.Destination;
                 var destination = findDestination(uri);
 
-                return new ChannelNode[] {destination};
+                return new ChannelNode[] { destination };
             }
 
             var inputType = envelope.Message.GetType();
-            return _lock.MaybeWrite(() => _routes[inputType], () => !_routes.ContainsKey(inputType), () => {
-                var nodes = FindSubscribingChannelsFor(inputType);
-                _routes.Add(inputType, new List<ChannelNode>(nodes));
-            });
+            return _lock.MaybeWrite(() => _routes[inputType],
+                () => !_routes.ContainsKey(inputType),
+                () =>
+                {
+                    var nodes = FindSubscribingChannelsFor(inputType);
+                    _routes.Add(inputType, new List<ChannelNode>(nodes));
+                });
         }
 
         /// <summary>
@@ -78,11 +82,29 @@ namespace FubuTransportation.Subscriptions
         /// <param name="subscriptions"></param>
         public void LoadSubscriptions(IEnumerable<Subscription> subscriptions)
         {
-            _lock.Write(() => {
-                _routes.Clear();
+            _lock.Write(() =>
+            {
+                RemoveCachedRoutesForChangedSubscriptions(subscriptions);
 
                 _subscriptions.Clear();
                 _subscriptions.AddRange(subscriptions);
+            });
+        }
+
+        private void RemoveCachedRoutesForChangedSubscriptions(IEnumerable<Subscription> subscriptions)
+        {
+            _routes.Keys.ToList().Each(type =>
+            {
+                // This list of subscriptions is generally pretty small (less than 100),
+                // so multiple enumerations over the collection shouldn't be a big deal.
+                var existingSubscriptions = _subscriptions.Where(x => x.Matches(type));
+                var newSubscriptions = subscriptions.Where(x => x.Matches(type));
+                var differences = new HashSet<Subscription>(existingSubscriptions);
+                differences.SymmetricExceptWith(newSubscriptions);
+                if (differences.Any())
+                {
+                    _routes.Remove(type);
+                }
             });
         }
 
@@ -128,10 +150,13 @@ namespace FubuTransportation.Subscriptions
 
         public string NodeName
         {
-            get
-            {
-                return _graph.Name;
-            }
+            get { return _graph.Name; }
+        }
+
+        // For testing
+        public IDictionary<Type, IList<ChannelNode>> CachedRoutes
+        {
+            get { return _routes; }
         }
     }
 }

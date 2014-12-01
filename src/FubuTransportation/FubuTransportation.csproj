@@ -350,6 +350,7 @@
     <Compile Include="Subscriptions\Subscription.cs" />
     <Compile Include="Subscriptions\SubscriptionActivator.cs" />
     <Compile Include="Subscriptions\SubscriptionCache.cs" />
+    <Compile Include="Subscriptions\SubscriptionRefreshJob.cs" />
     <Compile Include="Subscriptions\SubscriptionRepository.cs" />
     <Compile Include="Subscriptions\SubscriptionRequested.cs" />
     <Compile Include="Subscriptions\SubscriptionRequirements.cs" />

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FubuTestingSupport;
+﻿using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
@@ -42,6 +41,33 @@ namespace FubuTransportation.Testing.Subscriptions
             cache.LoadSubscriptions(subscriptions2);
 
             cache.ActiveSubscriptions.ShouldHaveTheSameElementsAs(subscriptions2);
+        }
+
+        [Test]
+        public void updates_cached_routes()
+        {
+            var cache = new SubscriptionCache(new ChannelGraph(), new ITransport[]{new InMemoryTransport(), });
+
+            var subscriptions1 = new[]
+            {
+                ObjectMother.ExistingSubscription(),
+                ObjectMother.ExistingSubscription()
+            };
+            subscriptions1[0].MessageType = typeof(string).FullName;
+            subscriptions1[1].MessageType = typeof(int).FullName;
+
+            var subscriptions2 = new[] { ObjectMother.ExistingSubscription() };
+            subscriptions2[0].MessageType = typeof(int).FullName;
+
+            cache.LoadSubscriptions(subscriptions1);
+            cache.FindDestinationChannels(new Envelope { Message = "Foo" });
+            cache.FindDestinationChannels(new Envelope { Message = 42 });
+            cache.CachedRoutes.ContainsKey(typeof(string)).ShouldBeTrue();
+            cache.CachedRoutes.ContainsKey(typeof(int)).ShouldBeTrue();
+
+            cache.LoadSubscriptions(subscriptions2);
+            cache.CachedRoutes.ContainsKey(typeof(string)).ShouldBeFalse();
+            cache.CachedRoutes.ContainsKey(typeof(int)).ShouldBeTrue();
         }
     }
 }

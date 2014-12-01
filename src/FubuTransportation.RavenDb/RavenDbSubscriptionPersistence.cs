@@ -24,7 +24,8 @@ namespace FubuTransportation.RavenDb
             {
                 return session.Query<Subscription>()
                     .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
-                    .Where(x => x.NodeName == name && x.Role == role);
+                    .Where(x => x.NodeName == name && x.Role == role)
+                    .ToList();
             }
         }
 
@@ -45,7 +46,8 @@ namespace FubuTransportation.RavenDb
                 return session
                     .Query<TransportNode>()
                     .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
-                    .Where(x => x.NodeName == name);
+                    .Where(x => x.NodeName == name)
+                    .ToList();
             }
         }
 

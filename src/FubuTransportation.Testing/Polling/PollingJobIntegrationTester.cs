@@ -54,11 +54,12 @@ namespace FubuTransportation.Testing.Polling
         {
             // The polling job for delayed messages & one for the expired listeners are registered by default.
             // Plus 1 for health monitoring
+            // And another for subscription refresh
             
             var pollingJobs = container.GetInstance<IPollingJobs>();
 
             pollingJobs.Count()
-                     .ShouldEqual(7);
+                     .ShouldEqual(8);
 
         }
 
