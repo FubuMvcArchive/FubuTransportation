@@ -18,7 +18,6 @@ namespace FubuTransportation.Serenity
         private readonly string _name;
         private readonly ChannelGraph _systemUnderTest;
         private readonly Type _registryType;
-        private FubuRuntime _runtime;
         private bool _isStarted;
         private IMessagingSession _messageListener;
         private IMessageRecorder _recorder;
@@ -40,6 +39,7 @@ namespace FubuTransportation.Serenity
             return type.IsConcreteTypeOf<FubuTransportRegistry>();
         }
 
+        public FubuRuntime Runtime { get; private set; }
         public Uri Uri { get; private set; }
 
         public void ClearReceivedMessages()
@@ -50,11 +50,11 @@ namespace FubuTransportation.Serenity
         public void Dispose()
         {
             _isStarted = false;
-            if (_runtime != null)
+            if (Runtime != null)
             {
                 Bottles.Services.Messaging.EventAggregator.Messaging.RemoveListener(_messageListener);
-                _runtime.Dispose();
-                _runtime = null;
+                Runtime.Dispose();
+                Runtime = null;
             }
         }
 
@@ -81,7 +81,7 @@ namespace FubuTransportation.Serenity
                 throw new ArgumentException("Cannot find destination channel for message type {0}. Have you configured the channel with AcceptsMessage()?".ToFormat(typeof(T)), "message");
 
             Uri destination = channelNode.Uri;
-            var bus = _runtime.Factory.Get<IServiceBus>();
+            var bus = Runtime.Factory.Get<IServiceBus>();
             bus.Send(destination, message);
         }
 
@@ -117,7 +117,7 @@ namespace FubuTransportation.Serenity
 
         private void SendResponseMessage(object message, EnvelopeToken request)
         {
-            var sender = _runtime.Factory.Get<IEnvelopeSender>();
+            var sender = Runtime.Factory.Get<IEnvelopeSender>();
             var response = new Envelope
             {
                 Message = message,
@@ -148,12 +148,12 @@ namespace FubuTransportation.Serenity
                 x.Forward<IMessageRecorder, IListener>();
             });
 
-            _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
-            Uri = _runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
-            _recorder = _runtime.Factory.Get<IMessageRecorder>();
+            Runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
+            Uri = Runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
+            _recorder = Runtime.Factory.Get<IMessageRecorder>();
 
             // Wireup the messaging session so the MessageHistory gets notified of messages on this node
-            _messageListener = _runtime.Factory.Get<IMessagingSession>();
+            _messageListener = Runtime.Factory.Get<IMessagingSession>();
             Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(_messageListener);
         }
     }

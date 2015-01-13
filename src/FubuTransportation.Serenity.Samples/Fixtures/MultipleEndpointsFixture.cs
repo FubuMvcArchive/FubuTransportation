@@ -88,7 +88,7 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         [FormatAs("The system under test should receive the message")]
         public bool SystemReceivedMessage()
         {
-            var messages = Retrieve<MessageRecorder>().Messages;
+            var messages = Retrieve<SystemUnderTest.MessageRecorder>().Messages;
             return ShortWait(() => messages.Any(x => x is TestMessage));
         }
 

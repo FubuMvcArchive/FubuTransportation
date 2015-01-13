@@ -18,7 +18,7 @@ namespace FubuTransportation.Storyteller
 
             OnContextCreation(TextFileWriter.Clear);
 
-            OnContextCreation<MessageRecorder>(x => x.Messages.Clear());
+            OnContextCreation<WebsiteNode.MessageRecorder>(x => x.Messages.Clear());
         }
 
 

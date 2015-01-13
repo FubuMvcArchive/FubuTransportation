@@ -9,14 +9,14 @@ using FubuTransportation.Runtime;
 
 namespace FubuTransportation.Serenity
 {
-    internal interface IMessageRecorder
+    public interface IMessageRecorder
     {
         IEnumerable<EnvelopeToken> ReceivedEnvelopes { get; }
         IEnumerable<object> ReceivedMessages { get; }
         void Clear();
     }
 
-    internal class MessageRecorder : IMessageRecorder, IListener, IListener<EnvelopeReceived>
+    public class MessageRecorder : IMessageRecorder, IListener, IListener<EnvelopeReceived>
     {
         private readonly IList<EnvelopeToken> _receivedEnvelopes = new List<EnvelopeToken>();
 
