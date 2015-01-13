@@ -589,9 +589,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ScheduledJobs\ScheduledJobPersistentTaskTester.cs" />
-    <Compile Include="ScheduledJobs\ScheduledJobRunnerTester.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ScheduledJobs\ScheduledJobTester.cs">
       <SubType>Code</SubType>
     </Compile>

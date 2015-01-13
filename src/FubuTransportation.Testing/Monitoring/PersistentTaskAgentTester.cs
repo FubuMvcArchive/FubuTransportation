@@ -54,7 +54,7 @@ namespace FubuTransportation.Testing.Monitoring
         {
             var peers = Services.CreateMockArrayFor<ITransportPeer>(4);
 
-            var peer = MockFor<ITransportPeer>();
+            var peer = peers[2];
 
             MockFor<IPersistentTask>().Stub(x => x.SelectOwner(peers))
                 .Return(peer.ToCompletionTask());

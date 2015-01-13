@@ -86,7 +86,7 @@ namespace FubuTransportation.Testing.Configuration
                 .Uri.ShouldEqual(bus.Downstream);
         }
 
-        [Test]
+        [Test, Ignore("Too flaky, too slow. Replace w/ ST tests?")]
         public void start_receiving()
         {
             using (var graph = new ChannelGraph())
