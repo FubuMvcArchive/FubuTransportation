@@ -7,7 +7,7 @@ namespace FubuTransportation.Serenity.Samples
     {
         public SampleSystem()
         {
-            OnContextCreation<MessageRecorder>(x => x.Messages.Clear());
+            OnContextCreation<SystemUnderTest.MessageRecorder>(x => x.Messages.Clear());
             FubuTransport.SetupForInMemoryTesting<TestSettings>();
         }
     }

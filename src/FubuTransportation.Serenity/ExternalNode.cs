@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FubuCore;
 using FubuMVC.Core;
@@ -8,6 +7,8 @@ using FubuMVC.StructureMap;
 using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
 using FubuTransportation.Events;
+using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Invocation;
 using StructureMap;
 
 namespace FubuTransportation.Serenity
@@ -17,7 +18,6 @@ namespace FubuTransportation.Serenity
         private readonly string _name;
         private readonly ChannelGraph _systemUnderTest;
         private readonly Type _registryType;
-        private FubuRuntime _runtime;
         private bool _isStarted;
         private IMessagingSession _messageListener;
         private IMessageRecorder _recorder;
@@ -39,6 +39,7 @@ namespace FubuTransportation.Serenity
             return type.IsConcreteTypeOf<FubuTransportRegistry>();
         }
 
+        public FubuRuntime Runtime { get; private set; }
         public Uri Uri { get; private set; }
 
         public void ClearReceivedMessages()
@@ -49,11 +50,11 @@ namespace FubuTransportation.Serenity
         public void Dispose()
         {
             _isStarted = false;
-            if (_runtime != null)
+            if (Runtime != null)
             {
                 Bottles.Services.Messaging.EventAggregator.Messaging.RemoveListener(_messageListener);
-                _runtime.Dispose();
-                _runtime = null;
+                Runtime.Dispose();
+                Runtime = null;
             }
         }
 
@@ -77,11 +78,55 @@ namespace FubuTransportation.Serenity
         {
             var channelNode = _systemUnderTest.FirstOrDefault(x => x.Publishes(typeof(T)));
             if (channelNode == null)
-                throw new ArgumentException("Cannot find destination channel for message type {0}".ToFormat(typeof(T)), "message");
+                throw new ArgumentException("Cannot find destination channel for message type {0}. Have you configured the channel with AcceptsMessage()?".ToFormat(typeof(T)), "message");
 
             Uri destination = channelNode.Uri;
-            var bus = _runtime.Factory.Get<IServiceBus>();
+            var bus = Runtime.Factory.Get<IServiceBus>();
             bus.Send(destination, message);
+        }
+
+        /// <summary>
+        /// Simulate a response from this endpoint to the last received request of type TRequest.
+        /// An example can be found in FubuTransportation.Serenity.Samples.
+        /// </summary>
+        /// <param name="message">The response message.</param>
+        public void RespondToRequestWithMessage<TRequest>(object message)
+        {
+            var request = _recorder.ReceivedEnvelopes
+                .LastOrDefault(x => x.Message is TRequest);
+            if (request == null)
+            {
+                throw new InvalidOperationException("This node hasn't received a message of type {0}".ToFormat(typeof(TRequest)));
+            }
+
+            SendResponseMessage(message, request);
+        }
+
+        /// <summary>
+        /// Simulate a response to a received request from this endpoint.
+        /// </summary>
+        /// <param name="requestSelector">Given the envelopes received by this endpoint, selects the envelope the response is for.</param>
+        /// <param name="message">The response message.</param>
+        public void RespondToRequestWithMessage(
+            Func<IEnumerable<EnvelopeToken>, EnvelopeToken> requestSelector,
+            object message)
+        {
+            var request = requestSelector(_recorder.ReceivedEnvelopes);
+            SendResponseMessage(message, request);
+        }
+
+        private void SendResponseMessage(object message, EnvelopeToken request)
+        {
+            var sender = Runtime.Factory.Get<IEnvelopeSender>();
+            var response = new Envelope
+            {
+                Message = message,
+                Destination = request.ReplyUri,
+                OriginalId = request.OriginalId ?? request.CorrelationId,
+                ParentId = request.CorrelationId,
+                ResponseId = request.CorrelationId
+            };
+            sender.Send(response);
         }
 
         public void Start()
@@ -93,6 +138,7 @@ namespace FubuTransportation.Serenity
             var registry = Activator.CreateInstance(_registryType).As<FubuTransportRegistry>();
             registry.NodeName = _name;
             registry.EnableInMemoryTransport();
+            registry.Services(x => x.ReplaceService<IEnvelopeHandler, ExternalNodeEnvelopeHandler>());
             TestNodes.Alterations.Each(x => x(registry));
 
 
@@ -102,13 +148,28 @@ namespace FubuTransportation.Serenity
                 x.Forward<IMessageRecorder, IListener>();
             });
 
-            _runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
-            Uri = _runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
-            _recorder = _runtime.Factory.Get<IMessageRecorder>();
+            Runtime = FubuTransport.For(registry).StructureMap(container).Bootstrap();
+            Uri = Runtime.Factory.Get<ChannelGraph>().ReplyUriList().First();
+            _recorder = Runtime.Factory.Get<IMessageRecorder>();
 
             // Wireup the messaging session so the MessageHistory gets notified of messages on this node
-            _messageListener = _runtime.Factory.Get<IMessagingSession>();
+            _messageListener = Runtime.Factory.Get<IMessagingSession>();
             Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(_messageListener);
+        }
+    }
+
+    // Prevents our fake node from returning FailureAcknowledgements because we don't 
+    // have actual message handlers on this end.
+    public class ExternalNodeEnvelopeHandler : SimpleEnvelopeHandler
+    {
+        public override bool Matches(Envelope envelope)
+        {
+            return true;
+        }
+
+        public override void Execute(Envelope envelope, ContinuationContext context)
+        {
+            envelope.Callback.MarkSuccessful();
         }
     }
 }
