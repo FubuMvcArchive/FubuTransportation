@@ -109,6 +109,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin\lib\net40\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="PowerCollections">
       <HintPath>..\packages\RavenDB.Database\lib\net45\PowerCollections.dll</HintPath>
     </Reference>
@@ -128,7 +131,10 @@
       <HintPath>..\packages\RavenDB.Database\lib\net45\Spatial4n.Core.NTS.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap\lib\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap\lib\net40\StructureMap.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

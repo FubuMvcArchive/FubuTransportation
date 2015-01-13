@@ -30,7 +30,7 @@ namespace FubuTransportation.Testing
             var graph = BehaviorGraph.BuildFrom(x => {
                 x.Import<BlueRegistry>();
                 x.Import<GreenRegistry>();
-                x.Policies.Add<ImportHandlers>(); // This would be here by Bottles normally
+                x.Policies.ChainSource<ImportHandlers>(); // This would be here by Bottles normally
             });
 
             var cache = new ChainResolutionCache(new TypeResolver(), graph);
@@ -61,7 +61,7 @@ namespace FubuTransportation.Testing
                 x.Import<GreenRegistry>();
                 x.Import<RedRegistry>();
 
-                x.Policies.Add<ImportHandlers>(); // This would be here by Bottles normally
+                x.Policies.ChainSource<ImportHandlers>(); // This would be here by Bottles normally
             });
 
             graph.Behaviors.Any(x => x is HandlerChain).ShouldBeTrue();
@@ -79,7 +79,7 @@ namespace FubuTransportation.Testing
                 x.Import<GreenRegistry>();
                 x.Import<RedRegistry>();
 
-                x.Policies.Add<ImportHandlers>(); // This would be here by Bottles normally
+                x.Policies.ChainSource<ImportHandlers>(); // This would be here by Bottles normally
             });
 
             graph.BehaviorFor<SomethingEndpoint>(x => x.get_hello())

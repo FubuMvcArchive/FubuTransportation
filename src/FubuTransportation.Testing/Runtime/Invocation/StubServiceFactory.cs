@@ -38,6 +38,11 @@ namespace FubuTransportation.Testing.Runtime.Invocation
             return _behavior;
         }
 
+        public T Build<T>(ServiceArguments arguments)
+        {
+            throw new NotImplementedException();
+        }
+
         public T Get<T>()
         {
             throw new NotImplementedException();

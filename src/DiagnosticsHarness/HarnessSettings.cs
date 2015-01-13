@@ -7,12 +7,12 @@ namespace DiagnosticsHarness
     {
         public HarnessSettings()
         {
-            Channel = "memory://harness".ToUri();
-            Publisher = "memory://publisher".ToUri();
+            //Channel = "memory://harness".ToUri();
+            //Publisher = "memory://publisher".ToUri();
 
             //Use this instead if you want to test with LightningQueues
-            //Channel = "lq.tcp://localhost:9998/channel".ToUri();
-            //Publisher = "lq.tcp://localhost:9999/publisher".ToUri();
+            Channel = "lq.tcp://localhost:9998/channel".ToUri();
+            Publisher = "lq.tcp://localhost:9999/publisher".ToUri();
         }
 
         public Uri Publisher { get; set; }

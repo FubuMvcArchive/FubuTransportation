@@ -45,9 +45,6 @@
     <Reference Include="FubuMVC.Katana">
       <HintPath>..\packages\FubuMVC.Katana\lib\net40\FubuMVC.Katana.dll</HintPath>
     </Reference>
-    <Reference Include="FubuMVC.OwinHost">
-      <HintPath>..\packages\FubuMVC.OwinHost\lib\net40\FubuMVC.OwinHost.dll</HintPath>
-    </Reference>
     <Reference Include="FubuMVC.StructureMap">
       <HintPath>..\packages\FubuMVC.StructureMap\lib\net40\FubuMVC.StructureMap.dll</HintPath>
     </Reference>
@@ -77,7 +74,10 @@
       <HintPath>..\packages\Storyteller2\lib\net40\StoryTeller.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap\lib\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap\lib\net40\StructureMap.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

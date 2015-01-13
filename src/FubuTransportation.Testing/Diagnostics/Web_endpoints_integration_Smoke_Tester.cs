@@ -19,7 +19,7 @@ using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Diagnostics
 {
-    [TestFixture]
+    [TestFixture, Explicit("Will bring this back later")]
     public class Web_endpoints_integration_Smoke_Tester
     {
         string appPath = Environment.CurrentDirectory

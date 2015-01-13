@@ -7,7 +7,6 @@ using FubuTransportation.Monitoring;
 using FubuTransportation.Polling;
 using FubuTransportation.Registration.Nodes;
 using FubuTransportation.Sagas;
-using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Configuration;
 
 namespace FubuTransportation
@@ -16,31 +15,29 @@ namespace FubuTransportation
     {
         public void Configure(FubuRegistry registry)
         {
-            registry.Policies.Add<ImportHandlers>();
-            registry.Policies.Add<ApplyScheduledJobRouting>();
-            registry.Services<FubuTransportServiceRegistry>();
-            registry.Services<PollingServicesRegistry>();
+            registry.Policies.Global.Add<ApplyScheduledJobRouting>();
             registry.Services<ScheduledJobServicesRegistry>();
             registry.Services<MonitoringServiceRegistry>();
-            registry.Policies.Add<RegisterPollingJobs>();
-            registry.Policies.Add<RegisterScheduledJobs>();
-            registry.Policies.Add<StatefulSagaConvention>();
-            registry.Policies.Add<AsyncHandlingConvention>();
+            registry.Policies.Global.Add<RegisterScheduledJobs>();
+            registry.Policies.ChainSource<ImportHandlers>();
+            registry.Services<FubuTransportServiceRegistry>();
+            registry.Services<PollingServicesRegistry>();
+            registry.Policies.Global.Add<RegisterPollingJobs>();
+            registry.Policies.Global.Add<StatefulSagaConvention>();
+            registry.Policies.Global.Add<AsyncHandlingConvention>();
 
             if (FubuTransport.AllQueuesInMemory)
             {
-                registry.Policies.Add<AllQueuesInMemoryPolicy>();
+                registry.Policies.Global.Add<AllQueuesInMemoryPolicy>();
             }
 
-            registry.Policies.Add<InMemoryQueueRegistration>();
+            registry.Policies.Global.Add<InMemoryQueueRegistration>();
 
-            registry.Policies.Add<ReorderBehaviorsPolicy>(x => {
+            registry.Policies.Global.Add<ReorderBehaviorsPolicy>(x =>
+            {
                 x.ThisNodeMustBeBefore<StatefulSagaNode>();
                 x.ThisNodeMustBeAfter<HandlerCall>();
             });
         }
     }
-
-
-
 }

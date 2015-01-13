@@ -1,5 +1,6 @@
-﻿using FubuCore;
-using FubuMVC.Core;
+﻿using System.Collections.Generic;
+using Bottles;
+using FubuCore;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
 using FubuTransportation.Configuration;
@@ -11,10 +12,15 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation
 {
-    [ConfigurationType(ConfigurationType.Attachment)] // needs to be done AFTER authentication, so this is good
-    public class ImportHandlers : IConfigurationAction
+    // needs to be done AFTER authentication, so this is good
+    public class ImportHandlers : IChainSource
     {
-        public void Configure(BehaviorGraph graph)
+        public IEnumerable<BehaviorChain> BuildChains(BehaviorGraph graph)
+        {
+            return PackageRegistry.Timer.Record("Building FubuTransportation Chains", () => buildChains(graph));
+        }
+
+        private static IEnumerable<BehaviorChain> buildChains(BehaviorGraph graph)
         {
             var handlers = graph.Settings.Get<HandlerGraph>();
 
@@ -23,12 +29,10 @@ namespace FubuTransportation
             handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionRequested())));
             handlers.Add(HandlerCall.For<SubscriptionsHandler>(x => x.Handle(new SubscriptionsChanged())));
 
-
-
             handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TakeOwnershipRequest())));
             handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TaskHealthRequest())));
             handlers.Add(HandlerCall.For<MonitoringControlHandler>(x => x.Handle(new TaskDeactivation())));
-            
+
             handlers.ApplyGeneralizedHandlers();
 
             var policies = graph.Settings.Get<HandlerPolicies>();
@@ -39,8 +43,6 @@ namespace FubuTransportation
                 // Apply the error handling node
                 chain.InsertFirst(new ExceptionHandlerNode(chain));
 
-                graph.AddChain(chain);
-
                 // Hate how we're doing this, but disable tracing
                 // on the polling job requests here.
                 if (chain.InputType().Closes(typeof (JobRequest<>)))
@@ -48,6 +50,8 @@ namespace FubuTransportation
                     chain.Tags.Add(BehaviorChain.NoTracing);
                 }
             }
+
+            return handlers;
         }
     }
 }

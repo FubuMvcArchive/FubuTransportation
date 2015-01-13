@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Reflection;
 using FubuCore;
-using FubuMVC.Core;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.Registration.Nodes;
 
 namespace FubuTransportation.Web
 {
-    [ConfigurationType(ConfigurationType.Discovery)]
     public class SendsMessageActionSource : IActionSource
     {
         public void Configure(BehaviorGraph graph)

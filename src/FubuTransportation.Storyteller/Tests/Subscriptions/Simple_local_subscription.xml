@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Test name="Simple local subscription" lifecycle="Regression">
+<Test name="Simple local subscription" lifecycle="Regression" retryAttemptNumber="0">
   <Subscriptions>
     <LoadNode isStep="True" Key="Publisher" Registry="PublishingRegistry" ReplyUri="memory://publisher1" />
     <LoadNode isStep="True" Key="Subscriber" Registry="HasLocalSubscriptionsRegistry" ReplyUri="memory://subscriber1" />

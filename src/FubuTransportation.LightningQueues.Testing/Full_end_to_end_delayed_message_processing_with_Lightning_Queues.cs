@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using FubuCore;
@@ -39,6 +40,8 @@ namespace FubuTransportation.LightningQueues.Testing
 
             var container = new Container();
             container.Inject(settings);
+            theClock = new SettableClock();
+            container.Inject<ISystemTime>(theClock);
 
             _runtime = FubuTransport.For<DelayedRegistry>().StructureMap(container)
                                        .Bootstrap();
@@ -46,12 +49,12 @@ namespace FubuTransportation.LightningQueues.Testing
             theServiceBus = _runtime.Factory.Get<IServiceBus>();
             //_runtime.Factory.Get<IPersistentQueues>().ClearAll();
 
-            theClock = _runtime.Factory.Get<ISystemTime>().As<SettableClock>();
-
             message1 = new OneMessage();
             message2 = new OneMessage();
             message3 = new OneMessage();
             message4 = new OneMessage();
+
+            Debug.WriteLine("The current Utc time is " + theClock.UtcNow());
 
             theServiceBus.DelaySend(message1, theClock.UtcNow().AddHours(1));
             theServiceBus.DelaySend(message2, theClock.UtcNow().AddHours(1));

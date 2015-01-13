@@ -6,7 +6,6 @@ using FubuCore;
 using FubuCore.Util;
 using FubuMVC.Core;
 using FubuMVC.Katana;
-using FubuMVC.OwinHost;
 using FubuMVC.StructureMap;
 using FubuPersistence.RavenDb;
 using FubuTransportation.Configuration;
@@ -46,6 +45,7 @@ namespace ScheduledJobHarness
                 _.ReplaceService<ISubscriptionPersistence, RavenDbSubscriptionPersistence>();
 
             });
+
 
             ReplaceSettings(RavenDbSettings.InMemory());
 

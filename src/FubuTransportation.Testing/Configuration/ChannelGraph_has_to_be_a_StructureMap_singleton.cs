@@ -3,6 +3,7 @@ using FubuTestingSupport;
 using FubuTransportation.Configuration;
 using NUnit.Framework;
 using StructureMap;
+using StructureMap.Pipeline;
 
 namespace FubuTransportation.Testing.Configuration
 {
@@ -16,7 +17,7 @@ namespace FubuTransportation.Testing.Configuration
             using (var runtime = FubuTransport.For(x => x.EnableInMemoryTransport()).StructureMap(container).Bootstrap()
                 )
             {
-                container.Model.For<ChannelGraph>().Lifecycle.ShouldEqual("Singleton");
+                container.Model.For<ChannelGraph>().Lifecycle.ShouldBeOfType<SingletonLifecycle>();
             }
 
            

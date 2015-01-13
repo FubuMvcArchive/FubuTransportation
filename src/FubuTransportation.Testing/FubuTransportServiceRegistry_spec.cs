@@ -232,7 +232,7 @@ namespace FubuTransportation.Testing
         }
 
         [Test]
-        public void TransportActivator_is_registered()
+        public void CompoundActivator_is_registered()
         {
             registeredTypeIs<IActivator, FubuTransportationActivator>();
         }

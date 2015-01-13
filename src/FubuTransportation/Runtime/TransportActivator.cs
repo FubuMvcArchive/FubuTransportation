@@ -10,6 +10,7 @@ using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation.Runtime
 {
+
     public class TransportActivator : IActivator
     {
         private readonly ChannelGraph _graph;

@@ -26,9 +26,12 @@ namespace FubuTransportation
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            _transports.Activate(packages, log);
-            _subscriptions.Activate(packages, log);
-            _pollingJobs.Activate(packages, log);
+            PackageRegistry.Timer.Record("Activating Transports and Starting Listening",
+                () => _transports.Activate(packages, log));
+
+            PackageRegistry.Timer.Record("Activating Subscriptions", () => _subscriptions.Activate(packages, log));
+
+            PackageRegistry.Timer.Record("Activating Polling Jobs", () => _pollingJobs.Activate(packages, log));
         }
 
         public void Deactivate(IPackageLog log)

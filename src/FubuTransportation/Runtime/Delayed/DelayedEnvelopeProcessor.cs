@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuTransportation.Polling;
@@ -23,6 +24,7 @@ namespace FubuTransportation.Runtime.Delayed
         public void Execute(CancellationToken cancellation)
         {
             var currentTime = _systemTime.UtcNow();
+
             _transports.Each(transport => {
                 DequeuFromTransport(transport, currentTime);
             });

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
 using FubuMVC.Core.Continuations;
@@ -28,9 +29,11 @@ namespace DiagnosticsHarness
 
             numbers.Each(x => _serviceBus.Send<NumberMessage>(x));
 
-            return
-                FubuContinuation.RedirectTo<FubuMVC.Instrumentation.Features.Instrumentation.InstrumentationFubuDiagnostics>(
-                    x => x.get_instrumentation(null));
+            throw new NotImplementedException("Took instrementation out");
+
+//            return
+//                FubuContinuation.RedirectTo<FubuMVC.Instrumentation.Features.Instrumentation.InstrumentationFubuDiagnostics>(
+//                    x => x.get_instrumentation(null));
         }
 
         public string get_received()
