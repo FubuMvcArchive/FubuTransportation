@@ -10,6 +10,8 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
 {
     public class MultipleEndpointsFixture : ExternalNodeFixture
     {
+        private TestResponse _responseFromExternalService;
+
         public MultipleEndpointsFixture()
         {
             Title = "Multiple Endpoints";
@@ -39,6 +41,23 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         public void SendMessageToOtherService()
         {
             Retrieve<IServiceBus>().Send(new MessageForExternalService());
+        }
+
+        [FormatAs("Await a response to a request sent to the external service")]
+        public void SendRequestToOtherService()
+        {
+            var node = AddOtherService();
+            node.ClearReceivedMessages();
+
+            var task = Retrieve<IServiceBus>().Request<TestResponse>(new MessageForExternalService());
+            ShortWait(() => node.ReceivedMessages<MessageForExternalService>().Any());
+
+            node.RespondToRequestWithMessage<MessageForExternalService>(new TestResponse());
+
+            if (task.Wait(TimeSpan.FromSeconds(1)))
+            {
+                _responseFromExternalService = task.Result;
+            }
         }
 
         [FormatAs("Node {name} received a response")]
@@ -71,6 +90,12 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         {
             var messages = Retrieve<MessageRecorder>().Messages;
             return ShortWait(() => messages.Any(x => x is TestMessage));
+        }
+
+        [FormatAs("The system under test should receive the response to the request")]
+        public bool SystemReceivedRequestedResponse()
+        {
+            return _responseFromExternalService != null;
         }
 
         private ExternalNode AddOtherService()
