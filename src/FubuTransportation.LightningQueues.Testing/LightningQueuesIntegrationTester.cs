@@ -23,9 +23,14 @@ namespace FubuTransportation.LightningQueues.Testing
         [SetUp]
         public void Setup()
         {
+            SetupTransport("lq.tcp://localhost:2032/upstream");
+        }
+
+        private void SetupTransport(string uri)
+        {
             graph = new ChannelGraph();
             node = graph.ChannelFor<ChannelSettings>(x => x.Upstream);
-            node.Uri = new Uri("lq.tcp://localhost:2032/upstream");
+            node.Uri = new Uri(uri);
             node.Incoming = true;
 
             var delayedCache = new DelayedMessageCache<MessageId>();
@@ -54,7 +59,16 @@ namespace FubuTransportation.LightningQueues.Testing
             uri.ShouldNotBeNull();
 
             uri.Host.ToUpperInvariant().ShouldEqual(Environment.MachineName.ToUpperInvariant());
+        }
 
+        [Test]
+        public void reply_uri_is_machine_specific_when_dns_address_is_used()
+        {
+            queues.Dispose();
+            SetupTransport("lq.tcp://www.foo.com:2032/upstream");
+
+            var uri = graph.ReplyChannelFor(LightningUri.Protocol);
+            uri.Host.ToUpperInvariant().ShouldEqual(Environment.MachineName.ToUpperInvariant());
         }
 
         [Test]

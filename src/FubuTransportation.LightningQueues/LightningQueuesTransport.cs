@@ -74,7 +74,7 @@ namespace FubuTransportation.LightningQueues
             if (channelNode == null)
                 throw new InvalidOperationException("You must have at least one incoming Lightning Queue channel for accepting replies");
 
-            return channelNode.Channel.Address.ToMachineUri();
+            return channelNode.Channel.Address.ToLocalUri();
         }
     }
 }
