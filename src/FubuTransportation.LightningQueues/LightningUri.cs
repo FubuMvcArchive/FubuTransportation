@@ -64,9 +64,14 @@ namespace FubuTransportation.LightningQueues
         {
             if (_locals.Contains(uri.Host))
             {
-                return new UriBuilder(uri) {Host = Environment.MachineName}.Uri;
+                return uri.ToLocalUri();
             }
             return uri;
+        }
+
+        public static Uri ToLocalUri(this Uri uri)
+        {
+            return new UriBuilder(uri) { Host = Environment.MachineName }.Uri;
         }
     }
 }
