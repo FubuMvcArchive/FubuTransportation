@@ -35,6 +35,11 @@ namespace FubuTransportation.Subscriptions
             // Reload here!
             Handle(new SubscriptionsChanged());
 
+            UpdatePeers();
+        }
+
+        public virtual void UpdatePeers()
+        {
             var peers = _repository.FindPeers();
             peers.Each(SendSubscriptionChangedToPeer);
         }
@@ -48,6 +53,13 @@ namespace FubuTransportation.Subscriptions
             };
 
             _sender.Send(envelope);
+        }
+
+        public void Handle(SubscriptionsRemoved message)
+        {
+            _repository.RemoveSubscriptionsForReceiver(message.Receiver);
+            ReloadSubscriptions();
+            UpdatePeers();
         }
     }
 }

@@ -102,6 +102,17 @@ namespace FubuTransportation.Subscriptions
             return localSubscriptions;
         }
 
+        public void RemoveSubscriptionsForReceiver(Uri receiver)
+        {
+            var subscriptions = LoadSubscriptions(SubscriptionRole.Publishes)
+                .Where(x => x.Receiver == receiver)
+                .ToList();
+            if (!subscriptions.Any())
+                return;
+
+            _persistence.DeleteSubscriptions(subscriptions);
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

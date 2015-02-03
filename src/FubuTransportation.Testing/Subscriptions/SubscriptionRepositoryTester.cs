@@ -267,5 +267,32 @@ namespace FubuTransportation.Testing.Subscriptions
             persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Subscribes)
                 .ShouldHaveCount(0);
         }
+
+        [Test]
+        public void remove_subscriptions_for_receiver()
+        {
+            var differentNode = ObjectMother.ExistingSubscription("DifferentNode");
+            var differentReceiver = ObjectMother.ExistingSubscription();
+            differentReceiver.Receiver = new Uri("memory://other_receiver");
+
+            var subscriptions = new[]
+            {
+                ObjectMother.ExistingSubscription(),
+                ObjectMother.ExistingSubscription(),
+                ObjectMother.ExistingSubscription(),
+                differentNode,
+                differentReceiver
+            };
+
+            subscriptions.Each(x => x.Role = SubscriptionRole.Publishes);
+            persistence.Persist(subscriptions);
+
+            theRepository.RemoveSubscriptionsForReceiver(subscriptions[0].Receiver);
+
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Publishes)
+                .ShouldHaveTheSameElementsAs(differentReceiver);
+            persistence.LoadSubscriptions("DifferentNode", SubscriptionRole.Publishes)
+                .ShouldHaveTheSameElementsAs(differentNode);
+        }
     }
 }
