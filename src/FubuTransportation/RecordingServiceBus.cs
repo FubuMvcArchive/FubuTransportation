@@ -60,6 +60,10 @@ namespace FubuTransportation
             return Task.Factory.StartNew(() => Await.Add(message));
         }
 
+        public void RemoveSubscriptionsForThisNode()
+        {
+        }
+
         public class DelayedMessage
         {
             public TimeSpan Delay;

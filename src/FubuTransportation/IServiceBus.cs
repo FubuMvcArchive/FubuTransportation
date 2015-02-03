@@ -50,5 +50,10 @@ namespace FubuTransportation
         /// <param name="message"></param>
         /// <returns></returns>
         Task SendAndWait<T>(T message);
+
+        /// <summary>
+        /// Unsubscribes from any messages this node was locally subscribed to.
+        /// </summary>
+        void RemoveSubscriptionsForThisNode();
     }
 }

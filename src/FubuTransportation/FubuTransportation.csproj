@@ -357,6 +357,7 @@
     <Compile Include="Subscriptions\SubscriptionRole.cs" />
     <Compile Include="Subscriptions\SubscriptionsChanged.cs" />
     <Compile Include="Subscriptions\SubscriptionsHandler.cs" />
+    <Compile Include="Subscriptions\SubscriptionsRemoved.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />

@@ -17,5 +17,6 @@ namespace FubuTransportation.Subscriptions
         TransportNode LoadNode(string nodeId);
 
         void Alter(string id, Action<TransportNode> alteration);
+        void DeleteSubscriptions(IEnumerable<Subscription> subscriptions);
     }
 }

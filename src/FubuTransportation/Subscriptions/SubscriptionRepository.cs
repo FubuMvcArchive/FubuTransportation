@@ -88,6 +88,20 @@ namespace FubuTransportation.Subscriptions
             _persistence.Alter(_graph.NodeId, node => subjects.Each(node.RemoveOwnership));
         }
 
+        public IEnumerable<Subscription> RemoveLocalSubscriptions()
+        {
+            var subscriptions = LoadSubscriptions(SubscriptionRole.Subscribes).ToList();
+            if (!subscriptions.Any())
+                return Enumerable.Empty<Subscription>();
+
+            var protocol = subscriptions.First().Source.Scheme;
+            var uri = _graph.ReplyChannelFor(protocol);
+            var localSubscriptions = subscriptions.Where(x => x.Receiver == uri).ToList();
+
+            _persistence.DeleteSubscriptions(localSubscriptions);
+            return localSubscriptions;
+        }
+
         public IEnumerable<Subscription> LoadSubscriptions(SubscriptionRole role)
         {
             return _persistence.LoadSubscriptions(_graph.Name, role);

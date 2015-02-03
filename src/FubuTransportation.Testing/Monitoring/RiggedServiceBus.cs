@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.UI;
 using NUnit.Framework;
 
 namespace FubuTransportation.Testing.Monitoring
@@ -129,6 +128,11 @@ namespace FubuTransportation.Testing.Monitoring
         }
 
         public Task SendAndWait<T>(T message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveSubscriptionsForThisNode()
         {
             throw new NotImplementedException();
         }

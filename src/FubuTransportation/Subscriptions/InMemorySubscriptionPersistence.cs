@@ -88,8 +88,11 @@ namespace FubuTransportation.Subscriptions
                 var node = _nodes.FirstOrDefault(x => x.Id == id);
                 alteration(node);
             });
+        }
 
-
+        public void DeleteSubscriptions(IEnumerable<Subscription> subscriptions)
+        {
+            _lock.Write(() => subscriptions.Each(x => _subscriptions.Remove(x.Id)));
         }
     }
 }

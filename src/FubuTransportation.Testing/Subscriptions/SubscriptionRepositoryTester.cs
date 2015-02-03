@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -244,7 +245,27 @@ namespace FubuTransportation.Testing.Subscriptions
             theRepository.RemoveOwnershipFromNode(fooNode.Id, subject);
 
             fooNode.OwnedTasks.ShouldNotContain(subject);
+        }
 
+        [Test]
+        public void remove_local_subscriptions()
+        {
+            var subscriptions = new[] { ObjectMother.NewSubscription(), ObjectMother.NewSubscription() };
+            subscriptions.Each(x =>
+            {
+                x.Receiver = channelGraph.ReplyChannelFor("foo");
+                x.Source = new Uri("foo://source");
+            });
+
+            theRepository.PersistSubscriptions(subscriptions);
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Subscribes)
+                .ShouldHaveTheSameElementsAs(subscriptions);
+
+            var removed = theRepository.RemoveLocalSubscriptions();
+            removed.ShouldHaveTheSameElementsAs(subscriptions);
+
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Subscribes)
+                .ShouldHaveCount(0);
         }
     }
 }

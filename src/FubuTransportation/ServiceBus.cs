@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
 using FubuCore.Dates;
 using FubuTransportation.Events;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Invocation;
+using FubuTransportation.Subscriptions;
 
 namespace FubuTransportation
 {
@@ -14,13 +17,15 @@ namespace FubuTransportation
         private readonly IEventAggregator _events;
         private readonly IChainInvoker _invoker;
         private readonly ISystemTime _systemTime;
+        private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IChainInvoker invoker, ISystemTime systemTime)
+        public ServiceBus(IEnvelopeSender sender, IEventAggregator events, IChainInvoker invoker, ISystemTime systemTime, ISubscriptionRepository subscriptionRepository)
         {
             _sender = sender;
             _events = events;
             _invoker = invoker;
             _systemTime = systemTime;
+            _subscriptionRepository = subscriptionRepository;
         }
 
         // The destination override is tested as part of the monitoring integration
@@ -90,6 +95,25 @@ namespace FubuTransportation
             _sender.Send(envelope);
 
             return listener.Completion;
+        }
+
+        public void RemoveSubscriptionsForThisNode()
+        {
+            var subscriptions = _subscriptionRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
+            if (!subscriptions.Any())
+                return;
+
+            subscriptions = _subscriptionRepository.RemoveLocalSubscriptions();
+            subscriptions.GroupBy(x => x.Source)
+                .Each(x =>
+                {
+                    var envelope = new Envelope
+                    {
+                        Destination = x.Key,
+                        Message = new SubscriptionsRemoved { Receiver = x.First().Receiver }
+                    };
+                    _sender.Send(envelope);
+                });
         }
     }
 }
