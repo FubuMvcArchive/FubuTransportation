@@ -60,6 +60,13 @@ namespace FubuTransportation
             return Task.Factory.StartNew(() => Await.Add(message));
         }
 
+
+        public Task SendAndWait<T>(Uri destination, T message)
+        {
+            SentDirectlyTo.Add(new SentDirectlyToMessage { Destination = destination, Message = message });
+            return Task.Factory.StartNew(() => Await.Add(message));
+        }
+
         public void RemoveSubscriptionsForThisNode()
         {
         }

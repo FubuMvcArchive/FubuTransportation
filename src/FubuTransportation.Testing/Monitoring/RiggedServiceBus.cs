@@ -132,6 +132,11 @@ namespace FubuTransportation.Testing.Monitoring
             throw new NotImplementedException();
         }
 
+        public Task SendAndWait<T>(Uri destination, T message)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveSubscriptionsForThisNode()
         {
             throw new NotImplementedException();

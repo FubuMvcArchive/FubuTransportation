@@ -83,10 +83,21 @@ namespace FubuTransportation
 
         public Task SendAndWait<T>(T message)
         {
+            return GetSendAndWaitTask(message);
+        }
+
+        public Task SendAndWait<T>(Uri destination, T message)
+        {
+            return GetSendAndWaitTask(message, destination);
+        }
+
+        private Task GetSendAndWaitTask<T>(T message, Uri destination = null)
+        {
             var envelope = new Envelope
             {
                 Message = message,
-                AckRequested = true
+                AckRequested = true,
+                Destination = destination
             };
 
             var listener = new ReplyListener<Acknowledgement>(_events, envelope.CorrelationId, 10.Minutes());
