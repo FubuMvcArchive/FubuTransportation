@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FubuCore;
@@ -108,23 +107,16 @@ namespace FubuTransportation
             return listener.Completion;
         }
 
-        public void RemoveSubscriptionsForThisNode()
+        public async Task RemoveSubscriptionsForThisNodeAsync()
         {
             var subscriptions = _subscriptionRepository.LoadSubscriptions(SubscriptionRole.Subscribes);
             if (!subscriptions.Any())
                 return;
 
             subscriptions = _subscriptionRepository.RemoveLocalSubscriptions();
-            subscriptions.GroupBy(x => x.Source)
-                .Each(x =>
-                {
-                    var envelope = new Envelope
-                    {
-                        Destination = x.Key,
-                        Message = new SubscriptionsRemoved { Receiver = x.First().Receiver }
-                    };
-                    _sender.Send(envelope);
-                });
+            var tasks = subscriptions.GroupBy(x => x.Source)
+                .Select(x => SendAndWait(x.Key, new SubscriptionsRemoved { Receiver = x.First().Receiver }));
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
     }
 }

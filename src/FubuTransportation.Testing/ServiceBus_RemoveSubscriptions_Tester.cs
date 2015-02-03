@@ -45,7 +45,7 @@ namespace FubuTransportation.Testing
             MockFor<ISubscriptionRepository>().Expect(x => x.RemoveLocalSubscriptions())
                 .Return(subscriptions);
 
-            ClassUnderTest.RemoveSubscriptionsForThisNode();
+            ClassUnderTest.RemoveSubscriptionsForThisNodeAsync();
 
             var envelopes = TheEnvelopesSent;
             envelopes.ShouldHaveCount(2);

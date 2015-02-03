@@ -137,7 +137,7 @@ namespace FubuTransportation.Testing.Monitoring
             throw new NotImplementedException();
         }
 
-        public void RemoveSubscriptionsForThisNode()
+        public Task RemoveSubscriptionsForThisNodeAsync()
         {
             throw new NotImplementedException();
         }

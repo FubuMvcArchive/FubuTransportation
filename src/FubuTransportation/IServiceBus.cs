@@ -64,6 +64,6 @@ namespace FubuTransportation
         /// <summary>
         /// Unsubscribes from any messages this node was locally subscribed to.
         /// </summary>
-        void RemoveSubscriptionsForThisNode();
+        Task RemoveSubscriptionsForThisNodeAsync();
     }
 }

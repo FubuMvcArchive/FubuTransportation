@@ -67,8 +67,9 @@ namespace FubuTransportation
             return Task.Factory.StartNew(() => Await.Add(message));
         }
 
-        public void RemoveSubscriptionsForThisNode()
+        public Task RemoveSubscriptionsForThisNodeAsync()
         {
+            return Task.FromResult(false);
         }
 
         public class DelayedMessage
