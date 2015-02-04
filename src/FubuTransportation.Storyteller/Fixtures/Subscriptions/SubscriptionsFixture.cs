@@ -72,11 +72,24 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
                 .MatchOn(x => x.NodeName, x => x.MessageType, x => x.Source, x => x.Receiver);
         }
 
+        public IGrammar TheLocalSubscriptionsAre()
+        {
+            return VerifySetOf(() => _node.PersistedSubscriptions(SubscriptionRole.Subscribes))
+                .Titled("The persisted roles for subscribing are")
+                .MatchOn(x => x.NodeName, x => x.MessageType, x => x.Source, x => x.Receiver);
+        }
+
         public IGrammar ThePersistedTransportNodesAre()
         {
             return VerifySetOf(() => _node.PersistedNodes().Select(x => new TransportNodeItem(x)))
                 .Titled("The persisted transport nodes are")
                 .MatchOn(x => x.NodeName, x => x.Address);
+        }
+
+        [FormatAs("Node {Key} removes local subscriptions")]
+        public void NodeRemovesLocalSubscritpions(string Key)
+        {
+            _nodes[Key].RemoveSubscriptions();
         }
     }
 
