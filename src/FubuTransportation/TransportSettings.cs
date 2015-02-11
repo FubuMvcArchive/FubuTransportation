@@ -18,8 +18,10 @@ namespace FubuTransportation
             DelayMessagePolling = 5000;
             ListenerCleanupPolling = 60000;
             SubscriptionRefreshPolling = 60000;
+            Disabled = false;
         }
 
+        public bool Disabled { get; set; }
         public bool EnableInMemoryTransport { get; set; }
         public bool DebugEnabled { get; set; }
         public double DelayMessagePolling { get; set; }

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bottles;
@@ -17,14 +16,17 @@ namespace FubuTransportation.Subscriptions
         private readonly ISubscriptionCache _cache;
         private readonly IEnumerable<ISubscriptionRequirement> _requirements;
         private readonly ChannelGraph _graph;
+        private readonly TransportSettings _settings;
 
-        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements, ChannelGraph graph)
+        public SubscriptionActivator(ISubscriptionRepository repository, IEnvelopeSender sender, ISubscriptionCache cache, IEnumerable<ISubscriptionRequirement> requirements, ChannelGraph graph,
+            TransportSettings settings)
         {
             _repository = repository;
             _sender = sender;
             _cache = cache;
             _requirements = requirements;
             _graph = graph;
+            _settings = settings;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
