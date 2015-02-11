@@ -31,8 +31,6 @@ namespace FubuTransportation.Subscriptions
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            if(_settings.Disabled) return;
-
             log.Trace("Determining subscriptions for node " + _cache.NodeName);
 
             // assuming that there are no automaticly persistent tasks

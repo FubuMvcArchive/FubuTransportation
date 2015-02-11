@@ -28,7 +28,11 @@ namespace FubuTransportation
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
-            if(_settings.Disabled) return;
+            if (_settings.Disabled)
+            {
+                log.Trace("Skipping activation because FubuTranportation is disabled.");
+                return;
+            }
 
             _transports.Activate(packages, log);
             _subscriptions.Activate(packages, log);
@@ -37,6 +41,8 @@ namespace FubuTransportation
 
         public void Deactivate(IPackageLog log)
         {
+            if(_settings.Disabled) return;
+
             log.Trace("Shutting down the scheduled jobs");
             _scheduledJobs.Deactivate();
         }
