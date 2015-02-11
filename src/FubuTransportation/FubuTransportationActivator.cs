@@ -14,18 +14,22 @@ namespace FubuTransportation
         private readonly SubscriptionActivator _subscriptions;
         private readonly IScheduledJobController _scheduledJobs;
         private readonly PollingJobActivator _pollingJobs;
+        private readonly TransportSettings _settings;
 
         public FubuTransportationActivator(TransportActivator transports, SubscriptionActivator subscriptions,
-            IScheduledJobController scheduledJobs, PollingJobActivator pollingJobs)
+            IScheduledJobController scheduledJobs, PollingJobActivator pollingJobs, TransportSettings settings)
         {
             _transports = transports;
             _subscriptions = subscriptions;
             _scheduledJobs = scheduledJobs;
             _pollingJobs = pollingJobs;
+            _settings = settings;
         }
 
         public void Activate(IEnumerable<IPackageInfo> packages, IPackageLog log)
         {
+            if(_settings.Disabled) return;
+
             _transports.Activate(packages, log);
             _subscriptions.Activate(packages, log);
             _pollingJobs.Activate(packages, log);
