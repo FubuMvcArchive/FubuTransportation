@@ -50,5 +50,20 @@ namespace FubuTransportation
         /// <param name="message"></param>
         /// <returns></returns>
         Task SendAndWait<T>(T message);
+
+        /// <summary>
+        /// Send a message to a specific destination and await an acknowledgment
+        /// that the message has been processed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="destination">The destination to send to</param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        Task SendAndWait<T>(Uri destination, T message);
+
+        /// <summary>
+        /// Unsubscribes from any messages this node was locally subscribed to.
+        /// </summary>
+        Task RemoveSubscriptionsForThisNodeAsync();
     }
 }

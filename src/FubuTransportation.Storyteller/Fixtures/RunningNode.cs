@@ -74,9 +74,9 @@ namespace FubuTransportation.Storyteller.Fixtures
 
         }
 
-        public IEnumerable<Subscription> PersistedSubscriptions()
+        public IEnumerable<Subscription> PersistedSubscriptions(SubscriptionRole role = SubscriptionRole.Publishes)
         {
-            return _runtime.Factory.Get<ISubscriptionRepository>().LoadSubscriptions(SubscriptionRole.Publishes);
+            return _runtime.Factory.Get<ISubscriptionRepository>().LoadSubscriptions(role);
         }
 
 
@@ -94,6 +94,11 @@ namespace FubuTransportation.Storyteller.Fixtures
         {
             return _runtime.Factory.Get<ISubscriptionPersistence>()
                 .NodesForGroup(_runtime.Factory.Get<ChannelGraph>().Name);
+        }
+
+        public void RemoveSubscriptions()
+        {
+            _runtime.Factory.Get<IServiceBus>().RemoveSubscriptionsForThisNodeAsync().Wait();
         }
     }
 }
