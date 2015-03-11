@@ -66,7 +66,7 @@ namespace FubuTransportation.LightningQueues.Testing
 
             var receiver = new RecordingReceiver();
 
-            node.StartReceiving(receiver);
+            node.StartReceiving(receiver, new RecordingLogger());
 
             node.Channel.As<LightningQueuesChannel>().Send(envelope.Data, envelope.Headers);
             Wait.Until(() => receiver.Received.Any());

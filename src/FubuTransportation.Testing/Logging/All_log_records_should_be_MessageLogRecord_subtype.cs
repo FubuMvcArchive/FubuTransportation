@@ -16,7 +16,10 @@ namespace FubuTransportation.Testing.Logging
         {
             var wrongTypes = typeof (MessageLogRecord).Assembly.GetExportedTypes()
                 .Where(x => x.IsConcreteTypeOf<LogRecord>() && !x.IsConcreteTypeOf<MessageLogRecord>())
-                .Where(x => !x.Name.Contains("Polling") && !x.Name.Contains("ScheduledJob") && !x.CanBeCastTo<PersistentTaskMessage>())
+                .Where(x => !x.Name.Contains("Polling") && 
+                    !x.Name.Contains("ScheduledJob") && 
+                    !x.CanBeCastTo<PersistentTaskMessage>() &&
+                    x != typeof(ReceiveFailed))
                 .ToList();
 
             if (wrongTypes.Any())

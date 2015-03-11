@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTransportation.Configuration;
 using FubuTransportation.InMemory;
 using FubuTransportation.Runtime;
@@ -71,7 +72,7 @@ namespace FubuTransportation.Testing.InMemory
 
                 var receiver = new RecordingReceiver();
 
-                node.StartReceiving(receiver);
+                node.StartReceiving(receiver, new RecordingLogger());
 
                 node.Channel.Send(envelope.Data, envelope.Headers);
 
@@ -98,7 +99,7 @@ namespace FubuTransportation.Testing.InMemory
                 transport.OpenChannels(graph);
 
                 var receiver = new RecordingReceiver();
-                node.StartReceiving(receiver);
+                node.StartReceiving(receiver, new RecordingLogger());
 
                 node.Channel.Send(new byte[] { 1, 2 }, new NameValueHeaders());
 

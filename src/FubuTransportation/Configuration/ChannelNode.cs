@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
+using FubuCore.Logging;
 using FubuCore.Reflection;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
@@ -92,16 +94,34 @@ namespace FubuTransportation.Configuration
         {
             if (Channel == null) throw new InvalidOperationException("Cannot receive on node {0} without a matching channel".ToFormat(SettingAddress));
             var receiver = new Receiver(pipeline, graph, this);
-            StartReceiving(receiver);
+            StartReceiving(receiver, pipeline.Logger);
         }
 
-        public void StartReceiving(IReceiver receiver)
+        public void StartReceiving(IReceiver receiver, ILogger logger)
         {
-            Scheduler.Start(() => {
+            Scheduler.Start(() =>
+            {
+                int exceptionCount = 0;
                 var receivingState = ReceivingState.CanContinueReceiving;
                 while (receivingState == ReceivingState.CanContinueReceiving)
                 {
-                    receivingState = Channel.Receive(receiver);
+                    try
+                    {
+                        receivingState = Channel.Receive(receiver);
+                        exceptionCount = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.InfoMessage(new ReceiveFailed { ChannelKey = Key, Exception = ex });
+                        logger.Error("Error in receive loop", ex);
+                        if (++exceptionCount > 9)
+                        {
+                            // We're probably stuck getting the same error forever, let the process crash.
+                            throw new ReceiveFailureException(
+                                "Received repeated errors while listening for messages on channel: " + Key,
+                                ex);
+                        }
+                    }
                 }
             });
         }
