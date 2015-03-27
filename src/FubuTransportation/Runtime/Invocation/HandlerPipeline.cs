@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FubuCore;
+using FubuCore.Logging;
 using FubuTransportation.ErrorHandling;
 using FubuTransportation.Logging;
 using FubuTransportation.Runtime.Serializers;
@@ -27,6 +28,11 @@ namespace FubuTransportation.Runtime.Invocation
         public IList<IEnvelopeHandler> Handlers
         {
             get { return _handlers; }
+        }
+
+        public ILogger Logger
+        {
+            get { return _context.Logger; }
         }
 
         // virtual for testing as usual
