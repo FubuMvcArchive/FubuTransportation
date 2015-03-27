@@ -604,6 +604,7 @@
     <Compile Include="Scheduling\ThreadSchedulerTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ServiceBus_RemoveSubscriptions_Tester.cs" />
     <Compile Include="Subscriptions\SubscriptionCache_clearing_tester.cs">
       <SubType>Code</SubType>
     </Compile>

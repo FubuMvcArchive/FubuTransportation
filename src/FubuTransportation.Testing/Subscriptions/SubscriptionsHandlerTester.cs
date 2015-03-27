@@ -131,4 +131,43 @@ namespace FubuTransportation.Testing.Subscriptions
             });
         }
     }
+
+    [TestFixture]
+    public class when_handling_subscriptions_removed : InteractionContext<SubscriptionsHandler>
+    {
+        private SubscriptionsRemoved theMessage;
+
+        protected override void beforeEach()
+        {
+            Services.PartialMockTheClassUnderTest();
+
+            ClassUnderTest.Expect(x => x.ReloadSubscriptions());
+            ClassUnderTest.Expect(x => x.UpdatePeers());
+
+            theMessage = new SubscriptionsRemoved
+            {
+                Receiver = new Uri("memory://receiver")
+            };
+            ClassUnderTest.Handle(theMessage);
+        }
+
+        [Test]
+        public void should_remove_subscriptions_from_repository()
+        {
+            MockFor<ISubscriptionRepository>()
+                .AssertWasCalled(x => x.RemoveSubscriptionsForReceiver(theMessage.Receiver));
+        }
+
+        [Test]
+        public void should_reload_subscriptions()
+        {
+            ClassUnderTest.AssertWasCalled(x => x.ReloadSubscriptions());
+        }
+
+        [Test]
+        public void should_update_peers()
+        {
+            ClassUnderTest.AssertWasCalled(x => x.UpdatePeers());
+        }
+    }
 }

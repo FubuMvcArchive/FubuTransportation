@@ -19,7 +19,6 @@ using FubuTransportation.Runtime;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
 using FubuTransportation.Sagas;
-using FubuTransportation.ScheduledJobs;
 using FubuTransportation.ScheduledJobs.Configuration;
 using FubuTransportation.Scheduling;
 using FubuTransportation.Subscriptions;

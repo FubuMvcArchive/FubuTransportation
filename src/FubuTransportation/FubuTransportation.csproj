@@ -164,6 +164,7 @@
     <Compile Include="Logging\MessageLogRecord.cs" />
     <Compile Include="Logging\MessageSuccessful.cs" />
     <Compile Include="Logging\NoHandlerForMessage.cs" />
+    <Compile Include="Logging\ReceiveFailed.cs" />
     <Compile Include="Monitoring\HealthMonitoringSettings.cs" />
     <Compile Include="Monitoring\HealthMonitorPollingJob.cs" />
     <Compile Include="Monitoring\HealthStatus.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Polling\PollingServicesRegistry.cs" />
     <Compile Include="Polling\RegisterPollingJobs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveFailureException.cs" />
     <Compile Include="RecordingServiceBus.cs" />
     <Compile Include="Registration\DefaultHandlerSource.cs" />
     <Compile Include="Registration\ExplicitTypeHandlerSource.cs" />
@@ -360,6 +362,7 @@
     <Compile Include="Subscriptions\SubscriptionRole.cs" />
     <Compile Include="Subscriptions\SubscriptionsChanged.cs" />
     <Compile Include="Subscriptions\SubscriptionsHandler.cs" />
+    <Compile Include="Subscriptions\SubscriptionsRemoved.cs" />
     <Compile Include="Subscriptions\TransportNode.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="TestSupport\ClearAllTransports.cs" />

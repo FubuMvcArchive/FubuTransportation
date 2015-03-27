@@ -98,5 +98,13 @@ namespace FubuTransportation.RavenDb
                 }
             });
         }
+
+        public void DeleteSubscriptions(IEnumerable<Subscription> subscriptions)
+        {
+            _transaction.Execute<IDocumentSession>(session => {
+                var docs = session.Load<Subscription>(subscriptions.Select(x => x.Id).Cast<ValueType>());
+                docs.Each(x => session.Delete(x));
+            });
+        }
     }
 }

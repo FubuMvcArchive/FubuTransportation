@@ -86,5 +86,19 @@ namespace FubuTransportation.Testing
             sentTo.Destination.ShouldEqual(destination);
             sentTo.Message.ShouldBeTheSameAs(message);
         }
+
+        [Test]
+        public void send_to_destination_and_wait()
+        {
+            var destination = new Uri("memory://blah");
+            var message = new Message1();
+            var bus = new RecordingServiceBus();
+
+            bus.SendAndWait(destination, message);
+
+            var sentTo = bus.SentDirectlyTo.Single();
+            sentTo.Destination.ShouldEqual(destination);
+            sentTo.Message.ShouldBeTheSameAs(message);
+        }
     }
 }

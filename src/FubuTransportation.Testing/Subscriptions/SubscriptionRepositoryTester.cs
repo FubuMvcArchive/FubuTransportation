@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FubuTestingSupport;
 using FubuTransportation.Configuration;
@@ -244,7 +245,54 @@ namespace FubuTransportation.Testing.Subscriptions
             theRepository.RemoveOwnershipFromNode(fooNode.Id, subject);
 
             fooNode.OwnedTasks.ShouldNotContain(subject);
+        }
 
+        [Test]
+        public void remove_local_subscriptions()
+        {
+            var subscriptions = new[] { ObjectMother.NewSubscription(), ObjectMother.NewSubscription() };
+            subscriptions.Each(x =>
+            {
+                x.Receiver = channelGraph.ReplyChannelFor("foo");
+                x.Source = new Uri("foo://source");
+            });
+
+            theRepository.PersistSubscriptions(subscriptions);
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Subscribes)
+                .ShouldHaveTheSameElementsAs(subscriptions);
+
+            var removed = theRepository.RemoveLocalSubscriptions();
+            removed.ShouldHaveTheSameElementsAs(subscriptions);
+
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Subscribes)
+                .ShouldHaveCount(0);
+        }
+
+        [Test]
+        public void remove_subscriptions_for_receiver()
+        {
+            var differentNode = ObjectMother.ExistingSubscription("DifferentNode");
+            var differentReceiver = ObjectMother.ExistingSubscription();
+            differentReceiver.Receiver = new Uri("memory://other_receiver");
+
+            var subscriptions = new[]
+            {
+                ObjectMother.ExistingSubscription(),
+                ObjectMother.ExistingSubscription(),
+                ObjectMother.ExistingSubscription(),
+                differentNode,
+                differentReceiver
+            };
+
+            subscriptions.Each(x => x.Role = SubscriptionRole.Publishes);
+            persistence.Persist(subscriptions);
+
+            theRepository.RemoveSubscriptionsForReceiver(subscriptions[0].Receiver);
+
+            persistence.LoadSubscriptions(TheNodeName, SubscriptionRole.Publishes)
+                .ShouldHaveTheSameElementsAs(differentReceiver);
+            persistence.LoadSubscriptions("DifferentNode", SubscriptionRole.Publishes)
+                .ShouldHaveTheSameElementsAs(differentNode);
         }
     }
 }

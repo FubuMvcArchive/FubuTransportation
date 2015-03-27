@@ -1,8 +1,11 @@
 ﻿using System;
+using FubuCore.Logging;
 using FubuCore.Reflection;
 using FubuMVC.Core.Runtime.Logging;
 using FubuTransportation.Configuration;
+using FubuTransportation.Logging;
 using FubuTransportation.Runtime;
+using FubuTransportation.Runtime.Headers;
 using FubuTransportation.Runtime.Invocation;
 using FubuTransportation.Runtime.Routing;
 using FubuTransportation.Runtime.Serializers;
@@ -114,6 +117,88 @@ namespace FubuTransportation.Testing.Configuration
 //
 //
 //            node.Channel.AssertWasCalled(x => x.Receive(new Receiver(invoker, graph, node)));
+        }
+
+        [Test]
+        public void ReceiveFailed_error_handling()
+        {
+            var node = new ChannelNode
+            {
+                Key = "TestKey",
+                Channel = new FakeChannel { StopAfter = 2 },
+                Scheduler = new FakeScheduler()
+            };
+
+            var logger = new RecordingLogger();
+            node.StartReceiving(new RecordingReceiver(), logger);
+
+            logger.ErrorMessages.ShouldHaveCount(1);
+            logger.InfoMessages.ShouldHaveCount(1);
+            var message = logger.InfoMessages.Cast<ReceiveFailed>().Single();
+            message.ChannelKey.ShouldEqual(node.Key);
+            message.Exception.ShouldNotBeNull();
+        }
+
+        [Test]
+        public void continuous_receive_errors()
+        {
+            var logger = new RecordingLogger();
+            var receiver = new RecordingReceiver();
+            var channel = MockRepository.GenerateMock<IChannel>();
+            channel.Expect(x => x.Receive(receiver))
+                .Throw(new Exception("I failed"));
+
+            var node = new ChannelNode
+            {
+                Channel = channel,
+                Scheduler = new FakeScheduler()
+            };
+
+            Assert.Throws<ReceiveFailureException>(() => node.StartReceiving(receiver, logger));
+        }
+
+        [Test]
+        public void doesnt_throw_if_receive_only_fails_intermittently()
+        {
+            var channel = new FakeChannel { StopAfter = 20 };
+            var node = new ChannelNode
+            {
+                Channel = channel,
+                Scheduler = new FakeScheduler()
+            };
+
+            var logger = new RecordingLogger();
+            var receiver = new RecordingReceiver();
+            node.StartReceiving(receiver, logger);
+
+            channel.HitCount.ShouldEqual(20);
+        }
+
+        public class FakeChannel : IChannel
+        {
+            public int HitCount { get; private set; }
+            public int StopAfter { get; set; }
+
+            public ReceivingState Receive(IReceiver receiver)
+            {
+                if (++HitCount >= StopAfter)
+                    return ReceivingState.StopReceiving;
+
+                // Throw every other time
+                if (HitCount % 2 == 1)
+                    throw new Exception("I failed");
+
+                return ReceivingState.CanContinueReceiving;
+            }
+
+            public Uri Address { get; private set; }
+            public void Send(byte[] data, IHeaders headers)
+            {
+            }
+
+            public void Dispose()
+            {
+            }
         }
     }
 

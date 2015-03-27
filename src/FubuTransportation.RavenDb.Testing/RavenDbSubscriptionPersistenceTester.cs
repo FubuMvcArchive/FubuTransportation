@@ -152,5 +152,25 @@ namespace FubuTransportation.RavenDb.Testing
             persistence.LoadNode(node1.Id).OwnedTasks
                 .ShouldContain(subject);
         }
+
+        [Test]
+        public void delete_susbscriptions()
+        {
+            var subscriptions = new Subscription[]
+            {
+                ObjectMother.ExistingSubscription("Node1"),
+                ObjectMother.ExistingSubscription("Node2"),
+                ObjectMother.ExistingSubscription("Node2")
+            };
+
+            persistence.Persist(subscriptions);
+
+            persistence.DeleteSubscriptions(subscriptions.Take(2));
+
+            persistence.LoadSubscriptions("Node1", SubscriptionRole.Subscribes)
+                .ShouldHaveCount(0);
+            persistence.LoadSubscriptions("Node2", SubscriptionRole.Subscribes)
+                .ShouldHaveTheSameElementsAs(subscriptions.Skip(2));
+        }
     }
 }
