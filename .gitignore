@@ -45,3 +45,4 @@ src/FubuTransportation.Docs/snippets
 *.stresult
 st-artifacts/
 st-results
+node_modules/
