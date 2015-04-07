@@ -4,6 +4,7 @@
 <markdown>
 * Start off by creating a class library.
 * Install the nuget package `ripple install FubuTransportation -p {YourProjectName}`
+* Install the FubuMVC.StructureMap nuget package `ripple install FubuMVC.StructureMap -p {YourProjectName}`
 * Add a FubuTransportSettings class. This class is essentially a bag of Uri's or endpoints that messages can be routed to.
 <Snippet name="GettingStartedSettings" />
 * Add a FubuTransportRegistry<TSettings> implementation.
