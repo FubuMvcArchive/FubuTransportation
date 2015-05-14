@@ -4,8 +4,8 @@ module.exports = {
     "fubu-transportation": './javascript/fubu-transportation.jsx'
   },
   output: {
-    //path: __dirname + '/src/DiagnosticsHarness/fubu-diagnostics',
-    path: __dirname + '/src/FubuTransporation/fubu-diagnostics',
+    path: __dirname + '/src/DiagnosticsHarness/fubu-diagnostics',
+    //path: __dirname + '/src/FubuTransportation/fubu-diagnostics',
     filename: "[name].js",
     publicPath: '/client/public/javascript/',
     pathinfo: true
@@ -24,7 +24,7 @@ module.exports = {
   externals: {
       // require("jquery") is external and available
       //  on the global var jQuery
-      "jquery": "jQuery"
+      //"jquery": "jQuery"
   },
 
   devtool: 'eval'

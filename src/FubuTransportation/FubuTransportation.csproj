@@ -394,6 +394,8 @@
   <ItemGroup>
     <EmbeddedResource Include="pak-WebContent.zip" />
   </ItemGroup>
-  <ItemGroup></ItemGroup>
-  <ItemGroup></ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="fubu-diagnostics\fubu-transportation.js" />
+  </ItemGroup>
 </Project>
