@@ -4,8 +4,8 @@ module.exports = {
     "fubu-transportation": './javascript/fubu-transportation.jsx'
   },
   output: {
-    path: __dirname + '/src/DiagnosticsHarness/fubu-diagnostics',
-    //path: __dirname + '/src/FubuTransportation/fubu-diagnostics',
+    //path: __dirname + '/src/DiagnosticsHarness/fubu-diagnostics',
+    path: __dirname + '/src/FubuTransportation/fubu-diagnostics',
     filename: "[name].js",
     publicPath: '/client/public/javascript/',
     pathinfo: true

@@ -6,7 +6,7 @@ var Router = require('react-router');
 var Handlers = require('./fubu-transportation-handlers');
 var Schedules = require('./fubu-transportation-schedules');
 var Subscriptions = require('./fubu-transportation-subscriptions');
-var Task = require('./fubu-transportation-tasks');
+var Tasks = require('./fubu-transportation-tasks');
 var TransportsAndChannels = require('./fubu-transportation-transports');
 
 
