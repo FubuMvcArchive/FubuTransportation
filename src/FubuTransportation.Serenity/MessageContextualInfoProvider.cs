@@ -3,10 +3,11 @@ using System.Linq;
 using FubuTransportation.Diagnostics;
 using HtmlTags;
 using Serenity;
+using StoryTeller.Results;
 
 namespace FubuTransportation.Serenity
 {
-    public class MessageContextualInfoProvider : IContextualInfoProvider
+    public class MessageContextualInfoProvider : Report
     {
         private readonly IMessagingSession _session;
 
@@ -15,9 +16,14 @@ namespace FubuTransportation.Serenity
             _session = session;
         }
 
-        public void Reset()
+        public string ToHtml()
         {
-            _session.ClearAll();
+            return GenerateReports().ToTagList().ToString();
+        }
+
+        public string Title
+        {
+            get { return "Messaging Log"; }
         }
 
         public IEnumerable<HtmlTag> GenerateReports()

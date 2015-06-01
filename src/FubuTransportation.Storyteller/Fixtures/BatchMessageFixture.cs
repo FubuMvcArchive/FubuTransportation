@@ -21,8 +21,7 @@ namespace FubuTransportation.Storyteller.Fixtures
         {
             return
                 VerifyStringList(() => TextFileWriter.Read())
-                    .Titled("The recorded message log from the service should be")
-                    .Grammar();
+                    .Titled("The recorded message log from the service should be");
         }
     }
 

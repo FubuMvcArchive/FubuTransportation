@@ -4,6 +4,7 @@ using FubuTransportation.Configuration;
 using FubuTransportation.Diagnostics;
 using FubuTransportation.TestSupport;
 using Serenity;
+using StoryTeller;
 
 namespace FubuTransportation.Serenity
 {
@@ -22,8 +23,6 @@ namespace FubuTransportation.Serenity
         {
             FubuTransport.SetupForTesting(); // Uses FubuMode.SetUpTestingMode();
 
-            AddContextualProvider<MessageContextualInfoProvider>();
-
             OnStartup<IMessagingSession>(x => Bottles.Services.Messaging.EventAggregator.Messaging.AddListener(x));
 
             // Clean up all the existing queue state to prevent test pollution
@@ -34,9 +33,18 @@ namespace FubuTransportation.Serenity
             });
 
             OnContextCreation<IMessagingSession>(
-                x => RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x)));
+                x =>
+                {
+                    x.ClearAll();
+                    RemoteSubSystems.Each(sys => sys.Runner.Messaging.AddListener(x));
+                });
 
             OnContextCreation(TestNodes.Reset);
+        }
+
+        public override void ApplyLogging(ISpecContext context)
+        {
+            context.Reporting.Log(new MessageContextualInfoProvider(Application.Services.GetInstance<IMessagingSession>()));
         }
     }
 }

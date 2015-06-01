@@ -68,10 +68,10 @@
       <HintPath>..\packages\Selenium.WebDriverBackedSelenium\lib\net40\Selenium.WebDriverBackedSelenium.dll</HintPath>
     </Reference>
     <Reference Include="Serenity">
-      <HintPath>..\packages\Serenity\lib\net40\Serenity.dll</HintPath>
+      <HintPath>..\packages\Serenity\lib\net45\Serenity.dll</HintPath>
     </Reference>
     <Reference Include="StoryTeller">
-      <HintPath>..\packages\Storyteller2\lib\net40\StoryTeller.dll</HintPath>
+      <HintPath>..\packages\Storyteller\lib\net45\StoryTeller.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap\lib\net40\StructureMap.dll</HintPath>

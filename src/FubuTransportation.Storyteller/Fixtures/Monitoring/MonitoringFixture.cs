@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.ModelBinding;
 using FubuCore;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Serenity;
 using FubuTransportation.Subscriptions;
 using HtmlTags;
 using StoryTeller;
-using StoryTeller.Assertions;
-using StoryTeller.Engine;
+using StoryTeller.Grammars.Tables;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 {
@@ -29,7 +27,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
         protected override void setup()
         {
             _nodes = new MonitoredNodeGroup();
-            Context.Store(_nodes);
+            Context.State.Store(_nodes);
         }
 
         protected override void teardown()
@@ -55,7 +53,8 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
                 });
             });
 
-            Context.Trace(table);
+
+            Context.Reporting.Log("Monitored Node Group", table.ToString());
 
             _nodes.Dispose();
         }

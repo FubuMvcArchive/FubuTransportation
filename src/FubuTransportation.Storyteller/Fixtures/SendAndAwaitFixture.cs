@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Serenity.Fixtures;
 using ServiceNode;
-using StoryTeller.Assertions;
-using StoryTeller.Engine;
+using StoryTeller;
+
 
 namespace FubuTransportation.Storyteller.Fixtures
 {

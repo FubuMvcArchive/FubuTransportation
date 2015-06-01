@@ -8,7 +8,6 @@ using FubuTransportation.InMemory;
 using FubuTransportation.Subscriptions;
 using HtmlTags;
 using StoryTeller;
-using StoryTeller.Engine;
 
 namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
 {
@@ -26,7 +25,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
                     .ToArray());
         }
 
-        public override void SetUp(ITestContext context)
+        public override void SetUp()
         {
             RunningNode.Subscriptions.ClearAll();
             MessageHistory.ClearAll();
@@ -40,7 +39,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
         }
 
         [FormatAs("Load a node {Key} from {Registry} with reply Uri {ReplyUri}")]
-        public void LoadNode(string Key, [SelectionValues("FubuTransportRegistries")] string Registry, string ReplyUri)
+        public void LoadNode(string Key, [SelectionList("FubuTransportRegistries")] string Registry, string ReplyUri)
         {
             MessageHistory.WaitForWorkToFinish(() => {
                 var node = new RunningNode(Registry, ReplyUri.ToUri());
@@ -48,7 +47,7 @@ namespace FubuTransportation.Storyteller.Fixtures.Subscriptions
 
                 _nodes[Key] = node;
 
-                Context.Trace(new CodeTag(Key, node.Contents));
+                Context.Reporting.Log("RunningNode: " + Key, new CodeTag(Key, node.Contents).ToString());
             });
         }
 

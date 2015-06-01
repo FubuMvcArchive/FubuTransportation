@@ -4,6 +4,7 @@ using FubuTransportation.Serenity.Samples.Setup;
 using FubuTransportation.Serenity.Samples.SystemUnderTest;
 using FubuTransportation.Serenity.Samples.SystemUnderTest.Subscriptions;
 using Serenity;
+using StoryTeller;
 using StoryTeller.Engine;
 
 namespace FubuTransportation.Serenity.Samples.Fixtures
@@ -88,7 +89,7 @@ namespace FubuTransportation.Serenity.Samples.Fixtures
         [FormatAs("The system under test should receive the message")]
         public bool SystemReceivedMessage()
         {
-            var messages = Retrieve<SystemUnderTest.MessageRecorder>().Messages;
+            var messages = Context.Service<SystemUnderTest.MessageRecorder>().Messages;
             return ShortWait(() => messages.Any(x => x is TestMessage));
         }
 

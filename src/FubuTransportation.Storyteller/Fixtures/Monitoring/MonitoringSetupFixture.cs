@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.Remoting.Contexts;
 using Serenity.Fixtures;
 using StoryTeller;
 using StoryTeller.Engine;
+using StoryTeller.Grammars.Tables;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 {
@@ -14,9 +16,9 @@ namespace FubuTransportation.Storyteller.Fixtures.Monitoring
             Title = "If the nodes within a cluster are";
         }
 
-        public override void SetUp(ITestContext context)
+        public override void SetUp()
         {
-            _nodes = context.Retrieve<MonitoredNodeGroup>();
+            _nodes = Context.State.Retrieve<MonitoredNodeGroup>();
         }
 
         public override void TearDown()

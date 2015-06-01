@@ -8,7 +8,7 @@ using FubuCore;
 using FubuTransportation.Monitoring;
 using FubuTransportation.Subscriptions;
 using OpenQA.Selenium.Safari.Internal;
-using StoryTeller.Assertions;
+using StoryTeller;
 
 namespace FubuTransportation.Storyteller.Fixtures.Monitoring
 {

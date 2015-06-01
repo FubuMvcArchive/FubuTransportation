@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using Bottles.Services;
 using Bottles.Services.Messaging.Tracking;
-using StoryTeller.Engine;
+using StoryTeller;
 using Wait = Serenity.Wait;
 
 namespace FubuTransportation.Serenity
@@ -10,7 +9,7 @@ namespace FubuTransportation.Serenity
     {
         public int TimeoutInMilliseconds = 10000;
 
-        public sealed override void SetUp(ITestContext context)
+        public sealed override void SetUp()
         {
             startListening();
             setup();
