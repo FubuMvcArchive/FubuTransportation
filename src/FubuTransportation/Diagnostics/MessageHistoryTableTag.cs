@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FubuCore;
-using FubuMVC.Core.Continuations;
 using HtmlTags;
 
 namespace FubuTransportation.Diagnostics
@@ -10,6 +9,8 @@ namespace FubuTransportation.Diagnostics
     {
         public MessageHistoryTableTag(MessageHistory history)
         {
+            AddClass("table");
+
             Style("width", "inherit");
             Style("margin-top", "50px");
 

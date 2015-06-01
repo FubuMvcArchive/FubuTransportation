@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using FubuMVC.Core;
@@ -96,7 +98,7 @@ namespace FubuTransportation.Testing.Publishing
         public void should_be_a_PublishEvent_node_directly_after_the_publishing_action()
         {
             // diagnostics are in here now.
-            chain.FirstCall().Next.Next.ShouldBeOfType<SendsMessage>()
+            chain.FirstCall().Next.ShouldBeOfType<SendsMessage>()
                 .EventType.ShouldEqual(typeof(Message1));
         }
 
